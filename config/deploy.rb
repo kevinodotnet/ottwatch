@@ -1,8 +1,19 @@
-set :application, "OttWatch"
+# Name of App and GIT location
+set :application, "ottwatch"
 set :repository,  "ssh://prodweb/mnt/git/ottwatch.git"
 
 set :homepath, "/mnt/www/ottwatch"
 set :deploy_via, :remote_cache
+set(:deploy_to) { "#{home_path}" }
+
+namespace :deploy do
+  task :restart do
+  end
+end
+
+
+set :keep_releases, 10
+set :normalize_asset_timestamps, false
 
 set :copy_exclude, [".git"]
 
