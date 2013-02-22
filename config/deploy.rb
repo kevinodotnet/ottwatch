@@ -2,7 +2,7 @@ set :application, "OttWatch"
 set :repository,  "ssh://prodweb/mnt/git/ottwatch.git"
 
 set :homepath, "/mnt/www/ottwatch"
-#set :deploy_via, :remote_cache
+set :deploy_via, :remote_cache
 
 set :copy_exclude, [".git"]
 
