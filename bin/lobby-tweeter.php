@@ -1,16 +1,14 @@
 <?php
 
 $url="https://apps107.ottawa.ca/LobbyistRegistry/search/searchlobbyist.aspx?lang=en";
-
 require_once('twitteroauth.php');
-
 $VAR="/mnt/shared/ottwatch/var";
-$VAR="/tmp/ottwatch";
 
 #######################################################################################
 
-# how far back to search
-$daterange = 5;
+# how far back to search. Lobbyists have 15 days to do it, so that's how far back we
+# need to search
+$daterange = 22;
 
 # step through all the days looking for back-filed new lobby entries
 for ($x = $daterange; $x >= 0; $x--) {
@@ -19,11 +17,42 @@ for ($x = $daterange; $x >= 0; $x--) {
   $date = strftime("%d-%b-%Y",$then);
 
   print "#########################################################\n";
-  print "Searching $date...\n";
+  print "Searching $date... (page 0)\n";
   $html = searchByDate($date);
-  #file_put_contents("test_result.html",$html);
-  #$html = file_get_contents("test_result.html");
+
+	# process page 1
   parseSearchResults($html);
+
+	$viewstate = getViewState($html);
+	$eventvalidation = getEventValidation($html);
+
+	# process any additional pages
+	$lines = explode("\n",$html);
+	for ($x = 0; $x < count($lines); $x++) {
+	  if (preg_match("/MainContent_page/",$lines[$x])) {
+	    $xml = $lines[$x-1].$lines[$x].$lines[$x+1];
+	    $xml = preg_replace("/&#39;/","'",$xml);
+	    $xml = simplexml_load_string($xml);
+			$links = $xml->xpath("//a");
+			# start at offset 1 because we've already processed page 1
+			for ($page = 1; $page < count($links); $page++) {
+			  print "Searching $date... (page $page)\n";
+				$href = $links[$page]->xpath("@href"); $href = $href[0].'';
+				$name = $href;
+				$name = preg_replace("/.*__doPostBack\('/","",$name);
+				$name = preg_replace("/'.*/","",$name);
+				$fields = array(
+				  '__VIEWSTATE' => $viewstate,
+				  '__EVENTVALIDATION' => $eventvalidation,
+				  '__EVENTTARGET' => $name,
+				  '__EVENTARGUMENT' => ''
+				);
+			  $html = sendPost($url,$fields);
+			  parseSearchResults($html);
+			}
+		}
+	}
+	exit; # just one day during testing
 }
 
 exit;
@@ -75,6 +104,7 @@ function parseSearchResults($html) {
       print "$tweet\n";
 	  }
 	}
+
 }
 
 function getViewState($html) {
@@ -123,6 +153,7 @@ function searchByDate($date) {
 
 function sendPost($url,$fields) {
 
+  $fields_string = "";
 	foreach($fields as $key=>$value) { 
     $fields_string .= $key.'='.$value.'&'; 
   }
