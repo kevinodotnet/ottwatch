@@ -4,6 +4,8 @@ require_once('twitteroauth.php');
 
 $VAR="/mnt/shared/ottwatch/var";
 
+file_put_contents("$VAR/ranat_".`date +%Y%m%d_%H%M%S`,"hi");
+
 $data = `wget -qO - http://app05.ottawa.ca/sirepub/rss/rss.aspx | head -1`;
 $xml = simplexml_load_string($data);
 $items = $xml->xpath("//item");
@@ -29,17 +31,12 @@ foreach ($items as $i) {
     continue;
   }
 
-  touch("$VAR/$guidmd5");
-  
   $link = preg_replace("/.*sirepub/","http://app05.ottawa.ca/sirepub",$link);
   $tweet = "$category on $meetingDate is updated $link";
 
+	file_put_contents("$VAR/$guidmd5",$tweet);
   send_tweet($tweet);
 
-  exit;
-  
-  #print "$category | $meetingDate | $title | $link\n";
-  #print print_r($i);
 }
 
 function send_tweet($tweet) {
@@ -49,10 +46,11 @@ function send_tweet($tweet) {
   $accessToken = '1206679020-ZDNk6AZT5cYhGWiyFXB4K5BsQK3ItQf5m4Cpt5t';
   $accessTokenSecret = 'EmT6yieQC9LxAwYIDHKFnUOqf1jX31jHHwxwspX5TnI';
   $twitter = new TwitterOAuth($consumerKey, $consumerSecret, $accessToken, $accessTokenSecret);
-  if(strlen($tweetMessage) <= 140) {
+  if(strlen($tweet) <= 140) {
     $twitter->post('statuses/update', array('status' => $tweet));
+		print "$tweet\n";
   } else {
-    print "ERROR: tweet too long\n";
+    print "ERROR: too long ($tweet)\n";
   }
 
 }
