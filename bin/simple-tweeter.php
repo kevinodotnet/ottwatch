@@ -3,7 +3,6 @@
 require_once('twitteroauth.php');
 
 $VAR="/mnt/shared/ottwatch/var";
-$VAR="/tmp/ottwatch";
 
 $data = `wget -qO - http://app05.ottawa.ca/sirepub/rss/rss.aspx | head -1`;
 $xml = simplexml_load_string($data);

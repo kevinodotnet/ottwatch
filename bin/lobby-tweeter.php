@@ -1,5 +1,7 @@
 <?php
 
+$url="https://apps107.ottawa.ca/LobbyistRegistry/search/searchlobbyist.aspx?lang=en";
+
 require_once('twitteroauth.php');
 
 $VAR="/mnt/shared/ottwatch/var";
@@ -7,28 +9,72 @@ $VAR="/tmp/ottwatch";
 
 #######################################################################################
 
-#$html = searchByDate();
-#file_put_contents("test_result.html",$html);
-$html = file_get_contents("test_result.html");
-$viewstate = getViewState($html);
-$eventvalidation = getEventValidation($html);
+# how far back to search
+$daterange = 5;
 
-$lines = explode("\n",$html);
-for ($x = 0; $x < count($lines); $x++) {
-  if (preg_match("/MainContent_gvSearchResults_LnkLobbyistName/",$lines[$x])) {
-    print "###################################################\n";
-    # start of lobby result
-    $xml = "<tr><td><b>";
-    for ($y = 0; $y < 13; $y++) {
-      $xml .= $lines[$x+$y]."\n";
-    }
-    $xml .= "</td></tr>";
-    $xml = preg_replace("/&/",'&amp;',$xml);
-    $xml = simplexml_load_string($xml);
-    print print_r($xml);
-    print "\n";
-    exit(0);
-  }
+# step through all the days looking for back-filed new lobby entries
+for ($x = $daterange; $x >= 0; $x--) {
+  $now = time();
+  $then = $now-(60*60*24*$x);
+  $date = strftime("%d-%b-%Y",$then);
+
+  print "#########################################################\n";
+  print "Searching $date...\n";
+  $html = searchByDate($date);
+  #file_put_contents("test_result.html",$html);
+  #$html = file_get_contents("test_result.html");
+  parseSearchResults($html);
+}
+
+exit;
+
+#######################################################################################
+function parseSearchResults($html) {
+
+	$viewstate = getViewState($html);
+	$eventvalidation = getEventValidation($html);
+	
+	$lines = explode("\n",$html);
+	for ($x = 0; $x < count($lines); $x++) {
+	  if (preg_match("/MainContent_gvSearchResults_LnkLobbyistName/",$lines[$x])) {
+	    # start of lobby result
+	    $xml = "<tr><td><b>";
+	    for ($y = 0; $y < 13; $y++) {
+	      $xml .= $lines[$x+$y]."\n";
+	    }
+	    $xml .= "</td></tr>";
+	    $xml = preg_replace("/&/",'&amp;',$xml);
+	    $xml = simplexml_load_string($xml);
+	    #print print_r($xml); print "\n";
+	
+	    $who = $xml->xpath("//u"); $who = $who[0].'';
+	    $spans = $xml->xpath("//span");
+      # for ($y = 0; $y < count($spans); $y++) { print "span[$y] ".$spans[$y]."\n"; }
+	
+	    $job = $spans[0].'/'.$spans[1];
+	    $from = explode('-',$spans[4]);
+	    $to = explode('-',$spans[5]);
+      $when = "{$from[0]}-{$from[1]} to {$to[0]}-{$to[1]}";
+
+	    $what = $spans[2];
+	
+	    $tweet = "Lobbyist $who: $what, $when";
+	    $tweet = "($when) Lobbyist $who: $what, $when";
+	    $tweet = preg_replace("/  /"," ",$tweet);
+	    $tweet = preg_replace("/  /"," ",$tweet);
+	    $tweet = preg_replace("/  /"," ",$tweet);
+	    $tweet = preg_replace("/  /"," ",$tweet);
+	    $tweet = preg_replace("/  /"," ",$tweet);
+	    $tweet = preg_replace("/  /"," ",$tweet);
+	    $len1 = strlen($tweet);
+	    $tweet = substr($tweet,0,130);
+	    $len2 = strlen($tweet);
+	    if ($len1 != $len2) {
+	      $tweet = $tweet."...";
+	    }
+      print "$tweet\n";
+	  }
+	}
 }
 
 function getViewState($html) {
@@ -45,7 +91,7 @@ function getViewState($html) {
 function getEventValidation($html) {
 	$lines = explode("\n",$html);
 	foreach ($lines as $line) {
-	  if (preg_match("/__VIEWSTATE/",$line)) {
+	  if (preg_match("/__EVENTVALIDATION/",$line)) {
 	    $viewstate = preg_replace('/.*value="/',"",$line);
 	    $viewstate = preg_replace('/".*/',"",$viewstate);
 	    return $viewstate;
@@ -53,49 +99,33 @@ function getEventValidation($html) {
 	}
 }
 
-function searchByDate() {
+function searchByDate($date) {
+  global $url;
 
-	$url="https://apps107.ottawa.ca/LobbyistRegistry/search/searchlobbyist.aspx?lang=en";
-	
-	# extract ASP.NET control variables
+  # how many days to go back in order to find results.
+  $daterange = 60; 
+
 	$html = file_get_contents($url);
   $viewstate = getViewState($html);
   $eventvalidation = getEventValidation($html);
-#	$lines = explode("\n",$html);
-#	foreach ($lines as $line) {
-#	  if (preg_match("/__VIEWSTATE/",$line)) {
-#	    $viewstate = preg_replace('/.*value="/',"",$line);
-#	    $viewstate = preg_replace('/".*/',"",$viewstate);
-#	  }
-#	  if (preg_match("/__EVENTVALIDATION/",$line)) {
-#	    $eventvalidation = preg_replace('/.*value="/',"",$line);
-#	    $eventvalidation = preg_replace('/".*/',"",$eventvalidation);
-#	  }
-#	}
-	
-	# write a test HTML file that verifies the input parameters work.
-	$html = "
-	<form method='post' action='$url'>
-	<input type='hidden' name='__VIEWSTATE' value='$viewstate'/>
-	<input type='hidden' name='__EVENTVALIDATION' value='$eventvalidation'/>
-	<input type='hidden' name='ctl00\$MainContent\$dpFromDate_txtbox' value='18-Feb-2013'/>
-	<input type='hidden' name='ctl00\$MainContent\$dpToDate_txtbox' value='22-Feb-2013'/>
-	<input type='hidden' name='ctl00\$MainContent\$btnSearch' value='Search'/>
-	<input type='submit' value='doit2'/>
-	</form>
-	";
-	file_put_contents("test.html",$html);
-	
-	# invoke CURLkk
 	
 	$fields = array(
 	  '__VIEWSTATE' => $viewstate,
 	  '__EVENTVALIDATION' => $eventvalidation,
-	  'ctl00$MainContent$dpFromDate_txtbox' => '18-Feb-2013',
-	  'ctl00$MainContent$dpToDate_txtbox' => '22-Feb-2013',
+	  'ctl00$MainContent$dpFromDate_txtbox' => $date,
+	  'ctl00$MainContent$dpToDate_txtbox' => $date,
 	  'ctl00$MainContent$btnSearch' => 'Search'
 	);
-	foreach($fields as $key=>$value) { $fields_string .= $key.'='.$value.'&'; }
+
+  $response = sendPost($url,$fields);
+  return $response;
+}
+
+function sendPost($url,$fields) {
+
+	foreach($fields as $key=>$value) { 
+    $fields_string .= $key.'='.$value.'&'; 
+  }
 	$fields_string = http_build_query($fields);
 	
 	$ch = curl_init();
@@ -103,11 +133,9 @@ function searchByDate() {
 	curl_setopt($ch,CURLOPT_URL, $url);
 	curl_setopt($ch,CURLOPT_POST, count($fields));
 	curl_setopt($ch,CURLOPT_POSTFIELDS, $fields_string);
-	#curl_setopt($ch,CURLOPT_USERAGENT, 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_5) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.57 Safari/537.17 OttWatch');
 	$response = curl_exec($ch);
 	curl_close($ch);
 
   return $response;
-	
 }
 
