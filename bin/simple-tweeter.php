@@ -45,16 +45,14 @@ foreach ($items as $i) {
   }
 
 	print "Sending $tweet\n";
-
 	file_put_contents("$OTTVAR/$guidmd5",$tweet);
-	#tweet($tweet,1);
+	tweet($tweet,1);
 }
 
 $output = ob_get_contents();
 ob_end_clean();
 $now = strftime("%Y%m%d_%H%M%S",time());
 file_put_contents("$OTTVAR/ranat_meetings_$now",$output);
-print "$output\n";
 
 #    [title] => TRC - 2012-Dec-05 12:00 pm
 #    [link] => http://sire/sirepub/mtgviewer.aspx?meetid=2283&doctype=MINUTES
