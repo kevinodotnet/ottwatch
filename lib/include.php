@@ -2,7 +2,7 @@
 
 $OTTVAR="/mnt/shared/ottwatch/var";
 
-function tweet($tweet) {
+function tweet($tweet,$allowDup=0) {
 
 	global $OTTVAR;
 
@@ -10,7 +10,9 @@ function tweet($tweet) {
   $hash = md5($tweet);
   $hashfile = "$OTTVAR/tweets/$hash";
   if (file_exists($hashfile)) {
-		return false;
+		if (!$allowDup) {
+			return false;
+		}
 	}
 
 	# check tweet cache and dont send if found

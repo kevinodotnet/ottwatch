@@ -1,11 +1,14 @@
 <?php
 
+$dirname = `dirname $argv[0]`;
+$dirname = preg_replace("/\n/","",$dirname);
+ob_start();
+
+set_include_path(get_include_path() . PATH_SEPARATOR . "$dirname/../lib");
+require_once('include.php');
 require_once('twitteroauth.php');
 
-$VAR="/mnt/shared/ottwatch/var";
-
-file_put_contents("$VAR/ranat_".`date +%Y%m%d_%H%M%S`,"hi");
-
+# get RSS of all meetings
 $data = `wget -qO - http://app05.ottawa.ca/sirepub/rss/rss.aspx | head -1`;
 $xml = simplexml_load_string($data);
 $items = $xml->xpath("//item");
@@ -26,34 +29,32 @@ foreach ($items as $i) {
   $meetingDate = explode(" - ",$title);
   $meetingDate = $meetingDate[1];
 
-  if (file_exists("$VAR/$guidmd5")) {
+	# URL is not Internet ready from the RSS
+  $link = preg_replace("/.*sirepub/","http://app05.ottawa.ca/sirepub",$link);
+	# links to MINUTES and SUMMARY replaced with Agenda because sometimes
+	# they are not available yet, though are referenced in RSS. Flip to 
+	# agenda means link always works, and user figure itout after the fact
+  $link = preg_replace("/doctype=MINUTES/","doctype=AGENDA",$link);
+  $link = preg_replace("/doctype=SUMMARY/","doctype=AGENDA",$link);
+
+  $tweet = "$category on $meetingDate is updated $link";
+
+  if (file_exists("$OTTVAR/$guidmd5")) {
     # this meeting has been tweeted already
     continue;
   }
 
-  $link = preg_replace("/.*sirepub/","http://app05.ottawa.ca/sirepub",$link);
-  $tweet = "$category on $meetingDate is updated $link";
+	print "Sending $tweet\n";
 
-	file_put_contents("$VAR/$guidmd5",$tweet);
-  send_tweet($tweet);
-
+	file_put_contents("$OTTVAR/$guidmd5",$tweet);
+	#tweet($tweet,1);
 }
 
-function send_tweet($tweet) {
- 
-  $consumerKey = 'aPqhRRoL1X4lDRGbRpdjA';
-  $consumerSecret = '9Cz0ot2iUfzAaoRNesHmxKl4se7zYMDpka0x2F9imG0';
-  $accessToken = '1206679020-ZDNk6AZT5cYhGWiyFXB4K5BsQK3ItQf5m4Cpt5t';
-  $accessTokenSecret = 'EmT6yieQC9LxAwYIDHKFnUOqf1jX31jHHwxwspX5TnI';
-  $twitter = new TwitterOAuth($consumerKey, $consumerSecret, $accessToken, $accessTokenSecret);
-  if(strlen($tweet) <= 140) {
-    $twitter->post('statuses/update', array('status' => $tweet));
-		print "$tweet\n";
-  } else {
-    print "ERROR: too long ($tweet)\n";
-  }
-
-}
+$output = ob_get_contents();
+ob_end_clean();
+$now = strftime("%Y%m%d_%H%M%S",time());
+file_put_contents("$OTTVAR/ranat_meetings_$now",$output);
+print "$output\n";
 
 #    [title] => TRC - 2012-Dec-05 12:00 pm
 #    [link] => http://sire/sirepub/mtgviewer.aspx?meetid=2283&doctype=MINUTES
