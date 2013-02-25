@@ -1,13 +1,13 @@
 <?php
 
-$url="https://apps107.ottawa.ca/LobbyistRegistry/search/searchlobbyist.aspx?lang=en";
+ob_start();
+require_once('../lib/include.php');
 require_once('twitteroauth.php');
-$VAR="/mnt/shared/ottwatch/var";
 
-#######################################################################################
+# base URL of the lobbyist registry
+$url="https://apps107.ottawa.ca/LobbyistRegistry/search/searchlobbyist.aspx?lang=en";
 
-# how far back to search. Lobbyists have 15 days to do it, so that's how far back we
-# need to search
+# how far back to search. Lobbyists have 15 days
 $daterange = 30;
 
 # the set of all tweets generated based on the search window
@@ -18,18 +18,14 @@ $now = time();
 $then = $now-(60*60*24*$daterange);
 $from = strftime("%d-%b-%Y",$then);
 $to = strftime("%d-%b-%Y",$now);
-
-print "Searching $from to $to\n";
-print "page 0\n";
 $html = searchByDate($from,$to);
 
 # process page 1
 $newtweets = parseSearchResults($html); foreach ($newtweets as $t) { $tweets[] = $t; }
 
+# process any additional pages
 $viewstate = getViewState($html);
 $eventvalidation = getEventValidation($html);
-
-# process any additional pages
 $lines = explode("\n",$html);
 for ($x = 0; $x < count($lines); $x++) {
   if (preg_match("/MainContent_page/",$lines[$x])) {
@@ -39,7 +35,6 @@ for ($x = 0; $x < count($lines); $x++) {
 		$links = $xml->xpath("//a");
 		# start at offset 1 because we've already processed page 1
 		for ($page = 1; $page < count($links); $page++) {
-			print "page $page\n";
 			$href = $links[$page]->xpath("@href"); $href = $href[0].'';
 			$name = $href;
 			$name = preg_replace("/.*__doPostBack\('/","",$name);
@@ -56,13 +51,19 @@ for ($x = 0; $x < count($lines); $x++) {
 	}
 }
 
+$sent = 0;
 foreach ($tweets as $t) {
-	print "$t\n";
+	if (tweet($t)) {
+		$sent ++;
+	}
 }
 
-print "\n";
-print count($tweets)." lobby found\n";
-print "\n";
+print "Send $sent of ".count($tweets)." tweets\n";
+
+$output = ob_get_contents();
+ob_end_clean();
+$now = strftime("%Y%m%d_%H%M%S",time());
+file_put_contents("$OTTVAR/ranat_lobby_$now",$output);
 
 exit;
 
@@ -94,12 +95,17 @@ function parseSearchResults($html) {
 	    $job = $spans[0].'/'.$spans[1];
 	    $from = explode('-',$spans[4]);
 	    $to = explode('-',$spans[5]);
-      $when = "{$from[0]}-{$from[1]} to {$to[0]}-{$to[1]}";
+      $from = "{$from[1]}{$from[0]}";
+      $to = "{$to[1]}{$to[0]}";
+
+      $when = "$from-$to";
+			if ($from == $to) {
+	      $when = $from;
+			}
 
 	    $what = $spans[2];
 	
-	    $tweet = "Lobbyist $who: $what, $when";
-	    $tweet = "($when) Lobbyist $who: $what, $when";
+	    $tweet = "Lobbying: $who ($when) $what";
 	    $tweet = preg_replace("/  /"," ",$tweet);
 	    $tweet = preg_replace("/  /"," ",$tweet);
 	    $tweet = preg_replace("/  /"," ",$tweet);
@@ -137,12 +143,11 @@ function parseSearchResults($html) {
 	    if ($len1 != $len2) {
 	      $tweet = $tweet."...";
 	    }
-			array_pusH($tweets,$tweet);
+			array_push($tweets,$tweet);
 	  }
 	}
 
 	return $tweets;
-
 }
 
 function getViewState($html) {
