@@ -37,9 +37,11 @@ function home() {
   <button clas="btn" onclick="lobbyist_search_form_submit()"><i class="icon-search"></i> Search</button>
   </span>
   <span class="span3">
+  <!--
   <a class="twitter-timeline" data-dnt="true" href="https://twitter.com/ottwatch" data-widget-id="306310112971210752">Tweets by @ottwatch</a>
   <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
   </span>
+  -->
   </div>
 
   <?php
@@ -71,7 +73,6 @@ function lobbyist_search($name) {
   }
   ?>
   <div class="row-fluid">
-  <span class="span3">
   <h3>Found <?php print count($matches); ?> matches.</h3>
   <table class="table table-hover table-condensed">
   <tr>
@@ -94,7 +95,6 @@ function lobbyist_search($name) {
   }
   ?>
   </table>
-  </span>
   </div>
   <?php
   bottom();
@@ -212,15 +212,10 @@ function top($title) {
 <div style="background: #fcfcfc; padding: 10px; border: #c0c0c0 solid 1px;">
 
 <div class="row-fluid">
-<span class="span9">
 <div class="lead">
 <a href="<?php print $OTT_WWW; ?>"><img style="width: 50px; height: 50px;" src="<?php print $OTT_WWW; ?>/img/ottwatch.png"/></a>
 <?php print $title; ?>
 </div>
-</span>
-<span class="span3">
-<i>Created by <a href="http://kevino.ca"><b>Kevin O'Donnell</b></a> to make it easier to be part of the political conversation in Ottawa.</i>
-</span>
 </div>
 
 </div>
@@ -228,6 +223,13 @@ function top($title) {
 }
 
 function bottom() {
+  ?>
+<div style="margin-top: 10px; background: #fcfcfc; padding: 10px; border: #c0c0c0 solid 1px;">
+<i>
+Follow <b><a href="http://twitter.com/OttWatch">@OttWatch</a></b> on Twitter too.
+Created by <a href="http://kevino.ca"><b>Kevin O'Donnell</b></a> to make it easier to be part of the political conversation in Ottawa.</i>
+</div>
+  <?php
   googleAnalytics();
   ?>
 
