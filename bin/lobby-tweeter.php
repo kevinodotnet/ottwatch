@@ -68,7 +68,7 @@ foreach ($events as $event) {
 		continue;
 	}
 
-  $link = "$OTT_WWW/lobbyist/".urlencode($who).'/link';
+  $link = "$OTT_WWW/lobbyist/".urlencode($who);
 	$bitly = bitly_v3_shorten($link);
 	$bitly = $bitly['url'];
 	$tweet = tweet_txt_and_url("Lobbying: $who, $what","$bitly");
@@ -77,23 +77,6 @@ foreach ($events as $event) {
 	print strlen($tweet)." :: $tweet\n";
 	tweet($tweet);
 }
-
-
-#    [who] => Jason Collins
-#    [what] => Human Services Integration Consulting and Technology
-#    [job] => Consultant/Social Services
-#    [from] => 29-Jan-2013
-#    [to] => 29-Jan-2013
-
-
-#$sent = 0;
-#foreach ($tweets as $t) {
-#	if (tweet($t)) {
-#		$sent ++;
-#	}
-#}
-
-#print "Send $sent of ".count($tweets)." tweets\n";
 
 $output = ob_get_contents();
 ob_end_clean();
@@ -133,6 +116,16 @@ function parseSearchResults($html) {
 	    $from =$spans[4].'';
 	    $to = $spans[5].'';
 
+	    $what = preg_replace("/  /"," ",$what);
+	    $what = preg_replace("/  /"," ",$what);
+	    $what = preg_replace("/  /"," ",$what);
+	    $what = preg_replace("/\r/"," ",$what);
+	    $what = preg_replace("/\r/"," ",$what);
+	    $what = preg_replace("/\r/"," ",$what);
+	    $what = preg_replace("/\n/"," ",$what);
+	    $what = preg_replace("/\r/"," ",$what);
+	    $what = preg_replace("/\r/"," ",$what);
+
 			$event['who'] = $who;
 			$event['what'] = $what;
 			$event['job'] = $job;
@@ -140,67 +133,6 @@ function parseSearchResults($html) {
 			$event['to'] = $to;
 
 			array_push($events,$event);
-			continue;
-
-#	    $link = "$OTT_WWW/lobbyist/".urlencode($who).'/link';
-#			$bitly = bitly_v3_shorten($link);
-#			if (!defined($bitly['url'])) {
-#				# bitly failed, so md5 of tweet will change, and that means
-#				# we may tweet extra times, so skip. Will catch it again next
-#				# time.
-#				print "WARNING: bitly failed\n";
-#				print print_r($bitly);
-#				continue;
-#			}
-			$link = $bitly['url'];
-
-	    $tweet = "Lobbying: $who ($when) $what";
-	    $tweet = "Lobbying: $who, $what";
-	    $tweet = preg_replace("/  /"," ",$tweet);
-	    $tweet = preg_replace("/  /"," ",$tweet);
-	    $tweet = preg_replace("/  /"," ",$tweet);
-	    $tweet = preg_replace("/  /"," ",$tweet);
-	    $tweet = preg_replace("/  /"," ",$tweet);
-	    $tweet = preg_replace("/  /"," ",$tweet);
-	    $tweet = preg_replace("/\n/"," ",$tweet);
-	    $tweet = preg_replace("/\n/"," ",$tweet);
-	    $tweet = preg_replace("/\n/"," ",$tweet);
-	    $tweet = preg_replace("/\n/"," ",$tweet);
-	    $tweet = preg_replace("/\n/"," ",$tweet);
-	    $tweet = preg_replace("/\n/"," ",$tweet);
-	    $tweet = preg_replace("/\n/"," ",$tweet);
-	    $tweet = preg_replace("/\n/"," ",$tweet);
-	    $tweet = preg_replace("/\n/"," ",$tweet);
-	    $tweet = preg_replace("/\n/"," ",$tweet);
-	    $tweet = preg_replace("/\r/"," ",$tweet);
-	    $tweet = preg_replace("/\r/"," ",$tweet);
-	    $tweet = preg_replace("/\r/"," ",$tweet);
-	    $tweet = preg_replace("/\r/"," ",$tweet);
-	    $tweet = preg_replace("/\r/"," ",$tweet);
-	    $tweet = preg_replace("/\r/"," ",$tweet);
-	    $tweet = preg_replace("/\r/"," ",$tweet);
-	    $tweet = preg_replace("/\r/"," ",$tweet);
-	    $tweet = preg_replace("/\r/"," ",$tweet);
-	    $tweet = preg_replace("/\r/"," ",$tweet);
-	    $tweet = preg_replace("/\r/"," ",$tweet);
-	    $tweet = preg_replace("/\r/"," ",$tweet);
-	    $tweet = preg_replace("/\r/"," ",$tweet);
-	    $tweet = preg_replace("/\r/"," ",$tweet);
-	    $tweet = preg_replace("/\r/"," ",$tweet);
-			$origTweet = "$tweet";
-			$tweet = "$origTweet $link";
-			$chop = 0;
-			while (strlen($tweet) >= 140) {
-				$chop ++;
-				$tweet = substr($origTweet,0,strlen($origTweet)-$chop).'... '.$link;
-			}
-#	    $len1 = strlen($tweet);
-#	    $tweet = substr($tweet,0,130);
-#	    $len2 = strlen($tweet);
-#	    if ($len1 != $len2) {
-#	      $tweet = $tweet."...";
-#	    }
-			array_push($tweets,$tweet);
 	  }
 	}
 
