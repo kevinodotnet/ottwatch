@@ -135,11 +135,17 @@ function lobbyistDetails($name) {
       $html = array();
       $add = 1;
       foreach ($lines as $line) {
-        if (preg_match("/Search Lobbyist Design/",$line)) {
-          $add = 0;
-        }
         if ($add) {
           array_push($html,$line);
+        }
+        if (preg_match("/<body/",$line)) {
+          $add = 0;
+        }
+        if (preg_match("/Header End/",$line)) {
+          $add = 1;
+        }
+        if (preg_match("/Search Lobbyist Design/",$line)) {
+          $add = 0;
         }
         if (preg_match("/End Search Lobbyist Design/",$line)) {
           $add = 1;
