@@ -49,7 +49,6 @@ function tweet($tweet,$allowDup=0) {
   $twitter = new TwitterOAuth($consumerKey, $consumerSecret, $accessToken, $accessTokenSecret);
   if(strlen($tweet) <= 140) {
     $value = $twitter->post('statuses/update', array('status' => $tweet));
-		print "\nTWEET RESULTS $value\n";
 		return true;
   } else {
 		print "WARNING: tweet too long; not sent; '$tweet'";
