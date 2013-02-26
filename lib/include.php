@@ -1,10 +1,29 @@
 <?php
 
+# pull in other libraries
+require_once('bitly.php');
+
+# Location of state files
 $OTTVAR="/mnt/shared/ottwatch/var";
 
+# URL of Lobby Registry search service
 $OTT_LOBBY_SEARCH_URL="https://apps107.ottawa.ca/LobbyistRegistry/search/searchlobbyist.aspx";
+
+# HTTP address of OttWatch itself.
 $OTT_WWW="http://ottwatch.kevino.ca";
 
+function tweet_txt_and_url($txt,$url) {
+	$parts = explode(" ",$txt);
+	$t = "$txt $url";
+	while (strlen($t) > 140) {
+		array_pop($parts);
+		$txt = implode(" ",$parts);
+		$txt = preg_replace("/[\.,:]$/","",$txt);
+		$t = "$txt... $url";
+	}
+	return $t;
+}
+ 
 function tweet($tweet,$allowDup=0) {
 
 	global $OTTVAR;
