@@ -154,28 +154,6 @@ function parseSearchResults($html) {
 	return $tweets;
 }
 
-function getViewState($html) {
-	$lines = explode("\n",$html);
-	foreach ($lines as $line) {
-	  if (preg_match("/__VIEWSTATE/",$line)) {
-	    $viewstate = preg_replace('/.*value="/',"",$line);
-	    $viewstate = preg_replace('/".*/',"",$viewstate);
-	    return $viewstate;
-	  }
-	}
-}
-
-function getEventValidation($html) {
-	$lines = explode("\n",$html);
-	foreach ($lines as $line) {
-	  if (preg_match("/__EVENTVALIDATION/",$line)) {
-	    $viewstate = preg_replace('/.*value="/',"",$line);
-	    $viewstate = preg_replace('/".*/',"",$viewstate);
-	    return $viewstate;
-	  }
-	}
-}
-
 function searchByDate($from,$to) {
   global $url;
 
@@ -195,25 +173,6 @@ function searchByDate($from,$to) {
 	);
 
   $response = sendPost($url,$fields);
-  return $response;
-}
-
-function sendPost($url,$fields) {
-
-  $fields_string = "";
-	foreach($fields as $key=>$value) { 
-    $fields_string .= $key.'='.$value.'&'; 
-  }
-	$fields_string = http_build_query($fields);
-	
-	$ch = curl_init();
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-	curl_setopt($ch,CURLOPT_URL, $url);
-	curl_setopt($ch,CURLOPT_POST, count($fields));
-	curl_setopt($ch,CURLOPT_POSTFIELDS, $fields_string);
-	$response = curl_exec($ch);
-	curl_close($ch);
-
   return $response;
 }
 
