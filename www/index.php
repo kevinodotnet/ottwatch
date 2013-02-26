@@ -8,28 +8,14 @@ Epi::init('route');
 
 getRoute()->get('/', 'home');
 getRoute()->get('/lobbyist/search/(.*)', 'lobbyist_search');
-getRoute()->get('/lobbyist/search', 'lobbyist_search_form');
+#getRoute()->get('/lobbyist/search', 'lobbyist_search_form');
 getRoute()->get('/lobbyist/([^\/]*)', 'lobbyist');
 getRoute()->get('/lobbyist/(.*)/link', 'lobbyistLink');
 getRoute()->get('.*', 'error404');
 getRoute()->run();
 
 function home() {
-  echo "Welcome to OttWatch<hr/>";
-  ?>
-  <script>
-  function lobbyistRedirect() {
-    name = document.getElementById('lobbyistName').value;
-    url = 'lobbyist/'+name+'/link';
-    document.location.href = url;
-  }
-  </script>
-  <input type="text" id="lobbyistName"/>
-  <input type="button" onclick="lobbyistRedirect();" value="Load"/>
-  <?php
-}
-
-function lobbyist_search_form() {
+  top("Ottawa Watch");
   ?>
   <script>
   function lobbyist_search_form_submit() {
@@ -37,16 +23,28 @@ function lobbyist_search_form() {
     if (v == '') {
       return;
     }
-    document.location.href = 'search/'+v;
+    document.location.href = 'lobbyist/search/'+v;
   }
   </script>
+
+  <div class="row-fluid">
+  <span class="span6">
+  Lobbyist Search by name
+  </span>
+  </div>
+  <div class="row-fluid">
+  <span class="span6">
   <input type="text" id="lobbyist_search_value"/>
   <input type="button" onclick="lobbyist_search_form_submit()" value="Search"/>
+  </span>
+  </div>
+
   <?php
+  bottom();
 }
 
 function lobbyist_search($name) {
-  print "Searching for $name<br/>\n";
+  top("Lobbyist Search: $name");
   $matches = lobbyistSearch($name);
   $vs = $matches["__vs"]; unset($matches["__vs"]);
   $ev = $matches["__ev"]; unset($matches["__ev"]);
@@ -58,22 +56,53 @@ function lobbyist_search($name) {
 #  }
   if (count($matches) == 0) {
     print "No matches\n";
+    bottom();
     return;
   }
-  print "Found ".count($matches)." matches.<br/>\n";
-  print "<ul>\n";
+  ?>
+  <p>Found <?php print count($matches); ?> matches.</p>
+  <div class="span6">
+  <table class="table table-hover table-condensed">
+  <tr>
+  <th>Ottawa.ca Link</th>
+  <th>Name</th>
+  </tr>
+  </tr>
+  <?php
   foreach ($matches as $name => $ctl) {
-    print "<li><a href=\"../$name\">$name</a>\n";
-    print "<a target=\"blank\" href=\"../$name/link\">link</a></li>\n";
+    ?>
+    <tr>
+    <td>
+    <a target="_blank" href="../<?php print $name; ?>/link">link</a>
+    </td>
+    <td>
+    <a href="../<?php print $name; ?>"><?php print $name; ?></a>
+    </td>
+    </tr>
+    <?php
   }
-  print "</ul>\n";
+  ?>
+  </table>
+  </div>
+  <?php
+  bottom();
 }
 
 function lobbyist($name) {
+  top("Lobbyist: $name");
   ?>
-  <h1><?php print $name; ?></h1>
-  <a target="_blank" href="<?php print $name; ?>/link">ottawa.ca profile for <?php print $name; ?></a>
+  <div class="row-fluid">
+  <div class="span12">
+  <p><a target="_blank" href="<?php print $name; ?>/link">link</a></p>
+  </div>
+  </div>
+  <div class="row-fluid">
+  <div class="span12">
+  <iframe style="width: 100%; height: 1200px;" src="<?php print $name; ?>/link"></iframe>
+  </div>
+  </div>
   <?php
+  bottom();
 }
 
 function lobbyistLink($name) {
@@ -156,6 +185,41 @@ function lobbyistLink($name) {
 
 function error404() {
   print "Not Found\n";
+}
+
+function top($title) {
+  global $OTT_WWW;
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html>
+<!-- <?php print $_SERVER['REQUEST_URI']; ?> -->
+<head>
+<title><?php print $title; ?></title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="<?php print $OTT_WWW; ?>/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen" type="text/css">
+<style type="text/css">
+  body {
+  padding-left: 20px;
+  padding-right: 20px;
+}
+</style>
+</head>
+<body>
+<div style="float: right;">
+<a href="<?php print $OTT_WWW; ?>">Home</a>
+</div>
+<div>
+<div class="lead"><?php print $title; ?></div>
+</div>
+<?php
+}
+
+function bottom() {
+  ?>
+  <script src="http://code.jquery.com/jquery.js" type="text/javascript"></script>
+  </body>
+  </html>
+  <?php
 }
 
 ?>
