@@ -7,16 +7,34 @@ Epi::setPath('base', 'epiphany/src');
 Epi::init('route');
 
 getRoute()->get('/', 'home');
+getRoute()->get('/about', 'about');
+getRoute()->get('/latest', 'latest');
+
 getRoute()->get('/lobbyist/search/(.*)', 'lobbyist_search');
-#getRoute()->get('/lobbyist/search', 'lobbyist_search_form');
 getRoute()->get('/lobbyist/([^\/]*)', 'lobbyist');
-getRoute()->get('/lobbyist/(.*)/link', 'lobbyistLink');
 getRoute()->get('/lobbyist/(.*)/details', 'lobbyistDetails');
+getRoute()->get('/lobbyist/(.*)/link', 'lobbyistLink');
+
 getRoute()->get('.*', 'error404');
 getRoute()->run();
 
+function latest() {
+  top();
+  ?>
+  <a class="twitter-timeline" data-dnt="true" href="https://twitter.com/ottwatch" data-widget-id="306310112971210752">Tweets by @ottwatch</a>
+  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+  <?php
+  bottom();
+}
+
+function about() {
+  top();
+  include("about_content.html");
+  bottom();
+}
+
 function home() {
-  top("Ottawa Watch");
+  top();
   ?>
   <script>
   function lobbyist_search_form_submit() {
@@ -253,25 +271,45 @@ function top($title) {
 </style>
 </head>
 <body>
-<div style="background: #fcfcfc; padding: 10px; border: #c0c0c0 solid 1px;">
 
 <div class="row-fluid">
-<div class="lead">
-<a href="<?php print $OTT_WWW; ?>"><img style="width: 50px; height: 50px;" src="<?php print $OTT_WWW; ?>/img/ottwatch.png"/></a>
-<?php print $title; ?>
-</div>
+<span class="span12">
+<div class="navbar"><div class="navbar-inner">
+<ul class="nav">
+<li><a href="<?php print $OTT_WWW; ?>">Home</a></li>
+<li><a href="<?php print $OTT_WWW; ?>/latest">Latest Updates</a></li>
+<li><a href="<?php print $OTT_WWW; ?>/about">About</a></li>
+</ul>
+</div></div>
+</span>
 </div>
 
-</div>
 <?php
+	if ($title != '') {
+		?>
+		
+		<div style="background: #fcfcfc; padding: 10px; border: #c0c0c0 solid 1px;">
+		<div class="row-fluid">
+		<span class="span6">
+		<div class="lead">
+		<?php print $title; ?>
+		</div>
+		</span>
+		</div>
+		</div>
+		<?php
+	}
 }
 
 function bottom() {
+  global $OTT_WWW;
   ?>
 <div style="margin-top: 10px; background: #fcfcfc; padding: 10px; border: #c0c0c0 solid 1px;">
+<a href="<?php print $OTT_WWW; ?>"><img style="float: right; padding-left: 5px; width: 50px; height: 50px;" src="<?php print $OTT_WWW; ?>/img/ottwatch.png"/></a>
 <i>
 Follow <b><a href="http://twitter.com/OttWatch">@OttWatch</a></b> on Twitter too.
 Created by <a href="http://kevino.ca"><b>Kevin O'Donnell</b></a> to make it easier to be part of the political conversation in Ottawa.</i>
+<div style="clear: both;"></div>
 </div>
   <?php
   googleAnalytics();
