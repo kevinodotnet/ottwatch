@@ -81,8 +81,7 @@ function sendPost($url,$fields) {
 function autoSubmitForm($url,$fields,$helptext) {
   $id = md5(''.time());
   ?>
-  <?php print $helptext; ?>
-  <div style="display: block;">
+  <div style="display: none;">
   <form id="form<?php print $id; ?>" method="post" action="<?php print $url; ?>">
   <?php
   foreach ($fields as $k => $v) {
@@ -97,6 +96,60 @@ function autoSubmitForm($url,$fields,$helptext) {
   document.getElementById('form<?php print $id; ?>').submit();
   </script>
   <?php
+}
+
+function lobbyistSearch($name) {
+  global $OTT_LOBBY_SEARCH_URL;
+
+  # get search page
+  $html = file_get_contents($OTT_LOBBY_SEARCH_URL);
+  $ev = getEventValidation($html);
+  $vs = getViewState($html);
+	$fields = array(
+	  '__VIEWSTATE' => $vs,
+	  '__EVENTVALIDATION' => $ev,
+    'ctl00$MainContent$btnSearch' => 'Search',
+	  'ctl00$MainContent$txtLobbyist' => $name
+	);
+  $html = sendPost($OTT_LOBBY_SEARCH_URL,$fields);
+ 
+  # find name in search results and forward to first one that is found.
+  $lines = explode("\n",$html);
+  $ev = getEventValidation($html);
+  $vs = getViewState($html);
+  $matches = array();
+  foreach ($lines as $line) {
+    // print ">>> $name >>> $line <<<\n";
+#    if (preg_match("/gvSearchResults.*LnkLobbyistName.*>$name</",$line)) {
+#      # href="javascript:__doPostBack(&#39;ctl00$MainContent$gvSearchResults$ctl02$LnkLobbyistName&#39;,&#39;&#39;)"><u>Patrick Dion</u></a>
+#      $ctl = $line;
+#      $ctl = preg_replace("/.*;ctl/","ctl",$ctl);
+#      $ctl = preg_replace("/&.*/","",$ctl);
+#			$fields = array(
+#			  '__VIEWSTATE' => $vs,
+#			  '__EVENTVALIDATION' => $ev,
+#		    $ctl => ''
+#			);
+#      autoSubmitForm($OTT_LOBBY_SEARCH_URL,$fields,"Forwarding to $name lobbyist page");
+#      #$html = sendPost($OTT_LOBBY_SEARCH_URL,$fields);
+#      #print "$html";
+#      return;
+#    }
+    if (preg_match("/gvSearchResults.*LnkLobbyistName/",$line)) {
+      $zname = $line;
+      $zname = preg_replace("/.*<u>/","",$zname);
+      $zname = preg_replace("/<.*/","",$zname);
+      $ctl = $line;
+      $ctl = preg_replace("/.*;ctl/","ctl",$ctl);
+      $ctl = preg_replace("/&.*/","",$ctl);
+      $matches[$zname] = $ctl;
+    }
+  }
+
+  $matches["__ev"] = $ev;
+  $matches["__vs"] = $vs;
+  ksort($matches);
+  return $matches;
 }
 
 ?>
