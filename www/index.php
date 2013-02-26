@@ -228,8 +228,8 @@ function top($title) {
 }
 
 function bottom() {
+  googleAnalytics();
   ?>
-
 
   <script src="http://code.jquery.com/jquery.js" type="text/javascript"></script>
   </body>
