@@ -33,7 +33,7 @@ function tweet($tweet,$allowDup=0) {
   $hashfile = "$OTTVAR/tweets/$hash";
   if (file_exists($hashfile)) {
 		if (!$allowDup) {
-			return false;
+			return -1;
 		}
 	}
 
@@ -47,14 +47,14 @@ function tweet($tweet,$allowDup=0) {
   $accessTokenSecret = 'EmT6yieQC9LxAwYIDHKFnUOqf1jX31jHHwxwspX5TnI';
 
   $twitter = new TwitterOAuth($consumerKey, $consumerSecret, $accessToken, $accessTokenSecret);
-  if(strlen($tweet) <= 140) {
-    $value = $twitter->post('statuses/update', array('status' => $tweet));
-		return true;
-  } else {
-		print "WARNING: tweet too long; not sent; '$tweet'";
-		return false;
-  }
-
+	print "Sending... $tweet\n";
+  $twitter->post('statuses/update', array('status' => $tweet));
+	$code = $twitter->http_code;
+	if ($code == 200) {
+		return 1;
+	} 
+	print "ERROR: twitter returned $code\n";
+	return 0;
 }
 
 function getViewState($html) {
