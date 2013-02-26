@@ -139,22 +139,6 @@ function lobbyistLink($name) {
   $vs = getViewState($html);
   $matches = array();
   foreach ($lines as $line) {
-    // print ">>> $name >>> $line <<<\n";
-    if (preg_match("/gvSearchResults.*LnkLobbyistName.*>$name</",$line)) {
-      # href="javascript:__doPostBack(&#39;ctl00$MainContent$gvSearchResults$ctl02$LnkLobbyistName&#39;,&#39;&#39;)"><u>Patrick Dion</u></a>
-      $ctl = $line;
-      $ctl = preg_replace("/.*;ctl/","ctl",$ctl);
-      $ctl = preg_replace("/&.*/","",$ctl);
-			$fields = array(
-			  '__VIEWSTATE' => $vs,
-			  '__EVENTVALIDATION' => $ev,
-		    $ctl => ''
-			);
-      autoSubmitForm($OTT_LOBBY_SEARCH_URL,$fields,"Forwarding to $name lobbyist page");
-      #$html = sendPost($OTT_LOBBY_SEARCH_URL,$fields);
-      #print "$html";
-      return;
-    }
     if (preg_match("/gvSearchResults.*LnkLobbyistName/",$line)) {
       $zname = $line;
       $zname = preg_replace("/.*<u>/","",$zname);
@@ -162,6 +146,15 @@ function lobbyistLink($name) {
       $ctl = $line;
       $ctl = preg_replace("/.*;ctl/","ctl",$ctl);
       $ctl = preg_replace("/&.*/","",$ctl);
+      if ($zname == $name) {
+        # exact match for the one we are looking for.
+  			$fields = array(
+  			  '__VIEWSTATE' => $vs,
+  			  '__EVENTVALIDATION' => $ev,
+  		    $ctl => ''
+  			);
+        autoSubmitForm($OTT_LOBBY_SEARCH_URL,$fields,"Forwarding to $name lobbyist page");
+      }
       $matches[$zname] = $ctl;
     }
   }
@@ -180,10 +173,10 @@ function lobbyistLink($name) {
     return;
   }
 
-  print "Exact name match not found.<hr/>\n";
+  print "<h3>Exact match not found.</h3>\n";
   print "<ul>\n";
-  foreach ($matches as $name => $ctl) {
-    print "<li><a href=\"../$name/link\">$name</a></li>\n";
+  foreach ($matches as $zname => $ctl) {
+    print "<li><a href=\"../$zname/link\">$zname</a></li>\n";
   }
   print "</ul>\n";
 
