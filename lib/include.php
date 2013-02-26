@@ -3,7 +3,7 @@
 $OTTVAR="/mnt/shared/ottwatch/var";
 
 $OTT_LOBBY_SEARCH_URL="https://apps107.ottawa.ca/LobbyistRegistry/search/searchlobbyist.aspx";
-$OTT_WWW="http://localhost/ottwatch";
+$OTT_WWW="http://ottwatch.kevino.ca";
 
 function tweet($tweet,$allowDup=0) {
 
