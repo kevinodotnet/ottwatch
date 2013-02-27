@@ -1,7 +1,15 @@
 <?php
 
-# pull in other libraries
+if (!@include_once('config.php')) {
+  print "FATAL ERROR: config.php not found. Did you forget to take config-sample.php and make your own config.php?\n";
+  exit(1);
+}
+
 require_once('bitly.php');
+require_once('epiphany/src/EpiDatabase.php');
+
+# Prepare the database classes
+EpiDatabase::employ(OttWatchConfig::DB_TYPE, OttWatchConfig::DB_NAME, OttWatchConfig::DB_HOST, OttWatchConfig::DB_USER, OttWatchConfig::DB_PASS);
 
 # Location of state files
 $OTTVAR="/mnt/shared/ottwatch/var";
