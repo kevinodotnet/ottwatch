@@ -44,23 +44,16 @@ foreach ($items as $i) {
   $starttime = preg_replace("/ pm$/","am",$starttime);
   $starttime = strftime("%Y-%m-%d %H:%M:%S",strtotime($starttime));
 
-  print "$meetid :: $starttime :: ";
-
   # is this guid in the database already
   $mdb = getDatabase()->one('select id from meeting where rssguid = :rssguid ', array(':rssguid' => $guid));
   if ($mdb['id']) {
     # continue;
-    print "exists with same guid\n";
     continue;
   }
   $mdb = getDatabase()->one('select id,rssguid from meeting where meetid = :meetid ', array(':meetid' => $meetid));
   if ($mdb['id']) {
-    # TODO: an existing meeting was updated, so that means new files uploads, etc (actually not sure).
-    # perhaps default option here should be to delete the meeting and treat it as brand new.
-    print "exists with new guid\n";
-    continue;
+	  getDatabase()->execute(' delete from meeting where meetid = :meetid ', array(':meetid' => $meetid));
   }
-  print "is new\n";
   $meetingid = getDatabase()->execute('
 		insert into meeting (rssguid,meetid,title,category,starttime,created,updated) 
 		values (:rssguid,:meetid,:title,:category,:starttime,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP); ', array(
