@@ -6,11 +6,12 @@ set :home_path, "/mnt/shared/ottwatch"
 set :deploy_via, :remote_cache
 set(:deploy_to) { "#{home_path}" }
 
+set :settings_path, "/mnt/shared/ottwatch/settings"
+
 namespace :deploy do
   task :restart do
   end
 end
-
 
 set :keep_releases, 10
 set :normalize_asset_timestamps, false
