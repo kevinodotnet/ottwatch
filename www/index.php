@@ -76,7 +76,11 @@ function dashboard() {
       <td><?php print meeting_category_to_title($m['category']); ?></td>
       <td>
         <a target="_blank" href="<?php print $mtgurl; ?>=AGENDA">Agenda</a>
+        <!--
+        MINUTES are not available until after the next meeting.
+        TODO: look at next meeting of same category; if there has been done, then enable minutes?
         <a target="_blank" href="<?php print $mtgurl; ?>=MINUTES">Minutes</a>
+        -->
       </td>
     </tr>
     <?php
