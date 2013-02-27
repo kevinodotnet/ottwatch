@@ -117,7 +117,9 @@ class EpiDatabase
 
     try
     {
-      $this->dbh = new PDO($this->_type . ':host=' . $this->_host . ';dbname=' . $this->_name, $this->_user, $this->_pass);
+      $this->dbh = new PDO($this->_type . ':host=' . $this->_host . ';dbname=' . $this->_name, $this->_user, $this->_pass,
+        array(\PDO::MYSQL_ATTR_INIT_COMMAND =>  'SET NAMES utf8')
+      );
       $this->dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     }
     catch(Exception $e)
