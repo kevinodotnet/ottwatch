@@ -124,7 +124,9 @@ function lobbyist($name) {
   ?>
   <div class="row-fluid">
   <div class="span12">
-  <p><a target="_blank" href="<?php print $name; ?>/link"><i class="icon-edit"></i> direct link to ottawa.ca</a></p>
+  <p>If you get a blank page below, reload, or go <a target="_blank" href="<?php print $name; ?>/link">direct to ottawa.ca <i class="icon-edit"></i></a>.
+  (The lobbyist registry has intermittent flake-outs)
+  </p>
   </div>
   </div>
   <div class="row-fluid">
