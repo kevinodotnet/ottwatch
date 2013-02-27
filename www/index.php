@@ -6,9 +6,9 @@ include_once '../lib/include.php';
 Epi::setPath('base', 'epiphany/src');
 Epi::init('route');
 
-getRoute()->get('/', 'home');
+getRoute()->get('/', 'dashboard');
 getRoute()->get('/about', 'about');
-getRoute()->get('/dashboard', 'dashboard');
+#getRoute()->get('/dashboard', 'dashboard');
 
 getRoute()->get('/lobbyist/search/(.*)', 'lobbyist_search');
 getRoute()->get('/lobbyist/([^\/]*)', 'lobbyist');
@@ -61,6 +61,14 @@ function dashboard() {
     <?php
   }
   ?>
+    <tr>
+      <td style="width: 90px;"></td>
+      <td>
+      <small>
+      <i>Note: Ottawa Watch only lists meetings if an agenda has been published.  For dates of all future meetings see <a href="http://app05.ottawa.ca/sirepub/agendaminutes/index_en.aspx">the City's E-Agenda tool</a>.</i></small>
+      </td>
+      <td></td>
+    </tr>
   <tr>
   <td colspan="3">
   <h4>Previous Meetings</h4>
@@ -88,8 +96,21 @@ function dashboard() {
   ?>
   </table>
   </div>
-  <span class="span3">
-  </span>
+  <div class="span3">
+  <script>
+  function lobbyist_search_form_submit() {
+    v = document.getElementById('lobbyist_search_value').value;
+    if (v == '') {
+      alert('Cannot perform an empty search');
+      return;
+    }
+    document.location.href = 'lobbyist/search/'+v;
+  }
+  </script>
+  <h4>Lobbyist Registry</h4>
+  <input type="text" id="lobbyist_search_value" placeholder="Search by name..."><br/>
+  <button class="btn" onclick="lobbyist_search_form_submit()"><i class="icon-search"></i> Search</button>
+  </div>
   <div class="span4">
   <h4>Follow @OttWatch for Realtime News</h4>
   <a class="twitter-timeline" data-dnt="true" href="https://twitter.com/ottwatch" data-widget-id="306310112971210752">Tweets by @ottwatch</a>
@@ -107,37 +128,6 @@ function about() {
 }
 
 function home() {
-  top();
-  ?>
-  <script>
-  function lobbyist_search_form_submit() {
-    v = document.getElementById('lobbyist_search_value').value;
-    if (v == '') {
-      alert('Cannot perform an empty search');
-      return;
-    }
-    document.location.href = 'lobbyist/search/'+v;
-  }
-  </script>
-
-  <p/>
-
-  <div class="row-fluid">
-  <div class="span9">
-  <h3>Search</h3>
-  <input type="text" id="lobbyist_search_value" placeholder="Lobbyist name..."><br/>
-  <button clas="btn" onclick="lobbyist_search_form_submit()"><i class="icon-search"></i> Search</button>
-  </div>
-  <div class="span3">
-  <!--
-  <a class="twitter-timeline" data-dnt="true" href="https://twitter.com/ottwatch" data-widget-id="306310112971210752">Tweets by @ottwatch</a>
-  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
-  -->
-  </div>
-  </div>
-
-  <?php
-  bottom();
 }
 
 function lobbyist_search($name) {
@@ -353,7 +343,7 @@ function top($title) {
 <div class="navbar"><div class="navbar-inner">
 <ul class="nav">
 <li><a href="<?php print $OTT_WWW; ?>">Home</a></li>
-<li><a href="<?php print $OTT_WWW; ?>/dashboard">Dashboard</a></li>
+<!--<li><a href="<?php print $OTT_WWW; ?>/dashboard">Dashboard</a></li>-->
 <li><a href="<?php print $OTT_WWW; ?>/about">About</a></li>
 </ul>
 </div></div>
