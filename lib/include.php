@@ -5,10 +5,23 @@ if (!@include_once('config.php')) {
   exit(1);
 }
 
+if (1) {
+  # avoids global vars name collissions
+  $base = dirname(__FILE__).'/..';
+  set_include_path(get_include_path() . PATH_SEPARATOR . "$base/lib");
+  set_include_path(get_include_path() . PATH_SEPARATOR . "$base/www");
+  set_include_path(get_include_path() . PATH_SEPARATOR . "$base/www/epiphany/src");
+}
+
 require_once('bitly.php');
-require_once('epiphany/src/EpiDatabase.php');
+require_once('Epi.php');
+require_once('EpiDatabase.php');
+require_once('EpiException.php');
 
 # Prepare the database classes
+Epi::setPath('base', $base);
+Epi::init('database');
+Epi::setSetting('exceptions', true);
 EpiDatabase::employ(OttWatchConfig::DB_TYPE, OttWatchConfig::DB_NAME, OttWatchConfig::DB_HOST, OttWatchConfig::DB_USER, OttWatchConfig::DB_PASS);
 
 # Location of state files

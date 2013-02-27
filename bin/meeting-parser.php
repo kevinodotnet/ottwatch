@@ -5,24 +5,72 @@ $dirname = preg_replace("/\n/","",$dirname);
 #ob_start();
 
 set_include_path(get_include_path() . PATH_SEPARATOR . "$dirname/../lib");
+set_include_path(get_include_path() . PATH_SEPARATOR . "$dirname/../www");
 require_once('include.php');
-#require_once('twitteroauth.php');
 
 # get RSS of all meetings
-$data = `wget -qO - http://app05.ottawa.ca/sirepub/rss/rss.aspx | head -1`;
+$data = `wget -qO - http://app05.ottawa.ca/sirepub/rss/rss.aspx | head -1`; # file_put_contents("rss.rss",$data);
+#$data = file_get_contents("rss.rss");
+
 $xml = simplexml_load_string($data);
 $items = $xml->xpath("//item");
 
 # iterate through each meeting
 foreach ($items as $i) {
-  $link = $i->xpath("link"); $link = $link[0];
-  $link = preg_replace("/.*sirepub/","http://app05.ottawa.ca/sirepub",$link);
 
+	# [title] => ARAC - 2012-Jun-25 9:30 am
+	# [link] => http://sire/sirepub/mtgviewer.aspx?meetid=2211&doctype=MINUTES
+	# [description] => SimpleXMLElement Object ()
+	# [category] => ARAC
+	# [pubDate] => Thu, 01 Nov 2012 19:51:28 GMT
+	# [guid] => 2211 ARAC 2012-Nov-01 3:51:28 PM
+
+  $guid = $i->xpath("guid"); $guid = $guid[0];
+  $title = $i->xpath("title"); $title = $title[0];
+  $link = $i->xpath("link"); $link = $link[0];
+  $category = $i->xpath("category"); $category = $category[0];
+
+  # regex out some details and fix http refs
+  $link = preg_replace("/.*sirepub/","http://app05.ottawa.ca/sirepub",$link);
   $meetid = $link;
   $meetid = preg_replace("/.*meetid=/","",$meetid);
   $meetid = preg_replace("/&.*/","",$meetid);
+  # ARAC - 2012-Jun-25 9:30 am
+  $starttime = $title;
+  $starttime = preg_replace("/.* - 20/","20",$starttime);
+  $starttime = preg_replace("/ AM$/"," am",$starttime);
+  $starttime = preg_replace("/ PM$/"," am",$starttime);
+  $starttime = preg_replace("/ am$/","am",$starttime);
+  $starttime = preg_replace("/ pm$/","am",$starttime);
+  $starttime = strftime("%Y-%m-%d %H:%M:%S",strtotime($starttime));
 
-	print "Meeting $meetid\n";
+  print "$meetid :: $starttime :: ";
+
+  # is this guid in the database already
+  $mdb = getDatabase()->one('select id from meeting where rssguid = :rssguid ', array(':rssguid' => $guid));
+  if ($mdb['id']) {
+    # continue;
+    print "exists with same guid\n";
+    continue;
+  }
+  $mdb = getDatabase()->one('select id,rssguid from meeting where meetid = :meetid ', array(':meetid' => $meetid));
+  if ($mdb['id']) {
+    # TODO: an existing meeting was updated, so that means new files uploads, etc (actually not sure).
+    # perhaps default option here should be to delete the meeting and treat it as brand new.
+    print "exists with new guid\n";
+    continue;
+  }
+  print "is new\n";
+  $meetingid = getDatabase()->execute('insert into meeting (rssguid,meetid,title,category,starttime) values (:rssguid,:meetid,:title,:category,:starttime); ', array(
+    'rssguid' => $guid,
+    'meetid' => $meetid,
+    'title' => $title,
+    'category' => $category,
+    'starttime' => $starttime,
+  ));
+}
+
+if (0) {
 
   # DEBUG
   # $meetid = "2252";
@@ -30,7 +78,8 @@ foreach ($items as $i) {
   # extract all items from the agenda
   $items = array();
   $url = "http://app05.ottawa.ca/sirepub/agview.aspx?agviewmeetid=$meetid&agviewdoctype=AGENDA";
-  $html = `wget -qO - '$url'`;
+  $html = file_get_contents($url);
+  #$html = `wget -qO - '$url'`;
   $lines = explode("\n",$html);
   foreach ($lines as $line) {
     if (preg_match("/itemid=/",$line)) {
@@ -38,27 +87,50 @@ foreach ($items as $i) {
       $itemid = preg_replace("/.*itemid=/","",$itemid);
       $itemid = preg_replace('/".*/',"",$itemid);
       $items[] = $itemid;
+  	  $dbitemid = getDatabase()->execute('insert into item (meetingid,itemid) values (:meetingid,:itemid) ', array(
+  	    'meetingid' => $meetingid,
+  	    'itemid' => $itemid,
+  	  ));
     }
   }
 
   # extract all files from the agenda item
   foreach ($items as $itemid) {
-		print "  item $itemid\n";
+		print "meeting:$meetid item $itemid\n";
     $url = "http://app05.ottawa.ca/sirepub/agdocs.aspx?doctype=agenda&itemid=$itemid";
-    $html = `wget -qO - '$url'`;
+    $html = file_get_contents($url);
 	  $lines = explode("\n",$html);
     $files = array();
 	  foreach ($lines as $line) {
+	    if (preg_match("/lblTitle/",$line)) {
+        $title = $line;
+        $title = preg_replace("/\r/",'',$title);
+        $title = preg_replace("/\n/",'',$title);
+        $title = preg_replace('/.*">/','',$title);
+        $title = preg_replace('/<.*/','',$title);
+        print "len(".strlen($title)."): $title\n";
+	  	  $c = getDatabase()->execute('update item set title = :title where itemid = :itemid ', array(
+          'title' => $title,
+          'itemid' => $itemid,
+	  	  ));
+      }
 	    if (preg_match("/fileid=/",$line)) {
 	      $fileid = $line;
 	      $fileid = preg_replace("/.*fileid=/","",$fileid);
 	      $fileid = preg_replace('/".*/',"",$fileid);
 	      $files[] = $fileid;
-				print "    file $fileid\n";
-        getFile($meetid,$itemid,$fileid);
+	  	  $dbfileid = getDatabase()->execute('insert into ifile (itemid,fileid) values (:itemid,:fileid) ', array(
+	  	    'itemid' => $dbitemid,
+	  	    'fileid' => $fileid,
+	  	  ));
+        print "  fileid:$fileid\n";
+        # getFile($meetid,$itemid,$fileid);
 	    }
 	  }
+    print "\n"; # end of item
   }
+
+  # end of meeting
 }
 
 #$output = ob_get_contents();
