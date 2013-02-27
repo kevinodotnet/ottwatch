@@ -61,7 +61,9 @@ foreach ($items as $i) {
     continue;
   }
   print "is new\n";
-  $meetingid = getDatabase()->execute('insert into meeting (rssguid,meetid,title,category,starttime) values (:rssguid,:meetid,:title,:category,:starttime); ', array(
+  $meetingid = getDatabase()->execute('
+		insert into meeting (rssguid,meetid,title,category,starttime,created,updated) 
+		values (:rssguid,:meetid,:title,:category,:starttime,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP); ', array(
     'rssguid' => $guid,
     'meetid' => $meetid,
     'title' => $title,
