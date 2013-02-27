@@ -28,8 +28,8 @@ create table meeting (
   starttime datetime,
   title varchar(100),
   category varchar(100),
-  created datetime default CURRENT_TIMESTAMP,
-  updated datetime default CURRENT_TIMESTAMP,
+  created datetime,
+  updated datetime,
   primary key (id)
 ) engine = innodb;
 
@@ -38,8 +38,8 @@ create table item (
   meetingid mediumint not null,
   itemid mediumint,
   title varchar(300),
-  created datetime default CURRENT_TIMESTAMP,
-  updated datetime default CURRENT_TIMESTAMP,
+  created datetime,
+  updated datetime,
   primary key (id),
   constraint foreign key (meetingid) references meeting (id) on delete cascade on update cascade
 ) engine = innodb;
@@ -49,8 +49,8 @@ create table ifile (
   id mediumint not null auto_increment,
   itemid mediumint not null,
   fileid mediumint,
-  created datetime default CURRENT_TIMESTAMP,
-  updated datetime default CURRENT_TIMESTAMP,
+  created datetime,
+  updated datetime,
   primary key (id),
   constraint foreign key (itemid) references item (id) on delete cascade on update cascade
 ) engine = innodb;
