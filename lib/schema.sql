@@ -55,3 +55,23 @@ create table ifile (
   constraint foreign key (itemid) references item (id) on delete cascade on update cascade
 ) engine = innodb;
 
+create table category (
+  category varchar(100) not null,
+  title varchar(100),
+  primary key (category)
+) engine = innodb;
+
+insert into category values ('ARAC','Agriculture and Rural Affairs Committee');
+insert into category values ('ASC','Audit Sub-Committee');
+insert into category values ('City Council','City Council');
+insert into category values ('CPSC','Community and Protective Services Committee');
+insert into category values ('CUR','COURT OF REVISION');
+insert into category values ('DC','Debenture Committee');
+insert into category values ('EC','Environment Committee');
+insert into category values ('FEDC','Finance and Economic Development Committee');
+insert into category values ('ITSC','Information Technology Sub-Committee');
+insert into category values ('OBHAC','Ottawa Built Heritage Advisory Committee');
+insert into category values ('OTC','Transit Commission');
+insert into category values ('PLC','Planning Committee');
+insert into category values ('TRC','Transportation Committee');
+

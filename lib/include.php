@@ -33,6 +33,20 @@ $OTT_LOBBY_SEARCH_URL="https://apps107.ottawa.ca/LobbyistRegistry/search/searchl
 # HTTP address of OttWatch itself.
 $OTT_WWW="http://ottwatch.kevino.ca";
 
+function meeting_category_to_title($category) {
+  $row = getDatabase()->one(" select * from category where category = :category ",array('category' => $category));
+  if ($row['title']) {
+    return $row['title'];
+  }
+  $row = getDatabase()->one(" select count(1) c from category where category = :category ",array('category' => $category));
+  if ($row['c'] > 0) {
+    # row exists, but title is null; broken; delete to below insert will fix
+    getDatabase()->execute(" delete from category where category = :category ",array('category' => $category));
+  }
+  $row = getDatabase()->execute(" insert into category (category,title) values (:category,:title) ",array('title' => $category,'category' => $category));
+  return $category;
+}
+
 function tweet_txt_and_url($txt,$url) {
 	$parts = explode(" ",$txt);
 	$t = "$txt $url";

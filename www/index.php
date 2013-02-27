@@ -8,7 +8,7 @@ Epi::init('route');
 
 getRoute()->get('/', 'home');
 getRoute()->get('/about', 'about');
-getRoute()->get('/latest', 'latest');
+getRoute()->get('/dashboard', 'dashboard');
 
 getRoute()->get('/lobbyist/search/(.*)', 'lobbyist_search');
 getRoute()->get('/lobbyist/([^\/]*)', 'lobbyist');
@@ -18,11 +18,80 @@ getRoute()->get('/lobbyist/(.*)/link', 'lobbyistLink');
 getRoute()->get('.*', 'error404');
 getRoute()->run();
 
-function latest() {
+
+function dashboard() {
   top();
   ?>
+  <div class="row-fluid">
+  <div class="span5">
+  <table class="table table-hover table-condensed">
+  <tr>
+  <td colspan="3">
+  <h4>Today's Meetings</h4>
+  </td>
+  </tr>
+  <?php
+  $meetings = getDatabase()->all(" select meetid,category,date(starttime) starttime from meeting where date(starttime) = date(CURRENT_TIMESTAMP) order by starttime ");
+  foreach ($meetings as $m) {
+    $mtgurl = htmlspecialchars("http://app05.ottawa.ca/sirepub/mtgviewer.aspx?meetid={$m['meetid']}&doctype");
+    ?>
+    <tr>
+      <td style="width: 90px;"><?php print $m['starttime']; ?></td>
+      <td><?php print meeting_category_to_title($m['category']); ?></td>
+      <td><a target="_blank" href="<?php print $mtgurl; ?>=AGENDA">Agenda</a></td>
+    </tr>
+    <?php
+  }
+  ?>
+  <tr>
+  <td colspan="3">
+  <h4>Upcoming Meetings</h4>
+  </td>
+  </tr>
+  <?php
+  $meetings = getDatabase()->all(" select category,date(starttime) starttime,meetid from meeting where date(starttime) > date(CURRENT_TIMESTAMP) order by starttime ");
+  foreach ($meetings as $m) {
+    $mtgurl = htmlspecialchars("http://app05.ottawa.ca/sirepub/mtgviewer.aspx?meetid={$m['meetid']}&doctype");
+    ?>
+    <tr>
+      <td style="width: 90px;"><?php print $m['starttime']; ?></td>
+      <td><?php print meeting_category_to_title($m['category']); ?></td>
+      <td><a target="_blank" href="<?php print $mtgurl; ?>=AGENDA">Agenda</a></td>
+    </tr>
+    <?php
+  }
+  ?>
+  <tr>
+  <td colspan="3">
+  <h4>Previous Meetings</h4>
+  </td>
+  </tr>
+  <?php
+  $meetings = getDatabase()->all(" select meetid,category,date(starttime) starttime from meeting where date(starttime) < date(CURRENT_TIMESTAMP) order by starttime desc limit 10 ");
+  foreach ($meetings as $m) {
+    $mtgurl = htmlspecialchars("http://app05.ottawa.ca/sirepub/mtgviewer.aspx?meetid={$m['meetid']}&doctype");
+    ?>
+    <tr>
+      <td><?php print $m['starttime']; ?></td>
+      <td><?php print meeting_category_to_title($m['category']); ?></td>
+      <td>
+        <a target="_blank" href="<?php print $mtgurl; ?>=AGENDA">Agenda</a>
+        <a target="_blank" href="<?php print $mtgurl; ?>=MINUTES">Minutes</a>
+      </td>
+    </tr>
+    <?php
+  }
+  ?>
+  </table>
+  </div>
+  <span class="span3">
+  </span>
+  <div class="span4">
+  <h4>Follow @OttWatch for Realtime News</h4>
   <a class="twitter-timeline" data-dnt="true" href="https://twitter.com/ottwatch" data-widget-id="306310112971210752">Tweets by @ottwatch</a>
   <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+  </div>
+  </div>
   <?php
   bottom();
 }
@@ -50,17 +119,17 @@ function home() {
   <p/>
 
   <div class="row-fluid">
-  <span class="span9">
+  <div class="span9">
   <h3>Search</h3>
   <input type="text" id="lobbyist_search_value" placeholder="Lobbyist name..."><br/>
   <button clas="btn" onclick="lobbyist_search_form_submit()"><i class="icon-search"></i> Search</button>
-  </span>
-  <span class="span3">
+  </div>
+  <div class="span3">
   <!--
   <a class="twitter-timeline" data-dnt="true" href="https://twitter.com/ottwatch" data-widget-id="306310112971210752">Tweets by @ottwatch</a>
   <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
-  </span>
   -->
+  </div>
   </div>
 
   <?php
@@ -82,9 +151,9 @@ function lobbyist_search($name) {
   if (count($matches) == 0) {
     ?>
     <div class="row-fluid">
-    <span class="span12">
+    <div class="span12">
     <h3>No Matches</h3>
-    </span>
+    </div>
     </div>
     <?php
     bottom();
@@ -259,11 +328,12 @@ function error404() {
 function top($title) {
   global $OTT_WWW;
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<!DOCTYPE html>
 <html>
 <!-- <?php print $_SERVER['REQUEST_URI']; ?> -->
 <head>
 <title><?php print $title; ?></title>
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href="<?php print $OTT_WWW; ?>/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen" type="text/css">
 <style type="text/css">
@@ -275,15 +345,15 @@ function top($title) {
 <body>
 
 <div class="row-fluid">
-<span class="span12">
+<div class="span12">
 <div class="navbar"><div class="navbar-inner">
 <ul class="nav">
 <li><a href="<?php print $OTT_WWW; ?>">Home</a></li>
-<li><a href="<?php print $OTT_WWW; ?>/latest">Latest Updates</a></li>
+<li><a href="<?php print $OTT_WWW; ?>/dashboard">Dashboard</a></li>
 <li><a href="<?php print $OTT_WWW; ?>/about">About</a></li>
 </ul>
 </div></div>
-</span>
+</div>
 </div>
 
 <?php
@@ -292,11 +362,9 @@ function top($title) {
 		
 		<div style="background: #fcfcfc; padding: 10px; border: #c0c0c0 solid 1px;">
 		<div class="row-fluid">
-		<span class="span6">
-		<div class="lead">
+		<div class="lead span6">
 		<?php print $title; ?>
 		</div>
-		</span>
 		</div>
 		</div>
 		<?php
@@ -307,7 +375,7 @@ function bottom() {
   global $OTT_WWW;
   ?>
 <div style="margin-top: 10px; background: #fcfcfc; padding: 10px; border: #c0c0c0 solid 1px;">
-<a href="<?php print $OTT_WWW; ?>"><img style="float: right; padding-left: 5px; width: 50px; height: 50px;" src="<?php print $OTT_WWW; ?>/img/ottwatch.png"/></a>
+<a href="<?php print $OTT_WWW; ?>"><img alt="Ottawa Watch Logo" style="float: right; padding-left: 5px; width: 50px; height: 50px;" src="<?php print $OTT_WWW; ?>/img/ottwatch.png"/></a>
 <i>
 Follow <b><a href="http://twitter.com/OttWatch">@OttWatch</a></b> on Twitter too.
 Created by <a href="http://kevino.ca"><b>Kevin O'Donnell</b></a> to make it easier to be part of the political conversation in Ottawa.</i>
