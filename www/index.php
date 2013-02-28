@@ -36,7 +36,7 @@ function dashboard() {
   </td>
   </tr>
   <?php
-  $meetings = getDatabase()->all(" select meetid,category,date(starttime) starttime from meeting where date(starttime) = date(CURRENT_TIMESTAMP) order by starttime ");
+  $meetings = getDatabase()->all(" select id,meetid,category,date(starttime) starttime from meeting where date(starttime) = date(CURRENT_TIMESTAMP) order by starttime ");
   foreach ($meetings as $m) {
     $mtgurl = htmlspecialchars("http://app05.ottawa.ca/sirepub/mtgviewer.aspx?meetid={$m['meetid']}&doctype");
     ?>
