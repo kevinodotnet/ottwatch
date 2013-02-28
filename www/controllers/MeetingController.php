@@ -36,6 +36,7 @@ class MeetingController {
     <!-- <a name="Item168199"></a> -->
     function highlighItem(itemid) {
       $('#agendaFrame').attr('src','<?php print MeetingController::getDocumentUrl($m['meetid'],'AGENDA'); ?>#Item' + itemid);
+      $('#itemDetails').html($('#itemAnchor'+itemid).html());
     }
     </script>
 
@@ -46,7 +47,7 @@ class MeetingController {
     <?php
     foreach ($items as $i) {
       ?>
-      <li><a href="javascript:highlighItem(<?php print $i['itemid']; ?>);"><?php print $i['title']; ?></a></li>
+      <li><a id="itemAnchor<?php print $i['itemid']; ?>" href="javascript:highlighItem(<?php print $i['itemid']; ?>);"><?php print $i['title']; ?></a></li>
       <?php
     }
     ?>
@@ -55,6 +56,9 @@ class MeetingController {
     </div>
 
     <div class="span8">
+    <div id="itemDetails" style="background: #f0f0f0; padding: 5px; margin-bottom: 5px;">
+    Item Details
+    </div>
     <iframe id="agendaFrame" src="<?php print $agendaUrl; ?>" style="width: 100%; height: 600px; border: 0px;"></iframe>
     </div>
     </div>
