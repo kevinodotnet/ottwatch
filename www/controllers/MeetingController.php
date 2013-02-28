@@ -31,7 +31,7 @@ class MeetingController {
     </script>
 
     <div class="row-fluid">
-    <div class="span4">
+    <div class="span4 visible-desktop">
     <div style="overflow:scroll; height: 600px; padding-right: 5px; padding-left: 5px;">
     <ol>
     <?php
