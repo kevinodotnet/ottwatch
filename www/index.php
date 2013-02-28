@@ -24,7 +24,7 @@ function dashboard() {
   ?>
   <div class="row-fluid">
   <div class="span5">
-  <table class="table table-hover table-condensed">
+  <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
   <tr>
   <td colspan="3">
   <h4>Today's Meetings</h4>
@@ -36,9 +36,9 @@ function dashboard() {
     $mtgurl = htmlspecialchars("http://app05.ottawa.ca/sirepub/mtgviewer.aspx?meetid={$m['meetid']}&doctype");
     ?>
     <tr>
-      <td style="width: 90px;"><?php print $m['starttime']; ?></td>
       <td><?php print meeting_category_to_title($m['category']); ?></td>
-      <td><a target="_blank" href="<?php print $mtgurl; ?>=AGENDA">Agenda</a></td>
+      <td style="text-align: center; width: 90px;"><?php print $m['starttime']; ?></td>
+      <td style="text-align: center;"><a class="btn btn-mini" target="_blank" href="<?php print $mtgurl; ?>=AGENDA">Agenda</a></td>
     </tr>
     <?php
   }
@@ -54,21 +54,13 @@ function dashboard() {
     $mtgurl = htmlspecialchars("http://app05.ottawa.ca/sirepub/mtgviewer.aspx?meetid={$m['meetid']}&doctype");
     ?>
     <tr>
-      <td style="width: 90px;"><?php print $m['starttime']; ?></td>
       <td><?php print meeting_category_to_title($m['category']); ?></td>
-      <td><a target="_blank" href="<?php print $mtgurl; ?>=AGENDA">Agenda</a></td>
+      <td style="text-align: center; width: 90px;"><?php print $m['starttime']; ?></td>
+      <td style="text-align: center;"><a class="btn btn-mini" target="_blank" href="<?php print $mtgurl; ?>=AGENDA">Agenda</a></td>
     </tr>
     <?php
   }
   ?>
-    <tr>
-      <td style="width: 90px;"></td>
-      <td>
-      <small>
-      <i>Note: Ottawa Watch only lists meetings if an agenda has been published.  For dates of all future meetings see <a href="http://app05.ottawa.ca/sirepub/agendaminutes/index_en.aspx">the City's E-Agenda tool</a>.</i></small>
-      </td>
-      <td></td>
-    </tr>
   <tr>
   <td colspan="3">
   <h4>Previous Meetings</h4>
@@ -80,16 +72,9 @@ function dashboard() {
     $mtgurl = htmlspecialchars("http://app05.ottawa.ca/sirepub/mtgviewer.aspx?meetid={$m['meetid']}&doctype");
     ?>
     <tr>
-      <td><?php print $m['starttime']; ?></td>
       <td><?php print meeting_category_to_title($m['category']); ?></td>
-      <td>
-        <a target="_blank" href="<?php print $mtgurl; ?>=AGENDA">Agenda</a>
-        <!--
-        MINUTES are not available until after the next meeting.
-        TODO: look at next meeting of same category; if there has been done, then enable minutes?
-        <a target="_blank" href="<?php print $mtgurl; ?>=MINUTES">Minutes</a>
-        -->
-      </td>
+      <td style="text-align: center; width: 90px;"><?php print $m['starttime']; ?></td>
+      <td style="text-align: center;"><a class="btn btn-mini" target="_blank" href="<?php print $mtgurl; ?>=AGENDA">Agenda</a></td>
     </tr>
     <?php
   }
