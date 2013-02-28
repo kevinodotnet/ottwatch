@@ -71,7 +71,7 @@ foreach ($items as $i) {
     'starttime' => $starttime,
   ));
 	# import the items for the new meeting.
-  MeetingController::downloadAndParseMeeting($id);
+  MeetingController::downloadAndParseMeeting($meetingid);
 }
 
 if (0) {
