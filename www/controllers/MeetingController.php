@@ -1,6 +1,10 @@
 <?php
 
 class MeetingController {
+
+  static public function getDocumentUrl ($meetid,$doctype) {
+    return "http://app05.ottawa.ca/sirepub/agview.aspx?agviewmeetid={$meetid}&agviewdoctype={$doctype}";
+  }
   
   static public function doList ($category) {
     top();
@@ -51,7 +55,7 @@ class MeetingController {
     <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
     <?php
     $rows = getDatabase()->all(" 
-      select m.category,id,meetid,date(starttime) starttime
+      select m.id,m.category,id,meetid,date(starttime) starttime
       from meeting m 
         join category c on c.category = m.category 
       ".
@@ -63,6 +67,7 @@ class MeetingController {
       $mtgurl = htmlspecialchars("http://app05.ottawa.ca/sirepub/mtgviewer.aspx?meetid={$r['meetid']}&doctype");
       ?>
 	    <tr>
+	      <td style="width: 90px; text-align: center;"><?php print $r['id']; ?></td>
 	      <td style="width: 90px; text-align: center;"><?php print $r['starttime']; ?></td>
 	      <td style="width: 90px; text-align: center;"><a class="btn btn-mini" target="_blank" href="<?php print $mtgurl; ?>=AGENDA">Agenda</a></td>
 	      <td><?php print meeting_category_to_title($r['category']); ?></td>
@@ -74,9 +79,77 @@ class MeetingController {
     <?php
     bottom();
   }
+
+  /*
+   */
+  static public function downloadAndParseMeeting ($id) {
+    $m = getDatabase()->one(" select * from meeting where id = :id ",array('id'=>$id));
+    if (!$m['id']) { return; }
+    
+    $file = OttWatchConfig::FILE_DIR."/{$m['meetid']}_agenda.html";
+    #$agenda = file_get_contents(MeetingController::getDocumentUrl($m['meetid'],'AGENDA'));
+    #file_put_contents($file,$agenda);
+    $agenda = file_get_contents($file);
+
+    $agenda = mb_convert_encoding($agenda,"ascii");
+    file_put_contents($file."new",$agenda);
+
+    $agenda = preg_replace("/&nbsp;/"," ",$agenda);
+
+    # rebuild item rows
+    getDatabase()->execute(" delete from item where meetingid = :id ",array('id'=>$id));
+
+	  $lines = explode("\n",$agenda);
+    $add = 0;
+    $spool = array();
+	  foreach ($lines as $line) {
+      $line = preg_replace("/\r/","",$line);
+	    if (preg_match("/itemid=/",$line)) {
+        $add = 1;
+	      $itemid = $line;
+	      $itemid = preg_replace("/.*itemid=/","",$itemid);
+	      $itemid = preg_replace('/".*/',"",$itemid);
+	      $items[] = $itemid;
+        array_push($spool,$line);
+        continue;
+	    }
+	    if ($add && preg_match("/span>/",$line)) {
+        $add = 0;
+        array_push($spool,$line);
+        $snippet = "<a ".implode($spool)."\n";
+        $snippet = preg_replace("/<\/a>.*/","</a>",$snippet);
+        #target=pubright><span  lang=EN-US>
+        $snippet = preg_replace("/target=pubright/",'',$snippet);
+        $snippet = preg_replace("/lang=EN-US/",'',$snippet);
+        $xml = simplexml_load_string($snippet);
+        $title = $xml->xpath("//span"); $title = $title[0].'';
+
+        # charset problems
+        $title = preg_replace("/ \? /"," - ",$title);
+        $title = preg_replace("/\?/","'",$title);
+
+        # fix open/close brace, and spaces next to braces
+        $title = preg_replace("/^\(/","",$title);
+        $title = preg_replace("/\)\s*$/","",$title);
+        $title = preg_replace("/  +/"," ",$title);
+        $title = preg_replace("/\( +/","(",$title);
+        $title = preg_replace("/ +\)/",")",$title);
+	  	  $dbitemid = getDatabase()->execute('insert into item (meetingid,itemid,title) values (:meetingid,:itemid,:title) ', array(
+	  	    'meetingid' => $id,
+	  	    'itemid' => $itemid,
+	  	    'title' => $title,
+	  	  ));
+        $spool = array();
+      }
+      if ($add) {
+        array_push($spool,$line);
+      }
+	  }
+
+
+  }
+
   
 }
 
 ?>
-
-

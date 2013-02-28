@@ -2,11 +2,18 @@
 
 $dirname = `dirname $argv[0]`;
 $dirname = preg_replace("/\n/","",$dirname);
-#ob_start();
 
 set_include_path(get_include_path() . PATH_SEPARATOR . "$dirname/../lib");
 set_include_path(get_include_path() . PATH_SEPARATOR . "$dirname/../www");
 require_once('include.php');
+
+if (count($argv) > 1) {
+  if ($argv[1] == 'getMeeting') {
+    $id = $argv[2];
+    MeetingController::downloadAndParseMeeting($id);
+  }
+  return;
+}
 
 # get RSS of all meetings
 $data = `wget -qO - http://app05.ottawa.ca/sirepub/rss/rss.aspx | head -1`; # file_put_contents("rss.rss",$data);
