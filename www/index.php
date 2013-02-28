@@ -348,6 +348,8 @@ function top($title) {
   padding: 20px;
 }
 </style>
+<script src="http://code.jquery.com/jquery.js" type="text/javascript"></script>
+<script src="<?php print $OTT_WWW; ?>/bootstrap/js/bootstrap.min.js"></script>
 </head>
 <body>
 
@@ -393,8 +395,6 @@ Created by <a href="http://kevino.ca"><b>Kevin O'Donnell</b></a> to make it easi
   googleAnalytics();
   ?>
 
-  <script src="http://code.jquery.com/jquery.js" type="text/javascript"></script>
-  <script src="<?php print $OTT_WWW; ?>/bootstrap/js/bootstrap.min.js"></script>
   </body>
   </html>
   <?php

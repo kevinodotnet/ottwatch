@@ -38,8 +38,8 @@ class MeetingController {
     $title = meeting_category_to_title($m['category']);
     $item = getDatabase()->one(" select * from item where id = :id ",array("id" => $itemid));
     if ($item['itemid']) {
+      # page title, and agenda url can be updated early
       $agendaUrl .= '#Item'.$item['itemid'];
-      $zoomingTo = 'Zooming to: <i>'.$item['title'].'</i>';
       $title = $item['title'];
     }
     $zoomingTo = "Zooming to: $title";
@@ -108,6 +108,13 @@ class MeetingController {
     </div>
 
     <?php
+    if ($item['itemid']) {
+      # cleaner to call javascript to update the UI, rather than try and hack the correct state everywhere in advance.
+      ?>
+      <script>javascript:highlightItem(<?php print $item['id'].','.$item['itemid']; ?>);</script>
+      <?php
+    }
+
     bottom();
   }
 
