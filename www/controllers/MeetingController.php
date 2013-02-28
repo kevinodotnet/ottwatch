@@ -118,7 +118,7 @@ class MeetingController {
       ?>
 	    <tr>
 	      <td style="width: 90px; text-align: center;"><?php print $r['starttime']; ?></td>
-	      <td style="width: 90px; text-align: center;"><a class="btn btn-mini" href="<?php print $myurl; ?>=AGENDA">Agenda</a></td>
+	      <td style="width: 90px; text-align: center;"><a class="btn btn-mini" href="<?php print $myurl; ?>">Agenda</a></td>
 	      <td>
         <a href="<?php print $myurl; ?>"><?php print meeting_category_to_title($r['category']); ?></a>
         </td>
