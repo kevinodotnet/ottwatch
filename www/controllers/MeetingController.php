@@ -185,21 +185,27 @@ class MeetingController {
         $snippet = preg_replace("/\n/",' ',$snippet);
         $snippet = preg_replace("/\r/",' ',$snippet);
         $xml = simplexml_load_string($snippet);
-        $title = $xml->xpath("//span"); $title = $title[0].'';
-        if ($title == '') {
-          $title = $xml->xpath("//a"); $title = $title[0].'';
-        }
-
-        # charset problems
-        $title = preg_replace("/ \? /"," - ",$title);
-        $title = preg_replace("/\?/","'",$title);
-
-        # fix open/close brace, and spaces next to braces
-        $title = preg_replace("/^\(/","",$title);
-        $title = preg_replace("/\)\s*$/","",$title);
-        $title = preg_replace("/  +/"," ",$title);
-        $title = preg_replace("/\( +/","(",$title);
-        $title = preg_replace("/ +\)/",")",$title);
+				if (!is_object($xml)) {
+					print "WARNING, bad snippet\n";
+					print ">> $snippet <<\n";
+					$title = '<i class="icon-warning-sign"></i> Doh! title autodection failed';
+				} else {
+	        $title = $xml->xpath("//span"); $title = $title[0].'';
+	        if ($title == '') {
+	          $title = $xml->xpath("//a"); $title = $title[0].'';
+	        }
+	
+	        # charset problems
+	        $title = preg_replace("/ \? /"," - ",$title);
+	        $title = preg_replace("/\?/","'",$title);
+	
+	        # fix open/close brace, and spaces next to braces
+	        $title = preg_replace("/^\(/","",$title);
+	        $title = preg_replace("/\)\s*$/","",$title);
+	        $title = preg_replace("/  +/"," ",$title);
+	        $title = preg_replace("/\( +/","(",$title);
+	        $title = preg_replace("/ +\)/",")",$title);
+				}
 	  	  $dbitemid = getDatabase()->execute('insert into item (meetingid,itemid,title) values (:meetingid,:itemid,:title) ', array(
 	  	    'meetingid' => $id,
 	  	    'itemid' => $itemid,
