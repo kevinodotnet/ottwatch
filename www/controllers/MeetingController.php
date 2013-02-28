@@ -29,22 +29,23 @@ class MeetingController {
   }
 
   static public function meetingDetails ($category,$id,$itemid) {
-    top();
     $m = getDatabase()->one(" select * from meeting where id = :id ",array("id" => $id));
     if (!$m['id']) {
       MeetingController::doList($category);
       return;
     }
     $agendaUrl = MeetingController::getDocumentUrl($m['meetid'],'AGENDA');
-    $zoomingTo = 'Zooming to: <i>the full agenda</i>';
+    $title = meeting_category_to_title($m['category']);
     $item = getDatabase()->one(" select * from item where id = :id ",array("id" => $itemid));
     if ($item['itemid']) {
       $agendaUrl .= '#Item'.$item['itemid'];
       $zoomingTo = 'Zooming to: <i>'.$item['title'].'</i>';
+      $title = $item['title'];
     }
+    $zoomingTo = "Zooming to: $title";
 
     $items = getDatabase()->all(" select * from item where meetingid = :id order by id ",array("id" => $id));
-    $title = meeting_category_to_title($m['category']);
+    top($title);
     ?>
 
     <script>
@@ -67,8 +68,11 @@ class MeetingController {
 
       itemTitle = $('#itemAnchor'+id).html();
       newHtml = 
+        ' Zooming to: <i>' + itemTitle + '</i> ' + 
         ' <a target="_blank" href="'+shareUrl+'"><img alt="Tweet" src=\"<?php print OttWatchConfig::WWW; ?>/img/twitter-share.png\"/></a> ' +
-        ' Zooming to: <i>' + itemTitle + '</i>';
+        ' <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u='+escape(owItemUrl)+'">' + 
+        ' <img style="height: 20px; width: 58px;" alt="Tweet" src="<?php print OttWatchConfig::WWW; ?>/img/facebook-share.png"/></a>' +
+        '';
       $('#itemDetails').html(newHtml);
     }
     </script>
@@ -90,13 +94,14 @@ class MeetingController {
 
     <div class="span8">
     <div id="itemDetails" style="padding: 5px; margin-bottom: 5px; border: solid 1px #f0f0f0;">
+    <?php print $zoomingTo; ?>
     <a target="_blank" 
       href="https://twitter.com/share?url=<?php 
       print urlencode(OttWatchConfig::WWW."/meetings/{$m['category']}/{$m['id']}"); 
       ?>&text=<?php 
       print urlencode("Reading an agenda for $title"); 
       ?>"><img alt="Tweet" src="<?php print OttWatchConfig::WWW; ?>/img/twitter-share.png"/></a>
-    <?php print $zoomingTo; ?>
+    <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=<?php print urlencode(OttWatchConfig::WWW."/meetings/{$m['category']}/{$m['id']}"); ?>"><img style="height: 20px; width: 58px;" alt="Tweet" src="<?php print OttWatchConfig::WWW; ?>/img/facebook-share.png"/></a>
     </div>
     <iframe id="agendaFrame" src="<?php print $agendaUrl; ?>" style="width: 100%; height: 600px; border: 0px;"></iframe>
     </div>

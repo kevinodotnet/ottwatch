@@ -365,8 +365,8 @@ function top($title) {
 
 <?php
 	if ($title != '') {
+    if (0) {
 		?>
-		
 		<div style="background: #fcfcfc; padding: 10px; border: #c0c0c0 solid 1px;">
 		<div class="row-fluid">
 		<div class="lead span6">
@@ -375,6 +375,7 @@ function top($title) {
 		</div>
 		</div>
 		<?php
+    }
 	}
 }
 
