@@ -43,7 +43,7 @@ function dashboard() {
     <tr>
       <td><?php print meeting_category_to_title($m['category']); ?></td>
       <td style="text-align: center; width: 90px;"><?php print $m['starttime']; ?></td>
-      <td style="text-align: center;"><a class="btn btn-mini" href="<?php print urlencode("$OTT_WWW/meetings/{$m['category']}/{$m['id']}"); ?>">Agenda</a></td>
+      <td style="text-align: center;"><a class="btn btn-mini" href="<?php print "$OTT_WWW/meetings/{$m['category']}/{$m['id']}"; ?>">Agenda</a></td>
     </tr>
     <?php
   }
@@ -61,7 +61,7 @@ function dashboard() {
     <tr>
       <td><?php print meeting_category_to_title($m['category']); ?></td>
       <td style="text-align: center; width: 90px;"><?php print $m['starttime']; ?></td>
-      <td style="text-align: center;"><a class="btn btn-mini" href="<?php print urlencode("$OTT_WWW/meetings/{$m['category']}/{$m['id']}"); ?>">Agenda</a></td>
+      <td style="text-align: center;"><a class="btn btn-mini" href="<?php print "$OTT_WWW/meetings/{$m['category']}/{$m['id']}"; ?>">Agenda</a></td>
     </tr>
     <?php
   }
@@ -79,7 +79,7 @@ function dashboard() {
     <tr>
       <td><?php print meeting_category_to_title($m['category']); ?></td>
       <td style="text-align: center; width: 90px;"><?php print $m['starttime']; ?></td>
-      <td style="text-align: center;"><a class="btn btn-mini" href="<?php print urlencode("$OTT_WWW/meetings/{$m['category']}/{$m['id']}"); ?>">Agenda</a></td>
+      <td style="text-align: center;"><a class="btn btn-mini" href="<?php print "$OTT_WWW/meetings/{$m['category']}/{$m['id']}"; ?>">Agenda</a></td>
     </tr>
     <?php
   }
