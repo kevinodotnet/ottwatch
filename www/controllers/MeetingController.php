@@ -9,7 +9,16 @@ class MeetingController {
   static public function getItemUrl ($itemid) {
     return "http://app05.ottawa.ca/sirepub/agdocs.aspx?doctype=agenda&itemid=".$itemid;
   }
-  
+
+  static public function meetidForward ($meetid) {
+    $m = getDatabase()->one(" select * from meeting where meetid = :meetid ",array("meetid" => $meetid));
+    if (!$m['id']) {
+      error404();
+      return;
+    }
+    header("Location: ../{$m['category']}/{$m['id']}");
+  }
+
   static public function meetingDetails ($category,$id) {
     top();
     $m = getDatabase()->one(" select * from meeting where id = :id ",array("id" => $id));

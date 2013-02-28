@@ -18,6 +18,7 @@ getRoute()->get('/lobbyist/(.*)/link', 'lobbyistLink');
 
 getRoute()->get('/meetings', array('MeetingController','dolist')); // meetings
 getRoute()->get('/meetings/([^\/]*)', array('MeetingController','dolist')); // meetings/CATEGORY
+getRoute()->get('/meetings/meetid/(\d+)', array('MeetingController','meetidForward')); // meetings/CATEGORY/ID
 getRoute()->get('/meetings/([^\/]*)/(\d+)', array('MeetingController','meetingDetails')); // meetings/CATEGORY/ID
 
 getRoute()->get('.*', 'error404');
