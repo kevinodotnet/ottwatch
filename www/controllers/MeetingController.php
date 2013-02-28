@@ -40,7 +40,7 @@ class MeetingController {
     </script>
 
     <div class="row-fluid">
-    <div class="span4">
+    <div class="span4 visible-desktop">
     <div style="overflow:scroll; height: 600px; padding-right: 5px; padding-left: 5px;">
     <ol>
     <?php
@@ -127,7 +127,7 @@ class MeetingController {
       ?>
 	    <tr>
 	      <td style="width: 90px; text-align: center;"><?php print $r['starttime']; ?></td>
-	      <td style="width: 90px; text-align: center;"><a class="btn btn-mini" target="_blank" href="<?php print $mtgurl; ?>=AGENDA">Agenda</a></td>
+	      <td style="width: 90px; text-align: center;"><a class="btn btn-mini" href="<?php print $myurl; ?>">Agenda</a></td>
 	      <td>
         <a href="<?php print $myurl; ?>"><?php print meeting_category_to_title($r['category']); ?></a>
         </td>
@@ -194,21 +194,27 @@ class MeetingController {
         $snippet = preg_replace("/\n/",' ',$snippet);
         $snippet = preg_replace("/\r/",' ',$snippet);
         $xml = simplexml_load_string($snippet);
-        $title = $xml->xpath("//span"); $title = $title[0].'';
-        if ($title == '') {
-          $title = $xml->xpath("//a"); $title = $title[0].'';
-        }
-
-        # charset problems
-        $title = preg_replace("/ \? /"," - ",$title);
-        $title = preg_replace("/\?/","'",$title);
-
-        # fix open/close brace, and spaces next to braces
-        $title = preg_replace("/^\(/","",$title);
-        $title = preg_replace("/\)\s*$/","",$title);
-        $title = preg_replace("/  +/"," ",$title);
-        $title = preg_replace("/\( +/","(",$title);
-        $title = preg_replace("/ +\)/",")",$title);
+				if (!is_object($xml)) {
+					print "WARNING, bad snippet\n";
+					print ">> $snippet <<\n";
+					$title = '<i class="icon-warning-sign"></i> Doh! title autodection failed';
+				} else {
+	        $title = $xml->xpath("//span"); $title = $title[0].'';
+	        if ($title == '') {
+	          $title = $xml->xpath("//a"); $title = $title[0].'';
+	        }
+	
+	        # charset problems
+	        $title = preg_replace("/ \? /"," - ",$title);
+	        $title = preg_replace("/\?/","'",$title);
+	
+	        # fix open/close brace, and spaces next to braces
+	        $title = preg_replace("/^\(/","",$title);
+	        $title = preg_replace("/\)\s*$/","",$title);
+	        $title = preg_replace("/  +/"," ",$title);
+	        $title = preg_replace("/\( +/","(",$title);
+	        $title = preg_replace("/ +\)/",")",$title);
+				}
 	  	  $dbitemid = getDatabase()->execute('insert into item (meetingid,itemid,title) values (:meetingid,:itemid,:title) ', array(
 	  	    'meetingid' => $id,
 	  	    'itemid' => $itemid,
