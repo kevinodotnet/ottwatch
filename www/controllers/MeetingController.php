@@ -65,6 +65,7 @@ class MeetingController {
       }
       shareUrl = 'https://twitter.com/share?url='+escape(owItemUrl)+'&text=' + escape(tweetText);
 
+      itemTitle = $('#itemAnchor'+id).html();
       newHtml = 
         ' <a target="_blank" href="'+shareUrl+'"><img alt="Tweet" src=\"<?php print OttWatchConfig::WWW; ?>/img/twitter-share.png\"/></a> ' +
         ' Zooming to: <i>' + itemTitle + '</i>';
