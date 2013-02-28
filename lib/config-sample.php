@@ -7,8 +7,8 @@ class OttWatchConfig {
   const DB_HOST = "localhost";
   const DB_USER = "ottwatch";
   const DB_PASS = "CHANGEME";
-
   const FILE_DIR = "/Users/kevino/Sites/var_ottwatch";
+  const WWW = "http://localhost/ottwatch";
 }
 
 ?>
