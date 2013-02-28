@@ -61,10 +61,9 @@ class MeetingController {
       tweetText = 'Reading "' + itemTitle + '" ' + owItemUrl;
       while (tweetText.length > 139) {
         itemTitle = itemTitle.substring(0,itemTitle.length-1);
-        tweetText = 'Reading "' + itemTitle + '"... ' + owItemUrl;
+        tweetText = 'Reading "' + itemTitle + '"... ';
       }
-      tweetText = escape(tweetText);
-      shareUrl = 'https://twitter.com/share?text=' + tweetText;
+      shareUrl = 'https://twitter.com/share?url='+escape(owItemUrl)+'&text=' + escape(tweetText);
 
       newHtml = 
         ' <a target="_blank" href="'+shareUrl+'"><img alt="Tweet" src=\"<?php print OttWatchConfig::WWW; ?>/img/twitter-share.png\"/></a> ' +
@@ -90,7 +89,12 @@ class MeetingController {
 
     <div class="span8">
     <div id="itemDetails" style="padding: 5px; margin-bottom: 5px; border: solid 1px #f0f0f0;">
-    <a target="_blank" href="https://twitter.com/share?text=<?php print urlencode("Reading an agenda for $title ".OttWatchConfig::WWW."/meetings/{$m['category']}/{$m['id']}"); ?>"><img alt="Tweet" src="<?php print OttWatchConfig::WWW; ?>/img/twitter-share.png"/></a>
+    <a target="_blank" 
+      href="https://twitter.com/share?url=<?php 
+      print urlencode(OttWatchConfig::WWW."/meetings/{$m['category']}/{$m['id']}"); 
+      ?>&text=<?php 
+      print urlencode("Reading an agenda for $title"); 
+      ?>"><img alt="Tweet" src="<?php print OttWatchConfig::WWW; ?>/img/twitter-share.png"/></a>
     <?php print $zoomingTo; ?>
     </div>
     <iframe id="agendaFrame" src="<?php print $agendaUrl; ?>" style="width: 100%; height: 600px; border: 0px;"></iframe>
