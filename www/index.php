@@ -350,6 +350,11 @@ function top($title) {
 </style>
 <script src="http://code.jquery.com/jquery.js" type="text/javascript"></script>
 <script src="<?php print $OTT_WWW; ?>/bootstrap/js/bootstrap.min.js"></script>
+<script>
+function copyToClipboard (text) {
+  window.prompt ("Copy to clipboard: Ctrl+C, Enter", text);
+}
+</script>
 </head>
 <body>
 
