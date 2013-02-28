@@ -30,7 +30,7 @@ if (1) {
 $OTTVAR="/mnt/shared/ottwatch/var";
 
 # URL of Lobby Registry search service
-$OTT_LOBBY_SEARCH_URL="https://apps107.ottawa.ca/LobbyistRegistry/search/searchlobbyist.aspx";
+$OTT_LOBBY_SEARCH_URL="https://apps107.ottawa.ca/LobbyistRegistry/search/searchlobbyist.aspx?lang=en";
 
 # HTTP address of OttWatch itself.
 $OTT_WWW="http://ottwatch.kevino.ca";
