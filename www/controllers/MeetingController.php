@@ -58,8 +58,8 @@ class MeetingController {
       // a Tweet button for it.
       owItemUrl = '<?php print MeetingController::getMeetingUrl($id); ?>/item/' + id;
       itemTitle = $('#itemAnchor'+id).html();
-      tweetText = 'Reading "' + itemTitle + '" ' + owItemUrl;
-      while (tweetText.length > 139) {
+      tweetText = 'Reading "' + itemTitle + '" ';
+      while ((tweetText.length + owItemUrl.length) > 139) {
         itemTitle = itemTitle.substring(0,itemTitle.length-1);
         tweetText = 'Reading "' + itemTitle + '"... ';
       }
