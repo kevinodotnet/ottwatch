@@ -108,8 +108,10 @@ function dashboard() {
   }
   </script>
   <h4>Lobbyist Registry</h4>
-  <input type="text" id="lobbyist_search_value" placeholder="Search by name..."><br/>
+  <div class="input-append">
+  <input type="text" id="lobbyist_search_value" placeholder="Search by name...">
   <button class="btn" onclick="lobbyist_search_form_submit()"><i class="icon-search"></i> Search</button>
+  </div>
   </div>
   <div class="span4">
   <h4>Follow @OttWatch for Realtime News</h4>
@@ -187,14 +189,14 @@ function lobbyist($name) {
   ?>
   <div class="row-fluid">
   <div class="span12">
-  <p>If you get a blank page below, reload, or go <a target="_blank" href="<?php print $name; ?>/link">direct to ottawa.ca <i class="icon-edit"></i></a>.
+  <p>If you get a blank page below, reload, or go <a target="_blank" href="<?php print urlencode($name); ?>/link">direct to ottawa.ca <i class="icon-edit"></i></a>.
   (The lobbyist registry has intermittent flake-outs)
   </p>
   </div>
   </div>
   <div class="row-fluid">
   <div class="span12">
-  <iframe style="border: 0px; width: 100%; height: 1200px;" src="<?php print $name; ?>/details"></iframe>
+  <iframe style="border: 0px; width: 100%; height: 1200px;" src="<?php print urlencode($name); ?>/details"></iframe>
   </div>
   </div>
   <?php
