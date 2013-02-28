@@ -1,7 +1,8 @@
 <?php
 
-include_once 'epiphany/src/Epi.php';
 include_once '../lib/include.php';
+include_once 'epiphany/src/Epi.php';
+include_once 'controllers/MeetingController.php';
 
 Epi::setPath('base', 'epiphany/src');
 Epi::init('route');
@@ -14,12 +15,13 @@ getRoute()->get('/lobbyist/search/(.*)', 'lobbyist_search');
 getRoute()->get('/lobbyist/([^\/]*)', 'lobbyist');
 getRoute()->get('/lobbyist/(.*)/details', 'lobbyistDetails');
 getRoute()->get('/lobbyist/(.*)/link', 'lobbyistLink');
+getRoute()->get('/meetings/(.*)', array('MeetingController','dolist'));
 
 getRoute()->get('.*', 'error404');
 getRoute()->run();
 
-
 function dashboard() {
+  global $OTT_WWW;
   top();
   ?>
   <div class="row-fluid">
@@ -79,6 +81,11 @@ function dashboard() {
     <?php
   }
   ?>
+  <tr>
+  <td colspan="3">
+  <a href="<?php print $OTT_WWW; ?>/meetings/all">See all meetings</a>
+  </td>
+  </tr>
   </table>
   </div>
   <div class="span3">
@@ -367,6 +374,7 @@ Created by <a href="http://kevino.ca"><b>Kevin O'Donnell</b></a> to make it easi
   ?>
 
   <script src="http://code.jquery.com/jquery.js" type="text/javascript"></script>
+  <script src="/ottwatch/bootstrap/js/bootstrap.min.js"></script>
   </body>
   </html>
   <?php
