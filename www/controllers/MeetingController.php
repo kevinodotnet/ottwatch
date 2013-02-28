@@ -10,6 +10,15 @@ class MeetingController {
     return "http://app05.ottawa.ca/sirepub/agdocs.aspx?doctype=agenda&itemid=".$itemid;
   }
 
+  static public function getMeetingUrl ($id) {
+    global $OTT_WWW;
+    $row = getDatabase()->one(" select id,category from meeting where id = :id ",array("id" => $id));
+    if (!$row['id']) {
+      return "";
+    }
+    return "$OTT_WWW/meetings/{$row['category']}/{$row['id']}";
+  }
+
   static public function meetidForward ($meetid) {
     $m = getDatabase()->one(" select * from meeting where meetid = :meetid ",array("meetid" => $meetid));
     if (!$m['id']) {
@@ -19,23 +28,48 @@ class MeetingController {
     header("Location: ../{$m['category']}/{$m['id']}");
   }
 
-  static public function meetingDetails ($category,$id) {
+  static public function meetingDetails ($category,$id,$itemid) {
     top();
     $m = getDatabase()->one(" select * from meeting where id = :id ",array("id" => $id));
     if (!$m['id']) {
       MeetingController::doList($category);
       return;
     }
-    $items = getDatabase()->all(" select * from item where meetingid = :id order by id ",array("id" => $id));
     $agendaUrl = MeetingController::getDocumentUrl($m['meetid'],'AGENDA');
-    $title = meeting_category_to_title($m['category']);
+    $zoomingTo = 'Zooming to: <i>the full agenda</i>';
+    $item = getDatabase()->one(" select * from item where id = :id ",array("id" => $itemid));
+    if ($item['itemid']) {
+      $agendaUrl .= '#Item'.$item['itemid'];
+      $zoomingTo = 'Zooming to: <i>'.$item['title'].'</i>';
+    }
 
+    $items = getDatabase()->all(" select * from item where meetingid = :id order by id ",array("id" => $id));
+    $title = meeting_category_to_title($m['category']);
     ?>
 
     <script>
     <!-- <a name="Item168199"></a> -->
-    function highlighItem(itemid) {
+    function highlightItem(id,itemid) {
+
+      // move the agenda iFrame to the <a name=""/> for the chosen item
       $('#agendaFrame').attr('src','<?php print MeetingController::getDocumentUrl($m['meetid'],'AGENDA'); ?>#Item' + itemid);
+
+      // build a REST link back to OttWatch for the item, and create
+      // a Tweet button for it.
+      owItemUrl = '<?php print MeetingController::getMeetingUrl($id); ?>/item/' + id;
+      itemTitle = $('#itemAnchor'+id).html();
+      tweetText = 'Reading "' + itemTitle + '" ';
+      while ((tweetText.length + owItemUrl.length) > 139) {
+        itemTitle = itemTitle.substring(0,itemTitle.length-1);
+        tweetText = 'Reading "' + itemTitle + '"... ';
+      }
+      shareUrl = 'https://twitter.com/share?url='+escape(owItemUrl)+'&text=' + escape(tweetText);
+
+      itemTitle = $('#itemAnchor'+id).html();
+      newHtml = 
+        ' <a target="_blank" href="'+shareUrl+'"><img alt="Tweet" src=\"<?php print OttWatchConfig::WWW; ?>/img/twitter-share.png\"/></a> ' +
+        ' Zooming to: <i>' + itemTitle + '</i>';
+      $('#itemDetails').html(newHtml);
     }
     </script>
 
@@ -46,7 +80,7 @@ class MeetingController {
     <?php
     foreach ($items as $i) {
       ?>
-      <li><a href="javascript:highlighItem(<?php print $i['itemid']; ?>);"><?php print $i['title']; ?></a></li>
+      <li><a id="itemAnchor<?php print $i['id']; ?>" href="javascript:highlightItem(<?php print $i['id'].','.$i['itemid']; ?>);"><?php print $i['title']; ?></a></li>
       <?php
     }
     ?>
@@ -55,6 +89,15 @@ class MeetingController {
     </div>
 
     <div class="span8">
+    <div id="itemDetails" style="padding: 5px; margin-bottom: 5px; border: solid 1px #f0f0f0;">
+    <a target="_blank" 
+      href="https://twitter.com/share?url=<?php 
+      print urlencode(OttWatchConfig::WWW."/meetings/{$m['category']}/{$m['id']}"); 
+      ?>&text=<?php 
+      print urlencode("Reading an agenda for $title"); 
+      ?>"><img alt="Tweet" src="<?php print OttWatchConfig::WWW; ?>/img/twitter-share.png"/></a>
+    <?php print $zoomingTo; ?>
+    </div>
     <iframe id="agendaFrame" src="<?php print $agendaUrl; ?>" style="width: 100%; height: 600px; border: 0px;"></iframe>
     </div>
     </div>

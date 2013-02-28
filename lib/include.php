@@ -33,7 +33,7 @@ $OTTVAR="/mnt/shared/ottwatch/var";
 $OTT_LOBBY_SEARCH_URL="https://apps107.ottawa.ca/LobbyistRegistry/search/searchlobbyist.aspx?lang=en";
 
 # HTTP address of OttWatch itself.
-$OTT_WWW="http://ottwatch.kevino.ca";
+$OTT_WWW = OttWatchConfig::WWW;
 
 function meeting_category_to_title($category) {
   $row = getDatabase()->one(" select * from category where category = :category ",array('category' => $category));
