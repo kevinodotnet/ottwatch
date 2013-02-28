@@ -2,7 +2,7 @@
 
 $dirname = `dirname $argv[0]`;
 $dirname = preg_replace("/\n/","",$dirname);
-ob_start();
+#ob_start();
 
 set_include_path(get_include_path() . PATH_SEPARATOR . "$dirname/../lib");
 require_once('include.php');
@@ -30,14 +30,13 @@ foreach ($items as $i) {
   $meetingDate = $meetingDate[1];
 
 	# URL is not Internet ready from the RSS
-  $link = preg_replace("/.*sirepub/","http://app05.ottawa.ca/sirepub",$link);
-	# links to MINUTES and SUMMARY replaced with Agenda because sometimes
-	# they are not available yet, though are referenced in RSS. Flip to 
-	# agenda means link always works, and user figure itout after the fact
-  $link = preg_replace("/doctype=MINUTES/","doctype=AGENDA",$link);
-  $link = preg_replace("/doctype=SUMMARY/","doctype=AGENDA",$link);
+	# http://app05.ottawa.ca/sirepub/mtgviewer.aspx?meetid=2285&doctype=AGENDA
+  $meetid = $link;
+  $meetid = preg_replace("/.*meetid=/","",$meetid);
+  $meetid = preg_replace("/&.*/","",$meetid);
+	$link = "http://ottwatch.kevino.ca/meetings/meetid/$meetid";
 
-  $tweet = "$category on $meetingDate is updated $link";
+  $tweet = meeting_category_to_title($category)." on $meetingDate is updated $link";
 
   if (file_exists("$OTTVAR/$guidmd5")) {
     # this meeting has been tweeted already
