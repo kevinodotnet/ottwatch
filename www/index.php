@@ -374,7 +374,7 @@ Created by <a href="http://kevino.ca"><b>Kevin O'Donnell</b></a> to make it easi
   ?>
 
   <script src="http://code.jquery.com/jquery.js" type="text/javascript"></script>
-  <script src="/ottwatch/bootstrap/js/bootstrap.min.js"></script>
+  <script src="<?php print $OTT_WWW; ?>/bootstrap/js/bootstrap.min.js"></script>
   </body>
   </html>
   <?php
