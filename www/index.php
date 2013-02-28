@@ -15,7 +15,10 @@ getRoute()->get('/lobbyist/search/(.*)', 'lobbyist_search');
 getRoute()->get('/lobbyist/([^\/]*)', 'lobbyist');
 getRoute()->get('/lobbyist/(.*)/details', 'lobbyistDetails');
 getRoute()->get('/lobbyist/(.*)/link', 'lobbyistLink');
-getRoute()->get('/meetings/(.*)', array('MeetingController','dolist'));
+
+getRoute()->get('/meetings', array('MeetingController','dolist')); // meetings
+getRoute()->get('/meetings/([^\/]*)', array('MeetingController','dolist')); // meetings/CATEGORY
+getRoute()->get('/meetings/([^\/]*)/(\d+)', array('MeetingController','meetingDetails')); // meetings/CATEGORY/ID
 
 getRoute()->get('.*', 'error404');
 getRoute()->run();
@@ -309,7 +312,21 @@ function lobbyistLink($name) {
 }
 
 function error404() {
-  print "Not Found\n";
+  top();
+  ?>
+  <div class="row-fluid">
+
+  <div class="span4">&nbsp;</div>
+  <div class="span4">
+  <h1>Error!</h1>
+  <h4>Somehow, you've found a page that does not work.</h4>
+  <h5>I should put a fail-whale here or something.</h5>
+  </div>
+  <div class="span4">&nbsp;</div>
+
+  </div>
+  <?php
+  bottom();
 }
 
 function top($title) {

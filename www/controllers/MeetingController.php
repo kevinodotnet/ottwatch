@@ -5,8 +5,57 @@ class MeetingController {
   static public function getDocumentUrl ($meetid,$doctype) {
     return "http://app05.ottawa.ca/sirepub/agview.aspx?agviewmeetid={$meetid}&agviewdoctype={$doctype}";
   }
+
+  static public function getItemUrl ($itemid) {
+    return "http://app05.ottawa.ca/sirepub/agdocs.aspx?doctype=agenda&itemid=".$itemid;
+  }
   
+  static public function meetingDetails ($category,$id) {
+    top();
+    $m = getDatabase()->one(" select * from meeting where id = :id ",array("id" => $id));
+    if (!$m['id']) {
+      MeetingController::doList($category);
+      return;
+    }
+    $items = getDatabase()->all(" select * from item where meetingid = :id order by id ",array("id" => $id));
+    $agendaUrl = MeetingController::getDocumentUrl($m['meetid'],'AGENDA');
+    $title = meeting_category_to_title($m['category']);
+
+    ?>
+
+    <script>
+    <!-- <a name="Item168199"></a> -->
+    function highlighItem(itemid) {
+      $('#agendaFrame').attr('src','<?php print MeetingController::getDocumentUrl($m['meetid'],'AGENDA'); ?>#Item' + itemid);
+    }
+    </script>
+
+    <div class="row-fluid">
+    <div class="span4">
+    <div style="overflow:scroll; height: 600px; padding-right: 5px; padding-left: 5px;">
+    <ol>
+    <?php
+    foreach ($items as $i) {
+      ?>
+      <li><a href="javascript:highlighItem(<?php print $i['itemid']; ?>);"><?php print $i['title']; ?></a></li>
+      <?php
+    }
+    ?>
+    <ol>
+    </div>
+    </div>
+
+    <div class="span8">
+    <iframe id="agendaFrame" src="<?php print $agendaUrl; ?>" style="width: 100%; height: 600px; border: 0px;"></iframe>
+    </div>
+    </div>
+
+    <?php
+    bottom();
+  }
+
   static public function doList ($category) {
+    global $OTT_WWW;
     top();
     if ($category == 'all' || $category == '') { 
       $category = ''; 
@@ -65,12 +114,20 @@ class MeetingController {
       array('category' => $category));
     foreach ($rows as $r) { 
       $mtgurl = htmlspecialchars("http://app05.ottawa.ca/sirepub/mtgviewer.aspx?meetid={$r['meetid']}&doctype");
+      $myurl = htmlspecialchars($OTT_WWW."/meetings/{$r['category']}/{$r['id']}");
       ?>
 	    <tr>
-	      <td style="width: 90px; text-align: center;"><?php print $r['id']; ?></td>
 	      <td style="width: 90px; text-align: center;"><?php print $r['starttime']; ?></td>
 	      <td style="width: 90px; text-align: center;"><a class="btn btn-mini" target="_blank" href="<?php print $mtgurl; ?>=AGENDA">Agenda</a></td>
-	      <td><?php print meeting_category_to_title($r['category']); ?></td>
+	      <td>
+        <a href="<?php print $myurl; ?>"><?php print meeting_category_to_title($r['category']); ?></a>
+        </td>
+	      <td>
+        <?php
+        $count = getDatabase()->one(" select count(1) c from item where meetingid = :id ",array('id'=>$r['id']));
+        print "{$count['c']} items";
+        ?>
+        </td>
 	    </tr>
       <?php
     }
@@ -85,11 +142,16 @@ class MeetingController {
   static public function downloadAndParseMeeting ($id) {
     $m = getDatabase()->one(" select * from meeting where id = :id ",array('id'=>$id));
     if (!$m['id']) { return; }
-    
+   
+    # cache file
     $file = OttWatchConfig::FILE_DIR."/{$m['meetid']}_agenda.html";
-    #$agenda = file_get_contents(MeetingController::getDocumentUrl($m['meetid'],'AGENDA'));
-    #file_put_contents($file,$agenda);
-    $agenda = file_get_contents($file);
+
+    if (1) {
+      $agenda = file_get_contents(MeetingController::getDocumentUrl($m['meetid'],'AGENDA')); 
+      file_put_contents($file,$agenda);
+    } else {
+      $agenda = file_get_contents($file);
+    }
 
     $agenda = mb_convert_encoding($agenda,"ascii");
     file_put_contents($file."new",$agenda);
@@ -113,16 +175,20 @@ class MeetingController {
         array_push($spool,$line);
         continue;
 	    }
-	    if ($add && preg_match("/span>/",$line)) {
+	    if ($add && preg_match("/a>/",$line)) {
         $add = 0;
         array_push($spool,$line);
         $snippet = "<a ".implode($spool)."\n";
         $snippet = preg_replace("/<\/a>.*/","</a>",$snippet);
-        #target=pubright><span  lang=EN-US>
         $snippet = preg_replace("/target=pubright/",'',$snippet);
-        $snippet = preg_replace("/lang=EN-US/",'',$snippet);
+        $snippet = preg_replace("/lang=[^>]*/",'',$snippet);
+        $snippet = preg_replace("/\n/",' ',$snippet);
+        $snippet = preg_replace("/\r/",' ',$snippet);
         $xml = simplexml_load_string($snippet);
         $title = $xml->xpath("//span"); $title = $title[0].'';
+        if ($title == '') {
+          $title = $xml->xpath("//a"); $title = $title[0].'';
+        }
 
         # charset problems
         $title = preg_replace("/ \? /"," - ",$title);
