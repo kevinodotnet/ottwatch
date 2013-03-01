@@ -81,7 +81,6 @@ class MeetingController {
     <script>
     function focusOn(type,id) {
       if (type == 'file') {
-        // <iframe src="http://docs.google.com/viewer?url=http%3A%2F%2Ftest.com&embedded=true" width="600" height="780" style="border: none;"></iframe>
         url = '<?php print OttWatchConfig::WWW; ?>/meetings/file/' + id;
         $('#focusFrame').attr('src','http://docs.google.com/viewer?url='+escape(url)+'&embedded=true');
       } else if (type == 'item') {
@@ -103,12 +102,12 @@ class MeetingController {
       print "<b><a href=\"javascript:focusOn('item',{$i['itemid']})\">{$i['title']}</a></b><br/>\n";
       $files = getDatabase()->all(" select * from ifile where itemid = :itemid order by id ",array("itemid"=>$i['id']));
       if (count($files) > 0) {
-        print "<ul>\n";
         foreach ($files as $f) {
-          print "<li><small><a href=\"javascript:focusOn('file',{$f['fileid']})\"><i class=\"icon-file\"></i> {$f['title']}</small></a></li>\n";
+          $fileurl = OttWatchConfig::WWW . "/meetings/file/" . $f['fileid'];
+          print "<small><a target=\"_blank\" href=\"{$fileurl}\"><i class=\"icon-share-alt\"></i></a> <a href=\"javascript:focusOn('file',{$f['fileid']})\"><i class=\"icon-edit\"></i> {$f['title']}</small></a><br/>\n";
         }
-        print "</ul>\n";
       }
+      print "<br/>\n";
     }
     ?>
     </div>
@@ -116,7 +115,7 @@ class MeetingController {
 
     <!-- column 2 -->
     <div class="span8">
-    <iframe id="focusFrame" src="<?php print $focusFrameSrc; ?>" style="border: 0px; width: 100%; height: 600px;"></iframe>
+    <iframe id="focusFrame" src="<?php print $focusFrameSrc; ?>" style=" border: 0px; border-left: 1px solid #000000; width: 100%; height: 600px;"></iframe>
     </div>
 
     </div>
