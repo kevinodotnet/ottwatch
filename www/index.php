@@ -348,6 +348,13 @@ function top($title) {
   padding: 20px;
 }
 </style>
+<script src="http://code.jquery.com/jquery.js" type="text/javascript"></script>
+<script src="<?php print $OTT_WWW; ?>/bootstrap/js/bootstrap.min.js"></script>
+<script>
+function copyToClipboard (text) {
+  window.prompt ("Copy to clipboard: Ctrl+C, Enter", text);
+}
+</script>
 </head>
 <body>
 
@@ -365,8 +372,8 @@ function top($title) {
 
 <?php
 	if ($title != '') {
+    if (0) {
 		?>
-		
 		<div style="background: #fcfcfc; padding: 10px; border: #c0c0c0 solid 1px;">
 		<div class="row-fluid">
 		<div class="lead span6">
@@ -375,6 +382,7 @@ function top($title) {
 		</div>
 		</div>
 		<?php
+    }
 	}
 }
 
@@ -392,8 +400,6 @@ Created by <a href="http://kevino.ca"><b>Kevin O'Donnell</b></a> to make it easi
   googleAnalytics();
   ?>
 
-  <script src="http://code.jquery.com/jquery.js" type="text/javascript"></script>
-  <script src="<?php print $OTT_WWW; ?>/bootstrap/js/bootstrap.min.js"></script>
   </body>
   </html>
   <?php

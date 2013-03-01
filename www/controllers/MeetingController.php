@@ -29,22 +29,23 @@ class MeetingController {
   }
 
   static public function meetingDetails ($category,$id,$itemid) {
-    top();
     $m = getDatabase()->one(" select * from meeting where id = :id ",array("id" => $id));
     if (!$m['id']) {
       MeetingController::doList($category);
       return;
     }
     $agendaUrl = MeetingController::getDocumentUrl($m['meetid'],'AGENDA');
-    $zoomingTo = 'Zooming to: <i>the full agenda</i>';
+    $title = meeting_category_to_title($m['category']);
     $item = getDatabase()->one(" select * from item where id = :id ",array("id" => $itemid));
     if ($item['itemid']) {
+      # page title, and agenda url can be updated early
       $agendaUrl .= '#Item'.$item['itemid'];
-      $zoomingTo = 'Zooming to: <i>'.$item['title'].'</i>';
+      $title = $item['title'];
     }
+    $zoomingTo = "Zooming to: $title";
 
     $items = getDatabase()->all(" select * from item where meetingid = :id order by id ",array("id" => $id));
-    $title = meeting_category_to_title($m['category']);
+    top($title);
     ?>
 
     <script>
@@ -68,8 +69,12 @@ class MeetingController {
       itemTitle = $('#itemAnchor'+id).html();
       newHtml = 
         ' <a target="_blank" href="'+shareUrl+'"><img alt="Tweet" src=\"<?php print OttWatchConfig::WWW; ?>/img/twitter-share.png\"/></a> ' +
-        ' Zooming to: <i>' + itemTitle + '</i>';
-      $('#itemDetails').html(newHtml);
+        ' <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u='+escape(owItemUrl)+'">' + 
+        ' <img style="height: 20px; width: 58px;" alt="Tweet" src="<?php print OttWatchConfig::WWW; ?>/img/facebook-share.png"/></a>' +
+        ' <a href="javascript:copyToClipboard(\'' + owItemUrl + '\');" class="btn btn-mini">Clipboard <i class="icon-share"></i></a> ' +
+        '';
+      $('#itemDetailsShare').html(newHtml);
+      $('#itemDetailsTitle').html(itemTitle);
     }
     </script>
 
@@ -88,21 +93,45 @@ class MeetingController {
     </div>
     </div>
 
+    <?php 
+    $ttu = OttWatchConfig::WWW."/meetings/{$m['category']}/{$m['id']}";
+    ?>
     <div class="span8">
-    <div id="itemDetails" style="padding: 5px; margin-bottom: 5px; border: solid 1px #f0f0f0;">
+
+    <div style="padding: 5px; margin-bottom: 5px; ">
+    <span id="itemDetailsTitle"></span>
+    
+    <div id="itemDetailsShare" class="pull-right">
     <a target="_blank" 
       href="https://twitter.com/share?url=<?php 
-      print urlencode(OttWatchConfig::WWW."/meetings/{$m['category']}/{$m['id']}"); 
+      print urlencode($ttu); 
       ?>&text=<?php 
       print urlencode("Reading an agenda for $title"); 
       ?>"><img alt="Tweet" src="<?php print OttWatchConfig::WWW; ?>/img/twitter-share.png"/></a>
-    <?php print $zoomingTo; ?>
-    </div>
-    <iframe id="agendaFrame" src="<?php print $agendaUrl; ?>" style="width: 100%; height: 600px; border: 0px;"></iframe>
-    </div>
+    <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=<?php print urlencode($ttu); ?>"><img style="height: 20px; width: 58px;" alt="Tweet" src="<?php print OttWatchConfig::WWW; ?>/img/facebook-share.png"/></a>
+    <a href="javascript:copyToClipboard('<?php print urlencode($ttu); ?>');" class="btn btn-mini">Clipboard <i class="icon-share"></i></a>
     </div>
 
+    </div><!-- item details -->
+
+    <iframe id="agendaFrame" src="<?php print $agendaUrl; ?>" style="width: 100%; height: 600px; border: 0px;"></iframe>
+
+    </div><!-- span8 -->
+
+    </div><!-- row -->
+
     <?php
+    if ($item['itemid']) {
+      # cleaner to call javascript to update the UI, rather than try and hack the correct state everywhere in advance.
+      ?>
+      <script>javascript:highlightItem(<?php print $item['id'].','.$item['itemid']; ?>);</script>
+      <?php
+    } else {
+      ?>
+      <script>$('#itemDetailsTitle').html('<?php print $title; ?>');</script>
+      <?php
+    }
+
     bottom();
   }
 
