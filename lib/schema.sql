@@ -49,6 +49,7 @@ create table ifile (
   id mediumint not null auto_increment,
   itemid mediumint not null,
   fileid mediumint,
+  title varchar(300),
   created datetime,
   updated datetime,
   primary key (id),
