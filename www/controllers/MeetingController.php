@@ -114,7 +114,7 @@ class MeetingController {
 
     </div><!-- item details -->
 
-    <iframe id="agendaFrame" src="<?php print $agendaUrl; ?>" style="width: 100%; height: 600px; border: 0px;"></iframe>
+    <iframe id="agendaFrame" src="<?php print $agendaUrl; ?>" style="width: 100%; height: 600px; border: 1px solid #000000;"></iframe>
 
     </div><!-- span8 -->
 
