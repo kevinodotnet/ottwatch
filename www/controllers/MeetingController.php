@@ -63,9 +63,17 @@ class MeetingController {
       return;
     }
 
+    $focusFrameSrc = self::getDocumentUrl($meetid,'AGENDA');
+    $title = meeting_category_to_title($m['category']);
+    if ($itemid != '') {
+      $item = getDatabase()->one(" select * from item where itemid = :itemid ",array("itemid"=>$itemid));
+      $title = $item['title'];
+      $focusFrameSrc = self::getDocumentUrl($meetid,'AGENDA')."#Item$itemid";
+    }
+
     # display list of items, and break out with the files too
     $items = getDatabase()->all(" select * from item where meetingid = :meetingid order by id ",array("meetingid"=>$m['id']));
-    top();
+    top($title);
 
     # LEFT hand navigation, items and files links
     ?>
@@ -108,7 +116,7 @@ class MeetingController {
 
     <!-- column 2 -->
     <div class="span8">
-    <iframe id="focusFrame" src="" style="border: 0px; width: 100%; height: 600px;"></iframe>
+    <iframe id="focusFrame" src="<?php print $focusFrameSrc; ?>" style="border: 0px; width: 100%; height: 600px;"></iframe>
     </div>
 
     </div>
