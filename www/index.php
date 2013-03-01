@@ -16,6 +16,7 @@ getRoute()->get('/lobbyist/([^\/]*)', 'lobbyist');
 getRoute()->get('/lobbyist/(.*)/details', 'lobbyistDetails');
 getRoute()->get('/lobbyist/(.*)/link', 'lobbyistLink');
 
+getRoute()->get('/meetings/file/(\d+)', array('MeetingController','getFileCacheUrl'));
 getRoute()->get('/meetings', array('MeetingController','dolist')); // meetings
 getRoute()->get('/meetings/([^\/]*)', array('MeetingController','dolist')); // meetings/CATEGORY
 getRoute()->get('/meetings/meetid/(\d+)', array('MeetingController','meetidForward')); // meetings/CATEGORY/ID
@@ -46,7 +47,7 @@ function dashboard() {
     <tr>
       <td><?php print meeting_category_to_title($m['category']); ?></td>
       <td style="text-align: center; width: 90px;"><?php print $m['starttime']; ?></td>
-      <td style="text-align: center;"><a class="btn btn-mini" href="<?php print "$OTT_WWW/meetings/{$m['category']}/{$m['id']}"; ?>">Agenda</a></td>
+      <td style="text-align: center;"><a class="btn btn-mini" href="<?php print "$OTT_WWW/meetings/{$m['category']}/{$m['meetid']}"; ?>">Agenda</a></td>
     </tr>
     <?php
   }
@@ -64,7 +65,7 @@ function dashboard() {
     <tr>
       <td><?php print meeting_category_to_title($m['category']); ?></td>
       <td style="text-align: center; width: 90px;"><?php print $m['starttime']; ?></td>
-      <td style="text-align: center;"><a class="btn btn-mini" href="<?php print "$OTT_WWW/meetings/{$m['category']}/{$m['id']}"; ?>">Agenda</a></td>
+      <td style="text-align: center;"><a class="btn btn-mini" href="<?php print "$OTT_WWW/meetings/{$m['category']}/{$m['meetid']}"; ?>">Agenda</a></td>
     </tr>
     <?php
   }
@@ -82,7 +83,7 @@ function dashboard() {
     <tr>
       <td><?php print meeting_category_to_title($m['category']); ?></td>
       <td style="text-align: center; width: 90px;"><?php print $m['starttime']; ?></td>
-      <td style="text-align: center;"><a class="btn btn-mini" href="<?php print "$OTT_WWW/meetings/{$m['category']}/{$m['id']}"; ?>">Agenda</a></td>
+      <td style="text-align: center;"><a class="btn btn-mini" href="<?php print "$OTT_WWW/meetings/{$m['category']}/{$m['meetid']}"; ?>">Agenda</a></td>
     </tr>
     <?php
   }

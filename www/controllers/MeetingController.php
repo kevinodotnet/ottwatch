@@ -2,6 +2,20 @@
 
 class MeetingController {
 
+  # for a given fileid, resolve the "cache" trick, then proxy download the real PDF
+  static public function getFileCacheUrl ($fileid) {
+    # get the data
+    $url = 'http://app05.ottawa.ca/sirepub/view.aspx?cabinet=published_meetings&fileid=' . $fileid;
+    $data = file_get_contents($url);
+    # <script>document.location = 'cache/2/lkwtpr5l2u0ppewlizialyuu/4692203012013020316562.PDF';</script>
+    $data = preg_replace("/';.*/","",$data);
+    $data = preg_replace("/.*'/","",$data);
+    $url = "http://app05.ottawa.ca/sirepub/$data";
+    # get the real PDF and echo it back.
+    header("Content-Type: application/pdf");
+    print file_get_contents($url);
+  }
+
   static public function getDocumentUrl ($meetid,$doctype) {
     return "http://app05.ottawa.ca/sirepub/agview.aspx?agviewmeetid={$meetid}&agviewdoctype={$doctype}";
   }
@@ -40,12 +54,72 @@ class MeetingController {
     }
   }
 
-  static public function meetingDetails ($category,$id,$itemid) {
-    $m = getDatabase()->one(" select * from meeting where id = :id ",array("id" => $id));
+  static public function meetingDetails ($category,$meetid,$itemid) {
+
+    $m = getDatabase()->one(" select * from meeting where meetid = :meetid ",array("meetid" => $meetid));
     if (!$m['id']) {
+      # meeting ID was not found
       self::doList($category);
       return;
     }
+
+    # display list of items, and break out with the files too
+    $items = getDatabase()->all(" select * from item where meetingid = :meetingid order by id ",array("meetingid"=>$m['id']));
+    top();
+
+    # LEFT hand navigation, items and files links
+    ?>
+
+    <script>
+    function focusOn(type,id) {
+      if (type == 'file') {
+        // <iframe src="http://docs.google.com/viewer?url=http%3A%2F%2Ftest.com&embedded=true" width="600" height="780" style="border: none;"></iframe>
+        url = '<?php print OttWatchConfig::WWW; ?>/meetings/file/' + id;
+        $('#focusFrame').attr('src','http://docs.google.com/viewer?url='+escape(url)+'&embedded=true');
+      } else if (type == 'item') {
+        $('#focusFrame').attr('src','<?php print self::getDocumentUrl($m['meetid'],'AGENDA'); ?>#Item' + id);
+      } else {
+        alert('programmer made a mistake; unknown type: ' + type);
+      }
+    }
+    </script>
+
+    <div class="row-fluid">
+
+    <!-- column 1 -->
+    <div class="span4">
+    <div style="overflow:scroll; height: 600px;">
+    <?php
+    foreach ($items as $i) {
+      #print "<pre>"; print print_r($i); print "</pre>";
+      print "<b><a href=\"javascript:focusOn('item',{$i['itemid']})\">{$i['title']}</a></b><br/>\n";
+      $files = getDatabase()->all(" select * from ifile where itemid = :itemid order by id ",array("itemid"=>$i['id']));
+      if (count($files) > 0) {
+        print "<ul>\n";
+        foreach ($files as $f) {
+          print "<li><small><a href=\"javascript:focusOn('file',{$f['fileid']})\"><i class=\"icon-file\"></i> {$f['title']}</small></a></li>\n";
+        }
+        print "</ul>\n";
+      }
+    }
+    ?>
+    </div>
+    </div>
+
+    <!-- column 2 -->
+    <div class="span8">
+    <iframe id="focusFrame" src="" style="border: 0px; width: 100%; height: 600px;"></iframe>
+    </div>
+
+    </div>
+    <?php
+    bottom();
+
+
+    if (1) {
+      return;
+    }
+
     $agendaUrl = self::getDocumentUrl($m['meetid'],'AGENDA');
     $title = meeting_category_to_title($m['category']);
     $item = getDatabase()->one(" select * from item where id = :id ",array("id" => $itemid));
