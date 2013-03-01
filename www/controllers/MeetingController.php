@@ -102,12 +102,12 @@ class MeetingController {
       print "<b><a href=\"javascript:focusOn('item',{$i['itemid']})\">{$i['title']}</a></b><br/>\n";
       $files = getDatabase()->all(" select * from ifile where itemid = :itemid order by id ",array("itemid"=>$i['id']));
       if (count($files) > 0) {
-        print "<ul>\n";
         foreach ($files as $f) {
-          print "<li><small><a href=\"javascript:focusOn('file',{$f['fileid']})\"><i class=\"icon-file\"></i> {$f['title']}</small></a></li>\n";
+          $fileurl = OttWatchConfig::WWW . "/meetings/file/" . $f['fileid'];
+          print "<small><a target=\"_blank\" href=\"{$fileurl}\"><i class=\"icon-share-alt\"></i></a> <a href=\"javascript:focusOn('file',{$f['fileid']})\"><i class=\"icon-edit\"></i> {$f['title']}</small></a><br/>\n";
         }
-        print "</ul>\n";
       }
+      print "<br/>\n";
     }
     ?>
     </div>
