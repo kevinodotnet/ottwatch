@@ -28,13 +28,25 @@ class MeetingController {
     header("Location: ../{$m['category']}/{$m['id']}");
   }
 
+  static public function itemFiles ($category,$id,$itemid,$format) {
+    $files = getDatabase()->all(" select * from ifile where itemid = :id order by id ",array('id' => $itemid));
+    if ($format == 'files.json') {
+      print json_encode($files);
+      return;
+    }
+    foreach ($files as $f) {
+      $url = "http://app05.ottawa.ca/sirepub/view.aspx?cabinet=published_meetings&fileid={$f['fileid']}";
+      print "<i class=\"icon-file\"></i> <a target=\"_blank\" href=\"{$url}\">{$f['title']}</a><br/>\n";
+    }
+  }
+
   static public function meetingDetails ($category,$id,$itemid) {
     $m = getDatabase()->one(" select * from meeting where id = :id ",array("id" => $id));
     if (!$m['id']) {
-      MeetingController::doList($category);
+      self::doList($category);
       return;
     }
-    $agendaUrl = MeetingController::getDocumentUrl($m['meetid'],'AGENDA');
+    $agendaUrl = self::getDocumentUrl($m['meetid'],'AGENDA');
     $title = meeting_category_to_title($m['category']);
     $item = getDatabase()->one(" select * from item where id = :id ",array("id" => $itemid));
     if ($item['itemid']) {
@@ -53,11 +65,11 @@ class MeetingController {
     function highlightItem(id,itemid) {
 
       // move the agenda iFrame to the <a name=""/> for the chosen item
-      $('#agendaFrame').attr('src','<?php print MeetingController::getDocumentUrl($m['meetid'],'AGENDA'); ?>#Item' + itemid);
+      $('#agendaFrame').attr('src','<?php print self::getDocumentUrl($m['meetid'],'AGENDA'); ?>#Item' + itemid);
 
       // build a REST link back to OttWatch for the item, and create
       // a Tweet button for it.
-      owItemUrl = '<?php print MeetingController::getMeetingUrl($id); ?>/item/' + id;
+      owItemUrl = '<?php print self::getMeetingUrl($id); ?>/item/' + id;
       itemTitle = $('#itemAnchor'+id).html();
       tweetText = 'Reading "' + itemTitle + '" ';
       while ((tweetText.length + owItemUrl.length) > 139) {
@@ -73,8 +85,16 @@ class MeetingController {
         ' <img style="height: 20px; width: 58px;" alt="Tweet" src="<?php print OttWatchConfig::WWW; ?>/img/facebook-share.png"/></a>' +
         ' <a href="javascript:copyToClipboard(\'' + owItemUrl + '\');" class="btn btn-mini">Clipboard <i class="icon-share"></i></a> ' +
         '';
-      $('#itemDetailsShare').html(newHtml);
       $('#itemDetailsTitle').html(itemTitle);
+      $('#itemDetailsShare').html(newHtml);
+
+      // load file data
+      $.get(owItemUrl + '/files', function(data) {
+        $('#itemDetailsFiles').html(data);
+        $(this).scrollTop(0);
+      });
+
+
     }
     </script>
 
@@ -99,7 +119,8 @@ class MeetingController {
     <div class="span8">
 
     <div style="padding: 5px; margin-bottom: 5px; ">
-    <span id="itemDetailsTitle"></span>
+    <div id="itemDetailsTitle" style="font-weight: bold;"></div>
+    <div id="itemDetailsFiles"></div>
     
     <div id="itemDetailsShare" class="pull-right">
     <a target="_blank" 
@@ -221,27 +242,28 @@ class MeetingController {
   /*
    */
   static public function downloadAndParseMeeting ($id) {
-    $m = getDatabase()->one(" select * from meeting where id = :id ",array('id'=>$id));
-    if (!$m['id']) { return; }
-   
-    # cache file
-    $file = OttWatchConfig::FILE_DIR."/{$m['meetid']}_agenda.html";
 
-    if (1) {
-      $agenda = file_get_contents(MeetingController::getDocumentUrl($m['meetid'],'AGENDA')); 
-      file_put_contents($file,$agenda);
-    } else {
-      $agenda = file_get_contents($file);
+    $m = getDatabase()->one(" select * from meeting where id = :id ",array('id'=>$id));
+    if (!$m['id']) { 
+      print "downloadAndParseMeeting for $id :: NOT FOUDN\n";
+      return; 
     }
 
-    $agenda = mb_convert_encoding($agenda,"ascii");
-    file_put_contents($file."new",$agenda);
+    print "downloadAndParseMeeting for meeting:$id\n";
 
+    # get agenda HTML
+    $agenda = file_get_contents(self::getDocumentUrl($m['meetid'],'AGENDA')); 
+
+    # charset issues
+    $agenda = mb_convert_encoding($agenda,"ascii");
+
+    # XML issues
     $agenda = preg_replace("/&nbsp;/"," ",$agenda);
 
     # rebuild item rows
     getDatabase()->execute(" delete from item where meetingid = :id ",array('id'=>$id));
 
+    # scrape out item IDs, and titles.
 	  $lines = explode("\n",$agenda);
     $add = 0;
     $spool = array();
@@ -299,6 +321,40 @@ class MeetingController {
       }
 	  }
 
+    # purge existing files; not needed as delete ITEM cascades
+    # getDatabase()->execute(" delete from ifile where itemid in (select id from item where meetingid = :id) ",array('id'=>$id));
+
+    # go back to the database to build up the "items" in this meeting, and then go grab
+    # all the files too.
+    $items = getDatabase()->all(' select * from item where meetingid = :id ', array('id' => $id));
+
+	  foreach ($items as $item) {
+      print "  item:{$item['id']} title: {$item['title']}\n";
+	    $html = file_get_contents(self::getItemUrl($item['itemid']));
+		  $lines = explode("\n",$html);
+	    $files = array();
+		  foreach ($lines as $line) {
+		    if (preg_match("/fileid=/",$line)) {
+          $line = preg_replace("/\n/","",$line);
+          $line = preg_replace("/\r/","",$line);
+
+          $title = $line;
+          $title = preg_replace("/.*&nbsp;/","",$title);
+          $title = preg_replace("/<.*/","",$title);
+
+		      $fileid = $line;
+		      $fileid = preg_replace("/.*fileid=/","",$fileid);
+		      $fileid = preg_replace('/".*/',"",$fileid);
+
+          print "    file: $title\n";
+		  	  getDatabase()->execute('insert into ifile (itemid,fileid,title,created,updated) values (:itemid,:fileid,:title,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP) ', array(
+		  	    'itemid' => $item['id'],
+		  	    'fileid' => $fileid,
+		  	    'title' => $title,
+		  	  ));
+		    }
+		  }
+	  }
 
   }
 
