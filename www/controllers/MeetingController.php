@@ -39,7 +39,7 @@ class MeetingController {
       error404();
       return;
     }
-    header("Location: ../{$m['category']}/{$m['id']}");
+    header("Location: ../{$m['category']}/{$m['meetid']}");
   }
 
   static public function itemFiles ($category,$id,$itemid,$format) {
