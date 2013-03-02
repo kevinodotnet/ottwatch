@@ -12,6 +12,10 @@ if (count($argv) > 1) {
     $id = $argv[2];
     MeetingController::downloadAndParseMeeting($id);
   }
+  if ($argv[1] == 'getFile') {
+    $id = $argv[2];
+    MeetingController::downloadAndParseFile($id);
+  }
   return;
 }
 

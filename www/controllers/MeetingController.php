@@ -74,6 +74,7 @@ class MeetingController {
     # display list of items, and break out with the files too
     $items = getDatabase()->all(" select * from item where meetingid = :meetingid order by id ",array("meetingid"=>$m['id']));
     top($title);
+    print "<b>$title</b> <small>{$m['starttime']}</small><br/><br/>";
 
     # LEFT hand navigation, items and files links
     ?>
@@ -439,6 +440,63 @@ class MeetingController {
 
   }
 
+  static public function downloadAndParseFile ($id) {
+
+    # DEBUG ONLY
+    # getDatabase()->execute(" update ifile set md5 = null where id = :id ",array("id"=>$id));
+
+    $file = getDatabase()->one(" select * from ifile where id = :id ",array("id"=>$id));
+    if (!$file['id']) {
+      print "Fileid not found: $id\n";
+      return;
+    }
+
+    # get the file data
+    print "downloading file: $id\n";
+    $pdf = file_get_contents(OttWatchConfig::WWW . "/meetings/file/".$file['fileid']);
+    #file_put_contents("tmp.pdf",$pdf);
+    #$pdf = file_get_contents("tmp.pdf");
+
+    $md5 = md5($pdf);
+    if ($md5 == $file['md5']) {
+      print "md5 is the same as existing file, no need to update\n";
+      return;
+    }
+    getDatabase()->execute(" update ifile set md5 = :md5 where id = :id ",array("md5"=>$md5,"id"=>$id));
+
+    # save to VAR, split into individual pages
+    print "  saving to disk\n";
+    $saveas = OttWatchConfig::FILE_DIR."/pdf/".$file['fileid'].'.pdf';
+    file_put_contents($saveas,$pdf);
+
+    # get the text, page by page
+    print "  converting to text\n";
+    $txtfile = OttWatchConfig::FILE_DIR."/pdf/".$file['fileid'].'.txt';
+    `pdftotext -layout -nopgbrk $saveas`;
+    $txt = file_get_contents($txtfile);
+    getDatabase()->execute(" update ifile set txt = :txt where id = :id ",array("txt"=>$txt,"id"=>$id));
+
+    # now do word analysis
+    print "  inserting words\n";
+    getDatabase()->execute(" delete from ifileword where fileid = :id ",array("id"=>$id));
+    $lines = explode("\n",$txt);
+    $docoffset = 0;
+    for ($x = 0; $x < count($lines); $x++) {
+	    $wordlist = preg_split("/[^a-zA-Z0-9]+/",$lines[$x]);
+      for ($y = 0; $y < count($wordlist); $y++) {
+        if ($wordlist[$y] == '') { continue; }
+        getDatabase()->execute(" insert into ifileword (fileid,word,line,offset,docoffset) values (:id,lower(:word),:line,:offset,:docoffset) ",array(
+          "id" => $id,
+          "word" => $wordlist[$y],
+          "line" => $x,
+          "offset" => $y,
+          "docoffset" => $docoffset,
+        ));
+        $docoffset ++;
+      }
+    }
+
+  }
   
 }
 

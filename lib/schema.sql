@@ -50,10 +50,23 @@ create table ifile (
   itemid mediumint not null,
   fileid mediumint,
   title varchar(300),
+  md5 varchar(50),
+  txt mediumtext, -- after pdftotext
   created datetime,
   updated datetime,
   primary key (id),
   constraint foreign key (itemid) references item (id) on delete cascade on update cascade
+) engine = innodb;
+
+create table ifileword (
+  id mediumint not null auto_increment,
+  fileid mediumint not null,
+  word varchar(50),
+  line int,
+  offset int,
+  docoffset int,
+  primary key (id),
+  constraint foreign key (fileid) references ifile (id) on delete cascade on update cascade
 ) engine = innodb;
 
 create table category (
