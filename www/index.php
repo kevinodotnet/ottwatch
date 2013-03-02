@@ -27,12 +27,25 @@ getRoute()->get('/meetings/([^\/]*)/(\d+)/item/(\d+)/(files|files.json)', array(
 getRoute()->get('.*', 'error404');
 getRoute()->run();
 
+function ottawaMediaRSS() {
+  $url = "http://ottawa.ca/rss/news_en.xml";
+  $rss = file_get_contents($url);
+  $xml = simplexml_load_string($rss);
+  $items = $xml->xpath("//item");
+  print "<h4>Media Releases</h4>\n";
+  foreach ($items as $item) {
+    $title = $item->xpath("title"); $title = $title[0].'';
+    $link = $item->xpath("link"); $link = $link[0].'';
+    print "<small><a href=\"$link\" target=\"_blank\">$title</small><br/>\n";
+  }
+}
+
 function dashboard() {
   global $OTT_WWW;
   top();
   ?>
   <div class="row-fluid">
-  <div class="span5">
+  <div class="span4">
   <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
   <tr>
   <td colspan="3">
@@ -95,7 +108,7 @@ function dashboard() {
   </tr>
   </table>
   </div>
-  <div class="span3">
+  <div class="span4">
   <script>
   function lobbyist_search_form_submit() {
     v = document.getElementById('lobbyist_search_value').value;
@@ -111,11 +124,18 @@ function dashboard() {
   <input type="text" id="lobbyist_search_value" placeholder="Search by name...">
   <button class="btn" onclick="lobbyist_search_form_submit()"><i class="icon-search"></i> Search</button>
   </div>
+
+  <?php
+  ottawaMediaRSS();
+  ?>
+
   </div>
+
   <div class="span4">
   <a class="twitter-timeline" data-dnt="true" href="https://twitter.com/ottwatch" data-widget-id="306310112971210752">Tweets by @ottwatch</a>
   <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
   </div>
+
   </div>
   <?php
   bottom();
