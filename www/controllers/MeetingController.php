@@ -298,13 +298,13 @@ class MeetingController {
       array('category' => $category));
     foreach ($rows as $r) { 
       $mtgurl = htmlspecialchars("http://app05.ottawa.ca/sirepub/mtgviewer.aspx?meetid={$r['meetid']}&doctype");
-      $myurl = htmlspecialchars($OTT_WWW."/meetings/{$r['category']}/{$r['id']}");
+      $myurl = htmlspecialchars($OTT_WWW."/meetings/{$r['category']}/{$r['meetid']}");
       ?>
 	    <tr>
 	      <td style="width: 90px; text-align: center;"><?php print $r['starttime']; ?></td>
 	      <td style="width: 90px; text-align: center;"><a class="btn btn-mini" href="<?php print $myurl; ?>">Agenda</a></td>
 	      <td>
-        <a href="<?php print $myurl; ?>"><?php print meeting_category_to_title($r['category']); ?></a>
+        <?php print meeting_category_to_title($r['category']); ?>
         </td>
 	      <td>
         <?php
