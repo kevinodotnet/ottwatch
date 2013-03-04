@@ -74,7 +74,7 @@ class MeetingController {
     # display list of items, and break out with the files too
     $items = getDatabase()->all(" select * from item where meetingid = :meetingid order by id ",array("meetingid"=>$m['id']));
     top($title);
-    print "<b>$title</b> <small>{$m['starttime']}</small><br/><br/>";
+    print "<b>".time()." $title</b> <small>{$m['starttime']}</small><br/><br/>";
 
     # LEFT hand navigation, items and files links
     ?>
@@ -133,7 +133,7 @@ class MeetingController {
     }
     </script>
     <a id="showbtn" onclick="flipComments()" href="#disqus_thread" class="btn pull-right btn-info">Show Comments</a>
-    <a id="hidebtn" style="display: none;" onclick="flipComments()" href="" class="btn pull-right btn-info">Show Agenda</a>
+    <a id="hidebtn" style="display: none;" href="javascript:flipComments()" class="btn pull-right btn-info">Show Agenda</a>
     </div>
     <div id="comments" style="display: none; clear: both; overflow:scroll; height: 550px; padding-top: 5px;">
     <?php disqus(); ?>
