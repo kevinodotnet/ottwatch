@@ -96,7 +96,7 @@ class MeetingController {
 
     <!-- column 1 -->
     <div class="span4">
-    <div style="overflow:scroll; height: 600px;">
+    <div id="agendanav" style="overflow:scroll; height: 550px;">
     <?php
     foreach ($items as $i) {
       #print "<pre>"; print print_r($i); print "</pre>";
@@ -111,6 +111,31 @@ class MeetingController {
       print "<br/>\n";
     }
     ?>
+    </div>
+    <div style="padding: 5px; 0px;">
+    <script>
+    showhideComments = 0; // default hidden
+    function flipComments() {
+      if (showhideComments) {
+        $('#comments').css('display','none');
+        $('#agendanav').css('display','block');
+        // $('#agendanav').css('height','550px');
+        $('#showhidebtn').html('Show Comments');
+        showhideComments = 0;
+      } else {
+        // $('#comments').css('display','none');
+        $('#comments').css('display','block');
+        $('#agendanav').css('display','none');
+        $('#showhidebtn').html('Show Agenda');
+        // $('#agendanav').css('height','350px');
+        showhideComments = 1;
+      }
+    }
+    </script>
+    <a id="showhidebtn" href="javascript:flipComments()" class="btn pull-right btn-info">Show Comments</a>
+    </div>
+    <div id="comments" style="display: none; clear: both; overflow:scroll; height: 550px; padding-top: 5px;">
+    <?php disqus(); ?>
     </div>
     </div>
 
