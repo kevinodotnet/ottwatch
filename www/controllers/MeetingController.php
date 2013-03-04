@@ -119,20 +119,20 @@ class MeetingController {
       if (showhideComments) {
         $('#comments').css('display','none');
         $('#agendanav').css('display','block');
-        // $('#agendanav').css('height','550px');
-        $('#showhidebtn').html('Show Comments');
+        $('#showbtn').css('display','block');
+        $('#hidebtn').css('display','none');
         showhideComments = 0;
       } else {
-        // $('#comments').css('display','none');
         $('#comments').css('display','block');
         $('#agendanav').css('display','none');
-        $('#showhidebtn').html('Show Agenda');
-        // $('#agendanav').css('height','350px');
+        $('#hidebtn').css('display','block');
+        $('#showbtn').css('display','none');
         showhideComments = 1;
       }
     }
     </script>
-    <a id="showhidebtn" href="javascript:flipComments()" class="btn pull-right btn-info">Show Comments</a>
+    <a id="showbtn" onclick="flipComments()" href="#disqus_thread" class="btn pull-right btn-info">Show Comments</a>
+    <a id="hidebtn" style="display: none;" onclick="flipComments()" href="" class="btn pull-right btn-info">Show Agenda</a>
     </div>
     <div id="comments" style="display: none; clear: both; overflow:scroll; height: 550px; padding-top: 5px;">
     <?php disqus(); ?>
