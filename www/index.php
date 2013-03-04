@@ -207,13 +207,6 @@ function lobbyist($name) {
   ?>
   <div class="row-fluid">
   <div class="span12">
-  <p>If you get a blank page below, reload, or go <a target="_blank" href="<?php print urlencode($name); ?>/link">direct to ottawa.ca <i class="icon-edit"></i></a>.
-  (The lobbyist registry has intermittent flake-outs)
-  </p>
-  </div>
-  </div>
-  <div class="row-fluid">
-  <div class="span12">
   <iframe style="border: 0px; width: 100%; height: 1200px;" src="<?php print urlencode($name); ?>/details"></iframe>
   </div>
   </div>
@@ -226,42 +219,61 @@ function lobbyistDetails($name) {
   $matches = lobbyistSearch($name);
   $vs = $matches["__vs"]; unset($matches["__vs"]);
   $ev = $matches["__ev"]; unset($matches["__ev"]);
-  foreach ($matches as $zname => $ctl) {
-    if ($zname == $name) {
-    	$fields = array(
-    	  '__VIEWSTATE' => $vs,
-    	  '__EVENTVALIDATION' => $ev,
-        $ctl => ''
-    	);
-      $html = sendPost($OTT_LOBBY_SEARCH_URL,$fields);
-      $lines = explode("\n",$html);
-      $html = array();
-      $add = 1;
-      foreach ($lines as $line) {
-        if ($add) {
-          array_push($html,$line);
-        }
-        if (preg_match("/<body/",$line)) {
-          $add = 0;
-        }
-        if (preg_match("/Header End/",$line)) {
-          $add = 1;
-        }
-        if (preg_match("/Search Lobbyist Design/",$line)) {
-          $add = 0;
-        }
-        if (preg_match("/End Search Lobbyist Design/",$line)) {
-          $add = 1;
-        }
-      }
-      $base = "\n<base href=\"https://apps107.ottawa.ca/LobbyistRegistry/search/\" target=\"_blank\"/>\n";
-      $html = implode("\n",$html);
-      $html = preg_replace("/<head>/","<head>$base",$html);
-      print $html;
-      return;
+
+  $m = $matches[$name];
+  if (count($m) == 0) {
+    print "Not found<br/>";
+    return;
+  }
+
+  if (count($m) > 1) {
+    print "<h4>Multiple Lobbyists found named '$name'</h4>\n";
+    $index = 0;
+    foreach ($m as $t) {
+      $index++;
+      ?>
+      <form method="post" action="<?php print $OTT_LOBBY_SEARCH_URL; ?>">
+      <input type="hidden" name="__VIEWSTATE" value="<?php print $vs; ?>"/>
+      <input type="hidden" name="__EVENTVALIDATION" value="<?php print $ev; ?>"/>
+      <input type="hidden" name="<?php print $t; ?>" value=""/>
+      <input type="submit" value="<?php print ($name.' '.$index); ?>"/>
+      </form>
+      <?php
     }
-  } 
-  print "$name Not found...\n";
+    return;
+  }
+
+  $fields = array(
+    '__VIEWSTATE' => $vs,
+    '__EVENTVALIDATION' => $ev,
+    $ctl => ''
+  );
+  $html = sendPost($OTT_LOBBY_SEARCH_URL,$fields);
+  $lines = explode("\n",$html);
+  $html = array();
+  $add = 1;
+  foreach ($lines as $line) {
+    if ($add) {
+      array_push($html,$line);
+    }
+    if (preg_match("/<body/",$line)) {
+      $add = 0;
+    }
+    if (preg_match("/Header End/",$line)) {
+      $add = 1;
+    }
+    if (preg_match("/Search Lobbyist Design/",$line)) {
+      $add = 0;
+    }
+    if (preg_match("/End Search Lobbyist Design/",$line)) {
+      $add = 1;
+    }
+  }
+  $base = "\n<base href=\"https://apps107.ottawa.ca/LobbyistRegistry/search/\" target=\"_blank\"/>\n";
+  $html = implode("\n",$html);
+  $html = preg_replace("/<head>/","<head>$base",$html);
+  print $html;
+
 }
 
 function lobbyistLink($name) {

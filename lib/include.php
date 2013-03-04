@@ -170,22 +170,6 @@ function lobbyistSearch($name) {
   $vs = getViewState($html);
   $matches = array();
   foreach ($lines as $line) {
-    // print ">>> $name >>> $line <<<\n";
-#    if (preg_match("/gvSearchResults.*LnkLobbyistName.*>$name</",$line)) {
-#      # href="javascript:__doPostBack(&#39;ctl00$MainContent$gvSearchResults$ctl02$LnkLobbyistName&#39;,&#39;&#39;)"><u>Patrick Dion</u></a>
-#      $ctl = $line;
-#      $ctl = preg_replace("/.*;ctl/","ctl",$ctl);
-#      $ctl = preg_replace("/&.*/","",$ctl);
-#			$fields = array(
-#			  '__VIEWSTATE' => $vs,
-#			  '__EVENTVALIDATION' => $ev,
-#		    $ctl => ''
-#			);
-#      autoSubmitForm($OTT_LOBBY_SEARCH_URL,$fields,"Forwarding to $name lobbyist page");
-#      #$html = sendPost($OTT_LOBBY_SEARCH_URL,$fields);
-#      #print "$html";
-#      return;
-#    }
     if (preg_match("/gvSearchResults.*LnkLobbyistName/",$line)) {
       $zname = $line;
       $zname = preg_replace("/.*<u>/","",$zname);
@@ -193,7 +177,10 @@ function lobbyistSearch($name) {
       $ctl = $line;
       $ctl = preg_replace("/.*;ctl/","ctl",$ctl);
       $ctl = preg_replace("/&.*/","",$ctl);
-      $matches[$zname] = $ctl;
+      if (!$matches[$zname]) {
+        $matches[$zname] = array();
+      }
+      array_push($matches[$zname],$ctl);
     }
   }
 
