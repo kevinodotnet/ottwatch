@@ -129,6 +129,7 @@ class MeetingController {
         $('#showbtn').css('display','none');
         showhideComments = 1;
       }
+      return -1;
     }
     </script>
     <a id="showbtn" onclick="flipComments()" href="#disqus_thread" class="btn pull-right btn-info">Show Comments</a>
