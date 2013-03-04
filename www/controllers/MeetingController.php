@@ -74,7 +74,7 @@ class MeetingController {
     # display list of items, and break out with the files too
     $items = getDatabase()->all(" select * from item where meetingid = :meetingid order by id ",array("meetingid"=>$m['id']));
     top($title);
-    print "<b>".time()." $title</b> <small>{$m['starttime']}</small><br/><br/>";
+    print "<b>$title</b> <small>{$m['starttime']}</small><br/><br/>";
 
     # LEFT hand navigation, items and files links
     ?>
