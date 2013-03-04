@@ -43,9 +43,8 @@ foreach ($items as $i) {
     continue;
   }
 
-	print "Sending $tweet\n";
 	file_put_contents("$OTTVAR/$guidmd5",$tweet);
-	tweet($tweet,1);
+	tweet($tweet,0);
 }
 
 $output = ob_get_contents();
