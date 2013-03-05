@@ -1,6 +1,33 @@
 <?php
 
 class MeetingController {
+ 
+  # trim file titles if they match the item title
+  static public function trimFileTitle ($itemTitle,$fileTitle) {
+    $o = $fileTitle;
+    $a = explode(" ",$itemTitle);
+    $b = explode(" ",$fileTitle);
+    while (count($b)) {
+      $a[0] = preg_replace("/[^a-zA-Z0-9]*/","",$a[0]);
+      $b[0] = preg_replace("/[^a-zA-Z0-9]*/","",$b[0]);
+      if ($a[0] == $b[0]) {
+        array_shift($a);
+        array_shift($b);
+        continue;
+      }
+      if (preg_match("/^{$b[0]}/",$a[0])) {
+        array_shift($b);
+        continue;
+      }
+      if ($b[0] == '-') {
+        array_shift($b);
+        continue;
+      }
+      break;
+    }
+    $fileTitle = implode(" ",$b);
+    return $fileTitle;
+  }
 
   # for a given fileid, resolve the "cache" trick, then proxy download the real PDF
   static public function getFileCacheUrl ($fileid) {
@@ -42,17 +69,18 @@ class MeetingController {
     header("Location: ../{$m['category']}/{$m['meetid']}");
   }
 
-  static public function itemFiles ($category,$id,$itemid,$format) {
-    $files = getDatabase()->all(" select * from ifile where itemid = :id order by id ",array('id' => $itemid));
-    if ($format == 'files.json') {
-      print json_encode($files);
-      return;
-    }
-    foreach ($files as $f) {
-      $url = "http://app05.ottawa.ca/sirepub/view.aspx?cabinet=published_meetings&fileid={$f['fileid']}";
-      print "<i class=\"icon-file\"></i> <a target=\"_blank\" href=\"{$url}\">{$f['title']}</a><br/>\n";
-    }
-  }
+#  static public function itemFiles ($category,$id,$itemid,$format) {
+#    $item = getDatabase()->all(" select * from item where id = :id ",array('id' => $itemid));
+#    $files = getDatabase()->all(" select * from ifile where itemid = :id order by id ",array('id' => $itemid));
+#    if ($format == 'files.json') {
+#      print json_encode($files);
+#      return;
+#    }
+#    foreach ($files as $f) {
+#      $url = "http://app05.ottawa.ca/sirepub/view.aspx?cabinet=published_meetings&fileid={$f['fileid']}";
+#      print "<i class=\"icon-file\"></i> <a target=\"_blank\" href=\"{$url}\">".self::trimFileTitle($item['title'],$f['title'])."</a><br/>\n";
+#    }
+#  }
 
   static public function meetingDetails ($category,$meetid,$itemid) {
 
@@ -104,8 +132,9 @@ class MeetingController {
       $files = getDatabase()->all(" select * from ifile where itemid = :itemid order by id ",array("itemid"=>$i['id']));
       if (count($files) > 0) {
         foreach ($files as $f) {
+          $ft = self::trimFileTitle($i['title'],$f['title']);
           $fileurl = OttWatchConfig::WWW . "/meetings/file/" . $f['fileid'];
-          print "<small><a target=\"_blank\" href=\"{$fileurl}\"><i class=\"icon-share-alt\"></i></a> <a href=\"javascript:focusOn('file',{$f['fileid']})\"><i class=\"icon-edit\"></i> {$f['title']}</small></a><br/>\n";
+          print "<small><a target=\"_blank\" href=\"{$fileurl}\"><i class=\"icon-share-alt\"></i></a> <a href=\"javascript:focusOn('file',{$f['fileid']})\"><i class=\"icon-edit\"></i> {$ft}</small></a><br/>\n";
         }
       }
       print "<br/>\n";
