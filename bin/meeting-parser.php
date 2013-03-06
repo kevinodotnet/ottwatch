@@ -65,6 +65,9 @@ foreach ($items as $i) {
   if ($mdb['id']) {
 	  getDatabase()->execute(' delete from meeting where meetid = :meetid ', array(':meetid' => $meetid));
   }
+
+  print "$category :: $starttime :: $title\n";
+
   $meetingid = getDatabase()->execute('
 		insert into meeting (rssguid,meetid,title,category,starttime,created,updated) 
 		values (:rssguid,:meetid,:title,:category,:starttime,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP); ', array(
