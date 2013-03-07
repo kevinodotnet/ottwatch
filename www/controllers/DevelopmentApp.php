@@ -14,9 +14,9 @@ class DevelopmentAppController {
     # get dev-apps sorted by status update.
     # results are sorted with oldtest date first, so then jump to last page, and start scanning backwards
     # until no dates on page are "new"
-    $html = file_get_contents('http://app01.ottawa.ca/postingplans/searchResults.jsf?lang=en&newReq=true&action=sort&sortField=objectCurrentStatusDate&keyword=.');
+    #$html = file_get_contents('http://app01.ottawa.ca/postingplans/searchResults.jsf?lang=en&newReq=true&action=sort&sortField=objectCurrentStatusDate&keyword=.');
     #file_put_contents("t.html",$html);
-    #$html = file_get_contents("t.html");
+    $html = file_get_contents("t.html");
 
     # parse out all of the pages of results
     $lines = explode("\n",$html);
@@ -48,9 +48,9 @@ class DevelopmentAppController {
     foreach ($pages as $p) {
       print "scanDevApps: loading results page $p\n";
       $url="http://app01.ottawa.ca/postingplans/searchResults.jsf?lang=en&action=sort&sortField=objectCurrentStatusDate&keyword=.&page=$p";
-      $html = file_get_contents($url);
+      #$html = file_get_contents($url);
       #file_put_contents("p.html",$html);
-      #$html = file_get_contents("p.html");
+      $html = file_get_contents("p.html");
       $lines = explode("\n",$html); 
       foreach ($lines as $l) {
         # <a href="appDetails.jsf;jsessionid=D49D6B525184BD8711CED3AFDE61A2D2?lang=en&appId=__866MYU" class="app_applicationlink">D01-01-12-0006           </a>
@@ -58,20 +58,35 @@ class DevelopmentAppController {
         if (preg_match('/appDetails.jsf.*appId=([^"]+)".*>(D[^ <]+)/',$l,$matches)) {
           $appid = $matches[1];
           $devid = $matches[2];
-          self::injestApplication($appid);
+          #self::injestApplication($appid);
 #          $url = "http://app01.ottawa.ca/postingplans/appDetails.jsf?lang=en&appId=$appid";
 #          $html = file_get_contents($url);
 #          injestApplication
 #          #file_put_contents("a.html",$html);
 #          exit;
         }
+        if (preg_match('/<td class="subRowGray15">(.*)</',$l,$matches)) {
+          $statusdate = $matches[1];
+          $statusdate = strftime("%Y-%m-%d",strtotime($statusdate));
+          $app = getDatabase()->one(" select id,date(statusdate) statusdate from devapp where appid = :appid ",array("appid"=>$appid));
+          $action = '';
+          if ($app['id']) {
+            if ($app['statusdate'] != $statusdate) {
+              self::injestApplication($appid,'update');
+            }
+          } else {
+            self::injestApplication($appid,'insert');
+          }
+        }
       }
+      exit;
     }
 
   }
 
-  static function injestApplication ($appid) {
-    print "injestApplication($appid)\n";
+  static function injestApplication ($appid,$action) {
+    print "injestApplication($appid,$action)\n";
+    return;
     $url = "http://app01.ottawa.ca/postingplans/appDetails.jsf?lang=en&appId=$appid";
     $html = file_get_contents($url);
     #file_put_contents("a.html",$html);
