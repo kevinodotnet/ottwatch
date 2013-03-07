@@ -47,6 +47,7 @@ class DevelopmentAppController {
     # obtain all search results until a page has no relatively new DevApps
     foreach ($pages as $p) {
       print "scanDevApps: loading results page $p\n";
+      $changed = 0;
       $url="http://app01.ottawa.ca/postingplans/searchResults.jsf?lang=en&action=sort&sortField=objectCurrentStatusDate&keyword=.&page=$p";
       #$html = file_get_contents($url);
       #file_put_contents("p.html",$html);
@@ -58,12 +59,6 @@ class DevelopmentAppController {
         if (preg_match('/appDetails.jsf.*appId=([^"]+)".*>(D[^ <]+)/',$l,$matches)) {
           $appid = $matches[1];
           $devid = $matches[2];
-          #self::injestApplication($appid);
-#          $url = "http://app01.ottawa.ca/postingplans/appDetails.jsf?lang=en&appId=$appid";
-#          $html = file_get_contents($url);
-#          injestApplication
-#          #file_put_contents("a.html",$html);
-#          exit;
         }
         if (preg_match('/<td class="subRowGray15">(.*)</',$l,$matches)) {
           $statusdate = $matches[1];
@@ -72,14 +67,21 @@ class DevelopmentAppController {
           $action = '';
           if ($app['id']) {
             if ($app['statusdate'] != $statusdate) {
+              $changed = 1;
               self::injestApplication($appid,'update');
             }
           } else {
+            $changed = 1;
             self::injestApplication($appid,'insert');
           }
         }
       }
-      exit;
+      if (! $changed) {
+        # nothing changed on this search results page;
+        # no need to keep going on other serach pages
+        print "No changes on page\n";
+        break;
+      }
     }
 
   }
