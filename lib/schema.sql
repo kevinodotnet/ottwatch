@@ -17,6 +17,20 @@ create table people (
   primary key (id)
 ) engine = innodb;
 
+create table devapp (
+  id mediumint not null auto_increment,
+  appid varchar(10),
+  devid varchar(20),
+  ward varchar(100),
+  apptype varchar(100),
+  status varchar(100),
+  statusdate datetime,
+  receiveddate datetime,
+  created datetime,
+  updated datetime,
+  primary key (id)
+) engine = innodb;
+
 drop table if exists ifile;
 drop table if exists item;
 drop table if exists meeting;
