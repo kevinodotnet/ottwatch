@@ -142,8 +142,13 @@ function dashboard() {
   $apps = getDatabase()->all(" select * from devapp order by updated desc limit 5 ");
   foreach ($apps as $a) {
     $url = DevelopmentAppController::getLinkToApp($a['appid']);
-    $addr = explode("|",$a['address']);
+    $addr = json_decode($a['address']);
+    $addrcount = count($addr);
     $addr = $addr[0];
+    $addr = $addr->addr;
+    if ($count > 1) {
+      $addr .= ' +';
+    }
     ?>
     <tr>
     <td><small><a href="<?php print $url; ?>"><?php print $a['devid']; ?></a></small></td>

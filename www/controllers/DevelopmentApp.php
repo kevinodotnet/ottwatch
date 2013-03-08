@@ -1,6 +1,5 @@
 <?php
 
-
 class DevelopmentAppController {
 
   static public function viewDevApp($devid) {
@@ -62,8 +61,10 @@ class DevelopmentAppController {
       <td><?php print $a['status']; ?></td>
       <td>
       <?php
-      $addr = explode("|",$a['address']);
-      print implode("<br/>",$addr);
+      $addr = json_decode($a['address']);
+      foreach ($addr as $t) {
+        print "<a target=\"_blank\" href=\"http://maps.google.com/?q={$t->lat},{$t->lon}\">{$t->addr}</a><br/>\n";
+      }
       ?>
       </td>
       <td><?php print strftime("%Y-%m-%d",strtotime($a['statusdate'])); ?></td>
@@ -182,8 +183,14 @@ class DevelopmentAppController {
     $value = '';
     for ($x = 0; $x < count($lines); $x++) {
       $matches = array();
-      if (preg_match('/apps104.*_emap">([^<]+)</',$lines[$x],$matches)) {
-        $addresses[] = $matches[1];
+      if (preg_match('/apps104.*LAT=([-\d\.]+).*LON=([-\d\.]+).*>([^<]+)</',$lines[$x],$matches)) {
+        # <li><a href="http://apps104.ottawa.ca/emap?emapver=lite&LAT=45.278462&LON=-75.570191&featname=5640+Bank+Street&amp;lang=en" target="_emap">5640 Bank Street</a></li>
+        print_r($matches);
+        $addr = array();
+        $addr['lat'] = $matches[1];
+        $addr['lon'] = $matches[2];
+        $addr['addr'] = $matches[3];
+        $addresses[] = $addr;
         #$addresses[0] = $matches[1];
       }
       if (preg_match('/div.*class="label"/',$lines[$x])) {
@@ -211,7 +218,7 @@ class DevelopmentAppController {
       values
       (:address,:appid,:devid,:ward,:apptype,:status,:statusdate,:receiveddate,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP)",array(
         'devid'=> $labels['Application #'],
-        'address'=> implode("|",$addresses),
+        'address'=> json_encode($addresses),
         'appid'=> $appid,
         'ward' => $labels['Ward'],
         'apptype' => $labels['Application'],
