@@ -235,4 +235,10 @@ function disqus() {
   <?php    
 }
 
+function pr($o) {
+  print "<pre>";
+  print print_r($o);
+  print "</pre>";
+}
+
 ?>
