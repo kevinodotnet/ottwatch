@@ -3,6 +3,7 @@
 include_once '../lib/include.php';
 include_once 'epiphany/src/Epi.php';
 include_once 'controllers/MeetingController.php';
+include_once 'controllers/DevelopmentApp.php';
 
 Epi::setPath('base', 'epiphany/src');
 Epi::init('route');
@@ -15,6 +16,8 @@ getRoute()->get('/lobbyist/search/(.*)', 'lobbyist_search');
 getRoute()->get('/lobbyist/([^\/]*)', 'lobbyist');
 getRoute()->get('/lobbyist/(.*)/details', 'lobbyistDetails');
 getRoute()->get('/lobbyist/(.*)/link', 'lobbyistLink');
+
+getRoute()->get('/devapps', array('DevelopmentAppController','listAll'));
 
 getRoute()->get('/meetings/file/(\d+)', array('MeetingController','getFileCacheUrl'));
 getRoute()->get('/meetings', array('MeetingController','dolist')); // meetings
@@ -36,7 +39,7 @@ function ottawaMediaRSS() {
   foreach ($items as $item) {
     $title = $item->xpath("title"); $title = $title[0].'';
     $link = $item->xpath("link"); $link = $link[0].'';
-    print "<small><a href=\"$link\" target=\"_blank\">$title</small><br/>\n";
+    print "<small><a href=\"$link\" target=\"_blank\">$title</a></small><br/>\n";
   }
 }
 
@@ -128,6 +131,37 @@ function dashboard() {
   <?php
   ottawaMediaRSS();
   ?>
+
+  <h4>Development Applications</h4>
+  <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
+  <?php
+  $count = getDatabase()->one(" select count(1) c from devapp ");
+  $count = $count['c'];
+  $apps = getDatabase()->all(" select appid,devid,date(statusdate),apptype statusdate from devapp order by statusdate desc limit 1 ");
+  $apps = getDatabase()->all(" select * from devapp order by statusdate desc limit 5 ");
+  foreach ($apps as $a) {
+    $url = DevelopmentAppController::getLinkToApp($a['appid']);
+    $addr = explode("|",$a['address']);
+    $addr = $addr[0];
+    ?>
+    <tr>
+    <td><small><a href="<?php print $url; ?>"><?php print $a['devid']; ?></a></small></td>
+    <td><small><?php print $a['apptype']; ?></small></td>
+    <td><small><?php print $addr; ?></small></td>
+    </tr>
+    <?php
+    #print "<a href=\"$url\">{$a['devid']}</a> {$a['apptype']}: {$addr}<br/>";
+    #pr($a);
+  }
+  ?>
+  <tr>
+  <td colspan="3">
+  <center>
+  <a href="devapps">View all <?php print $count; ?>  development applications</a>
+  </center>
+  </td>
+  </tr>
+  </table>
 
   </div>
 

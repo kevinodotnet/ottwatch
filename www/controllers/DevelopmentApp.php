@@ -3,6 +3,50 @@
 
 class DevelopmentAppController {
 
+  static public function listAll() {
+    top();
+
+    $apps = getDatabase()->all(" select * from devapp order by statusdate desc ");
+    ?>
+    <h1>Development Applications</h1>
+    <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
+    <tr>
+    <th>Application #</th>
+    <th>Application</th>
+    <th>Status</th>
+    <th>Address(es)</th>
+    <th>Updated</th>
+    <th>Started</th>
+    </tr>
+    <?php
+    foreach ($apps as $a) {
+      $url = self::getLinkToApp($a['appid']);
+      ?>
+      <tr>
+      <td><a target="_blank" href="<?php print $url; ?>"><?php print $a['devid']; ?></a></td>
+      <td><?php print $a['apptype']; ?></td>
+      <td><?php print $a['status']; ?></td>
+      <td>
+      <?php
+      $addr = explode("|",$a['address']);
+      print implode("<br/>",$addr);
+      ?>
+      </td>
+      <td><?php print strftime("%Y-%m-%d",strtotime($a['statusdate'])); ?></td>
+      <td><?php print strftime("%Y-%m-%d",strtotime($a['receiveddate'])); ?></td>
+      </tr>
+      <?php
+    }
+    ?>
+    </table>
+    <?php
+    bottom();
+  }
+
+  static public function getLinkToApp($appid) {
+    return "http://app01.ottawa.ca/postingplans/appDetails.jsf?lang=en&appId=$appid";
+  }
+
   static public function scanDevApps() {
 
     # get dev-apps sorted by status update.
