@@ -5,8 +5,6 @@ class DevelopmentAppController {
 
   static public function scanDevApps() {
 
-    print "scanDevApps: loading default page of results\n";
-
     # get dev-apps sorted by status update.
     # results are sorted with oldtest date first, so then jump to last page, and start scanning backwards
     # until no dates on page are "new"
@@ -42,7 +40,6 @@ class DevelopmentAppController {
 
     # obtain all search results until a page has no relatively new DevApps
     foreach ($pages as $p) {
-      print "scanDevApps: loading results page $p\n";
       $changed = 0;
       $url="http://app01.ottawa.ca/postingplans/searchResults.jsf?lang=en&action=sort&sortField=objectCurrentStatusDate&keyword=.&page=$p";
       $html = file_get_contents($url);
@@ -75,7 +72,6 @@ class DevelopmentAppController {
       if (! $changed) {
         # nothing changed on this search results page;
         # no need to keep going on other serach pages
-        print "No changes on page\n";
         break;
       }
     }
@@ -155,6 +151,7 @@ class DevelopmentAppController {
     }
 
     $newtweet = tweet_txt_and_url($tweet,$url);
+		print "$newtweet\n";
 
 		# allow dups because a devapp will be updated multiple times
 		tweet($newtweet,1);
