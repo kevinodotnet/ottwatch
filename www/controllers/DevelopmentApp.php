@@ -3,6 +3,40 @@
 
 class DevelopmentAppController {
 
+  static public function viewDevApp($devid) {
+    $a = getDatabase()->one(" select * from devapp where devid = :devid ",array("devid"=>$devid));
+    if (!$a['id']) {
+      top();
+      print "$devid not found in the database.\n";
+      bottom();
+      return;
+    }
+    top();
+
+    $html = file_get_contents(self::getLinkToApp($a['appid']));
+    $lines = explode("\n",$html);
+    $add = 0;
+    $buf = array();
+    foreach ($lines as $l) {
+      if (preg_match('/class="box"/',$l)) {
+        $add = 1;
+      }
+      if (preg_match("/CONTENT ENDS/",$l)) {
+        $add = 0;
+      }
+      if ($add) {
+        $buf[] = $l;
+      }
+    }
+    array_pop($buf); // pop last DIV, which is not part of the "class=box" div
+
+    print "<h1>{$a['devid']}</h1>";
+    print implode("\n",$buf);
+    ?>
+    <?php
+    bottom();
+  }
+
   static public function listAll() {
     top();
 

@@ -18,6 +18,7 @@ getRoute()->get('/lobbyist/(.*)/details', 'lobbyistDetails');
 getRoute()->get('/lobbyist/(.*)/link', 'lobbyistLink');
 
 getRoute()->get('/devapps', array('DevelopmentAppController','listAll'));
+getRoute()->get('/devapps/([^\/]+)', array('DevelopmentAppController','viewDevApp'));
 
 getRoute()->get('/meetings/file/(\d+)', array('MeetingController','getFileCacheUrl'));
 getRoute()->get('/meetings', array('MeetingController','dolist')); // meetings
