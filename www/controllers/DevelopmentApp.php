@@ -1,9 +1,5 @@
 <?php
 
-include("../../lib/include.php");
-
-DevelopmentAppController::scanDevApps();
-#DevelopmentAppController::injestApplication('__13234');
 
 class DevelopmentAppController {
 
@@ -150,8 +146,6 @@ class DevelopmentAppController {
         'receiveddate' =>$labels['date_received'],
     ));
 
-    return;
-
     $url = "http://app01.ottawa.ca/postingplans/appDetails.jsf?lang=en&appId=$appid";
 
     if ($action == 'insert') {
@@ -161,7 +155,9 @@ class DevelopmentAppController {
     }
 
     $newtweet = tweet_txt_and_url($tweet,$url);
-    print "$newtweet\n";
+
+		# allow dups because a devapp will be updated multiple times
+		tweet($newtweet,1);
 
 #  id mediumint not null auto_increment,
 #  appid varchar(10),

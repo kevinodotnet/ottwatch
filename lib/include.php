@@ -16,6 +16,7 @@ if (1) {
 	require_once('bitly.php');
 	require_once('Epi.php');
 	require_once('controllers/MeetingController.php');
+	require_once('controllers/DevelopmentApp.php');
 	#require_once('EpiDatabase.php');
 	#require_once('EpiException.php');
 	
