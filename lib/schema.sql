@@ -17,11 +17,13 @@ create table people (
   primary key (id)
 ) engine = innodb;
 
+drop table if exists devapp;
 create table devapp (
   id mediumint not null auto_increment,
   appid varchar(10),
   devid varchar(20),
   ward varchar(100),
+  address varchar(200),
   apptype varchar(100),
   status varchar(100),
   statusdate datetime,

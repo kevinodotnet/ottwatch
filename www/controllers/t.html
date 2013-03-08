@@ -1,0 +1,519 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+
+
+    
+    <html xmlns="http://www.w3.org/1999/xhtml" xml:lang='en'
+        lang='en'>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7">
+<link rel="stylesheet" type="text/css" href="/postingplans/css/redesign.css" />
+<!--[if IE]> <style type="text/css">@import "/postingplans/css/redesign_IE.css";</style> <![endif]-->
+<link rel="stylesheet" type="text/css" href="/postingplans/css/application.css" />
+<!--[if IE]> <style type="text/css">@import "/postingplans/css/application_IE.css";</style> <![endif]-->
+<script language="JavaScript" type="text/javascript" src="/postingplans/scripts/web.js"></script>
+<link type="text/css" rel="stylesheet" href="/so/css/wrapper.css" media="screen" />
+<style type="text/css">
+#wrappper #contentWrapper #container #serviceLevelTextArea {
+    width: 650px;
+}
+
+#wrappper #contentWrapper #container #serviceLevelTextArea.grayOuterGlowFilled  {
+    border: 1px solid #ccc; 
+}
+</style>
+<!--[if lt IE 7]>
+<style> 
+/* style for IE6 + IE5.5 + IE5.0 */ 
+.artsrightnav { height: 0; } 
+.artssearchresult { height: 0; } 
+.eventheader { height: 0; } 
+.eventfooter { height: 0; }
+</style>
+<![endif]--> 
+  
+<!--[if IE 7]>
+<style> 
+.artsrightnav { zoom: 1; } 
+.artssearchwrapper { zoom: 1; } 
+.artssearchresult { zoom: 1; } 
+.eventheader { zoom: 1; } 
+.eventfooter { zoom: 1; } 
+</style>
+<![endif]--> 
+
+
+<title>Development Application Search-Search Results</title>
+</head>
+<body>
+    
+                <div id="topBar"><!--//Top Bar Start-->
+	<div id="topLinks">
+	<ul class="navLinks whiteLinks">
+		<li><a href="http://ottawa.ca/en/">Home</a><span class="sepLine">|</span></li>
+		<!-- Switch language should not be provided to apps to avoid interference with the app steps and process
+	   	<li><a href="/cgi-bin/lang.cgi">Fran&#231;ais</a><span class="sepLine">|</span></li>
+		-->
+		<!-- Sitemap has no longer to be displayed (after migration to new Drupal ottawa.ca
+		<li><a href="http://ottawa.ca/en/sitemap/">Site Map</a><span class="sepLine">|</span></li>
+		-->
+		<li><a href="http://ottawa.ca/e/CAP066804">Contact Us</a><span class="sepLine">|</span></li>
+		<li><a href="http://app03.ottawa.ca/survey/index.php?sid=95314&lang=en">Rate Our Site</a></li>
+	</ul>
+	</div>
+</div><!--//Top Bar End-->
+<div id="wrappper"><!--//Wrapper Start-->
+	<div id="header"><!--//Header Start-->
+		<div id="homeLogo"><a href="http://ottawa.ca/en/"><img src="/so/images/ottawa_logo.png" border="0" alt="City of Ottawa" /></a></div>
+		<!--
+		<div id="searchItems">
+			<div id="otherSites"><div class="roundedThree whiteOuterGlow textBox">
+			<label class="accessibility" for="otherSitesDD">Other City of Ottawa Websites</label><select class="customSelect textBox" id="otherSitesDD">
+				<option selected value="http://ottawa.ca/en/">Other City of Ottawa Websites</option>
+				<option value="http://www.octranspo1.com/?lang=en">OC Transpo</option>
+				<option value="http://www.ottawapolice.ca/en/home.aspx">Ottawa Police Service</option>
+				<option value="http://biblioottawalibrary.ca/">Ottawa Public Library</option>
+				<option value="http://www.centrepointetheatre.com/en/">Centrepointe Theatre</option>
+				<option value="http://shenkmanarts.ca/en/">Shenkman Arts</option>
+				<option value="http://www.lansdownepark.ca/index_en.html">Lansdowne Park</option>
+				<option value="http://www.ottawalightrail.ca/en/">Ottawa Light Rail</option>
+				<option value="http://ottawa.com">Ottawa.com</option>
+				<option value="http://crimepreventionottawa.ca/en/">Crime Prevention Ottawa</option>
+			</select>
+			</div>&nbsp;<label class="accessibility" for="go">Go Button</label><input type="button" value="GO" class="roundedThree greenGradient whiteOuterGlow styledButton" id="go" /></div>
+			<div id="googleSearch">
+				<form id="gsa" name="gsa" action="http://search.ottawa.ca/search" method="get" class="floatRight width190px">
+				<div class="roundedThree whiteOuterGlow textBox">
+				<label class="accessibility" for="q">Keyword</label>
+				<input type="text" name="q" class="transInputText" value="Search" id="q" /></div>&nbsp;
+				<input type="hidden" name="client" value="newottawa_en">
+				<input type="hidden" name="proxystylesheet" value="newottawa_en">
+				<input type="hidden" name="site" value="default_collection">
+				<input type="hidden" name="lr" value="lang_en">
+				<label for="magGlass" class="accessibility">Magnifying Glass for Search Button</label>
+				<input type="image" id="magGlass" src="/so/images/search.png" alt="Search" class="roundedThree greenGradient whiteOuterGlow searchButton" />
+				</form>
+			</div>
+		</div>
+		-->
+	</div><!--//Header End-->	
+	<div id="contentWrapper" class="grayOuterGlowFilled"><!--//Content Wrapper Start-->
+		<div class="blueGradient paddingFifteen roundedTopBoth">
+			<div class="soTopLogo"><a href="http://serviceottawa.ca/en/"><img src="/so/images/service_ottawa_white.png" alt="Service Ottawa" border="0"/></a></div>	
+			<div class="clearFix onePixHigh"></div>
+		</div>
+		<div class="grayTopBar">
+		&nbsp;
+		</div>
+
+            
+            
+                <!-- start left hand column -->
+                <div id="serviceLevelLeftColumn"><div id="leftNav">
+	<ul id="navlist">
+		<li><a href="http://app01.ottawa.ca/postingplans/home.jsf;jsessionid=3F56A8D9F362DCA797A341CDA8B32A31?lang=en" class="navHead">Development Application Search</a></li>
+		<li><a href="http://app01.ottawa.ca/postingplans/advancedSearch.jsf;jsessionid=3F56A8D9F362DCA797A341CDA8B32A31?lang=en">Advanced Search</a></li>
+		<li>
+			<a href="../wardlookup/wardSearch.jsf;jsessionid=3F56A8D9F362DCA797A341CDA8B32A31?lang=en&amp;newReq=yes&amp;link1NameEn=Show%20Development%20Applications&amp;link1NameFr=Afficher%20les%20demandes%20d'am%E9nagement&amp;link1Url=http%3A//app01.ottawa.ca/postingplans/searchResults.jsf&amp;link1UrlParams=lang=en&amp;link1UrlParams=wardSearch=true&amp;link1UrlParams=newReq=yes&amp;link1UrlParams=action=as&amp;link1CommunityIdParam=ward&amp;cancelLinkNameEn=Return%20to%20Development%20Application%20Search&amp;cancelLinkNameFr=Retour%20%E0%20la%20recherche%20de%20demandes%20d'am%E9nagement&amp;cancelLinkUrl=http%3A//app01.ottawa.ca/postingplans/home.jsf%3Flang=en">Find a Ward</a>
+		</li>
+		<li><a href="http://app01.ottawa.ca/postingplans/faq.jsf;jsessionid=3F56A8D9F362DCA797A341CDA8B32A31?lang=en">FAQ</a></li>
+	</ul>
+	<!-- 
+	<br/>
+	
+ 
+ 
+        <h2 class="app_relatedlinksnavHead">Related Links</h2>
+        <ul id="app_relatedlinks">
+                <li><a href="http://ottawa.ca/residents/planning/dev_review_process/index_en.html" target="_top">Development Application Review - A 12 Step Process</a></li>
+                <li><a href="http://ottawa.ca/residents/planning/dev_review_process/2_9_1_en.html" target="_top">Glossary of Terms</a></li>
+                <li><a href="http://ottawa.ca/residents/planning/dev_review_process/2_6_en.html" target="_top">Making a Presentation to the Planning and Environment Committee</a></li>
+                <li><a href="http://ottawa.ca/city_hall/adjustment_committee/index_en.html" target="_top">Committee of Adjustment</a></li>
+                <li><a href="http://www.ottawa.ca/residents/bylaw/a_z/zoning/index_en.html" target="_top">Zoning By-law</a></li>
+    			<li><a href="http://ottawa.ca/residents/planning/design_plan_guidelines/index_en.html" target="_top">Design and Planning Guidelines</a></li>
+                <li><a href="http://www.e-laws.gov.on.ca/html/statutes/english/elaws_statutes_90p13_e.htm" target="_ottext">Planning Act</a></li>
+    			<li><a href="http://www.omb.gov.on.ca/english/home.html" target="_ottext">Ontario Municipal Board (OMB)</a></li>
+        </ul>
+ 
+ 
+	 -->
+</div>
+<!-- 
+<div id="printable">
+	<img  class="floatleft" src="//ottawa.ca/images/print.jpg" width="32" height="32"  alt="Printable Version" border="0" />
+	<span class="iconLinksText">
+		<a href="http://app01.ottawa.ca/postingplans/searchResults.jsf;jsessionid=3F56A8D9F362DCA797A341CDA8B32A31?action=sort&amp;newReq=true&amp;keyword=.&amp;sortField=objectCurrentStatusDate&amp;lang=en&amp;version=print" target="_print">Printable Version</a>
+	</span>
+</div>
+<div id="textSize">
+	<img  class="floatleft" src="//ottawa.ca/images/aaa_textSize.jpg" width="32" height="32"  alt="Text Size - Icon" border="0" />
+	<span class="iconLinksText">
+	<a href="http://ottawa.ca/textsize_en.html">Text Size</a></span>
+</div>
+--></div>
+            
+            <div id="serviceLevelTextArea" class="grayOuterGlowFilled">
+                <div id="mainBodyServiceArea">
+                    <!-- CONTENT BEGINS -->
+                    <div id="app_content">
+                        <div class="appHeader">
+                            <p class="appTitle">
+                                Search Results
+                            </p>
+                        </div>
+                        
+
+
+<div class="quickSearch">
+    <form name="searchForm" action="/postingplans/searchResults.jsf" method="get" accept-charset="UTF-8">
+        
+            
+            
+                <input type="hidden" name="lang" value="en" />
+            
+        
+        <input type="hidden" name="newReq" value="yes" /> <input type="hidden" name="action" value="qs" />
+        <div style="padding-left: 10px; padding-right: 25px;">
+            <input type="text" name="keyword" size="75" maxlength="100" class="searchinput" value='.' /> <input type="submit"
+                value="Search" />
+        </div>
+        <div style="position: relative; padding-left: 100px; float: left">
+            <div style="position: relative; float: left">
+                <span style="font-size: -2">Example:</span>
+            </div>
+            <div style="position: relative; float: left; padding-left: 5px;">
+                <ul style="margin: 0; padding: 0; text-align: left; list-style: none; font-size: -2;">
+                    <li>"Alta Vista"</li>
+                    <li>Woodroffe</li>
+                    <li>Commercial</li>
+                    <li>Subdivision</li>
+                </ul>
+            </div>
+        </div>
+        <div style="float: right; text-align: left; padding-right: 45px;">
+            <font size="-1"> <a href="http://app01.ottawa.ca/postingplans/advancedSearch.jsf;jsessionid=3F56A8D9F362DCA797A341CDA8B32A31?lang=en">Advanced Search</a> <br> <a href="../wardlookup/wardSearch.jsf;jsessionid=3F56A8D9F362DCA797A341CDA8B32A31?lang=en&newReq=yes&link1NameEn=Show%20Development%20Applications&link1NameFr=Afficher%20les%20demandes%20d'am%E9nagement&link1Url=http%3A//app01.ottawa.ca/postingplans/searchResults.jsf&link1UrlParams=lang=en&link1UrlParams=wardSearch=true&link1UrlParams=newReq=yes&link1UrlParams=action=as&link1CommunityIdParam=ward&cancelLinkNameEn=Return%20to%20Development%20Application%20Search&cancelLinkNameFr=Retour%20%E0%20la%20recherche%20de%20demandes%20d'am%E9nagement&cancelLinkUrl=http%3A//app01.ottawa.ca/postingplans/home.jsf%3Flang=en">Find a Ward</a> <br> <a href="http://apps104.ottawa.ca/emap/?emapver=lite&lang=en" target="_top">eMaps</a>
+            </font>
+        </div>
+    </form>
+</div>
+<script>
+<!-- //
+	function BodyOnLoad() {
+		document.searchForm.keyword.focus();
+	}
+
+	BodyOnLoad();
+// -->
+</script>
+
+                        <div class="searchResult" style="position: relative; clear: both">
+                            
+                                
+                                
+                                
+                                
+                                    Displaying&nbsp;
+												1&nbsp;
+												to&nbsp;
+												10&nbsp;
+												of&nbsp;
+												255&nbsp;
+												Applications.
+                                
+                            
+                        </div>
+                        
+                            
+                                <div class="searchResult">
+                                    <div id="listTbl">
+                                        
+<form id="main:content:resultsForm" name="main:content:resultsForm" method="post" action="/postingplans/searchResults.jsf;jsessionid=3F56A8D9F362DCA797A341CDA8B32A31" enctype="application/x-www-form-urlencoded" lang="en">
+<input type="hidden" name="main:content:resultsForm" value="main:content:resultsForm" />
+
+                                            <input type="hidden" name="lang" value='en' />
+                                            <table style="width: 100%">
+<thead>
+<tr>
+<th class="subHeadingGray" scope="col">Application #</th>
+<th class="subHeadingGray" scope="col"><a href="searchResults.jsf;jsessionid=3F56A8D9F362DCA797A341CDA8B32A31?lang=en&newReq=true&action=sort&sortField=type&keyword=." title="Click to sort by Application Type">Application Type&nbsp;</a></th>
+<th class="subHeadingGray" scope="col"><a href="searchResults.jsf;jsessionid=3F56A8D9F362DCA797A341CDA8B32A31?lang=en&newReq=true&action=sort&sortField=progressStatus&keyword=." title="Click to sort by Status">Review Status&nbsp;</a></th>
+<th class="subHeadingGray" scope="col"><a href="searchResults.jsf;jsessionid=3F56A8D9F362DCA797A341CDA8B32A31?lang=en&newReq=true&action=sort&sortField=objectCurrentStatusDate&keyword=." title="Click to sort by Status Date">Status Date&nbsp;<img src="/postingplans/images/sortAsc.gif;jsessionid=3F56A8D9F362DCA797A341CDA8B32A31" alt="Sort Ascending" style="border:0" title="Sort Ascending" /></a></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="subRowGray30">
+                                                    
+                                                        
+                                                        
+                                                        
+                                                    
+                                                    <div>
+                                                        2240 Roger Stevens Drive<br/>
+                                                    </div>
+                                                    <div>
+                                                        <a href="appDetails.jsf;jsessionid=3F56A8D9F362DCA797A341CDA8B32A31?lang=en&appId=__673ITL" class="app_applicationlink">D02-02-08-0036           </a>
+                                                    </div>
+                                                </td>
+<td class="subRowGray30">Zoning By-law Amendment  </td>
+<td class="subRowGray25">Application on Hold</td>
+<td class="subRowGray15">Apr 30, 2008</td>
+</tr>
+<tr>
+<td class="subRowGray30">
+                                                    
+                                                        
+                                                        
+                                                        
+                                                    
+                                                    <div>
+                                                        24 Chesapeake Crescent<br/>
+                                                    </div>
+                                                    <div>
+                                                        <a href="appDetails.jsf;jsessionid=3F56A8D9F362DCA797A341CDA8B32A31?lang=en&appId=__68IO8V" class="app_applicationlink">D07-12-08-0076           </a>
+                                                    </div>
+                                                </td>
+<td class="subRowGray30">Site Plan Control        </td>
+<td class="subRowGray25">Application on Hold</td>
+<td class="subRowGray15">Jun 9, 2008</td>
+</tr>
+<tr>
+<td class="subRowGray30">
+                                                    
+                                                        
+                                                        
+                                                        
+                                                    
+                                                    <div>
+                                                        4497 O'keefe Court<br/>
+                                                    </div>
+                                                    <div>
+                                                        <a href="appDetails.jsf;jsessionid=3F56A8D9F362DCA797A341CDA8B32A31?lang=en&appId=__682434" class="app_applicationlink">D07-12-08-0098           </a>
+                                                    </div>
+                                                </td>
+<td class="subRowGray30">Site Plan Control        </td>
+<td class="subRowGray25">Application on Hold</td>
+<td class="subRowGray15">Jun 27, 2008</td>
+</tr>
+<tr>
+<td class="subRowGray30">
+                                                    
+                                                        
+                                                        
+                                                        
+                                                    
+                                                    <div>
+                                                        700 Hunt Club Road<br/>
+                                                    </div>
+                                                    <div>
+                                                        <a href="appDetails.jsf;jsessionid=3F56A8D9F362DCA797A341CDA8B32A31?lang=en&appId=__6APHMP" class="app_applicationlink">D07-12-08-0103           </a>
+                                                    </div>
+                                                </td>
+<td class="subRowGray30">Site Plan Control        </td>
+<td class="subRowGray25">Application on Hold</td>
+<td class="subRowGray15">Aug 19, 2008</td>
+</tr>
+<tr>
+<td class="subRowGray30">
+                                                    
+                                                        
+                                                        
+                                                        
+                                                    
+                                                    <div>
+                                                        2175 Prince Of Wales Drive<br/>
+                                                    </div>
+                                                    <div>
+                                                        <a href="appDetails.jsf;jsessionid=3F56A8D9F362DCA797A341CDA8B32A31?lang=en&appId=__7IBM0I" class="app_applicationlink">D02-02-08-0121           </a>
+                                                    </div>
+                                                </td>
+<td class="subRowGray30">Zoning By-law Amendment  </td>
+<td class="subRowGray25">Application on Hold</td>
+<td class="subRowGray15">Apr 9, 2009</td>
+</tr>
+<tr>
+<td class="subRowGray30">
+                                                    
+                                                        
+                                                        
+                                                        
+                                                    
+                                                    <div>
+                                                        2911 Prince Of Wales Drive<br/>
+                                                    </div>
+                                                    <div>
+                                                        <a href="appDetails.jsf;jsessionid=3F56A8D9F362DCA797A341CDA8B32A31?lang=en&appId=__671A2Y" class="app_applicationlink">D01-01-08-0004           </a>
+                                                    </div>
+                                                </td>
+<td class="subRowGray30">Official Plan Amendment  </td>
+<td class="subRowGray25">OMB Hearing Held</td>
+<td class="subRowGray15">Apr 27, 2009</td>
+</tr>
+<tr>
+<td class="subRowGray30">
+                                                    
+                                                        
+                                                        
+                                                        
+                                                    
+                                                    <div>
+                                                        620 Palladium Drive<br/>
+                                                    </div>
+                                                    <div>
+                                                        <a href="appDetails.jsf;jsessionid=3F56A8D9F362DCA797A341CDA8B32A31?lang=en&appId=__7NM9Q3" class="app_applicationlink">D07-12-09-0057           </a>
+                                                    </div>
+                                                </td>
+<td class="subRowGray30">Site Plan Control        </td>
+<td class="subRowGray25">Application on Hold</td>
+<td class="subRowGray15">Jun 17, 2009</td>
+</tr>
+<tr>
+<td class="subRowGray30">
+                                                    
+                                                        
+                                                        
+                                                        
+                                                    
+                                                    <div>
+                                                        40 Somerset Street<br/>
+                                                    </div>
+                                                    <div>
+                                                        <a href="appDetails.jsf;jsessionid=3F56A8D9F362DCA797A341CDA8B32A31?lang=en&appId=__7OHLYQ" class="app_applicationlink">D07-12-09-0086           </a>
+                                                    </div>
+                                                </td>
+<td class="subRowGray30">Site Plan Control        </td>
+<td class="subRowGray25">Application on Hold</td>
+<td class="subRowGray15">Aug 10, 2009</td>
+</tr>
+<tr>
+<td class="subRowGray30">
+                                                    
+                                                        
+                                                        
+                                                        
+                                                    
+                                                    <div>
+                                                        305 Tweedsmuir Avenue<br/>311 Tweedsmuir Avenue<br/>319 Mcrae Avenue<br/>320 Mcrae Avenue<br/>1976 Scott Street<br/>
+                                                    </div>
+                                                    <div>
+                                                        <a href="appDetails.jsf;jsessionid=3F56A8D9F362DCA797A341CDA8B32A31?lang=en&appId=__7NX8LE" class="app_applicationlink">D02-02-09-0031           </a>
+                                                    </div>
+                                                </td>
+<td class="subRowGray30">Zoning By-law Amendment  </td>
+<td class="subRowGray25">Application on Hold</td>
+<td class="subRowGray15">Sep 10, 2009</td>
+</tr>
+<tr>
+<td class="subRowGray30">
+                                                    
+                                                        
+                                                        
+                                                        
+                                                    
+                                                    <div>
+                                                        1156 March Road<br/>1170 March Road<br/>
+                                                    </div>
+                                                    <div>
+                                                        <a href="appDetails.jsf;jsessionid=3F56A8D9F362DCA797A341CDA8B32A31?lang=en&appId=__7O0OJL" class="app_applicationlink">D02-02-09-0064           </a>
+                                                    </div>
+                                                </td>
+<td class="subRowGray30">Zoning By-law Amendment  </td>
+<td class="subRowGray25">Application on Hold</td>
+<td class="subRowGray15">Sep 23, 2009</td>
+</tr>
+</tbody>
+</table>
+<input type="hidden" name="javax.faces.ViewState" id="javax.faces.ViewState" value="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" />
+</form>
+                                    </div>
+                                </div>
+                            
+                        
+                        
+                            <div class="searchpaging">
+                                
+                                 <span class="current">1</span> <a href="/postingplans/searchResults.jsf?lang=en&action=sort&sortField=objectCurrentStatusDate&keyword=.&page=2">2</a>  <a href="/postingplans/searchResults.jsf?lang=en&action=sort&sortField=objectCurrentStatusDate&keyword=.&page=3">3</a>  <a href="/postingplans/searchResults.jsf?lang=en&action=sort&sortField=objectCurrentStatusDate&keyword=.&page=4">4</a>  <a href="/postingplans/searchResults.jsf?lang=en&action=sort&sortField=objectCurrentStatusDate&keyword=.&page=5">5</a>  <a href="/postingplans/searchResults.jsf?lang=en&action=sort&sortField=objectCurrentStatusDate&keyword=.&page=6">6</a>  <a href="/postingplans/searchResults.jsf?lang=en&action=sort&sortField=objectCurrentStatusDate&keyword=.&page=7">7</a>  <a href="/postingplans/searchResults.jsf?lang=en&action=sort&sortField=objectCurrentStatusDate&keyword=.&page=8">8</a>  <a href="/postingplans/searchResults.jsf?lang=en&action=sort&sortField=objectCurrentStatusDate&keyword=.&page=9">9</a>  <a href="/postingplans/searchResults.jsf?lang=en&action=sort&sortField=objectCurrentStatusDate&keyword=.&page=10">10</a>  <a href="/postingplans/searchResults.jsf?lang=en&action=sort&sortField=objectCurrentStatusDate&keyword=.&page=11">11</a>  <a href="/postingplans/searchResults.jsf?lang=en&action=sort&sortField=objectCurrentStatusDate&keyword=.&page=12">12</a>  <a href="/postingplans/searchResults.jsf?lang=en&action=sort&sortField=objectCurrentStatusDate&keyword=.&page=13">13</a>  <a href="/postingplans/searchResults.jsf?lang=en&action=sort&sortField=objectCurrentStatusDate&keyword=.&page=14">14</a>  <a href="/postingplans/searchResults.jsf?lang=en&action=sort&sortField=objectCurrentStatusDate&keyword=.&page=15">15</a>  <a href="/postingplans/searchResults.jsf?lang=en&action=sort&sortField=objectCurrentStatusDate&keyword=.&page=16">16</a>  <a href="/postingplans/searchResults.jsf?lang=en&action=sort&sortField=objectCurrentStatusDate&keyword=.&page=17">17</a>  <a href="/postingplans/searchResults.jsf?lang=en&action=sort&sortField=objectCurrentStatusDate&keyword=.&page=18">18</a>  <a href="/postingplans/searchResults.jsf?lang=en&action=sort&sortField=objectCurrentStatusDate&keyword=.&page=19">19</a>  <a href="/postingplans/searchResults.jsf?lang=en&action=sort&sortField=objectCurrentStatusDate&keyword=.&page=20">20</a>  <a href="/postingplans/searchResults.jsf?lang=en&action=sort&sortField=objectCurrentStatusDate&keyword=.&page=21">21</a>  <a href="/postingplans/searchResults.jsf?lang=en&action=sort&sortField=objectCurrentStatusDate&keyword=.&page=22">22</a>  <a href="/postingplans/searchResults.jsf?lang=en&action=sort&sortField=objectCurrentStatusDate&keyword=.&page=23">23</a>  <a href="/postingplans/searchResults.jsf?lang=en&action=sort&sortField=objectCurrentStatusDate&keyword=.&page=24">24</a>  <a href="/postingplans/searchResults.jsf?lang=en&action=sort&sortField=objectCurrentStatusDate&keyword=.&page=25">25</a>  <a href="/postingplans/searchResults.jsf?lang=en&action=sort&sortField=objectCurrentStatusDate&keyword=.&page=26">26</a> <a href="/postingplans/searchResults.jsf;jsessionid=3F56A8D9F362DCA797A341CDA8B32A31?lang=en&action=sort&sortField=objectCurrentStatusDate&keyword=.&page=2">Next&nbsp;&gt;&gt;</a>
+                                
+                                    
+                                
+                            </div>
+                        
+                    </div>
+                    <!-- CONTENT ENDS -->
+                </div>
+            </div>
+        
+                		</div><!--//Content Wrapper end-->		
+	<div class="clearFix"></div>	
+</div><!--// Wrapper end -->
+<div class="marginTopFifty"></div>
+<div id="footer"><!--//Footer Start-->
+	<div id="innerFooter"><!--//Inner Footer Start-->
+		<!-- Social media buttons should not be displayed
+		<div id="socialMedia">
+			<a href="http://ottawa.ca/e/CAP184204" class="socialMedia twitter" title="Follow this link to the City of Ottawa's Twitter account">&nbsp;&nbsp;</a>
+			<a href="http://www.youtube.com/user/cityottawa" class="socialMedia youtube" title="Follow this link to the City of Ottawa's YouTube account">&nbsp;&nbsp;</a>
+			<a href="http://www.flickr.com/photos/cityofottawa" class="socialMedia flickr" title="Follow this link to the City of Ottawa's Flickr account">&nbsp;&nbsp;</a>
+			<a href="http://ottawa.ca/e/CAW098204" class="socialMedia rss" title="Follow this link to the City of Ottawa's RSS feeds">&nbsp;&nbsp;</a>
+			<a href="http://ottawa.ca/e/CAP080213" class="socialMedia browseAloud" title="Follow this link to learn more about BrowseAloud">&nbsp;&nbsp;</a>
+			<a href="http://ottawa.ca/e/WC016442" class="socialMedia accessIcon" title="Follow this link to learn more about the City of Ottawa's accessibility guidelines">&nbsp;&nbsp;</a>
+		</div>
+		
+		<div id="google_translate_element"></div>
+		-->
+		
+		<div id="footerNav">&copy; 2001-
+            <script type="text/javascript">         
+			   var currentTime = new Date()
+				document.write(currentTime.getFullYear() + " ")
+			</script>     		
+		City of Ottawa<br />
+			<ul class="navLinks marginTopSeven grayLinks">
+				<li><a href="http://ottawa.ca/e/CAP066803">Disclaimer</a><span class="sepLine">|</span></li>
+				<li><a href="http://ottawa.ca/e/CAP066806">Privacy</a><span class="sepLine">|</span></li>
+				<!-- No longer to be displayed (after migration to new Drupal ottawa.ca
+				<li><a href="http://ottawa.ca/e/CAP066809">Links</a><span class="sepLine">|</span></li>
+				-->
+				<li><a href="http://ottawa.ca/en/city_hall/accessibility/index.html">Accessibility</a></li>
+			</ul>
+		</div>
+	</div><!--//Inner Footer End-->
+
+</div><!--//Footer End-->
+<script type="text/javascript" src="/so/script/jquery-1.6.2.min.js"></script>
+<script type="text/javascript" src="/so/script/custom_select.js"></script>
+<script type="text/javascript">
+$(function() {
+	$('select.customSelect').customStyle();
+	$("#q").css('color','#575757');
+	$("#q").focus(function(){inputFocus(this)});
+	$("#q").blur(function(){inputBlur(this)});
+	function inputFocus(tb){
+		if(tb.value==tb.defaultValue){ tb.value=""; tb.style.color="#000";}
+	}
+	function inputBlur(tb){
+		if(tb.value==""){ tb.value=tb.defaultValue; tb.style.color="#575757";}
+	}
+	$('#go').click(function(){goToOtherSite();});
+	function goToOtherSite()
+	{
+		var site = $('#otherSitesDD').val();
+		if(site != "None"){
+			location.href = site;
+		}
+	}
+	var today = new Date();
+	var thisYear = today.getFullYear();
+	$("#thisYear").html(thisYear);	
+});
+</script>
+            
+<!-- MYFACES JAVASCRIPT -->
+
+</body>
+    </html>
+

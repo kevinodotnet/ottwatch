@@ -14,9 +14,9 @@ class DevelopmentAppController {
     # get dev-apps sorted by status update.
     # results are sorted with oldtest date first, so then jump to last page, and start scanning backwards
     # until no dates on page are "new"
-    #$html = file_get_contents('http://app01.ottawa.ca/postingplans/searchResults.jsf?lang=en&newReq=true&action=sort&sortField=objectCurrentStatusDate&keyword=.');
+    $html = file_get_contents('http://app01.ottawa.ca/postingplans/searchResults.jsf?lang=en&newReq=true&action=sort&sortField=objectCurrentStatusDate&keyword=.');
     #file_put_contents("t.html",$html);
-    $html = file_get_contents("t.html");
+    #$html = file_get_contents("t.html");
 
     # parse out all of the pages of results
     $lines = explode("\n",$html);
@@ -49,9 +49,9 @@ class DevelopmentAppController {
       print "scanDevApps: loading results page $p\n";
       $changed = 0;
       $url="http://app01.ottawa.ca/postingplans/searchResults.jsf?lang=en&action=sort&sortField=objectCurrentStatusDate&keyword=.&page=$p";
-      #$html = file_get_contents($url);
+      $html = file_get_contents($url);
       #file_put_contents("p.html",$html);
-      $html = file_get_contents("p.html");
+      #$html = file_get_contents("p.html");
       $lines = explode("\n",$html); 
       foreach ($lines as $l) {
         # <a href="appDetails.jsf;jsessionid=D49D6B525184BD8711CED3AFDE61A2D2?lang=en&appId=__866MYU" class="app_applicationlink">D01-01-12-0006           </a>
@@ -88,7 +88,6 @@ class DevelopmentAppController {
 
   static function injestApplication ($appid,$action) {
     print "injestApplication($appid,$action)\n";
-    return;
     $url = "http://app01.ottawa.ca/postingplans/appDetails.jsf?lang=en&appId=$appid";
     $html = file_get_contents($url);
     #file_put_contents("a.html",$html);
@@ -107,9 +106,16 @@ class DevelopmentAppController {
 		$labels['Status Date'] = '';
 		#$labels['Description'] = '';
 
+    $addresses = array();
+
     $label = '';
     $value = '';
     for ($x = 0; $x < count($lines); $x++) {
+      $matches = array();
+      if (preg_match('/apps104.*_emap">([^<]+)</',$lines[$x],$matches)) {
+        $addresses[] = $matches[1];
+        #$addresses[0] = $matches[1];
+      }
       if (preg_match('/div.*class="label"/',$lines[$x])) {
         $x++;
         $label = self::suckToNextDiv($lines,$x);
@@ -131,10 +137,11 @@ class DevelopmentAppController {
     getDatabase()->execute(" delete from devapp where appid = :appid ",array("appid"=>$appid));
     getDatabase()->execute(" 
       insert into devapp 
-      (appid,devid,ward,apptype,status,statusdate,receiveddate)
+      (address,appid,devid,ward,apptype,status,statusdate,receiveddate)
       values
-      (:appid,:devid,:ward,:apptype,:status,:statusdate,:receiveddate)",array(
+      (:address,:appid,:devid,:ward,:apptype,:status,:statusdate,:receiveddate)",array(
         'devid'=> $labels['Application #'],
+        'address'=> implode("|",$addresses),
         'appid'=> $appid,
         'ward' => $labels['Ward'],
         'apptype' => $labels['Application'],
@@ -142,6 +149,19 @@ class DevelopmentAppController {
         'statusdate' => $labels['status_date'],
         'receiveddate' =>$labels['date_received'],
     ));
+
+    return;
+
+    $url = "http://app01.ottawa.ca/postingplans/appDetails.jsf?lang=en&appId=$appid";
+
+    if ($action == 'insert') {
+      $tweet = "New {$labels['Application']}: ".implode("/",$addresses)." {$labels['Application #']}";
+    } else {
+      $tweet = "Updated {$labels['Application']}: ".implode("/",$addresses)." {$labels['Application #']}";
+    }
+
+    $newtweet = tweet_txt_and_url($tweet,$url);
+    print "$newtweet\n";
 
 #  id mediumint not null auto_increment,
 #  appid varchar(10),

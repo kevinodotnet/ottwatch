@@ -44,6 +44,12 @@ function meeting_category_to_title($category) {
 }
 
 function tweet_txt_and_url($txt,$url) {
+  if (!preg_match("/bitly/",$url)) {
+    # shorten the url
+  	$bitly = bitly_v3_shorten($url);
+  	$bitly = $bitly['url'];
+    $url = $bitly;
+  }
 	$parts = explode(" ",$txt);
 	$t = "$txt $url";
 	while (strlen($t) > 140) {
