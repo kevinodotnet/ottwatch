@@ -23,7 +23,7 @@ create table devapp (
   appid varchar(10),
   devid varchar(20),
   ward varchar(100),
-  address varchar(2048),
+  address varchar(2048), -- big because JSON encoded array of multiple addresses with lat/lon too
   apptype varchar(100),
   status varchar(100),
   statusdate datetime,
