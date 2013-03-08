@@ -6,7 +6,7 @@ class DevelopmentAppController {
   static public function listAll() {
     top();
 
-    $apps = getDatabase()->all(" select * from devapp order by statusdate desc ");
+    $apps = getDatabase()->all(" select * from devapp order by updated desc ");
     ?>
     <h1>Development Applications</h1>
     <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
@@ -173,9 +173,9 @@ class DevelopmentAppController {
     getDatabase()->execute(" delete from devapp where appid = :appid ",array("appid"=>$appid));
     getDatabase()->execute(" 
       insert into devapp 
-      (address,appid,devid,ward,apptype,status,statusdate,receiveddate)
+      (address,appid,devid,ward,apptype,status,statusdate,receiveddate,created,updated)
       values
-      (:address,:appid,:devid,:ward,:apptype,:status,:statusdate,:receiveddate)",array(
+      (:address,:appid,:devid,:ward,:apptype,:status,:statusdate,:receiveddate,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP)",array(
         'devid'=> $labels['Application #'],
         'address'=> implode("|",$addresses),
         'appid'=> $appid,
