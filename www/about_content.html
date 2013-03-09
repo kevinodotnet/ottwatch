@@ -1,15 +1,31 @@
-  <h3>What can I do with Ottawa Watch?</h3>
+  <h3>What can I do with OttWatch?</h3>
 
   <div class="row-fluid">
   <span class="span6">
   <p><strong>Keep track of City Council and Committee meetings as they are published</strong>. The City's e-Agenda tool is great, but it requires that you check in to find out what's going on. Ottawa
-  Watch monitors the agendas and minutes automatically and will tweet when new documents are found. So follow @OttWatch and you'll never miss an update.</p>
+  Watch monitors the agendas <strike>and minutes</strike> automatically and will tweet when new documents are found. So follow @OttWatch and you'll never miss an update. <a href="meetings/all">You can browse all meetings</a> too - and there is a handy dashboard for viewing meeting documents and agenda items (ex: <a href="meetings/City%20Council/2478">City Council Feb 27, 2012</a>).</p>
   </span>
   <span class="span6">
   <p><strong>Find out who's lobbying the City</strong>. Lobbyists are required to file reports within 15 days of any lobbying activities. But again, do you really want to check the Lobbyist Registry
-  every day? I don't. The @OttWatch twitter account will let you know when lobbyists have entered their data.</p>
+  every day? I don't. The @OttWatch twitter account will let you know when lobbyists have entered their data. You can also search for lobbyist data from the home page.
+  <i>(FYI: The lobbyist search is a bit flaky at the moment after I discovered multiple lobbyists with the same name. I'll fix this eventually).</i>
+  </p>
   </span>
   </div>
+
+  <div class="row-fluid">
+  <span class="span6">
+  <p><strong>Keep track of Development Applications.</strong>. 
+  Again, the city makes this information available on a not-bad search tool. OttWatch tweets new and updated development applications as they are detected, and 
+  offers a toasty-quick page of all applications for easy reference (instead of 26 pages of search results).</p>
+  </span>
+  <span class="span6">
+  <p><strong>Who's building and demolishing?</strong>. The city puts out a ton-load of opendata (yay Ottawa!), including a <a href="http://app06.ottawa.ca/en/city_hall/statisticsdata/opendata/info/constr_demo_pool_permits/index.htm">monthly dump of construction, demolition, and pool-enclosure permits</a>. I'm in the process of pulling this data into the system. I won't tweet it
+  (tens of permits a day) but it will be handy for geographic lookups down the line.
+  </p>
+  </span>
+  </div>
+
 
   <div class="row-fluid">
   <span class="span6">
@@ -17,24 +33,33 @@
   <p>I most certainly do!</p>
   </span>
   <span class="span6">
-  <h3>Could you make Ottawa Watch do X, Y or Z?</h3>
-  <p>Probably. Drop an email to kevino@kevino.net, or tweet me at @odonnell_k, and let me know.</p>
+  <h3>Could you make OttWatch do X, Y or Z?</h3>
+  <p>
+  Maybe. Drop ideas kevino@kevino.net or @odonnell_k. Seriously, really do share ideas. If it's quick and helpful to you - you never know when
+  an episode on Netflix is made better by coding at the same time.
+  </p>
   </span>
   </div>
 
 
   <div class="row-fluid">
   <span class="span6">
-  <h3>How did you do all this? The dark arts? Can you share the software?</h3>
-  <p>After I get a few more features implemented and there's a bit of spit and polish to this thing I'll upload the source code to GitHub. I'm using PHP and Ephiphany for the REST style web
-  application, and Bootstrap for the look and feel.</p>
+  <h3>What's the tech behind OttWatch?</h3>
+  <p>
+  OttWatch runs on an Amazon EC2 "small" Unbuntu server, using Apache, PHP and Mysql. The GUI prettiness is courtesy of Bootstrap, and the REST style application design is 
+  aided by Epiphany. Source code is tracked in GIT and deployments are handled by Capistrano. All in all, a wonderful system to work in that couldn't be more different
+  than my day job.
+  </p>
   </span>
   <span class="span6">
   <h3>Why are you doing this?</h3>
-  <p>If you follow my main kevino.ca site you'll know I'm into politics, so I have goals there. But the values that spur me to work on this project are rooted in open-government, transparency, and
-  accountability. The City of Ottawa is making good progress on opening up data and making it easier for citizens to engage. Ottawa Watch&nbsp;couldn't happen without the City opening up as much as
-  it already has. I have some technical skills, so my goal is to help open up the data even more, and make it available to a wider audience. You'll see what I mean when some more features come out.
-  There's a method to the madness!</p>
+  <p>If you follow my main <a href="http://kevino.ca">kevino.ca</a> site you'll know I'm into politics, and have goals there. 
+  But the values that spur me to work on this project are rooted in open-government, transparency, and accountability. 
+  The City of Ottawa is making good progress on opening up data and making it easier for citizens to engage. 
+  OttWatch couldn't happen without the City opening up as much as it already has. 
+  I have some technical skills, so my goal is to help open up the data even more, and make it available to a wider audience. 
+  You'll see what I mean when some more features come out.  There's a method to the madness!</p>
+  </p>
   </span>
   </div>
 
