@@ -240,7 +240,7 @@ class LobbyistController {
         f.client,
         f.issue
       order by
-        date(max(l.created))
+        date(max(l.created)) desc
       ");
     if (count($rows) == 0) {
       print "<h1>No matches</h1>\n";
