@@ -15,17 +15,20 @@ if (1) {
 
 	include_once 'bitly.php';
 	include_once 'Epi.php';
-	include_once 'controllers/MeetingController.php';
-	include_once 'controllers/DevelopmentApp.php';
 
-	#include_once('EpiDatabase.php');
-	#require_once('EpiException.php');
-	
 	# Prepare the database classes
 	Epi::setPath('base', "$base/www/epiphany/src");
 	Epi::init('database');
 	Epi::setSetting('exceptions', true);
 	EpiDatabase::employ(OttWatchConfig::DB_TYPE, OttWatchConfig::DB_NAME, OttWatchConfig::DB_HOST, OttWatchConfig::DB_USER, OttWatchConfig::DB_PASS);
+
+	include_once 'controllers/MeetingController.php';
+	include_once 'controllers/DevelopmentApp.php';
+	include_once 'controllers/LobbyistController.php';
+
+	#include_once('EpiDatabase.php');
+	#require_once('EpiException.php');
+	
 }
 
 # Location of state files

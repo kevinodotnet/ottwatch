@@ -1,13 +1,286 @@
 <?php
 
-include '../../lib/include.php';
-
-LobbyistController::scrapeForNewLobbyActivities(60);
-
 class LobbyistController {
 
 	# base URL of the lobbyist registry
 	const URL = "https://apps107.ottawa.ca/LobbyistRegistry/search/searchlobbyist.aspx?lang=en";
+
+  #################################################################################################
+  # GUI
+  #################################################################################################
+
+  public static function showLobbied ($lobbied) {
+    top("Lobbied: $lobbied");
+    $rows = getDatabase()->all("
+      select *
+      from lobbyfile f
+        join lobbying l on l.lobbyfileid = f.id
+      where l.lobbied like '".mysql_escape_string($lobbied)."%';
+      order by
+        l.created desc
+      ",array(
+        'lobbied' => $lobbied
+      ));
+    ?>
+    <h1><?php print $lobbied; ?></h1>
+    <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
+      <tr>
+      <th>Lobbyist</th>
+      <th>Client</th>
+      <th>Issue</th>
+      <th>Date</th>
+      <th>Activity</th>
+      <th>Reported On</th>
+      </tr>
+    <?php
+    $lastclient = '';
+    $lastissue = '';
+    foreach ($rows as $r) {
+      ?>
+      <tr>
+      <?php
+      if ($r['client'] == $lastclient && $r['issue'] == $lastissue) {
+        ?>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <?php
+      } else {
+        ?>
+        <td><nobr><a href="<?php print OttWatchConfig::WWW."/lobbying/lobbyists/{$r['lobbyist']}"; ?>"><?php print $r['lobbyist']; ?></a></nobr></td>
+        <td><nobr><a href="<?php print OttWatchConfig::WWW."/lobbying/clients/{$r['client']}"; ?>"><?php print $r['client']; ?></a></nobr></td>
+        <td><?php print $r['issue']; ?></td>
+        <?php
+      }
+      $lastclient = $r['client'];
+      $lastissue = $r['issue'];
+      ?>
+      <td><nobr><?php print substr($r['lobbydate'],0,10); ?></nobr></td>
+      <td><nobr><?php print $r['activity']; ?></nobr></td>
+      <td><nobr><?php print substr($r['created'],0,10); ?></nobr></td>
+      </tr>
+      <?php
+    }
+    ?>
+    </table>
+    <?php
+    bottom();
+  }
+
+  public static function showLobbyist ($lobbyist) {
+    top("Lobbyist: $lobbyist");
+    ?>
+
+    <?php
+    $rows = getDatabase()->all(" select client,issue from lobbyfile f where lobbyist = :lobbyist ",array( 'lobbyist' => $lobbyist));
+    $files = count($rows);
+    ?>
+    <div class="row-fluid">
+    <div class="span4">
+    <h1><?php print $lobbyist; ?></h1>
+    </div>
+    <div class="span8">
+    <h4>Works on <?php print count($rows); ?> lobbying files for these clients:</h4>
+    <?php
+    $skip = array();
+    foreach ($rows as $r) {
+      if ($skip[$r['client']]) { continue; }
+      print "<a href=\"".OttWatchConfig::WWW."/lobbying/clients/{$r['client']}\">{$r['client']}</a>";
+      print "&nbsp;";
+      print "&nbsp;";
+      print "&nbsp;";
+      print "&nbsp;";
+      $skip[$r['client']] = 1;
+    }
+    ?>
+    <br/><br/>
+    </div>
+    </div>
+
+    <?php
+    $rows = getDatabase()->all("
+      select 
+        * 
+      from lobbyfile f
+        join lobbying l on l.lobbyfileid = f.id
+      where 
+        lobbyist = :lobbyist
+      order by
+        l.lobbydate desc
+      ",array(
+        'lobbyist' => $lobbyist
+      ));
+    ?>
+    <div class="row-fluid">
+    <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
+      <tr>
+      <th>Client</th>
+      <th>Issue</th>
+      <th>Date</th>
+      <th>Activity</th>
+      <th>Lobbied</th>
+      <th>Reported On</th>
+      </tr>
+    <?php
+    $lastclient = '';
+    $lastissue = '';
+    foreach ($rows as $r) {
+      ?>
+      <tr>
+      <?php
+      if ($r['client'] == $lastclient && $r['issue'] == $lastissue) {
+        ?>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <?php
+      } else {
+        ?>
+        <td><nobr><a href="<?php print OttWatchConfig::WWW."/lobbying/clients/{$r['client']}"; ?>"><?php print $r['client']; ?></a></nobr></td>
+        <td><?php print $r['issue']; ?></td>
+        <?php
+      }
+      $lastclient = $r['client'];
+      $lastissue = $r['issue'];
+      ?>
+      <td><nobr><?php print substr($r['lobbydate'],0,10); ?></nobr></td>
+      <td><nobr><?php print $r['activity']; ?></nobr></td>
+      <td><nobr><a href="<?php print OttWatchConfig::WWW."/lobbying/thelobbied/".urlencode($r['lobbied']); ?>"><?php print $r['lobbied']; ?></a></nobr></td>
+      <td><nobr><?php print substr($r['created'],0,10); ?></nobr></td>
+      </tr>
+      <?php
+    }
+    ?>
+    </table>
+    </div>
+    <?php
+    bottom();
+  }
+
+  public static function showClient ($client) {
+    top("Lobbying Client: $client");
+    $rows = getDatabase()->all("
+      select *
+      from lobbyfile f
+        join lobbying l on l.lobbyfileid = f.id
+      where client = :client
+      order by
+        l.created desc
+      ",array(
+      'client' => $client
+      ));
+    ?>
+    <h1><?php print $client; ?></h1>
+    <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
+      <tr>
+      <th>Lobbyist</th>
+      <th>Issue</th>
+      <th>Date</th>
+      <th>Activity</th>
+      <th>Lobbied</th>
+      <th>Reported On</th>
+      </tr>
+    <?php
+    $lastlobbyist = '';
+    $lastissue = '';
+    foreach ($rows as $r) {
+      ?>
+      <tr>
+      <?php
+      if ($r['lobbyist'] == $lastlobbyist && $r['issue'] == $lastissue) {
+        ?>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <?php
+      } else {
+        ?>
+        <td><nobr><a href="<?php print OttWatchConfig::WWW."/lobbying/lobbyists/{$r['lobbyist']}"; ?>"><?php print $r['lobbyist']; ?></a></nobr></td>
+        <td><?php print $r['issue']; ?></td>
+        <?php
+      }
+      $lastlobbyist = $r['lobbyist'];
+      $lastissue = $r['issue'];
+      ?>
+      <td><nobr><?php print substr($r['lobbydate'],0,10); ?></nobr></td>
+      <td><nobr><?php print $r['activity']; ?></nobr></td>
+      <td><nobr><a href="<?php print OttWatchConfig::WWW."/lobbying/thelobbied/".urlencode($r['lobbied']); ?>"><?php print $r['lobbied']; ?></a></nobr></td>
+      <td><nobr><?php print substr($r['created'],0,10); ?></nobr></td>
+      </tr>
+      <?php
+    }
+    ?>
+    </table>
+    <?php
+    bottom();
+  }
+
+  public static function search ($query) {
+    top();
+
+    $clause = mysql_escape_string($query);
+
+    $rows = getDatabase()->all("
+      select 
+        f.id,
+        f.lobbyist,
+        f.client,
+        f.issue,
+        date(min(l.lobbydate)) fdate,
+        date(max(l.lobbydate)) tdate,
+        date(max(l.created)) created,
+        count(1) as count
+      from lobbyfile f
+        join lobbying l on l.lobbyfileid = f.id
+      where
+        client like '%$clause%'
+        or lobbyist like '%$clause%'
+        or issue like '%$clause%'
+      group by
+        f.id,
+        f.lobbyist,
+        f.client,
+        f.issue
+      order by
+        date(max(l.created))
+      ");
+    if (count($rows) == 0) {
+      print "<h1>No matches</h1>\n";
+      bottom();
+      return;
+    }
+    ?>
+    <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
+      <tr>
+      <th>Lobbyist</th>
+      <th>Client</th>
+      <th>Issue</th>
+      <th>Activties</th>
+      <th>From</th>
+      <th>To</th>
+      <th>Reported On</th>
+      </tr>
+    <?php
+    foreach ($rows as $r) {
+      ?>
+      <tr>
+      <td><nobr><a href="<?php print OttWatchConfig::WWW."/lobbying/lobbyists/{$r['lobbyist']}"; ?>"><?php print $r['lobbyist']; ?></a></nobr></td>
+      <td><nobr><a href="<?php print OttWatchConfig::WWW."/lobbying/clients/{$r['client']}"; ?>"><?php print $r['client']; ?></a></nobr></td>
+      <td><?php print $r['issue']; ?></td>
+      <td><?php print $r['count']; ?></td>
+      <td><nobr><?php print $r['fdate']; ?></nobr></td>
+      <td><nobr><?php print $r['tdate']; ?></nobr></td>
+      <td><nobr><?php print $r['created']; ?></nobr></td>
+      </tr>
+      <?php
+    }
+    ?>
+    </table>
+    <?php
+    bottom();
+  }
+
+  #################################################################################################
+  # Scaping
+  #################################################################################################
 
   public static function scrapeForNewLobbyActivities($daterange = 30) {
 

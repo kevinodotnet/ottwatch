@@ -4,6 +4,7 @@ include_once '../lib/include.php';
 include_once 'epiphany/src/Epi.php';
 include_once 'controllers/MeetingController.php';
 include_once 'controllers/DevelopmentApp.php';
+include_once 'controllers/LobbyistController.php';
 
 Epi::setPath('base', 'epiphany/src');
 Epi::init('route');
@@ -12,10 +13,14 @@ getRoute()->get('/', 'dashboard');
 getRoute()->get('/about', 'about');
 #getRoute()->get('/dashboard', 'dashboard');
 
-getRoute()->get('/lobbyist/search/(.*)', 'lobbyist_search');
-getRoute()->get('/lobbyist/([^\/]*)', 'lobbyist');
-getRoute()->get('/lobbyist/(.*)/details', 'lobbyistDetails');
-getRoute()->get('/lobbyist/(.*)/link', 'lobbyistLink');
+getRoute()->get('/lobbying/search/(.*)', array('LobbyistController','search'));
+getRoute()->get('/lobbying/lobbyists/(.*)', array('LobbyistController','showLobbyist'));
+getRoute()->get('/lobbying/clients/(.*)', array('LobbyistController','showClient'));
+getRoute()->get('/lobbying/thelobbied/(.*)', array('LobbyistController','showLobbied'));
+
+#getRoute()->get('/lobbyist/([^\/]*)', 'lobbyist');
+#getRoute()->get('/lobbyist/(.*)/details', 'lobbyistDetails');
+#getRoute()->get('/lobbyist/(.*)/link', 'lobbyistLink');
 
 getRoute()->get('/devapps', array('DevelopmentAppController','listAll'));
 getRoute()->get('/devapps/([^\/]+)', array('DevelopmentAppController','viewDevApp'));
@@ -37,10 +42,13 @@ function ottawaMediaRSS() {
   $xml = simplexml_load_string($rss);
   $items = $xml->xpath("//item");
   print "<h4>Media Releases</h4>\n";
+  $max = 4;
   foreach ($items as $item) {
+    if ($x++ < $max) {
     $title = $item->xpath("title"); $title = $title[0].'';
     $link = $item->xpath("link"); $link = $link[0].'';
     print "<small><a href=\"$link\" target=\"_blank\">$title</a></small><br/>\n";
+    }
   }
 }
 
@@ -120,18 +128,15 @@ function dashboard() {
       alert('Cannot perform an empty search');
       return;
     }
-    document.location.href = 'lobbyist/search/'+v;
+    document.location.href = 'lobbying/search/'+v;
   }
   </script>
   <h4>Lobbyist Registry</h4>
-  <div class="input-append">
-  <input type="text" id="lobbyist_search_value" placeholder="Search by name...">
+  <div class="input-prepend input-append">
+  <button class="btn" onclick="document.location.href = 'lobbying/search/'">Show All</button>
+  <input type="text" id="lobbyist_search_value" placeholder="Search...">
   <button class="btn" onclick="lobbyist_search_form_submit()"><i class="icon-search"></i> Search</button>
   </div>
-
-  <?php
-  ottawaMediaRSS();
-  ?>
 
   <h4>Development Applications</h4>
   <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
@@ -169,6 +174,10 @@ function dashboard() {
   </tr>
   </table>
 
+  <?php
+  ottawaMediaRSS();
+  ?>
+
   </div>
 
   <div class="span4">
@@ -190,57 +199,6 @@ function about() {
 function home() {
 }
 
-function lobbyist_search($name) {
-  top("Lobbyist Search: $name");
-  $matches = lobbyistSearch($name);
-  $vs = $matches["__vs"]; unset($matches["__vs"]);
-  $ev = $matches["__ev"]; unset($matches["__ev"]);
-
-#  if (count($matches) == 1) {
-#    reset($matches);
-#    $name = key($matches);
-#    header("Location: ../$name");
-#    return;
-#  }
-  if (count($matches) == 0) {
-    ?>
-    <div class="row-fluid">
-    <div class="span12">
-    <h3>No Matches</h3>
-    </div>
-    </div>
-    <?php
-    bottom();
-    return;
-  }
-  ?>
-  <div class="row-fluid">
-  <h3>Found <?php print count($matches); ?> matches.</h3>
-  <table class="table table-hover table-condensed">
-  <tr>
-  <th>Name</th>
-  <th>Link</th>
-  </tr>
-  </tr>
-  <?php
-  foreach ($matches as $name => $ctl) {
-    ?>
-    <tr>
-    <td>
-    <a href="../<?php print $name; ?>"><?php print $name; ?></a>
-    </td>
-    <td>
-    <a target="_blank" href="../<?php print $name; ?>/link"><i class="icon-edit"></i></a>
-    </td>
-    </tr>
-    <?php
-  }
-  ?>
-  </table>
-  </div>
-  <?php
-  bottom();
-}
 
 function lobbyist($name) {
   top("Lobbyist: $name");
