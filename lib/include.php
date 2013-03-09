@@ -5,19 +5,20 @@ if (!@include_once('config.php')) {
   exit(1);
 }
 
-
 if (1) {
   # avoids global vars name collissions
   $base = dirname(__FILE__).'/..';
   set_include_path(get_include_path() . PATH_SEPARATOR . "$base/lib");
   set_include_path(get_include_path() . PATH_SEPARATOR . "$base/www");
   set_include_path(get_include_path() . PATH_SEPARATOR . "$base/www/epiphany/src");
+  set_include_path(get_include_path() . PATH_SEPARATOR . "$base/phpexcel/Classes");
 
-	require_once('bitly.php');
-	require_once('Epi.php');
-	require_once('controllers/MeetingController.php');
-	require_once('controllers/DevelopmentApp.php');
-	#require_once('EpiDatabase.php');
+	include_once 'bitly.php';
+	include_once 'Epi.php';
+	include_once 'controllers/MeetingController.php';
+	include_once 'controllers/DevelopmentApp.php';
+
+	#include_once('EpiDatabase.php');
 	#require_once('EpiException.php');
 	
 	# Prepare the database classes
