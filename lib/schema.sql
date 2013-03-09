@@ -17,6 +17,30 @@ create table people (
   primary key (id)
 ) engine = innodb;
 
+drop table if exists lobbying;
+drop table if exists lobbyfile;
+create table lobbyfile (
+  id mediumint not null auto_increment,
+  lobbyist varchar(100),
+  client varchar(100),
+  issue varchar(200),
+  primary key (id)
+) engine = innodb;
+
+create table lobbying (
+  id mediumint not null auto_increment,
+  lobbyfileid mediumint not null,
+  lobbydate datetime,
+  activity varchar(100),
+  lobbied varchar(200),
+  created datetime,
+  primary key (id),
+  constraint foreign key (lobbyfileid) references lobbyfile (id) on delete cascade on update cascade
+) engine = innodb;
+
+-- enforce unique on the lobbying table; used by INSERTER to avoid dups
+create unique index lobbying_in1 on lobbying (lobbyfileid,lobbydate,activity,lobbied);
+
 drop table if exists devapp;
 create table devapp (
   id mediumint not null auto_increment,
