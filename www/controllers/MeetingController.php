@@ -133,7 +133,7 @@ class MeetingController {
         $('#tablist').append('<li><a href="#tabfile'+id+'" data-toggle="tab">'+title+'</a></li>');
         tabcontent = '';
         tabcontent = tabcontent + '<div class="tab-pane active in" id="tabfile'+id+'">';
-        tabcontent = tabcontent + '<iframe id="focusFrame" src="'+frameurl+'" style=" border: 0px; border-left: 1px solid #000000; width: 100%; height: 620px;"></iframe>';
+        tabcontent = tabcontent + '<iframe id="focusFrame" src="'+frameurl+'" style=" border: 0px; border-left: 1px solid #000000; width: 100%; height: 600px;"></iframe>';
         tabcontent = tabcontent + '</div>';
         $('#tabcontent').append(tabcontent);
         $('#tablist a[href="#tabfile'+id+'"]').tab('show'); 
@@ -190,7 +190,7 @@ class MeetingController {
     <div id="tabcontent" class="tab-content">
 
     <div class="tab-pane active in" id="tabagenda">
-    <iframe id="focusFrame" src="<?php print $focusFrameSrc; ?>" style="width: 100%; height: 90%; border: 0px;"></iframe>
+    <iframe id="focusFrame" src="<?php print $focusFrameSrc; ?>" style="width: 100%; height: 600px; border: 0px;"></iframe>
     </div>
 
     <div class="tab-pane fade" id="tabcomments">
@@ -334,7 +334,6 @@ class MeetingController {
       'email' => $coordEmail,
       'id' => $id
     ));
-    exit;
 
     # rebuild item rows
     getDatabase()->execute(" delete from item where meetingid = :id ",array('id'=>$id));
