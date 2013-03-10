@@ -125,37 +125,18 @@ class MeetingController {
     <div class="span4">
 
     <?php
-    print "<b>$title</b> <small>".substr($m['starttime'],0,10)."</small>";
+    print "<b>$title</b>";
+    renderShareLinks("City meeting: $title","/meetings/{$category}/{$meetid}");
+    print "<br/>";
+    print "<small>".substr($m['starttime'],0,10)."</small>";
     ?>
 
     <div style="padding: 5px; 0px;">
-    <script>
-    showhideComments = 0; // default hidden
-    function flipComments() {
-      if (showhideComments) {
-        $('#comments').css('display','none');
-        $('#agendanav').css('display','block');
-        $('#showbtn').css('display','inline-block');
-        $('#hidebtn').css('display','none');
-        showhideComments = 0;
-      } else {
-        $('#comments').css('display','block');
-        $('#agendanav').css('display','none');
-        $('#hidebtn').css('display','inline-block');
-        $('#showbtn').css('display','none');
-        showhideComments = 1;
-      }
-      return -1;
-    }
-    </script>
     <?php
-    renderShareLinks("City meeting: $title","/meetings/{$category}/{$meetid}");
     ?>
-    <a id="showbtn" onclick="flipComments()" class="btn btn-info">Show Comments</a>
-    <a id="hidebtn" style="display: none;" href="javascript:flipComments()" class="btn btn-info">Show Agenda</a>
     </div>
 
-    <div id="agendanav" style="overflow:scroll; height: 550px;">
+    <div id="agendanav" style="overflow:scroll; height: 620px;">
     <?php
     foreach ($items as $i) {
       #print "<pre>"; print print_r($i); print "</pre>";
@@ -173,133 +154,35 @@ class MeetingController {
     ?>
     </div>
 
-    <div id="comments" style="display: none; clear: both; overflow:scroll; height: 550px; padding-top: 5px;">
-    <?php disqus(); ?>
-    </div>
     </div>
 
     <!-- column 2 -->
     <div class="span8">
+
+    <ul class="nav nav-tabs">
+    <li><a href="#tabagenda" data-toggle="tab">Agenda</a></li>
+    <li><a href="#tabcomments" data-toggle="tab">Comments</a></li>
+    </ul>
+
+    <div id="tabcontent" class="tab-content">
+
+    <div class="tab-pane active in" id="tabagenda">
     <iframe id="focusFrame" src="<?php print $focusFrameSrc; ?>" style=" border: 0px; border-left: 1px solid #000000; width: 100%; height: 620px;"></iframe>
     </div>
 
+    <div class="tab-pane fade" id="tabcomments">
+    <?php disqus(); ?>
+    </div>
+
+    </div>
+
+
+    </div>
+
     </div>
     <?php
     bottom();
 
-
-    if (1) {
-      return;
-    }
-
-    $agendaUrl = self::getDocumentUrl($m['meetid'],'AGENDA');
-    $title = meeting_category_to_title($m['category']);
-    $item = getDatabase()->one(" select * from item where id = :id ",array("id" => $itemid));
-    if ($item['itemid']) {
-      # page title, and agenda url can be updated early
-      $agendaUrl .= '#Item'.$item['itemid'];
-      $title = $item['title'];
-    }
-    $zoomingTo = "Zooming to: $title";
-
-    $items = getDatabase()->all(" select * from item where meetingid = :id order by id ",array("id" => $id));
-    top($title);
-    ?>
-
-    <script>
-    <!-- <a name="Item168199"></a> -->
-    function highlightItem(id,itemid) {
-
-      // move the agenda iFrame to the <a name=""/> for the chosen item
-      $('#agendaFrame').attr('src','<?php print self::getDocumentUrl($m['meetid'],'AGENDA'); ?>#Item' + itemid);
-
-      // build a REST link back to OttWatch for the item, and create
-      // a Tweet button for it.
-      owItemUrl = '<?php print self::getMeetingUrl($id); ?>/item/' + id;
-      itemTitle = $('#itemAnchor'+id).html();
-      tweetText = 'Reading "' + itemTitle + '" ';
-      while ((tweetText.length + owItemUrl.length) > 139) {
-        itemTitle = itemTitle.substring(0,itemTitle.length-1);
-        tweetText = 'Reading "' + itemTitle + '"... ';
-      }
-      shareUrl = 'https://twitter.com/share?url='+escape(owItemUrl)+'&text=' + escape(tweetText);
-
-      itemTitle = $('#itemAnchor'+id).html();
-      newHtml = 
-        ' <a target="_blank" href="'+shareUrl+'"><img alt="Tweet" src=\"<?php print OttWatchConfig::WWW; ?>/img/twitter-share.png\"/></a> ' +
-        ' <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u='+escape(owItemUrl)+'">' + 
-        ' <img style="height: 20px; width: 58px;" alt="Tweet" src="<?php print OttWatchConfig::WWW; ?>/img/facebook-share.png"/></a>' +
-        ' <a href="javascript:copyToClipboard(\'' + owItemUrl + '\');" class="btn btn-mini">Clipboard <i class="icon-share"></i></a> ' +
-        '';
-      $('#itemDetailsTitle').html(itemTitle);
-      $('#itemDetailsShare').html(newHtml);
-
-      // load file data
-      $.get(owItemUrl + '/files', function(data) {
-        $('#itemDetailsFiles').html(data);
-        $(this).scrollTop(0);
-      });
-
-
-    }
-    </script>
-
-    <div class="row-fluid">
-    <div class="span4 visible-desktop">
-    <div style="overflow:scroll; height: 600px; padding-right: 5px; padding-left: 5px;">
-    <ol>
-    <?php
-    foreach ($items as $i) {
-      ?>
-      <li><a id="itemAnchor<?php print $i['id']; ?>" href="javascript:highlightItem(<?php print $i['id'].','.$i['itemid']; ?>);"><?php print $i['title']; ?></a></li>
-      <?php
-    }
-    ?>
-    <ol>
-    </div>
-    </div>
-
-    <?php 
-    $ttu = OttWatchConfig::WWW."/meetings/{$m['category']}/{$m['id']}";
-    ?>
-    <div class="span8">
-
-    <div style="padding: 5px; margin-bottom: 5px; ">
-    <div id="itemDetailsTitle" style="font-weight: bold;"></div>
-    <div id="itemDetailsFiles"></div>
-    
-    <div id="itemDetailsShare" class="pull-right">
-    <a target="_blank" 
-      href="https://twitter.com/share?url=<?php 
-      print urlencode($ttu); 
-      ?>&text=<?php 
-      print urlencode("Reading an agenda for $title"); 
-      ?>"><img alt="Tweet" src="<?php print OttWatchConfig::WWW; ?>/img/twitter-share.png"/></a>
-    <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=<?php print urlencode($ttu); ?>"><img style="height: 20px; width: 58px;" alt="Tweet" src="<?php print OttWatchConfig::WWW; ?>/img/facebook-share.png"/></a>
-    <a href="javascript:copyToClipboard('<?php print urlencode($ttu); ?>');" class="btn btn-mini">Clipboard <i class="icon-share"></i></a>
-    </div>
-
-    </div><!-- item details -->
-
-    <iframe id="agendaFrame" src="<?php print $agendaUrl; ?>" style="width: 100%; height: 600px; border: 1px solid #000000;"></iframe>
-
-    </div><!-- span8 -->
-
-    </div><!-- row -->
-
-    <?php
-    if ($item['itemid']) {
-      # cleaner to call javascript to update the UI, rather than try and hack the correct state everywhere in advance.
-      ?>
-      <script>javascript:highlightItem(<?php print $item['id'].','.$item['itemid']; ?>);</script>
-      <?php
-    } else {
-      ?>
-      <script>$('#itemDetailsTitle').html('<?php print $title; ?>');</script>
-      <?php
-    }
-
-    bottom();
   }
 
   static public function doList ($category) {
