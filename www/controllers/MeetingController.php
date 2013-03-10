@@ -102,7 +102,6 @@ class MeetingController {
     # display list of items, and break out with the files too
     $items = getDatabase()->all(" select * from item where meetingid = :meetingid order by id ",array("meetingid"=>$m['id']));
     top($title);
-    print "<b>$title</b> <small>{$m['starttime']}</small><br/><br/>";
 
     # LEFT hand navigation, items and files links
     ?>
@@ -124,23 +123,11 @@ class MeetingController {
 
     <!-- column 1 -->
     <div class="span4">
-    <div id="agendanav" style="overflow:scroll; height: 550px;">
+
     <?php
-    foreach ($items as $i) {
-      #print "<pre>"; print print_r($i); print "</pre>";
-      print "<b><a href=\"javascript:focusOn('item',{$i['itemid']})\">{$i['title']}</a></b><br/>\n";
-      $files = getDatabase()->all(" select * from ifile where itemid = :itemid order by id ",array("itemid"=>$i['id']));
-      if (count($files) > 0) {
-        foreach ($files as $f) {
-          $ft = self::trimFileTitle($i['title'],$f['title']);
-          $fileurl = OttWatchConfig::WWW . "/meetings/file/" . $f['fileid'];
-          print "<small><a target=\"_blank\" href=\"{$fileurl}\"><i class=\"icon-share-alt\"></i></a> <a href=\"javascript:focusOn('file',{$f['fileid']})\"><i class=\"icon-edit\"></i> {$ft}</small></a><br/>\n";
-        }
-      }
-      print "<br/>\n";
-    }
+    print "<b>$title</b> <small>".substr($m['starttime'],0,10)."</small>";
     ?>
-    </div>
+
     <div style="padding: 5px; 0px;">
     <script>
     showhideComments = 0; // default hidden
@@ -161,9 +148,31 @@ class MeetingController {
       return -1;
     }
     </script>
-    <a id="showbtn" onclick="flipComments()" href="#disqus_thread" class="btn pull-right btn-info">Show Comments</a>
-    <a id="hidebtn" style="display: none;" href="javascript:flipComments()" class="btn pull-right btn-info">Show Agenda</a>
+    <a id="showbtn" onclick="flipComments()" class="btn btn-info">Comments</a>
+    <a id="hidebtn" style="display: none;" href="javascript:flipComments()" class="btn btn-info">Show Agenda</a>
+    <?php
+    renderShareLinks("City meeting: $title","/meetings/{$category}/{$meetid}");
+    ?>
     </div>
+
+    <div id="agendanav" style="overflow:scroll; height: 550px;">
+    <?php
+    foreach ($items as $i) {
+      #print "<pre>"; print print_r($i); print "</pre>";
+      print "<b><a href=\"javascript:focusOn('item',{$i['itemid']})\">{$i['title']}</a></b><br/>\n";
+      $files = getDatabase()->all(" select * from ifile where itemid = :itemid order by id ",array("itemid"=>$i['id']));
+      if (count($files) > 0) {
+        foreach ($files as $f) {
+          $ft = self::trimFileTitle($i['title'],$f['title']);
+          $fileurl = OttWatchConfig::WWW . "/meetings/file/" . $f['fileid'];
+          print "<small><a target=\"_blank\" href=\"{$fileurl}\"><i class=\"icon-share-alt\"></i></a> <a href=\"javascript:focusOn('file',{$f['fileid']})\"><i class=\"icon-edit\"></i> {$ft}</small></a><br/>\n";
+        }
+      }
+      print "<br/>\n";
+    }
+    ?>
+    </div>
+
     <div id="comments" style="display: none; clear: both; overflow:scroll; height: 550px; padding-top: 5px;">
     <?php disqus(); ?>
     </div>
@@ -171,7 +180,7 @@ class MeetingController {
 
     <!-- column 2 -->
     <div class="span8">
-    <iframe id="focusFrame" src="<?php print $focusFrameSrc; ?>" style=" border: 0px; border-left: 1px solid #000000; width: 100%; height: 600px;"></iframe>
+    <iframe id="focusFrame" src="<?php print $focusFrameSrc; ?>" style=" border: 0px; border-left: 1px solid #000000; width: 100%; height: 620px;"></iframe>
     </div>
 
     </div>

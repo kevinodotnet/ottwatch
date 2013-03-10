@@ -245,4 +245,24 @@ function pr($o) {
   print "</pre>";
 }
 
+function renderShareLinks($text,$url) {
+  $url = OttWatchConfig::WWW.$url;
+
+  $fbUrl = "https://www.facebook.com/sharer/sharer.php?u=".urlencode($url);
+  $twUrl = "";
+
+  $twUrl = "https://twitter.com/share".
+    "?url=".urlencode($url).
+    "&text=".urlencode($text).
+    "&via=OttWatch".
+    "&related=odonnell_k".
+    "&hashtags=ottpoli".
+    "";
+
+  ?>
+  <a target="_blank" href="<?php print $twUrl; ?>"><img src="<?php print OttWatchConfig::WWW; ?>/img/twitter-share.png"/></a>
+  <a target="_blank" href="<?php print $fbUrl; ?>"><img src="<?php print OttWatchConfig::WWW; ?>/img/facebook-share.png"/></a>
+  <?php
+}
+
 ?>
