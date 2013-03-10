@@ -18,8 +18,8 @@ getRoute()->get('/lobbying/lobbyists/(.*)', array('LobbyistController','showLobb
 getRoute()->get('/lobbying/clients/(.*)', array('LobbyistController','showClient'));
 getRoute()->get('/lobbying/thelobbied/(.*)', array('LobbyistController','showLobbied'));
 getRoute()->get('/lobbying/files/(.*)', array('LobbyistController','showFile'));
+getRoute()->get('/lobbyist/([^\/]*)', 'lobbyist'); # legacy REST location
 
-#getRoute()->get('/lobbyist/([^\/]*)', 'lobbyist');
 #getRoute()->get('/lobbyist/(.*)/details', 'lobbyistDetails');
 #getRoute()->get('/lobbyist/(.*)/link', 'lobbyistLink');
 
@@ -202,148 +202,8 @@ function home() {
 
 
 function lobbyist($name) {
-  top("Lobbyist: $name");
-  ?>
-  <div class="row-fluid">
-  <div class="span12">
-  <iframe style="border: 0px; width: 100%; height: 1200px;" src="<?php print urlencode($name); ?>/details"></iframe>
-  </div>
-  </div>
-  <?php
-  bottom();
-}
-
-function lobbyistDetails($name) {
-  global $OTT_LOBBY_SEARCH_URL;
-  $matches = lobbyistSearch($name);
-  $vs = $matches["__vs"]; unset($matches["__vs"]);
-  $ev = $matches["__ev"]; unset($matches["__ev"]);
-
-  $m = $matches[$name];
-  if (count($m) == 0) {
-    print "Not found<br/>";
-    return;
-  }
-
-  if (count($m) > 1) {
-    print "<h4>Multiple Lobbyists found named '$name'</h4>\n";
-    $index = 0;
-    foreach ($m as $t) {
-      $index++;
-      ?>
-      <form method="post" action="<?php print $OTT_LOBBY_SEARCH_URL; ?>">
-      <input type="hidden" name="__VIEWSTATE" value="<?php print $vs; ?>"/>
-      <input type="hidden" name="__EVENTVALIDATION" value="<?php print $ev; ?>"/>
-      <input type="hidden" name="<?php print $t; ?>" value=""/>
-      <input type="submit" value="<?php print ($name.' '.$index); ?>"/>
-      </form>
-      <?php
-    }
-    return;
-  }
-
-  $fields = array(
-    '__VIEWSTATE' => $vs,
-    '__EVENTVALIDATION' => $ev,
-    $ctl => ''
-  );
-  $html = sendPost($OTT_LOBBY_SEARCH_URL,$fields);
-  $lines = explode("\n",$html);
-  $html = array();
-  $add = 1;
-  foreach ($lines as $line) {
-    if ($add) {
-      array_push($html,$line);
-    }
-    if (preg_match("/<body/",$line)) {
-      $add = 0;
-    }
-    if (preg_match("/Header End/",$line)) {
-      $add = 1;
-    }
-    if (preg_match("/Search Lobbyist Design/",$line)) {
-      $add = 0;
-    }
-    if (preg_match("/End Search Lobbyist Design/",$line)) {
-      $add = 1;
-    }
-  }
-  $base = "\n<base href=\"https://apps107.ottawa.ca/LobbyistRegistry/search/\" target=\"_blank\"/>\n";
-  $html = implode("\n",$html);
-  $html = preg_replace("/<head>/","<head>$base",$html);
-  print $html;
-
-}
-
-function lobbyistLink($name) {
-  global $OTT_LOBBY_SEARCH_URL;
-
-  # get search page
-  $html = file_get_contents($OTT_LOBBY_SEARCH_URL);
-  $ev = getEventValidation($html);
-  $vs = getViewState($html);
-	$fields = array(
-	  '__VIEWSTATE' => $vs,
-	  '__EVENTVALIDATION' => $ev,
-    'ctl00$MainContent$btnSearch' => 'Search',
-	  'ctl00$MainContent$txtLobbyist' => $name
-	);
-  $html = sendPost($OTT_LOBBY_SEARCH_URL,$fields);
- 
-  # find name in search results and forward to first one that is found.
-  # TODO: potential defect if two people are registered under same name?
-  $lines = explode("\n",$html);
-  $ev = getEventValidation($html);
-  $vs = getViewState($html);
-  $matches = array();
-  foreach ($lines as $line) {
-    if (preg_match("/gvSearchResults.*LnkLobbyistName/",$line)) {
-      $zname = $line;
-      $zname = preg_replace("/.*<u>/","",$zname);
-      $zname = preg_replace("/<.*/","",$zname);
-      $ctl = $line;
-      $ctl = preg_replace("/.*;ctl/","ctl",$ctl);
-      $ctl = preg_replace("/&.*/","",$ctl);
-      if ($zname == $name) {
-        # exact match for the one we are looking for.
-  			$fields = array(
-  			  '__VIEWSTATE' => $vs,
-  			  '__EVENTVALIDATION' => $ev,
-  		    $ctl => ''
-  			);
-        autoSubmitForm($OTT_LOBBY_SEARCH_URL,$fields,"Forwarding to $name lobbyist page");
-      }
-      $matches[$zname] = $ctl;
-    }
-  }
-
-  if (count($matches) == 1) {
-    # not exact match, but only one, so forward anyway
-    reset($matches);
-    $zname = key($matches);
-    $ctl = $matches[$zname];
-		$fields = array(
-		  '__VIEWSTATE' => $vs,
-		  '__EVENTVALIDATION' => $ev,
-	    $ctl => ''
-		);
-    autoSubmitForm($OTT_LOBBY_SEARCH_URL,$fields,"Forwarding to $zname lobbyist page");
-    return;
-  }
-
-  print "<h3>Exact match not found.</h3>\n";
-  print "<ul>\n";
-  foreach ($matches as $zname => $ctl) {
-    print "<li><a href=\"../$zname/link\">$zname</a></li>\n";
-  }
-  print "</ul>\n";
-
-  #print "Lobbyist search results for $name<hr/>";
-  #print "<hr/>";
-  #print $html;
-
-  #header("Location: http://google.ca");
-  #print "Will now 302 redirect to Ottawa.ca for lobbyist <b>$name</b> (".time().")\n";
+  # move to new REST location
+  header("Location: ".OttWatchConfig::WWW."/lobbying/lobbyists/$name");
 }
 
 function error404() {
