@@ -246,6 +246,7 @@ function pr($o) {
 }
 
 function renderShareLinks($text,$url) {
+  return;
   $url = OttWatchConfig::WWW.$url;
 
   $fbUrl = "https://www.facebook.com/sharer/sharer.php?u=".urlencode($url);
