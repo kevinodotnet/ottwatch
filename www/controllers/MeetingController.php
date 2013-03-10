@@ -101,7 +101,7 @@ class MeetingController {
 
     # display list of items, and break out with the files too
     $items = getDatabase()->all(" select * from item where meetingid = :meetingid order by id ",array("meetingid"=>$m['id']));
-    top($title);
+    top($title . " on " . substr($m['starttime'],0,10));
 
     # LEFT hand navigation, items and files links
     ?>
@@ -135,24 +135,24 @@ class MeetingController {
       if (showhideComments) {
         $('#comments').css('display','none');
         $('#agendanav').css('display','block');
-        $('#showbtn').css('display','block');
+        $('#showbtn').css('display','inline-block');
         $('#hidebtn').css('display','none');
         showhideComments = 0;
       } else {
         $('#comments').css('display','block');
         $('#agendanav').css('display','none');
-        $('#hidebtn').css('display','block');
+        $('#hidebtn').css('display','inline-block');
         $('#showbtn').css('display','none');
         showhideComments = 1;
       }
       return -1;
     }
     </script>
-    <a id="showbtn" onclick="flipComments()" class="btn btn-info">Comments</a>
-    <a id="hidebtn" style="display: none;" href="javascript:flipComments()" class="btn btn-info">Show Agenda</a>
     <?php
     renderShareLinks("City meeting: $title","/meetings/{$category}/{$meetid}");
     ?>
+    <a id="showbtn" onclick="flipComments()" class="btn btn-info">Show Comments</a>
+    <a id="hidebtn" style="display: none;" href="javascript:flipComments()" class="btn btn-info">Show Agenda</a>
     </div>
 
     <div id="agendanav" style="overflow:scroll; height: 550px;">
