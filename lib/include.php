@@ -246,12 +246,13 @@ function pr($o) {
 }
 
 function renderShareLinks($text,$url) {
-  return;
   $url = OttWatchConfig::WWW.$url;
 
   $fbUrl = "https://www.facebook.com/sharer/sharer.php?u=".urlencode($url);
   $twUrl = "";
 
+  # twitter doesn't like spaces in urls
+  $url = preg_replace("/ /","+",$url);
   $twUrl = "https://twitter.com/share".
     "?url=".urlencode($url).
     "&text=".urlencode($text).
