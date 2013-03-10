@@ -9,6 +9,71 @@ class LobbyistController {
   # GUI
   #################################################################################################
 
+  public static function getUrlForIssue ($id,$issue) {
+    return "<a href=\"".OttWatchConfig::WWW."/lobbying/files/{$id}\">{$issue}</a>";
+  }
+
+  public static function showFile ($id) {
+    $file = getDatabase()->one(" select * from lobbyfile where id = :id",array('id'=>$id));
+    $issue = substr($file['issue'],0,30);
+    $issue .= '...';
+    top($issue);
+    ?>
+
+    <div class="row-fluid">
+    <div class="span4">
+    <h4>Issue</h4>
+    <?php print $file['issue']; ?>
+    </div>
+    <div class="span4">
+    <h4>Lobbyist</h4>
+    <a href="<?php print "../lobbyists/".$file['lobbyist']; ?>"><?php print $file['lobbyist']; ?></a>
+    </div>
+    <div class="span4">
+    <h4>Client</h4>
+    <a href="<?php print "../clients/".$file['client']; ?>"><?php print $file['client']; ?></a>
+    </div>
+    </div>
+
+    <p/>
+
+    <?php
+    $rows = getDatabase()->all(" select * from lobbying where lobbyfileid = :id order by date(created) desc, date(lobbydate) desc ",array('id'=>$id));
+    #pr($rows);
+    ?>
+    <div class="row-fluid">
+    <div class="span12">
+    <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
+      <tr>
+      <th>Date</th>
+      <th>Activity</th>
+      <th>Lobbied</th>
+      <th>Reported On</th>
+      </tr>
+    <?php
+    $lastclient = '';
+    $lastissue = '';
+    foreach ($rows as $r) {
+      ?>
+      <tr>
+      <?php
+      ?>
+      <td><nobr><?php print substr($r['lobbydate'],0,10); ?></nobr></td>
+      <td><nobr><?php print $r['activity']; ?></nobr></td>
+      <td><nobr><?php print $r['lobbied']; ?></nobr></td>
+      <td><nobr><?php print substr($r['created'],0,10); ?></nobr></td>
+      </tr>
+      <?php
+    }
+    ?>
+    </table>
+    </div>
+    </div>
+
+    <?php
+    bottom();
+  }
+
   public static function showLobbied ($lobbied) {
     top("Lobbied: $lobbied");
     $rows = getDatabase()->all("
@@ -49,7 +114,7 @@ class LobbyistController {
         ?>
         <td><nobr><a href="<?php print OttWatchConfig::WWW."/lobbying/lobbyists/{$r['lobbyist']}"; ?>"><?php print $r['lobbyist']; ?></a></nobr></td>
         <td><nobr><a href="<?php print OttWatchConfig::WWW."/lobbying/clients/{$r['client']}"; ?>"><?php print $r['client']; ?></a></nobr></td>
-        <td><?php print $r['issue']; ?></td>
+        <td><?php print self::getUrlForIssue($r['lobbyfileid'],$r['issue']); ?></td>
         <?php
       }
       $lastclient = $r['client'];
@@ -136,7 +201,7 @@ class LobbyistController {
       } else {
         ?>
         <td><nobr><a href="<?php print OttWatchConfig::WWW."/lobbying/clients/{$r['client']}"; ?>"><?php print $r['client']; ?></a></nobr></td>
-        <td><?php print $r['issue']; ?></td>
+        <td><?php print self::getUrlForIssue($r['lobbyfileid'],$r['issue']); ?></td>
         <?php
       }
       $lastclient = $r['client'];
@@ -194,7 +259,7 @@ class LobbyistController {
       } else {
         ?>
         <td><nobr><a href="<?php print OttWatchConfig::WWW."/lobbying/lobbyists/{$r['lobbyist']}"; ?>"><?php print $r['lobbyist']; ?></a></nobr></td>
-        <td><?php print $r['issue']; ?></td>
+        <td><?php print self::getUrlForIssue($r['lobbyfileid'],$r['issue']); ?></td>
         <?php
       }
       $lastlobbyist = $r['lobbyist'];
@@ -251,9 +316,9 @@ class LobbyistController {
     <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
       <tr>
       <th>Lobbyist</th>
-      <th>Client</th>
       <th>Issue</th>
-      <th>Activties</th>
+      <th>Client</th>
+      <th>Who Got Lobbied?</th>
       <th>From</th>
       <th>To</th>
       <th>Reported On</th>
@@ -263,9 +328,9 @@ class LobbyistController {
       ?>
       <tr>
       <td><nobr><a href="<?php print OttWatchConfig::WWW."/lobbying/lobbyists/{$r['lobbyist']}"; ?>"><?php print $r['lobbyist']; ?></a></nobr></td>
+      <td><?php print self::getUrlForIssue($r['id'],$r['issue']); ?></td>
       <td><nobr><a href="<?php print OttWatchConfig::WWW."/lobbying/clients/{$r['client']}"; ?>"><?php print $r['client']; ?></a></nobr></td>
-      <td><?php print $r['issue']; ?></td>
-      <td><?php print $r['count']; ?></td>
+      <td><nobr><a href="../files/<?php print $r['id']; ?>" class="btn">See all <?php print $r['count']; ?></a></nobr></td>
       <td><nobr><?php print $r['fdate']; ?></nobr></td>
       <td><nobr><?php print $r['tdate']; ?></nobr></td>
       <td><nobr><?php print $r['created']; ?></nobr></td>

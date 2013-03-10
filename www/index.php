@@ -17,6 +17,7 @@ getRoute()->get('/lobbying/search/(.*)', array('LobbyistController','search'));
 getRoute()->get('/lobbying/lobbyists/(.*)', array('LobbyistController','showLobbyist'));
 getRoute()->get('/lobbying/clients/(.*)', array('LobbyistController','showClient'));
 getRoute()->get('/lobbying/thelobbied/(.*)', array('LobbyistController','showLobbied'));
+getRoute()->get('/lobbying/files/(.*)', array('LobbyistController','showFile'));
 
 #getRoute()->get('/lobbyist/([^\/]*)', 'lobbyist');
 #getRoute()->get('/lobbyist/(.*)/details', 'lobbyistDetails');
