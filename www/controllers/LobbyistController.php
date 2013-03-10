@@ -29,9 +29,12 @@ class LobbyistController {
     <h4>Lobbyist</h4>
     <a href="<?php print "../lobbyists/".$file['lobbyist']; ?>"><?php print $file['lobbyist']; ?></a>
     </div>
-    <div class="span4">
+    <div class="span3">
     <h4>Client</h4>
     <a href="<?php print "../clients/".$file['client']; ?>"><?php print $file['client']; ?></a>
+    </div>
+    <div class="span1">
+    <?php renderShareLinks("Lobbying about ".$file['issue'],"/lobbying/files/".$file['id']); ?>
     </div>
     </div>
 
@@ -98,7 +101,14 @@ class LobbyistController {
         'lobbied' => $lobbied
       ));
     ?>
+    <div class="row-fluid">
+    <div class="span11">
     <h1><?php print $lobbied; ?></h1>
+    </div>
+    <div class="span1">
+    <?php renderShareLinks("The Lobbied: $lobbied".$file['issue'],"/lobbying/thelobbied/".$lobbied); ?>
+    </div>
+    </div>
     <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
       <tr>
       <th>Lobbyist</th>
@@ -155,7 +165,7 @@ class LobbyistController {
     <div class="span4">
     <h1><?php print $lobbyist; ?></h1>
     </div>
-    <div class="span8">
+    <div class="span7">
     <h4>Works on <?php print count($rows); ?> lobbying files for these clients:</h4>
     <?php
     $skip = array();
@@ -170,6 +180,9 @@ class LobbyistController {
     }
     ?>
     <br/><br/>
+    </div>
+    <div class="span1">
+    <?php renderShareLinks("Lobbyist: $lobbyist","/lobbying/lobbyists/".$lobbyist); ?>
     </div>
     </div>
 
@@ -245,7 +258,15 @@ class LobbyistController {
       'client' => $client
       ));
     ?>
+    <div class="row-fluid">
+    <div class="span11">
     <h1><?php print $client; ?></h1>
+    </div>
+    <div class="span1">
+    <?php renderShareLinks("Lobbying Clients: $client","/lobbying/clinets/".$client); ?>
+    </div>
+    </div>
+
     <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
       <tr>
       <th>Lobbyist</th>
