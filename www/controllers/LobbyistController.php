@@ -51,19 +51,30 @@ class LobbyistController {
       <th>Reported On</th>
       </tr>
     <?php
-    $lastclient = '';
-    $lastissue = '';
+    $lastdate= '';
+    $lastactivity = '';
     foreach ($rows as $r) {
       ?>
       <tr>
       <?php
+      if ($lastdate == $r['lobbydate'] && $lastactivity == $r['activity']) {
+        ?>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <?php
+      } else {
+        ?>
+        <td><nobr><?php print substr($r['lobbydate'],0,10); ?></nobr></td>
+        <td><nobr><?php print $r['activity']; ?></nobr></td>
+        <?php
+      }
       ?>
-      <td><nobr><?php print substr($r['lobbydate'],0,10); ?></nobr></td>
-      <td><nobr><?php print $r['activity']; ?></nobr></td>
       <td><nobr><?php print $r['lobbied']; ?></nobr></td>
       <td><nobr><?php print substr($r['created'],0,10); ?></nobr></td>
       </tr>
       <?php
+      $lastdate = $r['lobbydate'];
+      $lastactivity = $r['activity'];
     }
     ?>
     </table>
