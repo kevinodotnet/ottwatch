@@ -329,29 +329,6 @@ class LobbyistController {
 			}
 		}
   }
-		
-# 		foreach ($events as $event) {
-# 			$who = $event['who'];
-# 			$what = $event['what'];
-# 			$job = $event['job'];
-# 			$from = $event['from'];
-# 			$to = $event['to'];
-# 		
-# 			$hash = md5("$from :: $to :: $who :: $job :: $what");
-# 		  $hashfile = "$OTTVAR/lobby/$hash";
-# 			if (file_exists($hashfile)) {
-# 				continue;
-# 			}
-# 		
-# 		  $link = "$OTT_WWW/lobbyist/".urlencode($who);
-# 			$bitly = bitly_v3_shorten($link);
-# 			$bitly = $bitly['url'];
-# 			$tweet = tweet_txt_and_url("Lobbying: $who, $what","$bitly");
-# 		
-# 			file_put_contents($hashfile,"$from :: $to :: $who :: $job :: $what :: $bitly\n\n$tweet\n");
-# 			# tweet($tweet);
-# 		}
-
 
   /*
   HTML is the output of a client/lobbyistfile. 
@@ -501,7 +478,7 @@ class LobbyistController {
         $ctl = $matches[1];
         # print ">>> $l\n";
         # print "\n";
-        print "$from to $to :: $lobbyist :: $issue\n";
+        # print "$from to $to :: $lobbyist :: $issue\n";
 
         # now check if we have a lobbyfile match; if so, assume no changes because the min/max date
         # ranges are the same, and don't bother scraping the detailed page.
