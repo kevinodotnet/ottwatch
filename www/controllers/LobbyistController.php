@@ -331,6 +331,7 @@ class LobbyistController {
         client like '%$clause%'
         or lobbyist like '%$clause%'
         or issue like '%$clause%'
+        or lobbied like '%$clause%'
       group by
         f.id,
         f.lobbyist,
