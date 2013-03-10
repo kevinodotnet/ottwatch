@@ -351,7 +351,7 @@ class LobbyistController {
       <th>Lobbyist</th>
       <th>Issue</th>
       <th>Client</th>
-      <th>Who Got Lobbied?</th>
+      <th>Activities</th>
       <th>From</th>
       <th>To</th>
       <th>Reported On</th>
@@ -363,7 +363,7 @@ class LobbyistController {
       <td><nobr><a href="<?php print OttWatchConfig::WWW."/lobbying/lobbyists/{$r['lobbyist']}"; ?>"><?php print $r['lobbyist']; ?></a></nobr></td>
       <td><?php print self::getUrlForIssue($r['id'],$r['issue']); ?></td>
       <td><nobr><a href="<?php print OttWatchConfig::WWW."/lobbying/clients/{$r['client']}"; ?>"><?php print $r['client']; ?></a></nobr></td>
-      <td><nobr><a href="../files/<?php print $r['id']; ?>" class="btn">See all <?php print $r['count']; ?></a></nobr></td>
+      <td><nobr><a href="../files/<?php print $r['id']; ?>" class="btn"><?php print $r['count']; ?> activities</a></nobr></td>
       <td><nobr><?php print $r['fdate']; ?></nobr></td>
       <td><nobr><?php print $r['tdate']; ?></nobr></td>
       <td><nobr><?php print $r['created']; ?></nobr></td>
