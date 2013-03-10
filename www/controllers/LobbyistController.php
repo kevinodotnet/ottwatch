@@ -390,7 +390,7 @@ class LobbyistController {
     # Use the first lobbyist search results page to find all lobbyists
     # how have activities in the given range.
 
-    print "Loading results for $from to $to ($daterange days)\n";
+    # print "Loading results for $from to $to ($daterange days)\n";
 
 		$html = LobbyistController::searchByDate($from,$to);
 		#file_put_contents("lobbysearch.html",$html);
@@ -460,7 +460,7 @@ class LobbyistController {
       $lobbyist = trim($lobbyist);
     }
 
-    print "Scraping $lobbyist, client: $client, issue: $issue\n";
+    #print "Scraping $lobbyist, client: $client, issue: $issue\n";
 
     if ($issue == 'ERR: issue parsing failed') {
       file_put_contents("err.html",$html);
