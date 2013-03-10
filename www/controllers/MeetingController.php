@@ -107,15 +107,38 @@ class MeetingController {
     ?>
 
     <script>
-    function focusOn(type,id) {
-      if (type == 'file') {
-        url = '<?php print OttWatchConfig::WWW; ?>/meetings/file/' + id;
-        $('#focusFrame').attr('src','http://docs.google.com/viewer?url='+escape(url)+'&embedded=true');
-      } else if (type == 'item') {
+    function focusOn(type,id,title) {
+
+      if (type == 'item') {
+        // move agenda to an item, and refocus on agenda tab just in case user is currently browsing
+        // a different tab
         $('#focusFrame').attr('src','<?php print self::getDocumentUrl($m['meetid'],'AGENDA'); ?>#Item' + id);
-      } else {
-        alert('programmer made a mistake; unknown type: ' + type);
+        $('#tablist a[href="#tabagenda"]').tab('show'); 
+        return;
       }
+
+      d = document.getElementById('tabfile'+id);
+      if (d) {
+        // already added, just flip to tab
+        $('#tablist a[href="#tabfile'+id+'"]').tab('show'); 
+      } else {
+        // add new tab
+        maxtitle = 30;
+        if (title.length > maxtitle) {
+          title = title.substring(0,maxtitle-3)+'...';
+        }
+
+        url = '<?php print OttWatchConfig::WWW; ?>/meetings/file/' + id;
+        frameurl = 'http://docs.google.com/viewer?url='+escape(url)+'&embedded=true';
+        $('#tablist').append('<li><a href="#tabfile'+id+'" data-toggle="tab">'+title+'</a></li>');
+        tabcontent = '';
+        tabcontent = tabcontent + '<div class="tab-pane active in" id="tabfile'+id+'">';
+        tabcontent = tabcontent + '<iframe id="focusFrame" src="'+frameurl+'" style=" border: 0px; border-left: 1px solid #000000; width: 100%; height: 620px;"></iframe>';
+        tabcontent = tabcontent + '</div>';
+        $('#tabcontent').append(tabcontent);
+        $('#tablist a[href="#tabfile'+id+'"]').tab('show'); 
+      }
+
     }
     </script>
 
@@ -146,7 +169,7 @@ class MeetingController {
         foreach ($files as $f) {
           $ft = self::trimFileTitle($i['title'],$f['title']);
           $fileurl = OttWatchConfig::WWW . "/meetings/file/" . $f['fileid'];
-          print "<small><a target=\"_blank\" href=\"{$fileurl}\"><i class=\"icon-share-alt\"></i></a> <a href=\"javascript:focusOn('file',{$f['fileid']})\"><i class=\"icon-edit\"></i> {$ft}</small></a><br/>\n";
+          print "<small><a target=\"_blank\" href=\"{$fileurl}\"><i class=\"icon-share-alt\"></i></a> <a href=\"javascript:focusOn('file',{$f['fileid']},'{$ft}')\"><i class=\"icon-edit\"></i> {$ft}</small></a><br/>\n";
         }
       }
       print "<br/>\n";
@@ -157,9 +180,9 @@ class MeetingController {
     </div>
 
     <!-- column 2 -->
-    <div class="span8">
+    <div class="span8" style=" border: 0px; border-left: 1px solid #000000; height: 620px;"></iframe>
 
-    <ul class="nav nav-tabs">
+    <ul id="tablist" class="nav nav-tabs">
     <li><a href="#tabagenda" data-toggle="tab">Agenda</a></li>
     <li><a href="#tabcomments" data-toggle="tab">Comments</a></li>
     </ul>
@@ -167,11 +190,13 @@ class MeetingController {
     <div id="tabcontent" class="tab-content">
 
     <div class="tab-pane active in" id="tabagenda">
-    <iframe id="focusFrame" src="<?php print $focusFrameSrc; ?>" style=" border: 0px; border-left: 1px solid #000000; width: 100%; height: 620px;"></iframe>
+    <iframe id="focusFrame" src="<?php print $focusFrameSrc; ?>" style="width: 100%; height: 90%; border: 0px;"></iframe>
     </div>
 
     <div class="tab-pane fade" id="tabcomments">
+    <div style="padding: 10px;">
     <?php disqus(); ?>
+    </div>
     </div>
 
     </div>
