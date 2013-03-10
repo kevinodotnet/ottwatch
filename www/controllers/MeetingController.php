@@ -313,12 +313,33 @@ class MeetingController {
 
     # XML issues
     $agenda = preg_replace("/&nbsp;/"," ",$agenda);
+	  $lines = explode("\n",$agenda);
+
+    # get coordinator information
+    for ($x = 0; $x < count($lines); $x++) {
+      $matches = array();
+      $lines[$x] = preg_replace("/\r/","",$lines[$x]);
+      if (preg_match("/(.*), Committee Coordinator/",$lines[$x],$matches)) {
+        $coordName = $matches[1];
+        $coordPhone = $lines[$x+1];
+        $coordEmail = $lines[$x+2];
+        $coordPhone = preg_replace("/<.*/","",$coordPhone);
+        $coordEmail = preg_replace("/<.*/","",$coordEmail);
+        break;
+      }
+    }
+    getDatabase()->execute(" update meeting set contactName = :name, contactEmail = :email, contactPhone = :phone where id = :id ",array(
+      'name' => $coordName,
+      'phone' => $coordPhone,
+      'email' => $coordEmail,
+      'id' => $id
+    ));
+    exit;
 
     # rebuild item rows
     getDatabase()->execute(" delete from item where meetingid = :id ",array('id'=>$id));
 
     # scrape out item IDs, and titles.
-	  $lines = explode("\n",$agenda);
     $add = 0;
     $spool = array();
 	  foreach ($lines as $line) {
