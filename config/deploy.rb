@@ -16,7 +16,7 @@ end
 set :keep_releases, 10
 set :normalize_asset_timestamps, false
 
-set :copy_exclude, ["spec","log","public","tmp"]
+set :copy_exclude, ["public","tmp"]
 
 set :scm, :git # You can set :scm explicitly or Capistrano will make an intelligent guess based on known version control directory names
 # Or: `accurev`, `bzr`, `cvs`, `darcs`, `git`, `mercurial`, `perforce`, `subversion` or `none`
