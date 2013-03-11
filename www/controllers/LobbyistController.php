@@ -171,10 +171,10 @@ class LobbyistController {
     $skip = array();
     foreach ($rows as $r) {
       if ($skip[$r['client']]) { continue; }
-      print "<nobr><a href=\"".OttWatchConfig::WWW."/lobbying/clients/{$r['client']}\">{$r['client']}</a></nobr> ";
+      print "<nobr><a href=\"".OttWatchConfig::WWW."/lobbying/clients/{$r['client']}\">{$r['client']}</a></nobr>";
       print "&nbsp;";
       print "&nbsp;";
-      print "&nbsp;";
+      print "&nbsp; ";
       $skip[$r['client']] = 1;
     }
     ?>
