@@ -102,7 +102,7 @@ function dashboard() {
   </td>
   </tr>
   <?php
-  $meetings = getDatabase()->all(" select id,meetid,category,date(starttime) starttime from meeting where date(starttime) < date(CURRENT_TIMESTAMP) order by starttime desc limit 10 ");
+  $meetings = getDatabase()->all(" select id,meetid,category,date(starttime) starttime from meeting where date(starttime) < date(CURRENT_TIMESTAMP) order by starttime desc limit 5 ");
   foreach ($meetings as $m) {
     $mtgurl = htmlspecialchars("http://app05.ottawa.ca/sirepub/mtgviewer.aspx?meetid={$m['meetid']}&doctype");
     ?>
@@ -120,7 +120,13 @@ function dashboard() {
   </td>
   </tr>
   </table>
+
+  <?php
+  ottawaMediaRSS();
+  ?>
+
   </div>
+
   <div class="span4">
   <script>
   function lobbyist_search_form_submit() {
@@ -132,9 +138,39 @@ function dashboard() {
     document.location.href = 'lobbying/search/'+v;
   }
   </script>
-  <h4>Lobbyist Registry</h4>
+  <h4>Recent Lobbying</h4>
+  <?php
+  $rows = getDatabase()->all(" 
+    select
+      f.id,f.lobbyist,f.issue
+    from lobbyfile f
+      join lobbying l on l.lobbyfileid = f.id
+    group by f.id,f.lobbyist,f.issue
+    order by
+      l.created desc
+    limit 5
+  ");
+  ?>
+  <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
+  <?php 
+  foreach ($rows as $r) {
+    ?>
+    <tr>
+    <td><nobr><?php print $r['lobbyist']; ?></nobr></td>
+    <td><a href="<?php print "lobbying/files/".$r['id']; ?>"><?php print $r['issue']; ?></a></td>
+    </tr>
+    <?php
+  }
+  ?>
+  <tr>
+  <td colspan="2"><center>
+  <button class="btn" onclick="document.location.href = 'lobbying/search/'">Show All Lobbying</button>
+  </center>
+  </td>
+  </tr>
+  </table>
+  <h4>Search Lobbyist Registry</h4>
   <div class="input-prepend input-append">
-  <button class="btn" onclick="document.location.href = 'lobbying/search/'">Show All</button>
   <input type="text" id="lobbyist_search_value" placeholder="Search...">
   <button class="btn" onclick="lobbyist_search_form_submit()"><i class="icon-search"></i> Search</button>
   </div>
@@ -175,9 +211,6 @@ function dashboard() {
   </tr>
   </table>
 
-  <?php
-  ottawaMediaRSS();
-  ?>
 
   </div>
 
