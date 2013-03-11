@@ -95,6 +95,9 @@ class DevelopmentAppController {
         foreach ($apps as $a) {
           $addr = json_decode($a['address']);
           $addr = $addr[0];
+          if (count($addr) == 0) {
+            continue;
+          }
           $lat = $addr->lat;
           $lon = $addr->lon;
           ?>
