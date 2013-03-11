@@ -41,7 +41,7 @@ class DevelopmentAppController {
 
     $since = $_GET['since'];
     if ($since == '') {
-      $since = 60;
+      $since = 7;
     }
 
     if (preg_match("/^\d\d\d\d-\d\d-\d\d$/",$since)) {
@@ -63,7 +63,7 @@ class DevelopmentAppController {
 
     <div class="row-fluid">
 
-    <div class="span8">
+    <div class="span5">
 
     Displaying <b><?php print count($apps); ?></b> applications updated since <?php print $sinceDisplay; ?>
     <p/>
@@ -81,21 +81,20 @@ class DevelopmentAppController {
 
     <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
     <tr>
-    <th>Application #</th>
-    <th>Application</th>
-    <th>Status</th>
+    <th>Application #<br/>Updated</th>
+    <th>Application Type and Status</th>
     <th>Address(es)</th>
-    <th>Updated</th>
-    <th>Started</th>
     </tr>
     <?php
     foreach ($apps as $a) {
       $url = self::getLinkToApp($a['appid']);
       ?>
       <tr>
-      <td><nobr><a target="_blank" href="<?php print $url; ?>"><?php print $a['devid']; ?></a></nobr></td>
-      <td><?php print $a['apptype']; ?></td>
-      <td><?php print $a['status']; ?></td>
+      <td><b><nobr><a target="_blank" href="<?php print $url; ?>"><?php print $a['devid']; ?></a></nobr></b><br/>
+      <nobr><?php print strftime("%Y-%m-%d",strtotime($a['statusdate'])); ?> updated</nobr><br/>
+      <nobr><?php print strftime("%Y-%m-%d",strtotime($a['receiveddate'])); ?> started</nobr></td>
+      <td><b><?php print $a['apptype']; ?></b><br/>
+      <?php print $a['status']; ?></td>
       <td>
       <?php
       $addr = json_decode($a['address']);
@@ -104,8 +103,6 @@ class DevelopmentAppController {
       }
       ?>
       </td>
-      <td><nobr><?php print strftime("%Y-%m-%d",strtotime($a['statusdate'])); ?></nobr></td>
-      <td><nobr><?php print strftime("%Y-%m-%d",strtotime($a['receiveddate'])); ?></nobr></td>
       </tr>
       <?php
     }
@@ -113,7 +110,7 @@ class DevelopmentAppController {
     </table>
     </div>
 
-    <div class="span4">
+    <div class="span7">
     <div id="map_canvas" style="width:100%; height:600px;"></div>
     <script>
       $(document).ready(function() {
