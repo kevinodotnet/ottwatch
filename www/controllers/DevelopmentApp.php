@@ -268,7 +268,6 @@ class DevelopmentAppController {
       $matches = array();
       if (preg_match('/apps104.*LAT=([-\d\.]+).*LON=([-\d\.]+).*>([^<]+)</',$lines[$x],$matches)) {
         # <li><a href="http://apps104.ottawa.ca/emap?emapver=lite&LAT=45.278462&LON=-75.570191&featname=5640+Bank+Street&amp;lang=en" target="_emap">5640 Bank Street</a></li>
-        print_r($matches);
         $addr = array();
         $addr['lat'] = $matches[1];
         $addr['lon'] = $matches[2];
@@ -316,10 +315,13 @@ class DevelopmentAppController {
 
     $url = "http://app01.ottawa.ca/postingplans/appDetails.jsf?lang=en&appId=$appid";
 
+		$addr = $addresses[0];
+		$addr = $addr['addr'];
+
     if ($action == 'insert') {
-      $tweet = "New {$labels['Application']}: ".implode("/",$addresses)." {$labels['Application #']} in $ward";
+      $tweet = "New {$labels['Application']}: ".$addr." {$labels['Application #']} in $ward";
     } else {
-      $tweet = "Updated {$labels['Application']}: ".implode("/",$addresses)." {$labels['Application #']} in $ward";
+      $tweet = "Updated {$labels['Application']}: ".$addr." {$labels['Application #']} in $ward";
     }
 
     $newtweet = tweet_txt_and_url($tweet,$url);
