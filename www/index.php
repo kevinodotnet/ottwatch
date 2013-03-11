@@ -189,9 +189,6 @@ function dashboard() {
     $addrcount = count($addr);
     $addr = $addr[0];
     $addr = $addr->addr;
-    if ($count > 1) {
-      $addr .= ' +';
-    }
     ?>
     <tr>
     <td><small><a href="<?php print $url; ?>"><?php print $a['devid']; ?></a></small></td>
