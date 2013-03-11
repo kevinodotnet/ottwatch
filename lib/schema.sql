@@ -68,6 +68,9 @@ create table meeting (
   starttime datetime,
   title varchar(100),
   category varchar(100),
+  contactName varchar(100),
+  contactEmail varchar(100),
+  contactPhone varchar(30),
   created datetime,
   updated datetime,
   primary key (id)

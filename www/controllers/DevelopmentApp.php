@@ -39,41 +39,124 @@ class DevelopmentAppController {
   static public function listAll() {
     top();
 
-    $apps = getDatabase()->all(" select * from devapp order by updated desc ");
+    $since = $_GET['since'];
+    if ($since == '') {
+      $since = 7;
+    }
+
+    if (preg_match("/^\d\d\d\d-\d\d-\d\d$/",$since)) {
+      $apps = getDatabase()->all(" select * from devapp where updated >= '$since' order by updated desc ");
+      $sinceDisplay = $since;
+    } else if (preg_match("/^\d+$/",$since)) {
+      $apps = getDatabase()->all(" select * from devapp where updated >= DATE_SUB(NOW(), INTERVAL $since day) order by updated desc ");
+      $sinceDisplay = "$since days ago";
+    } else {
+      # malformed since
+      print "The 'since' value is malformed; query aborted\n";
+      bottom();
+      return;
+    }
+
     ?>
+
     <h1>Development Applications</h1>
+
+    <div class="row-fluid">
+
+    <div class="span5">
+
+    Displaying <b><?php print count($apps); ?></b> applications updated since <?php print $sinceDisplay; ?>
+    <p/>
+    <script>
+    function filterSince() {
+      since = $('#filterSinceValue').val();
+      document.location.href = '?since='+since;
+    }
+    </script>
+
+    <div class="input-prepend input-append">
+    <span class="add-on">Updated Since:</span>
+    <input id="filterSinceValue" class="span10" type="text" name="" placeholder="yyyy-mm-dd or 'X' for 'days-ago'">
+    <button class="btn" type="button" onclick="filterSince()">Filter</button>
+    </div>
+
+    <div style="overflow:scroll; height: 500px;">
     <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
     <tr>
-    <th>Application #</th>
-    <th>Application</th>
-    <th>Status</th>
+    <th>Application #<br/>Updated</th>
+    <th>Application Type and Status</th>
     <th>Address(es)</th>
-    <th>Updated</th>
-    <th>Started</th>
     </tr>
     <?php
     foreach ($apps as $a) {
       $url = self::getLinkToApp($a['appid']);
       ?>
       <tr>
-      <td><a target="_blank" href="<?php print $url; ?>"><?php print $a['devid']; ?></a></td>
-      <td><?php print $a['apptype']; ?></td>
-      <td><?php print $a['status']; ?></td>
+      <td><b><nobr><a target="_blank" href="<?php print $url; ?>"><?php print $a['devid']; ?></a></nobr></b><br/>
+      <nobr><?php print strftime("%Y-%m-%d",strtotime($a['statusdate'])); ?> updated</nobr><br/>
+      <nobr><?php print strftime("%Y-%m-%d",strtotime($a['receiveddate'])); ?> started</nobr></td>
+      <td><b><?php print $a['apptype']; ?></b><br/>
+      <?php print $a['status']; ?></td>
       <td>
       <?php
       $addr = json_decode($a['address']);
       foreach ($addr as $t) {
-        print "<a target=\"_blank\" href=\"http://maps.google.com/?q={$t->lat},{$t->lon}\">{$t->addr}</a><br/>\n";
+        print "<nobr><a target=\"_blank\" href=\"http://maps.google.com/?q={$t->lat},{$t->lon}\">{$t->addr}</a></nobr><br/>\n";
       }
       ?>
       </td>
-      <td><?php print strftime("%Y-%m-%d",strtotime($a['statusdate'])); ?></td>
-      <td><?php print strftime("%Y-%m-%d",strtotime($a['receiveddate'])); ?></td>
       </tr>
       <?php
     }
     ?>
     </table>
+    </div><!-- overflow -->
+    </div><!-- span -->
+
+    <div class="span7">
+    <div id="map_canvas" style="width:100%; height:600px;"></div>
+    <script>
+      $(document).ready(function() {
+        var mapOptions = { center: new google.maps.LatLng(45.420833,-75.69), zoom: 8, mapTypeId: google.maps.MapTypeId.ROADMAP };
+        var map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
+
+        <?php
+        foreach ($apps as $a) {
+          $url = self::getLinkToApp($a['appid']);
+          $addr = json_decode($a['address']);
+          $addr = $addr[0];
+          if (count($addr) == 0) {
+            continue;
+          }
+          $lat = $addr->lat;
+          $lon = $addr->lon;
+          ?>
+          {
+	        var myLatlng<?php print $a['id']; ?> = new google.maps.LatLng(<?php print $lat; ?>,<?php print $lon; ?>);
+	        var contentString<?php print $a['id']; ?> = 
+            '<div>' + 
+            '<b><a target="_blank" href="<?php print $url; ?>"><?php print $a['devid']; ?></a>: ' +
+            '<?php print $a['apptype']; ?></b><br/>' +
+            '<?php print $a['status']; ?><br/>' +
+            'Updated: <?php print strftime("%Y-%m-%d",strtotime($a['statusdate'])); ?>' +
+            '</div>';
+	        var infowindow<?php print $a['id']; ?> = new google.maps.InfoWindow({ content: contentString<?php print $a['id']; ?> });
+	        var marker<?php print $a['id']; ?> = new google.maps.Marker({ position: myLatlng<?php print $a['id']; ?>, map: map, title: '<?php print $a['devid']; ?>' }); 
+	        google.maps.event.addListener(marker<?php print $a['id']; ?>, 'click', function() {
+	          infowindow<?php print $a['id']; ?>.open(map,marker<?php print $a['id']; ?>);
+	        });
+          }
+          <?php
+        }
+        ?>
+
+
+
+      });
+    </script>
+    </div>
+
+    </div><!-- row -->
     <?php
     bottom();
   }

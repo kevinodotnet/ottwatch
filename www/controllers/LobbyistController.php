@@ -9,6 +9,85 @@ class LobbyistController {
   # GUI
   #################################################################################################
 
+  public static function getUrlForIssue ($id,$issue) {
+    return "<a href=\"".OttWatchConfig::WWW."/lobbying/files/{$id}\">{$issue}</a>";
+  }
+
+  public static function showFile ($id) {
+    $file = getDatabase()->one(" select * from lobbyfile where id = :id",array('id'=>$id));
+    $issue = substr($file['issue'],0,30);
+    $issue .= '...';
+    top($issue);
+    ?>
+
+    <div class="row-fluid">
+    <div class="span4">
+    <h4>Issue</h4>
+    <?php print $file['issue']; ?>
+    </div>
+    <div class="span4">
+    <h4>Lobbyist</h4>
+    <a href="<?php print "../lobbyists/".$file['lobbyist']; ?>"><?php print $file['lobbyist']; ?></a>
+    </div>
+    <div class="span3">
+    <h4>Client</h4>
+    <a href="<?php print "../clients/".$file['client']; ?>"><?php print $file['client']; ?></a>
+    </div>
+    <div class="span1">
+    <?php renderShareLinks("Lobbying about ".$file['issue'],"/lobbying/files/".$file['id']); ?>
+    </div>
+    </div>
+
+    <p/>
+
+    <?php
+    $rows = getDatabase()->all(" select * from lobbying where lobbyfileid = :id order by date(created) desc, date(lobbydate) desc ",array('id'=>$id));
+    #pr($rows);
+    ?>
+    <div class="row-fluid">
+    <div class="span12">
+    <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
+      <tr>
+      <th>Date</th>
+      <th>Activity</th>
+      <th>Lobbied</th>
+      <th>Reported On</th>
+      </tr>
+    <?php
+    $lastdate= '';
+    $lastactivity = '';
+    foreach ($rows as $r) {
+      ?>
+      <tr>
+      <?php
+      if ($lastdate == $r['lobbydate'] && $lastactivity == $r['activity']) {
+        ?>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <?php
+      } else {
+        ?>
+        <td><nobr><?php print substr($r['lobbydate'],0,10); ?></nobr></td>
+        <td><nobr><?php print $r['activity']; ?></nobr></td>
+        <?php
+      }
+      ?>
+      <td><nobr><?php print $r['lobbied']; ?></nobr></td>
+      <td><nobr><?php print substr($r['created'],0,10); ?></nobr></td>
+      </tr>
+      <?php
+      $lastdate = $r['lobbydate'];
+      $lastactivity = $r['activity'];
+    }
+    ?>
+    </table>
+    </div>
+    </div>
+
+    <?php
+    bottom();
+  }
+
   public static function showLobbied ($lobbied) {
     top("Lobbied: $lobbied");
     $rows = getDatabase()->all("
@@ -22,7 +101,14 @@ class LobbyistController {
         'lobbied' => $lobbied
       ));
     ?>
+    <div class="row-fluid">
+    <div class="span11">
     <h1><?php print $lobbied; ?></h1>
+    </div>
+    <div class="span1">
+    <?php renderShareLinks("The Lobbied: $lobbied".$file['issue'],"/lobbying/thelobbied/".$lobbied); ?>
+    </div>
+    </div>
     <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
       <tr>
       <th>Lobbyist</th>
@@ -49,7 +135,7 @@ class LobbyistController {
         ?>
         <td><nobr><a href="<?php print OttWatchConfig::WWW."/lobbying/lobbyists/{$r['lobbyist']}"; ?>"><?php print $r['lobbyist']; ?></a></nobr></td>
         <td><nobr><a href="<?php print OttWatchConfig::WWW."/lobbying/clients/{$r['client']}"; ?>"><?php print $r['client']; ?></a></nobr></td>
-        <td><?php print $r['issue']; ?></td>
+        <td><?php print self::getUrlForIssue($r['lobbyfileid'],$r['issue']); ?></td>
         <?php
       }
       $lastclient = $r['client'];
@@ -79,13 +165,13 @@ class LobbyistController {
     <div class="span4">
     <h1><?php print $lobbyist; ?></h1>
     </div>
-    <div class="span8">
+    <div class="span7">
     <h4>Works on <?php print count($rows); ?> lobbying files for these clients:</h4>
     <?php
     $skip = array();
     foreach ($rows as $r) {
       if ($skip[$r['client']]) { continue; }
-      print "<a href=\"".OttWatchConfig::WWW."/lobbying/clients/{$r['client']}\">{$r['client']}</a>";
+      print "<nobr><a href=\"".OttWatchConfig::WWW."/lobbying/clients/{$r['client']}\">{$r['client']}</a></nobr>";
       print "&nbsp;";
       print "&nbsp;";
       print "&nbsp;";
@@ -94,6 +180,9 @@ class LobbyistController {
     }
     ?>
     <br/><br/>
+    </div>
+    <div class="span1">
+    <?php renderShareLinks("Lobbyist: $lobbyist","/lobbying/lobbyists/".$lobbyist); ?>
     </div>
     </div>
 
@@ -136,7 +225,7 @@ class LobbyistController {
       } else {
         ?>
         <td><nobr><a href="<?php print OttWatchConfig::WWW."/lobbying/clients/{$r['client']}"; ?>"><?php print $r['client']; ?></a></nobr></td>
-        <td><?php print $r['issue']; ?></td>
+        <td><?php print self::getUrlForIssue($r['lobbyfileid'],$r['issue']); ?></td>
         <?php
       }
       $lastclient = $r['client'];
@@ -169,7 +258,15 @@ class LobbyistController {
       'client' => $client
       ));
     ?>
+    <div class="row-fluid">
+    <div class="span11">
     <h1><?php print $client; ?></h1>
+    </div>
+    <div class="span1">
+    <?php renderShareLinks("Lobbying Clients: $client","/lobbying/clinets/".$client); ?>
+    </div>
+    </div>
+
     <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
       <tr>
       <th>Lobbyist</th>
@@ -194,7 +291,7 @@ class LobbyistController {
       } else {
         ?>
         <td><nobr><a href="<?php print OttWatchConfig::WWW."/lobbying/lobbyists/{$r['lobbyist']}"; ?>"><?php print $r['lobbyist']; ?></a></nobr></td>
-        <td><?php print $r['issue']; ?></td>
+        <td><?php print self::getUrlForIssue($r['lobbyfileid'],$r['issue']); ?></td>
         <?php
       }
       $lastlobbyist = $r['lobbyist'];
@@ -234,6 +331,7 @@ class LobbyistController {
         client like '%$clause%'
         or lobbyist like '%$clause%'
         or issue like '%$clause%'
+        or lobbied like '%$clause%'
       group by
         f.id,
         f.lobbyist,
@@ -251,9 +349,9 @@ class LobbyistController {
     <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
       <tr>
       <th>Lobbyist</th>
-      <th>Client</th>
       <th>Issue</th>
-      <th>Activties</th>
+      <th>Client</th>
+      <th>Activities</th>
       <th>From</th>
       <th>To</th>
       <th>Reported On</th>
@@ -263,9 +361,9 @@ class LobbyistController {
       ?>
       <tr>
       <td><nobr><a href="<?php print OttWatchConfig::WWW."/lobbying/lobbyists/{$r['lobbyist']}"; ?>"><?php print $r['lobbyist']; ?></a></nobr></td>
+      <td><?php print self::getUrlForIssue($r['id'],$r['issue']); ?></td>
       <td><nobr><a href="<?php print OttWatchConfig::WWW."/lobbying/clients/{$r['client']}"; ?>"><?php print $r['client']; ?></a></nobr></td>
-      <td><?php print $r['issue']; ?></td>
-      <td><?php print $r['count']; ?></td>
+      <td><nobr><a href="../files/<?php print $r['id']; ?>" class="btn"><?php print $r['count']; ?> activities</a></nobr></td>
       <td><nobr><?php print $r['fdate']; ?></nobr></td>
       <td><nobr><?php print $r['tdate']; ?></nobr></td>
       <td><nobr><?php print $r['created']; ?></nobr></td>
@@ -292,7 +390,7 @@ class LobbyistController {
     # Use the first lobbyist search results page to find all lobbyists
     # how have activities in the given range.
 
-    print "Loading results for $from to $to ($daterange days)\n";
+    # print "Loading results for $from to $to ($daterange days)\n";
 
 		$html = LobbyistController::searchByDate($from,$to);
 		#file_put_contents("lobbysearch.html",$html);
@@ -329,29 +427,6 @@ class LobbyistController {
 			}
 		}
   }
-		
-# 		foreach ($events as $event) {
-# 			$who = $event['who'];
-# 			$what = $event['what'];
-# 			$job = $event['job'];
-# 			$from = $event['from'];
-# 			$to = $event['to'];
-# 		
-# 			$hash = md5("$from :: $to :: $who :: $job :: $what");
-# 		  $hashfile = "$OTTVAR/lobby/$hash";
-# 			if (file_exists($hashfile)) {
-# 				continue;
-# 			}
-# 		
-# 		  $link = "$OTT_WWW/lobbyist/".urlencode($who);
-# 			$bitly = bitly_v3_shorten($link);
-# 			$bitly = $bitly['url'];
-# 			$tweet = tweet_txt_and_url("Lobbying: $who, $what","$bitly");
-# 		
-# 			file_put_contents($hashfile,"$from :: $to :: $who :: $job :: $what :: $bitly\n\n$tweet\n");
-# 			# tweet($tweet);
-# 		}
-
 
   /*
   HTML is the output of a client/lobbyistfile. 
@@ -385,7 +460,7 @@ class LobbyistController {
       $lobbyist = trim($lobbyist);
     }
 
-    print "Scraping $lobbyist, client: $client, issue: $issue\n";
+    #print "Scraping $lobbyist, client: $client, issue: $issue\n";
 
     if ($issue == 'ERR: issue parsing failed') {
       file_put_contents("err.html",$html);
@@ -501,7 +576,7 @@ class LobbyistController {
         $ctl = $matches[1];
         # print ">>> $l\n";
         # print "\n";
-        print "$from to $to :: $lobbyist :: $issue\n";
+        # print "$from to $to :: $lobbyist :: $issue\n";
 
         # now check if we have a lobbyfile match; if so, assume no changes because the min/max date
         # ranges are the same, and don't bother scraping the detailed page.

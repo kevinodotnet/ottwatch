@@ -17,8 +17,9 @@ getRoute()->get('/lobbying/search/(.*)', array('LobbyistController','search'));
 getRoute()->get('/lobbying/lobbyists/(.*)', array('LobbyistController','showLobbyist'));
 getRoute()->get('/lobbying/clients/(.*)', array('LobbyistController','showClient'));
 getRoute()->get('/lobbying/thelobbied/(.*)', array('LobbyistController','showLobbied'));
+getRoute()->get('/lobbying/files/(.*)', array('LobbyistController','showFile'));
+getRoute()->get('/lobbyist/([^\/]*)', 'lobbyist'); # legacy REST location
 
-#getRoute()->get('/lobbyist/([^\/]*)', 'lobbyist');
 #getRoute()->get('/lobbyist/(.*)/details', 'lobbyistDetails');
 #getRoute()->get('/lobbyist/(.*)/link', 'lobbyistLink');
 
@@ -101,7 +102,7 @@ function dashboard() {
   </td>
   </tr>
   <?php
-  $meetings = getDatabase()->all(" select id,meetid,category,date(starttime) starttime from meeting where date(starttime) < date(CURRENT_TIMESTAMP) order by starttime desc limit 10 ");
+  $meetings = getDatabase()->all(" select id,meetid,category,date(starttime) starttime from meeting where date(starttime) < date(CURRENT_TIMESTAMP) order by starttime desc limit 5 ");
   foreach ($meetings as $m) {
     $mtgurl = htmlspecialchars("http://app05.ottawa.ca/sirepub/mtgviewer.aspx?meetid={$m['meetid']}&doctype");
     ?>
@@ -119,7 +120,13 @@ function dashboard() {
   </td>
   </tr>
   </table>
+
+  <?php
+  ottawaMediaRSS();
+  ?>
+
   </div>
+
   <div class="span4">
   <script>
   function lobbyist_search_form_submit() {
@@ -131,9 +138,39 @@ function dashboard() {
     document.location.href = 'lobbying/search/'+v;
   }
   </script>
-  <h4>Lobbyist Registry</h4>
+  <h4>Recent Lobbying</h4>
+  <?php
+  $rows = getDatabase()->all(" 
+    select
+      f.id,f.lobbyist,f.issue
+    from lobbyfile f
+      join lobbying l on l.lobbyfileid = f.id
+    group by f.id,f.lobbyist,f.issue
+    order by
+      l.created desc
+    limit 5
+  ");
+  ?>
+  <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
+  <?php 
+  foreach ($rows as $r) {
+    ?>
+    <tr>
+    <td><nobr><?php print $r['lobbyist']; ?></nobr></td>
+    <td><a href="<?php print "lobbying/files/".$r['id']; ?>"><?php print $r['issue']; ?></a></td>
+    </tr>
+    <?php
+  }
+  ?>
+  <tr>
+  <td colspan="2"><center>
+  <button class="btn" onclick="document.location.href = 'lobbying/search/'">Show All Lobbying</button>
+  </center>
+  </td>
+  </tr>
+  </table>
+  <h4>Search Lobbyist Registry</h4>
   <div class="input-prepend input-append">
-  <button class="btn" onclick="document.location.href = 'lobbying/search/'">Show All</button>
   <input type="text" id="lobbyist_search_value" placeholder="Search...">
   <button class="btn" onclick="lobbyist_search_form_submit()"><i class="icon-search"></i> Search</button>
   </div>
@@ -174,9 +211,6 @@ function dashboard() {
   </tr>
   </table>
 
-  <?php
-  ottawaMediaRSS();
-  ?>
 
   </div>
 
@@ -201,148 +235,8 @@ function home() {
 
 
 function lobbyist($name) {
-  top("Lobbyist: $name");
-  ?>
-  <div class="row-fluid">
-  <div class="span12">
-  <iframe style="border: 0px; width: 100%; height: 1200px;" src="<?php print urlencode($name); ?>/details"></iframe>
-  </div>
-  </div>
-  <?php
-  bottom();
-}
-
-function lobbyistDetails($name) {
-  global $OTT_LOBBY_SEARCH_URL;
-  $matches = lobbyistSearch($name);
-  $vs = $matches["__vs"]; unset($matches["__vs"]);
-  $ev = $matches["__ev"]; unset($matches["__ev"]);
-
-  $m = $matches[$name];
-  if (count($m) == 0) {
-    print "Not found<br/>";
-    return;
-  }
-
-  if (count($m) > 1) {
-    print "<h4>Multiple Lobbyists found named '$name'</h4>\n";
-    $index = 0;
-    foreach ($m as $t) {
-      $index++;
-      ?>
-      <form method="post" action="<?php print $OTT_LOBBY_SEARCH_URL; ?>">
-      <input type="hidden" name="__VIEWSTATE" value="<?php print $vs; ?>"/>
-      <input type="hidden" name="__EVENTVALIDATION" value="<?php print $ev; ?>"/>
-      <input type="hidden" name="<?php print $t; ?>" value=""/>
-      <input type="submit" value="<?php print ($name.' '.$index); ?>"/>
-      </form>
-      <?php
-    }
-    return;
-  }
-
-  $fields = array(
-    '__VIEWSTATE' => $vs,
-    '__EVENTVALIDATION' => $ev,
-    $ctl => ''
-  );
-  $html = sendPost($OTT_LOBBY_SEARCH_URL,$fields);
-  $lines = explode("\n",$html);
-  $html = array();
-  $add = 1;
-  foreach ($lines as $line) {
-    if ($add) {
-      array_push($html,$line);
-    }
-    if (preg_match("/<body/",$line)) {
-      $add = 0;
-    }
-    if (preg_match("/Header End/",$line)) {
-      $add = 1;
-    }
-    if (preg_match("/Search Lobbyist Design/",$line)) {
-      $add = 0;
-    }
-    if (preg_match("/End Search Lobbyist Design/",$line)) {
-      $add = 1;
-    }
-  }
-  $base = "\n<base href=\"https://apps107.ottawa.ca/LobbyistRegistry/search/\" target=\"_blank\"/>\n";
-  $html = implode("\n",$html);
-  $html = preg_replace("/<head>/","<head>$base",$html);
-  print $html;
-
-}
-
-function lobbyistLink($name) {
-  global $OTT_LOBBY_SEARCH_URL;
-
-  # get search page
-  $html = file_get_contents($OTT_LOBBY_SEARCH_URL);
-  $ev = getEventValidation($html);
-  $vs = getViewState($html);
-	$fields = array(
-	  '__VIEWSTATE' => $vs,
-	  '__EVENTVALIDATION' => $ev,
-    'ctl00$MainContent$btnSearch' => 'Search',
-	  'ctl00$MainContent$txtLobbyist' => $name
-	);
-  $html = sendPost($OTT_LOBBY_SEARCH_URL,$fields);
- 
-  # find name in search results and forward to first one that is found.
-  # TODO: potential defect if two people are registered under same name?
-  $lines = explode("\n",$html);
-  $ev = getEventValidation($html);
-  $vs = getViewState($html);
-  $matches = array();
-  foreach ($lines as $line) {
-    if (preg_match("/gvSearchResults.*LnkLobbyistName/",$line)) {
-      $zname = $line;
-      $zname = preg_replace("/.*<u>/","",$zname);
-      $zname = preg_replace("/<.*/","",$zname);
-      $ctl = $line;
-      $ctl = preg_replace("/.*;ctl/","ctl",$ctl);
-      $ctl = preg_replace("/&.*/","",$ctl);
-      if ($zname == $name) {
-        # exact match for the one we are looking for.
-  			$fields = array(
-  			  '__VIEWSTATE' => $vs,
-  			  '__EVENTVALIDATION' => $ev,
-  		    $ctl => ''
-  			);
-        autoSubmitForm($OTT_LOBBY_SEARCH_URL,$fields,"Forwarding to $name lobbyist page");
-      }
-      $matches[$zname] = $ctl;
-    }
-  }
-
-  if (count($matches) == 1) {
-    # not exact match, but only one, so forward anyway
-    reset($matches);
-    $zname = key($matches);
-    $ctl = $matches[$zname];
-		$fields = array(
-		  '__VIEWSTATE' => $vs,
-		  '__EVENTVALIDATION' => $ev,
-	    $ctl => ''
-		);
-    autoSubmitForm($OTT_LOBBY_SEARCH_URL,$fields,"Forwarding to $zname lobbyist page");
-    return;
-  }
-
-  print "<h3>Exact match not found.</h3>\n";
-  print "<ul>\n";
-  foreach ($matches as $zname => $ctl) {
-    print "<li><a href=\"../$zname/link\">$zname</a></li>\n";
-  }
-  print "</ul>\n";
-
-  #print "Lobbyist search results for $name<hr/>";
-  #print "<hr/>";
-  #print $html;
-
-  #header("Location: http://google.ca");
-  #print "Will now 302 redirect to Ottawa.ca for lobbyist <b>$name</b> (".time().")\n";
+  # move to new REST location
+  header("Location: ".OttWatchConfig::WWW."/lobbying/lobbyists/$name");
 }
 
 function error404() {
@@ -387,6 +281,7 @@ function copyToClipboard (text) {
   window.prompt ("Copy to clipboard: Ctrl+C, Enter", text);
 }
 </script>
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=<?php print OttWatchConfig::GOOGLE_API_KEY; ?>&sensor=false"></script>
 </head>
 <body>
 

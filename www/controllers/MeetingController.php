@@ -101,22 +101,44 @@ class MeetingController {
 
     # display list of items, and break out with the files too
     $items = getDatabase()->all(" select * from item where meetingid = :meetingid order by id ",array("meetingid"=>$m['id']));
-    top($title);
-    print "<b>$title</b> <small>{$m['starttime']}</small><br/><br/>";
+    top($title . " on " . substr($m['starttime'],0,10));
 
     # LEFT hand navigation, items and files links
     ?>
 
     <script>
-    function focusOn(type,id) {
-      if (type == 'file') {
-        url = '<?php print OttWatchConfig::WWW; ?>/meetings/file/' + id;
-        $('#focusFrame').attr('src','http://docs.google.com/viewer?url='+escape(url)+'&embedded=true');
-      } else if (type == 'item') {
+    function focusOn(type,id,title) {
+
+      if (type == 'item') {
+        // move agenda to an item, and refocus on agenda tab just in case user is currently browsing
+        // a different tab
         $('#focusFrame').attr('src','<?php print self::getDocumentUrl($m['meetid'],'AGENDA'); ?>#Item' + id);
-      } else {
-        alert('programmer made a mistake; unknown type: ' + type);
+        $('#tablist a[href="#tabagenda"]').tab('show'); 
+        return;
       }
+
+      d = document.getElementById('tabfile'+id);
+      if (d) {
+        // already added, just flip to tab
+        $('#tablist a[href="#tabfile'+id+'"]').tab('show'); 
+      } else {
+        // add new tab
+        maxtitle = 30;
+        if (title.length > maxtitle) {
+          title = title.substring(0,maxtitle-3)+'...';
+        }
+
+        url = '<?php print OttWatchConfig::WWW; ?>/meetings/file/' + id;
+        frameurl = 'http://docs.google.com/viewer?url='+escape(url)+'&embedded=true';
+        $('#tablist').append('<li><a href="#tabfile'+id+'" data-toggle="tab">'+title+'</a></li>');
+        tabcontent = '';
+        tabcontent = tabcontent + '<div class="tab-pane active in" id="tabfile'+id+'">';
+        tabcontent = tabcontent + '<iframe id="focusFrame" src="'+frameurl+'" style=" border: 0px; border-left: 1px solid #000000; width: 100%; height: 600px;"></iframe>';
+        tabcontent = tabcontent + '</div>';
+        $('#tabcontent').append(tabcontent);
+        $('#tablist a[href="#tabfile'+id+'"]').tab('show'); 
+      }
+
     }
     </script>
 
@@ -124,7 +146,20 @@ class MeetingController {
 
     <!-- column 1 -->
     <div class="span4">
-    <div id="agendanav" style="overflow:scroll; height: 550px;">
+
+    <?php
+    print "<b>$title</b>";
+    renderShareLinks("City meeting: $title","/meetings/{$category}/{$meetid}");
+    print "<br/>";
+    print "<small>".substr($m['starttime'],0,10)."</small>";
+    ?>
+
+    <div style="padding: 5px; 0px;">
+    <?php
+    ?>
+    </div>
+
+    <div id="agendanav" style="overflow:scroll; height: 620px;">
     <?php
     foreach ($items as $i) {
       #print "<pre>"; print print_r($i); print "</pre>";
@@ -134,163 +169,45 @@ class MeetingController {
         foreach ($files as $f) {
           $ft = self::trimFileTitle($i['title'],$f['title']);
           $fileurl = OttWatchConfig::WWW . "/meetings/file/" . $f['fileid'];
-          print "<small><a target=\"_blank\" href=\"{$fileurl}\"><i class=\"icon-share-alt\"></i></a> <a href=\"javascript:focusOn('file',{$f['fileid']})\"><i class=\"icon-edit\"></i> {$ft}</small></a><br/>\n";
+          print "<small><a target=\"_blank\" href=\"{$fileurl}\"><i class=\"icon-share-alt\"></i></a> <a href=\"javascript:focusOn('file',{$f['fileid']},'{$ft}')\"><i class=\"icon-edit\"></i> {$ft}</small></a><br/>\n";
         }
       }
       print "<br/>\n";
     }
     ?>
     </div>
-    <div style="padding: 5px; 0px;">
-    <script>
-    showhideComments = 0; // default hidden
-    function flipComments() {
-      if (showhideComments) {
-        $('#comments').css('display','none');
-        $('#agendanav').css('display','block');
-        $('#showbtn').css('display','block');
-        $('#hidebtn').css('display','none');
-        showhideComments = 0;
-      } else {
-        $('#comments').css('display','block');
-        $('#agendanav').css('display','none');
-        $('#hidebtn').css('display','block');
-        $('#showbtn').css('display','none');
-        showhideComments = 1;
-      }
-      return -1;
-    }
-    </script>
-    <a id="showbtn" onclick="flipComments()" href="#disqus_thread" class="btn pull-right btn-info">Show Comments</a>
-    <a id="hidebtn" style="display: none;" href="javascript:flipComments()" class="btn pull-right btn-info">Show Agenda</a>
+
     </div>
-    <div id="comments" style="display: none; clear: both; overflow:scroll; height: 550px; padding-top: 5px;">
+
+    <!-- column 2 -->
+    <div class="span8" style=" border: 0px; border-left: 1px solid #000000; height: 620px;"></iframe>
+
+    <ul id="tablist" class="nav nav-tabs">
+    <li><a href="#tabagenda" data-toggle="tab">Agenda</a></li>
+    <li><a href="#tabcomments" data-toggle="tab">Comments</a></li>
+    </ul>
+
+    <div id="tabcontent" class="tab-content">
+
+    <div class="tab-pane active in" id="tabagenda">
+    <iframe id="focusFrame" src="<?php print $focusFrameSrc; ?>" style="width: 100%; height: 600px; border: 0px;"></iframe>
+    </div>
+
+    <div class="tab-pane fade" id="tabcomments">
+    <div style="padding: 10px;">
     <?php disqus(); ?>
     </div>
     </div>
 
-    <!-- column 2 -->
-    <div class="span8">
-    <iframe id="focusFrame" src="<?php print $focusFrameSrc; ?>" style=" border: 0px; border-left: 1px solid #000000; width: 100%; height: 600px;"></iframe>
+    </div>
+
+
     </div>
 
     </div>
     <?php
     bottom();
 
-
-    if (1) {
-      return;
-    }
-
-    $agendaUrl = self::getDocumentUrl($m['meetid'],'AGENDA');
-    $title = meeting_category_to_title($m['category']);
-    $item = getDatabase()->one(" select * from item where id = :id ",array("id" => $itemid));
-    if ($item['itemid']) {
-      # page title, and agenda url can be updated early
-      $agendaUrl .= '#Item'.$item['itemid'];
-      $title = $item['title'];
-    }
-    $zoomingTo = "Zooming to: $title";
-
-    $items = getDatabase()->all(" select * from item where meetingid = :id order by id ",array("id" => $id));
-    top($title);
-    ?>
-
-    <script>
-    <!-- <a name="Item168199"></a> -->
-    function highlightItem(id,itemid) {
-
-      // move the agenda iFrame to the <a name=""/> for the chosen item
-      $('#agendaFrame').attr('src','<?php print self::getDocumentUrl($m['meetid'],'AGENDA'); ?>#Item' + itemid);
-
-      // build a REST link back to OttWatch for the item, and create
-      // a Tweet button for it.
-      owItemUrl = '<?php print self::getMeetingUrl($id); ?>/item/' + id;
-      itemTitle = $('#itemAnchor'+id).html();
-      tweetText = 'Reading "' + itemTitle + '" ';
-      while ((tweetText.length + owItemUrl.length) > 139) {
-        itemTitle = itemTitle.substring(0,itemTitle.length-1);
-        tweetText = 'Reading "' + itemTitle + '"... ';
-      }
-      shareUrl = 'https://twitter.com/share?url='+escape(owItemUrl)+'&text=' + escape(tweetText);
-
-      itemTitle = $('#itemAnchor'+id).html();
-      newHtml = 
-        ' <a target="_blank" href="'+shareUrl+'"><img alt="Tweet" src=\"<?php print OttWatchConfig::WWW; ?>/img/twitter-share.png\"/></a> ' +
-        ' <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u='+escape(owItemUrl)+'">' + 
-        ' <img style="height: 20px; width: 58px;" alt="Tweet" src="<?php print OttWatchConfig::WWW; ?>/img/facebook-share.png"/></a>' +
-        ' <a href="javascript:copyToClipboard(\'' + owItemUrl + '\');" class="btn btn-mini">Clipboard <i class="icon-share"></i></a> ' +
-        '';
-      $('#itemDetailsTitle').html(itemTitle);
-      $('#itemDetailsShare').html(newHtml);
-
-      // load file data
-      $.get(owItemUrl + '/files', function(data) {
-        $('#itemDetailsFiles').html(data);
-        $(this).scrollTop(0);
-      });
-
-
-    }
-    </script>
-
-    <div class="row-fluid">
-    <div class="span4 visible-desktop">
-    <div style="overflow:scroll; height: 600px; padding-right: 5px; padding-left: 5px;">
-    <ol>
-    <?php
-    foreach ($items as $i) {
-      ?>
-      <li><a id="itemAnchor<?php print $i['id']; ?>" href="javascript:highlightItem(<?php print $i['id'].','.$i['itemid']; ?>);"><?php print $i['title']; ?></a></li>
-      <?php
-    }
-    ?>
-    <ol>
-    </div>
-    </div>
-
-    <?php 
-    $ttu = OttWatchConfig::WWW."/meetings/{$m['category']}/{$m['id']}";
-    ?>
-    <div class="span8">
-
-    <div style="padding: 5px; margin-bottom: 5px; ">
-    <div id="itemDetailsTitle" style="font-weight: bold;"></div>
-    <div id="itemDetailsFiles"></div>
-    
-    <div id="itemDetailsShare" class="pull-right">
-    <a target="_blank" 
-      href="https://twitter.com/share?url=<?php 
-      print urlencode($ttu); 
-      ?>&text=<?php 
-      print urlencode("Reading an agenda for $title"); 
-      ?>"><img alt="Tweet" src="<?php print OttWatchConfig::WWW; ?>/img/twitter-share.png"/></a>
-    <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=<?php print urlencode($ttu); ?>"><img style="height: 20px; width: 58px;" alt="Tweet" src="<?php print OttWatchConfig::WWW; ?>/img/facebook-share.png"/></a>
-    <a href="javascript:copyToClipboard('<?php print urlencode($ttu); ?>');" class="btn btn-mini">Clipboard <i class="icon-share"></i></a>
-    </div>
-
-    </div><!-- item details -->
-
-    <iframe id="agendaFrame" src="<?php print $agendaUrl; ?>" style="width: 100%; height: 600px; border: 1px solid #000000;"></iframe>
-
-    </div><!-- span8 -->
-
-    </div><!-- row -->
-
-    <?php
-    if ($item['itemid']) {
-      # cleaner to call javascript to update the UI, rather than try and hack the correct state everywhere in advance.
-      ?>
-      <script>javascript:highlightItem(<?php print $item['id'].','.$item['itemid']; ?>);</script>
-      <?php
-    } else {
-      ?>
-      <script>$('#itemDetailsTitle').html('<?php print $title; ?>');</script>
-      <?php
-    }
-
-    bottom();
   }
 
   static public function doList ($category) {
@@ -396,12 +313,32 @@ class MeetingController {
 
     # XML issues
     $agenda = preg_replace("/&nbsp;/"," ",$agenda);
+	  $lines = explode("\n",$agenda);
+
+    # get coordinator information
+    for ($x = 0; $x < count($lines); $x++) {
+      $matches = array();
+      $lines[$x] = preg_replace("/\r/","",$lines[$x]);
+      if (preg_match("/(.*), Committee Coordinator/",$lines[$x],$matches)) {
+        $coordName = $matches[1];
+        $coordPhone = $lines[$x+1];
+        $coordEmail = $lines[$x+2];
+        $coordPhone = preg_replace("/<.*/","",$coordPhone);
+        $coordEmail = preg_replace("/<.*/","",$coordEmail);
+        break;
+      }
+    }
+    getDatabase()->execute(" update meeting set contactName = :name, contactEmail = :email, contactPhone = :phone where id = :id ",array(
+      'name' => $coordName,
+      'phone' => $coordPhone,
+      'email' => $coordEmail,
+      'id' => $id
+    ));
 
     # rebuild item rows
     getDatabase()->execute(" delete from item where meetingid = :id ",array('id'=>$id));
 
     # scrape out item IDs, and titles.
-	  $lines = explode("\n",$agenda);
     $add = 0;
     $spool = array();
 	  foreach ($lines as $line) {
