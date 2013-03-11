@@ -39,7 +39,23 @@ class DevelopmentAppController {
   static public function listAll() {
     top();
 
-    $apps = getDatabase()->all(" select * from devapp order by updated desc ");
+    $since = $_GET['since'];
+    if ($since == '') {
+      $since = 60;
+    }
+
+    if (preg_match("/^\d\d\d\d-\d\d-\d\d$/",$since)) {
+      $apps = getDatabase()->all(" select * from devapp where updated >= '$since' order by updated desc ");
+      $sinceDisplay = $since;
+    } else if (preg_match("/^\d+$/",$since)) {
+      $apps = getDatabase()->all(" select * from devapp where updated >= DATE_SUB(NOW(), INTERVAL $since day) order by updated desc ");
+      $sinceDisplay = "$since days ago";
+    } else {
+      # malformed since
+      print "The 'since' value is malformed; query aborted\n";
+      bottom();
+      return;
+    }
 
     ?>
 
@@ -49,6 +65,19 @@ class DevelopmentAppController {
 
     <div class="span8">
 
+    Displaying applications updated since <?php print $sinceDisplay; ?>
+    <p/>
+    <script>
+    function filterSince() {
+      since = $('#filterSinceValue').val();
+      document.location.href = '?since='+since;
+    }
+    </script>
+    <div class="input-prepend input-append">
+    <span class="add-on">Updated Since:</span>
+    <input id="filterSinceValue" class="span10" type="text" name="" placeholder="yyyy-mm-dd or 'X' for 'days-ago'">
+    <button class="btn" type="button" onclick="filterSince()">Filter</button>
+    </div>
 
     <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
     <tr>
@@ -64,19 +93,19 @@ class DevelopmentAppController {
       $url = self::getLinkToApp($a['appid']);
       ?>
       <tr>
-      <td><a target="_blank" href="<?php print $url; ?>"><?php print $a['devid']; ?></a></td>
+      <td><nobr><a target="_blank" href="<?php print $url; ?>"><?php print $a['devid']; ?></a></nobr></td>
       <td><?php print $a['apptype']; ?></td>
       <td><?php print $a['status']; ?></td>
       <td>
       <?php
       $addr = json_decode($a['address']);
       foreach ($addr as $t) {
-        print "<a target=\"_blank\" href=\"http://maps.google.com/?q={$t->lat},{$t->lon}\">{$t->addr}</a><br/>\n";
+        print "<nobr><a target=\"_blank\" href=\"http://maps.google.com/?q={$t->lat},{$t->lon}\">{$t->addr}</a></nobr><br/>\n";
       }
       ?>
       </td>
-      <td><?php print strftime("%Y-%m-%d",strtotime($a['statusdate'])); ?></td>
-      <td><?php print strftime("%Y-%m-%d",strtotime($a['receiveddate'])); ?></td>
+      <td><nobr><?php print strftime("%Y-%m-%d",strtotime($a['statusdate'])); ?></nobr></td>
+      <td><nobr><?php print strftime("%Y-%m-%d",strtotime($a['receiveddate'])); ?></nobr></td>
       </tr>
       <?php
     }
