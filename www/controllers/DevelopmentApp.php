@@ -40,8 +40,16 @@ class DevelopmentAppController {
     top();
 
     $apps = getDatabase()->all(" select * from devapp order by updated desc ");
+
     ?>
+
     <h1>Development Applications</h1>
+
+    <div class="row-fluid">
+
+    <div class="span8">
+
+
     <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
     <tr>
     <th>Application #</th>
@@ -74,6 +82,48 @@ class DevelopmentAppController {
     }
     ?>
     </table>
+    </div>
+
+    <div class="span4">
+    <div id="map_canvas" style="width:100%; height:600px;"></div>
+    <script>
+      $(document).ready(function() {
+        var mapOptions = { center: new google.maps.LatLng(45.420833,-75.69), zoom: 8, mapTypeId: google.maps.MapTypeId.ROADMAP };
+        var map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
+
+        <?php
+        foreach ($apps as $a) {
+          $addr = json_decode($a['address']);
+          $addr = $addr[0];
+          $lat = $addr->lat;
+          $lon = $addr->lon;
+          ?>
+          {
+	        var myLatlng<?php print $a['id']; ?> = new google.maps.LatLng(<?php print $lat; ?>,<?php print $lon; ?>);
+	        var contentString<?php print $a['id']; ?> = 
+            '<div>' + 
+            '<b><a target="_blank" href="<?php print $url; ?>"><?php print $a['devid']; ?></a>: ' +
+            '<?php print $a['apptype']; ?></b><br/>' +
+            '<?php print $a['status']; ?><br/>' +
+            'Updated: <?php print strftime("%Y-%m-%d",strtotime($a['statusdate'])); ?>' +
+            '</div>';
+	        var infowindow<?php print $a['id']; ?> = new google.maps.InfoWindow({ content: contentString<?php print $a['id']; ?> });
+	        var marker<?php print $a['id']; ?> = new google.maps.Marker({ position: myLatlng<?php print $a['id']; ?>, map: map, title: '<?php print $a['devid']; ?>' }); 
+	        google.maps.event.addListener(marker<?php print $a['id']; ?>, 'click', function() {
+	          infowindow<?php print $a['id']; ?>.open(map,marker<?php print $a['id']; ?>);
+	        });
+          }
+          <?php
+        }
+        ?>
+
+
+
+      });
+    </script>
+    </div>
+
+    </div><!-- row -->
     <?php
     bottom();
   }

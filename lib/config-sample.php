@@ -9,6 +9,7 @@ class OttWatchConfig {
   const DB_PASS = "CHANGEME";
   const FILE_DIR = "/Users/kevino/Sites/var_ottwatch";
   const WWW = "http://localhost/ottwatch";
+  const GOOGLE_API_KEY = "GET_FROM https://code.google.com/apis/console";
 }
 
 ?>
