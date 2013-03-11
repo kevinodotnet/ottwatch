@@ -73,12 +73,14 @@ class DevelopmentAppController {
       document.location.href = '?since='+since;
     }
     </script>
+
     <div class="input-prepend input-append">
     <span class="add-on">Updated Since:</span>
     <input id="filterSinceValue" class="span10" type="text" name="" placeholder="yyyy-mm-dd or 'X' for 'days-ago'">
     <button class="btn" type="button" onclick="filterSince()">Filter</button>
     </div>
 
+    <div style="overflow:scroll; height: 500px;">
     <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
     <tr>
     <th>Application #<br/>Updated</th>
@@ -108,7 +110,8 @@ class DevelopmentAppController {
     }
     ?>
     </table>
-    </div>
+    </div><!-- overflow -->
+    </div><!-- span -->
 
     <div class="span7">
     <div id="map_canvas" style="width:100%; height:600px;"></div>
