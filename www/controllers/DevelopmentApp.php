@@ -310,12 +310,16 @@ class DevelopmentAppController {
         'receiveddate' =>$labels['date_received'],
     ));
 
+    $ward = $labels['Ward'];
+    $ward = explode(" - ",$ward);
+    $ward = "{$ward[0]}, {$ward[1]}";
+
     $url = "http://app01.ottawa.ca/postingplans/appDetails.jsf?lang=en&appId=$appid";
 
     if ($action == 'insert') {
-      $tweet = "New {$labels['Application']}: ".implode("/",$addresses)." {$labels['Application #']}";
+      $tweet = "New {$labels['Application']}: ".implode("/",$addresses)." {$labels['Application #']} in $ward";
     } else {
-      $tweet = "Updated {$labels['Application']}: ".implode("/",$addresses)." {$labels['Application #']}";
+      $tweet = "Updated {$labels['Application']}: ".implode("/",$addresses)." {$labels['Application #']} in $ward";
     }
 
     $newtweet = tweet_txt_and_url($tweet,$url);
