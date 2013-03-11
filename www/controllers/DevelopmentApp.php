@@ -65,7 +65,7 @@ class DevelopmentAppController {
 
     <div class="span8">
 
-    Displaying applications updated since <?php print $sinceDisplay; ?>
+    Displaying <b><?php print count($apps); ?></b> applications updated since <?php print $sinceDisplay; ?>
     <p/>
     <script>
     function filterSince() {
