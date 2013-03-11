@@ -122,6 +122,7 @@ class DevelopmentAppController {
 
         <?php
         foreach ($apps as $a) {
+          $url = self::getLinkToApp($a['appid']);
           $addr = json_decode($a['address']);
           $addr = $addr[0];
           if (count($addr) == 0) {
