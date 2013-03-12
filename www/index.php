@@ -148,7 +148,7 @@ function dashboard() {
       join lobbying l on l.lobbyfileid = f.id
     group by f.id,f.lobbyist,f.issue
     order by
-      l.created desc
+      max(l.created) desc
     limit 5
   ");
   ?>
