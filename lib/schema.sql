@@ -83,6 +83,7 @@ create table meeting (
   contactName varchar(100),
   contactEmail varchar(100),
   contactPhone varchar(30),
+  members varchar(300),
   created datetime,
   updated datetime,
   primary key (id)

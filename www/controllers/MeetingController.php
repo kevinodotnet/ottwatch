@@ -368,6 +368,8 @@ class MeetingController {
 
     # get agenda HTML
     $agenda = file_get_contents(self::getDocumentUrl($m['meetid'],'AGENDA')); 
+    #file_put_contents("agenda.html",$agenda);
+    #$agenda = file_get_contents("agenda.html");
 
     # charset issues
     $agenda = mb_convert_encoding($agenda,"ascii");
@@ -375,6 +377,40 @@ class MeetingController {
     # XML issues
     $agenda = preg_replace("/&nbsp;/"," ",$agenda);
 	  $lines = explode("\n",$agenda);
+
+    # get members information
+    $members = array();
+    $parse = 0;
+    $raw = '';
+    for ($x = 0; $x < count($lines); $x++) {
+      if (preg_match("/Committee Members:/",$lines[$x])) {
+        $parse = 1;
+      }
+      if (preg_match("/DECLARATIONS/i",$lines[$x])) {
+        $parse = 0;
+      }
+      if ($parse) {
+        $raw .= $lines[$x];
+      }
+    }
+    $raw = preg_replace("/[^a-zA-Z-]+/"," ",$raw);
+    $raw = preg_replace("/  /"," ",$raw);
+    $raw = preg_replace("/  /"," ",$raw);
+    $raw = preg_replace("/  /"," ",$raw);
+    $raw = preg_replace("/  /"," ",$raw);
+    $raw = explode(" ",$raw);
+    for ($x = 0; $x < (count($raw)-1); $x++) {
+      $a = $raw[$x];
+      $b = $raw[$x+1];
+      $row = getDatabase()->one(" select * from electedofficials where lower(last) = :last and lower(left(first,1)) = :first ",array("first"=>$a,"last"=>$b));
+      if ($row['id']) {
+        $members[] = $row['id'];
+      }
+    }
+    getDatabase()->execute(" update meeting set members = :members where id = :id ",array(
+      'members'=> json_encode($members),
+      'id' => $id
+    ));
 
     # get coordinator information
     for ($x = 0; $x < count($lines); $x++) {
