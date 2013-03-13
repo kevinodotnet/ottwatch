@@ -41,6 +41,7 @@ create table lobbying (
 -- enforce unique on the lobbying table; used by INSERTER to avoid dups
 create unique index lobbying_in1 on lobbying (lobbyfileid,lobbydate,activity,lobbied);
 
+drop table if exists devappfile;
 drop table if exists devapp;
 create table devapp (
   id mediumint not null auto_increment,
@@ -50,11 +51,22 @@ create table devapp (
   address varchar(2048), -- big because JSON encoded array of multiple addresses with lat/lon too
   apptype varchar(100),
   status varchar(100),
+  description varchar(2048),
   statusdate datetime,
   receiveddate datetime,
   created datetime,
   updated datetime,
   primary key (id)
+) engine = innodb;
+create table devappfile (
+  id mediumint not null auto_increment,
+  devappid mediumint not null,
+  href varchar(300),
+  title varchar(300),
+  created datetime,
+  updated datetime,
+  primary key (id),
+  constraint foreign key (devappid) references devapp (id) on delete cascade on update cascade
 ) engine = innodb;
 
 drop table if exists ifile;
@@ -131,4 +143,18 @@ insert into category values ('OBHAC','Ottawa Built Heritage Advisory Committee')
 insert into category values ('OTC','Transit Commission');
 insert into category values ('PLC','Planning Committee');
 insert into category values ('TRC','Transportation Committee');
+
+create table electedofficials (
+  id mediumint not null auto_increment,
+  ward varchar(100),
+  wardnum varchar(5),
+  office varchar(25),
+  first varchar(50),
+  last varchar(50),
+  email varchar(100),
+  url varchar(300),
+  photourl varchar(300),
+  phone varchar(12),
+  primary key (id)
+) engine = innodb;
 
