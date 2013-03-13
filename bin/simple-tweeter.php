@@ -11,6 +11,11 @@ require_once('twitteroauth.php');
 # get RSS of all meetings
 $data = `wget -qO - http://app05.ottawa.ca/sirepub/rss/rss.aspx | head -1`;
 $xml = simplexml_load_string($data);
+if (!is_object($xml)) {
+  # network error or other bubble; just abort, CRON will retry
+  print "XML error on RSS pull; aborting\n\n$data";
+  exit;
+}
 $items = $xml->xpath("//item");
 
 foreach ($items as $i) {
