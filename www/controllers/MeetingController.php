@@ -185,6 +185,7 @@ class MeetingController {
     <ul id="tablist" class="nav nav-tabs">
     <li><a href="#tabagenda" data-toggle="tab">Agenda</a></li>
     <li><a href="#tabcomments" data-toggle="tab">Comments</a></li>
+    <li><a href="#tabdelegation" data-toggle="tab"><big><b>Public Delegations</b></big></a></li>
     </ul>
 
     <div id="tabcontent" class="tab-content">
@@ -194,8 +195,68 @@ class MeetingController {
     </div>
 
     <div class="tab-pane fade" id="tabcomments">
-    <div style="padding: 10px;">
+    <div style="padding: 10px; padding-top: 0px;">
+    <h3>This is an informal chat area</h3>
+    The purpose of this page is to let residents comment and interact with eachother on the meeting's topics. 
+    <b>BUT</b> it is not monitored by the City, so what you say here may not influence any decisions or votes.
+    To have your opinion officially heard, use the <b>Public Delegation</b> tab to email the meeting
+    coordinator, and through them, the relevant commmittee members.
+    <p/>
     <?php disqus(); ?>
+    </div>
+    </div>
+
+    <div class="tab-pane fade" id="tabdelegation">
+    <div style="padding: 10px; padding-top: 0px;">
+    <h3>What is a "Public Delegation"?</h3>
+    <p>
+    Everyone is entitled to attend committee meetings and provide a verbal statement (up to 5 minutes long)
+    before Councillors vote on each agenda item. If you are not able to attend a meeting, you can also email
+    your comments to councillors. Either way, your statements become part of the official record - and this
+    is the single most important step to shaping the outcome of your city.
+    </p>
+
+    <?php
+    $date = substr($m['starttime'],0,10);
+    $title = meeting_category_to_title($m['category']);
+    $subject = urlencode("Public Delegation for $title on $date");
+    $mailto = "mailto:{$m['contactEmail']}?Subject=$subject";
+    if ($m['contactName'] != '') {
+	    ?>
+	    <p>
+	    This meeting's coordinator is:
+	    <blockquote><b><?php print $m['contactName']; ?></b><br/>
+	    <a target="_blank" href="<?php print $mailto; ?>"><?php print "{$m['contactEmail']}"; ?></a><br/>
+	    <?php print $m['contactPhone']; ?></blockquote>
+	    </p>
+	    <?php 
+    } else {
+      ?>
+	    <p>
+	    This meeting's coordinator <b>was not autodetected - oops</b>! But you can read it yourself - it's at the top of the Agenda.
+      </p>
+	    <?php 
+    }
+    ?>
+    <h3>What should I say? I'm scared! I'm not an expert!</h3>
+    <p>
+    Here's a little secret: councillors aren't experts either, so don't let that stop you. They are also
+    regular people and benefit from feedback from the public on the decisions they are about to make.
+    </p>
+    <p>
+    Anything you choose to write or say as a "public delegation" is good. But if you want some tips, here they are.
+    Don't feel limited to these points though - you have rights in this democracy - use them!
+    </p>
+    <ul>
+    <li><b>Be respectful and concise</b>: Make your point in the first paragraph, and leave the proof till later. You have the right to say your peace, but truth be told, I don't know if councillors read these things. So shorter is better.</li>
+    <li><b>Come in person if at all possible</b>: Public delegations by email are good, but showing up in person is better. Councillors may skip reading the emails, but they can't avoid listening to you for five minutes if you can make it.</li>
+    <li><b>Don't pick on staff</b>: Often staff seem to do things that the public dislikes, but that's because staff only do what Council has instructed them to do in the first place. So if you have a beef, make it a beef with Councillors. (and remember, respectful and concise)</li>
+    <li><b>Don't be shy</b>: 
+    If you're reviewed the Lobbyist Registry you'll know that business has no shame in pushing agendas at City Hall. If you're reading this, you are the 1 in 5,000 who might take action and change Ottawa's future. 
+    So don't be shy or nervous about it! "Power to the people" and all that good stuff, you know?
+    </li>
+    </ul>
+
     </div>
     </div>
 
