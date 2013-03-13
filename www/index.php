@@ -42,6 +42,12 @@ function ottawaMediaRSS() {
   $url = "http://ottawa.ca/rss/news_en.xml";
   $rss = file_get_contents($url);
   $xml = simplexml_load_string($rss);
+  if (!is_object($xml)) {
+    # could not load RSS; just fail silently
+    print "<h4>Media Releases</h4>\n";
+    print "<i>Could not load media releases. Probably a temporary error.</i>";
+    return;
+  }
   $items = $xml->xpath("//item");
   print "<h4>Media Releases</h4>\n";
   $max = 4;
