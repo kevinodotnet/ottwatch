@@ -12,27 +12,8 @@ class DevelopmentAppController {
     }
     top();
 
-    $html = file_get_contents(self::getLinkToApp($a['appid']));
-    $lines = explode("\n",$html);
-    $add = 0;
-    $buf = array();
-    foreach ($lines as $l) {
-      if (preg_match('/class="box"/',$l)) {
-        $add = 1;
-      }
-      if (preg_match("/CONTENT ENDS/",$l)) {
-        $add = 0;
-      }
-      if ($add) {
-        $buf[] = $l;
-      }
-    }
-    array_pop($buf); // pop last DIV, which is not part of the "class=box" div
+    pr($a);
 
-    print "<h1>{$a['devid']}</h1>";
-    print implode("\n",$buf);
-    ?>
-    <?php
     bottom();
   }
 
@@ -90,9 +71,10 @@ class DevelopmentAppController {
     <?php
     foreach ($apps as $a) {
       $url = self::getLinkToApp($a['appid']);
+      # $url = OttWatchConfig::WWW."/devapps/{$a['devid']}";
       ?>
       <tr>
-      <td><b><nobr><a target="_blank" href="<?php print $url; ?>"><?php print $a['devid']; ?></a></nobr></b><br/>
+      <td><b><nobr><a href="<?php print $url; ?>"><?php print $a['devid']; ?></a></nobr></b><br/>
       <nobr><?php print strftime("%Y-%m-%d",strtotime($a['statusdate'])); ?> updated</nobr><br/>
       <nobr><?php print strftime("%Y-%m-%d",strtotime($a['receiveddate'])); ?> started</nobr></td>
       <td><b><?php print $a['apptype']; ?></b><br/>
@@ -274,9 +256,10 @@ class DevelopmentAppController {
 		$labels['Application'] = '';
 		$labels['Review Status'] = '';
 		$labels['Status Date'] = '';
-		#$labels['Description'] = '';
+		$labels['Description'] = '';
 
     $addresses = array();
+    $files = array();
 
     $label = '';
     $value = '';
@@ -307,6 +290,13 @@ class DevelopmentAppController {
           $labels[$label] = $value;
         }
       }
+      if (preg_match('/main:content:supportingDocLink.*href="([^"]+)".*title="([^"]+)"/',$lines[$x],$matches)) {
+        $file = array();
+        $file['href'] = $matches[1];
+        $file['title'] = $matches[2];
+        $files[] = $file;
+      }
+
     }
 
     $labels['status_date'] = strftime('%Y-%m-%d',strtotime($labels['Status Date']));
@@ -315,7 +305,7 @@ class DevelopmentAppController {
     unset($labels['Date Received']);
 
     getDatabase()->execute(" delete from devapp where appid = :appid ",array("appid"=>$appid));
-    getDatabase()->execute(" 
+    $id = getDatabase()->execute(" 
       insert into devapp 
       (address,appid,devid,ward,apptype,status,statusdate,receiveddate,created,updated)
       values
@@ -329,6 +319,14 @@ class DevelopmentAppController {
         'statusdate' => $labels['status_date'],
         'receiveddate' =>$labels['date_received'],
     ));
+
+    foreach ($files as $f) {
+      getDatabase()->execute(" insert into devappfile (devappid,href,title,created,updated) values (:devappid,:href,:title,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP) ",array(
+        'devappid' => $id,
+        'href' => $f['href'],
+        'title' => $f['title'],
+      ));
+    }
 
     $ward = $labels['Ward'];
     $ward = explode(" - ",$ward);
