@@ -128,11 +128,8 @@ class DevelopmentAppController {
           if (count($addr) == 0) {
             continue;
           }
-          $lat = $addr->lat;
-          $lon = $addr->lon;
           ?>
-          {
-	        var myLatlng<?php print $a['id']; ?> = new google.maps.LatLng(<?php print $lat; ?>,<?php print $lon; ?>);
+
 	        var contentString<?php print $a['id']; ?> = 
             '<div>' + 
             '<b><a target="_blank" href="<?php print $url; ?>"><?php print $a['devid']; ?></a>: ' +
@@ -141,17 +138,37 @@ class DevelopmentAppController {
             'Updated: <?php print strftime("%Y-%m-%d",strtotime($a['statusdate'])); ?>' +
             '</div>';
 	        var infowindow<?php print $a['id']; ?> = new google.maps.InfoWindow({ content: contentString<?php print $a['id']; ?> });
-	        var marker<?php print $a['id']; ?> = new google.maps.Marker({ position: myLatlng<?php print $a['id']; ?>, map: map, title: '<?php print $a['devid']; ?>' }); 
-	        google.maps.event.addListener(marker<?php print $a['id']; ?>, 'click', function() {
-	          infowindow<?php print $a['id']; ?>.open(map,marker<?php print $a['id']; ?>);
-	        });
-          }
+
           <?php
+          # not all addresses have lat/lon
+          $lat = $addr->lat;
+          $lon = $addr->lon;
+          $address = "{$addr->addr}, Ottawa, Ontario";
+          if ($lat != '') {
+            ?>
+  	        var myLatlng<?php print $a['id']; ?> = new google.maps.LatLng(<?php print $lat; ?>,<?php print $lon; ?>);
+		        var marker<?php print $a['id']; ?> = new google.maps.Marker({ position: myLatlng<?php print $a['id']; ?>, map: map, title: '<?php print $a['devid']; ?>' }); 
+		        google.maps.event.addListener(marker<?php print $a['id']; ?>, 'click', function() {
+		          infowindow<?php print $a['id']; ?>.open(map,marker<?php print $a['id']; ?>);
+		        });
+            <?php
+          } else {
+            ?>
+            var geocoder = new google.maps.Geocoder();
+            geocoder.geocode( { 'address': '<?php print $address; ?>'}, function(results, status) {
+		  	        alert('lat: ' + results[0].geometry.location.mb + ' lon: ' + results[0].geometry.location.nb);
+              if (status == google.maps.GeocoderStatus.OK) {
+		  	        var myLatlng<?php print $a['id']; ?> = new google.maps.LatLng(results[0].geometry.location.mb,results[0].geometry.location.nb);
+				        var marker<?php print $a['id']; ?> = new google.maps.Marker({ position: myLatlng<?php print $a['id']; ?>, map: map, title: '<?php print $a['devid']; ?>' }); 
+				        google.maps.event.addListener(marker<?php print $a['id']; ?>, 'click', function() {
+				          infowindow<?php print $a['id']; ?>.open(map,marker<?php print $a['id']; ?>);
+                });
+              }
+            });
+            <?php
+          }
         }
         ?>
-
-
-
       });
     </script>
     </div>
@@ -274,6 +291,11 @@ class DevelopmentAppController {
         $addr['addr'] = $matches[3];
         $addresses[] = $addr;
         #$addresses[0] = $matches[1];
+      } else if (preg_match('/<a.*target="_emap">([^<]+)</',$lines[$x],$matches)) {
+        # <li><a href="http://apps104.ottawa.ca/emap?emapver=lite&amp;lang=en" target="_emap">114 Richmond Road</a></li>
+        $addr = array();
+        $addr['addr'] = $matches[1];
+        $addresses[] = $addr;
       }
       if (preg_match('/div.*class="label"/',$lines[$x])) {
         $x++;
@@ -328,7 +350,7 @@ class DevelopmentAppController {
 		print "$newtweet\n";
 
 		# allow dups because a devapp will be updated multiple times
-		tweet($newtweet,1);
+		# tweet($newtweet,1);
 
 #  id mediumint not null auto_increment,
 #  appid varchar(10),
