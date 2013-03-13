@@ -156,7 +156,6 @@ class DevelopmentAppController {
             ?>
             var geocoder = new google.maps.Geocoder();
             geocoder.geocode( { 'address': '<?php print $address; ?>'}, function(results, status) {
-		  	        alert('lat: ' + results[0].geometry.location.mb + ' lon: ' + results[0].geometry.location.nb);
               if (status == google.maps.GeocoderStatus.OK) {
 		  	        var myLatlng<?php print $a['id']; ?> = new google.maps.LatLng(results[0].geometry.location.mb,results[0].geometry.location.nb);
 				        var marker<?php print $a['id']; ?> = new google.maps.Marker({ position: myLatlng<?php print $a['id']; ?>, map: map, title: '<?php print $a['devid']; ?>' }); 
@@ -342,27 +341,17 @@ class DevelopmentAppController {
 
     if ($action == 'insert') {
       $tweet = "New {$labels['Application']}: ".$addr." {$labels['Application #']} in $ward";
-    } else {
+    } else if ($action == 'update') {
       $tweet = "Updated {$labels['Application']}: ".$addr." {$labels['Application #']} in $ward";
-    }
-
-    $newtweet = tweet_txt_and_url($tweet,$url);
-		print "$newtweet\n";
+    } else {
+			# no tweeting!
+			return;
+		}
 
 		# allow dups because a devapp will be updated multiple times
-		# tweet($newtweet,1);
-
-#  id mediumint not null auto_increment,
-#  appid varchar(10),
-#  ward varchar(100),
-#  apptype varchar(100),
-#  status varchar(100),
-#  statusdate datetime,
-#  receiveddate datetime,
-#  created datetime,
-#  updated datetime,
-#  primary key (id)
-
+    $newtweet = tweet_txt_and_url($tweet,$url);
+		print "$newtweet\n";
+		tweet($newtweet,1);
   }
 
   static function suckToNextDiv ($lines,$x) {
