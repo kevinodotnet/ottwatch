@@ -186,13 +186,14 @@ class MeetingController {
     <li><a href="#tabagenda" data-toggle="tab">Agenda</a></li>
     <li><a href="#tabcomments" data-toggle="tab">Comments</a></li>
     <li><a href="#tabdelegation" data-toggle="tab"><big><b>Public Delegations</b></big></a></li>
+    <li><a href="#tababout" data-toggle="tab">About</a></li>
     </ul>
 
     <div id="tabcontent" class="tab-content">
 
     <div class="tab-pane active in" id="tabagenda">
     <iframe id="focusFrame" src="<?php print $focusFrameSrc; ?>" style="width: 100%; height: 600px; border: 0px;"></iframe>
-    </div>
+    </div><!-- /tab -->
 
     <div class="tab-pane fade" id="tabcomments">
     <div style="padding: 10px; padding-top: 0px;">
@@ -204,7 +205,7 @@ class MeetingController {
     <p/>
     <?php disqus(); ?>
     </div>
-    </div>
+    </div><!-- /tab -->
 
     <div class="tab-pane fade" id="tabdelegation">
     <div style="padding: 10px; padding-top: 0px;">
@@ -238,6 +239,7 @@ class MeetingController {
 	    <?php 
     }
     ?>
+    <p>You can also email the councillors directly. Convenient links for that are on the "About" tab.</p>
     <h3>What should I say? I'm scared! I'm not an expert!</h3>
     <p>
     Here's a little secret: councillors aren't experts either, so don't let that stop you. They are also
@@ -258,10 +260,48 @@ class MeetingController {
     </ul>
 
     </div>
-    </div>
+    </div><!-- /tab -->
 
+    <div class="tab-pane fade" id="tababout">
+    <div style="padding: 10px; padding-top: 0px;">
+    <h3>Contact Information</h3>
+    <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
+      <tr>
+      <th>Name</th>
+      <th>Email</th>
+      <th>Phone</th>
+      <th>Ward</th>
+      <th>Office</th>
+      </tr>
+    <?php
+    $members = $m['members'];
+    $members = json_decode($members);
+    $rows = getDatabase()->all(" select * from electedofficials where id in (".implode(",",$members).") ");
+    $emails = array();
+    foreach ($rows as $r) {
+      $emails[] = $r['email'];
+      ?>
+      <tr>
+      <td><b><?php print "{$r['last']}, {$r['first']}"; ?></b></td>
+      <td><?php print "{$r['email']}"; ?></td>
+      <td><?php print "{$r['phone']}"; ?></td>
+      <td><?php print "{$r['ward']}"; ?> (Ward <?php print "{$r['wardnum']}"; ?>)</td>
+      <td><?php print "{$r['office']}"; ?></td>
+      </tr>
+      <?php
+    }
+    $mailto = "mailto:".implode(",",$emails)."?Subject={$title} on ".substr($m['starttime'],0,10);
+    ?>
+    </table>
+    <h3>Send Your Thoughts</h3>
+    <p>Want to contact the meeting members? Here's two easy ways:</p>
+    <blockquote><a target="_blank" href="<?php print $mailto; ?>">Click on this convenient MAILTO link</a>.</blockquote>
+    <p>Cut and paste these email addresses into your email program:</p>
+    <blockquote><?php print implode("<br/>",$emails); ?></blockquote>
     </div>
+    </div><!-- /tab -->
 
+    </div><!-- /tabcontent -->
 
     </div>
 
