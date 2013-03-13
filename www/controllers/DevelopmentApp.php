@@ -336,8 +336,11 @@ class DevelopmentAppController {
 
     $url = "http://app01.ottawa.ca/postingplans/appDetails.jsf?lang=en&appId=$appid";
 
-		$addr = $addresses[0];
-		$addr = $addr['addr'];
+		$addr = '';
+		if (count($addresses) > 0) {
+			$addr = $addresses[0];
+			$addr = $addr['addr'];
+		}
 
     if ($action == 'insert') {
       $tweet = "New {$labels['Application']}: ".$addr." {$labels['Application #']} in $ward";
