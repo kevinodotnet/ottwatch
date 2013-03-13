@@ -196,7 +196,7 @@ class MeetingController {
     </div><!-- /tab -->
 
     <div class="tab-pane fade" id="tabcomments">
-    <div style="padding: 10px; padding-top: 0px;">
+    <div style="padding: 10px; padding-top: 0px; overflow: scroll">
     <h3>This is an informal chat area</h3>
     The purpose of this page is to let residents comment and interact with eachother on the meeting's topics. 
     <b>BUT</b> it is not monitored by the City, so what you say here may not influence any decisions or votes.
@@ -208,7 +208,7 @@ class MeetingController {
     </div><!-- /tab -->
 
     <div class="tab-pane fade" id="tabdelegation">
-    <div style="padding: 10px; padding-top: 0px;">
+    <div style="padding: 10px; padding-top: 0px; overflow: scroll">
     <h3>What is a "Public Delegation"?</h3>
     <p>
     Everyone is entitled to attend committee meetings and provide a verbal statement (up to 5 minutes long)
@@ -263,7 +263,7 @@ class MeetingController {
     </div><!-- /tab -->
 
     <div class="tab-pane fade" id="tababout">
-    <div style="padding: 10px; padding-top: 0px;">
+    <div style="padding: 10px; padding-top: 0px; overflow: scroll;">
     <h3>Contact Information</h3>
     <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
       <tr>
