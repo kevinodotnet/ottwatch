@@ -23,14 +23,19 @@ class ApiController {
       return self::errResult("Bad lan");
     }
 
+    $result = array();
+    $result['lat'] = $lat;
+    $result['lon'] = $lon;
+
     # what ward is it in?
-    $ward = array();
     $row = getDatabase()->one(" select ward_num,ward_en,ward_fr from wards_2010 where ST_Contains(shape,PointFromText('POINT($lon $lat)')) ");
     if ($row['ward_num']) {
-      return getApi()->invoke('/api/wards/'.$row['ward_num']);
+      $result['ward'] = getApi()->invoke('/api/wards/'.$row['ward_num']);
     } else {
-      return self::errResult("Point is not within Ottawa city limits");
+      $result['ward'] = self::errResult("Point is not within Ottawa city limits");
     }
+
+    return $result;
   }
 
   public static function ward($wardnum) {
