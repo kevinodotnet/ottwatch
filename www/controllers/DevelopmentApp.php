@@ -20,16 +20,28 @@ class DevelopmentAppController {
   static public function listAll() {
     top();
 
+    $match = $_GET['match'];
     $since = $_GET['since'];
     if ($since == '') {
       $since = 7;
     }
 
+    $matchWhere = '';
+    if ($match != '') {
+      $safe = mysql_escape_string($match);
+      $matchWhere = " ( ";
+      $matchWhere .= " devid like '%$safe%' ";
+      $matchWhere .= " or ward like '%$safe%' ";
+      $matchWhere .= " or status like '%$safe%' ";
+      $matchWhere .= " or address like '%$safe%' ";
+      $matchWhere .= " ) and ";
+    }
+
     if (preg_match("/^\d\d\d\d-\d\d-\d\d$/",$since)) {
-      $apps = getDatabase()->all(" select * from devapp where updated >= '$since' order by updated desc ");
+      $apps = getDatabase()->all(" select * from devapp where $matchWhere updated >= '$since' order by updated desc ");
       $sinceDisplay = $since;
-    } else if (preg_match("/^\d+$/",$since)) {
-      $apps = getDatabase()->all(" select * from devapp where updated >= DATE_SUB(NOW(), INTERVAL $since day) order by updated desc ");
+    } else if ($since == '' || preg_match("/^\d+$/",$since)) {
+      $apps = getDatabase()->all(" select * from devapp where $matchWhere updated >= DATE_SUB(NOW(), INTERVAL $since day) order by updated desc ");
       $sinceDisplay = "$since days ago";
     } else {
       # malformed since
@@ -49,6 +61,10 @@ class DevelopmentAppController {
     Displaying <b><?php print count($apps); ?></b> applications updated since <?php print $sinceDisplay; ?>
     <p/>
     <script>
+    function filterMatch() {
+      match = $('#filterMatchValue').val();
+      document.location.href = '?match='+match;
+    }
     function filterSince() {
       since = $('#filterSinceValue').val();
       document.location.href = '?since='+since;
@@ -56,9 +72,15 @@ class DevelopmentAppController {
     </script>
 
     <div class="input-prepend input-append">
+    <span class="add-on">Contains:</span>
+    <input id="filterMatchValue" class="span10" type="text" name="" placeholder="Streetname..." value="<?php print $match; ?>">
+    <button class="btn" type="button" onclick="filterMatch()">Search</button>
+    </div>
+
+    <div class="input-prepend input-append">
     <span class="add-on">Updated Since:</span>
-    <input id="filterSinceValue" class="span10" type="text" name="" placeholder="yyyy-mm-dd or 'X' for 'days-ago'">
-    <button class="btn" type="button" onclick="filterSince()">Filter</button>
+    <input id="filterSinceValue" class="span10" type="text" name="" placeholder="yyyy-mm-dd or 'X' for 'days-ago'" value="<?php print $since; ?>">
+    <button class="btn" type="button" onclick="filterSince()">Limit</button>
     </div>
 
     <div style="overflow:scroll; height: 500px;">
