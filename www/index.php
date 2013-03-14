@@ -2,12 +2,20 @@
 
 include_once '../lib/include.php';
 include_once 'epiphany/src/Epi.php';
+include_once 'controllers/ApiController.php';
 include_once 'controllers/MeetingController.php';
 include_once 'controllers/DevelopmentApp.php';
 include_once 'controllers/LobbyistController.php';
 
 Epi::setPath('base', 'epiphany/src');
 Epi::init('route');
+Epi::init('api');
+
+getApi()->get('/api/point', array('ApiController', 'point'), EpiApi::external);
+getApi()->get('/api/wards/(\d+)', array('ApiController', 'ward'), EpiApi::external);
+getApi()->get('/api/committees', array('ApiController', 'committees'), EpiApi::external);
+getApi()->get('/api/councillors/(\d+)', array('ApiController', 'councillorById'), EpiApi::external);
+getApi()->get('/api/councillors/([^/]+)/(.*)', array('ApiController', 'councillorByName'), EpiApi::external);
 
 getRoute()->get('/', 'dashboard');
 getRoute()->get('/about', 'about');
