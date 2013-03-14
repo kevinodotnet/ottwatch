@@ -510,10 +510,15 @@ class MeetingController {
 					print ">> $snippet <<\n";
 					$title = '<i class="icon-warning-sign"></i> Doh! title autodection failed';
 				} else {
-	        $title = $xml->xpath("//span"); $title = $title[0].'';
-	        if ($title == '') {
-	          $title = $xml->xpath("//a"); $title = $title[0].'';
-	        }
+	        $title = $xml->xpath("//span"); 
+          if (count($title) == 0) {
+            # fall back to <a>
+	          $title = $xml->xpath("//a"); 
+            $title = $title[0].'';
+          }
+          if (count($title) > 0) {
+            $title = $title[0].'';
+          }
 
 	        # charset problems
 	        $title = preg_replace("/ \? /"," - ",$title);
