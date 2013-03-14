@@ -13,6 +13,9 @@ Epi::init('api');
 
 getApi()->get('/api/point', array('ApiController', 'point'), EpiApi::external);
 getApi()->get('/api/wards/(\d+)', array('ApiController', 'ward'), EpiApi::external);
+getApi()->get('/api/committees', array('ApiController', 'committees'), EpiApi::external);
+getApi()->get('/api/councillors/(\d+)', array('ApiController', 'councillorById'), EpiApi::external);
+getApi()->get('/api/councillors/([^/]+)/(.*)', array('ApiController', 'councillorByName'), EpiApi::external);
 
 getRoute()->get('/', 'dashboard');
 getRoute()->get('/about', 'about');
