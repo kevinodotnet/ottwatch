@@ -615,6 +615,14 @@ class LobbyistController {
 
         # Load the entire lobbyist/client file for this row, and hand-off parsing.
 			  $lobbyistHTML = sendPost(self::URL,$fields);
+				if (preg_match('/OracleConnection/',$lobbyistHTML)) {
+					# errors happen, try again just for kicks
+				  $lobbyistHTML = sendPost(self::URL,$fields);
+					if (preg_match('/OracleConnection/',$lobbyistHTML)) {
+						print "Two back to back OracleConnection errors; giving up\n";
+						continue;
+					}
+				}
         #file_put_contents("lobbyistprofile.html",$lobbyistHTML);
         #$lobbyistHTML = file_get_contents("lobbyistprofile.html");
         self::scrapeLobbyistClientFile($lobbyistHTML);
