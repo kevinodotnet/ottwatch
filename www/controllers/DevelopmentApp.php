@@ -62,16 +62,6 @@ class DevelopmentAppController {
     <p/>
     <script>
 
-    /* for mobile, but for anyone really */
-    if (navigator.geolocation) { // device can return its location
-      navigator.geolocation.getCurrentPosition(function(position) {
-        var newLatlng = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
-        map.panTo(newLatlng);
-//        console.log(position.coords.latitude);
-//        console.log(position.coords.longitude);
-      });
-    }
-
     function filterMatch() {
       match = $('#filterMatchValue').val();
       document.location.href = '?match='+match;
@@ -187,6 +177,15 @@ class DevelopmentAppController {
           }
         }
         ?>
+
+        // map is in place and ready, panTo if user allows GEO location permission
+		    if (navigator.geolocation) {
+		      navigator.geolocation.getCurrentPosition(function(position) {
+		        var newLatlng = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
+		        map.panTo(newLatlng);
+		      });
+		    }
+
       });
     </script>
     </div>
