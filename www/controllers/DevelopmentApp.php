@@ -115,8 +115,11 @@ class DevelopmentAppController {
       <?php
       $addr = json_decode($a['address']);
       foreach ($addr as $t) {
-        print "<nobr><a href=\"javascript:panMapTo({$t->lat},{$t->lon});\">{$t->addr}</a></nobr><br/>\n";
-        // print "<nobr><a target=\"_blank\" href=\"http://maps.google.com/?q={$t->lat},{$t->lon}\">{$t->addr}</a></nobr><br/>\n";
+        if ($t->lat != '') {
+          print "<nobr><a href=\"javascript:panMapTo({$t->lat},{$t->lon});\">{$t->addr}</a></nobr><br/>\n";
+        } else {
+          print "<nobr><a target=\"_blank\" href=\"http://maps.google.com/?q={$t->lat},{$t->lon}\">{$t->addr}</a></nobr><br/>\n";
+        }
       }
       ?>
       </td>
@@ -200,10 +203,6 @@ class DevelopmentAppController {
       });
 
       function panMapTo(lat,lon) {
-        if (lat == '') {
-          alert("oops - no GEO location available for this address");
-          return;
-        }
         map.panTo(new google.maps.LatLng(lat,lon));
       }
 
