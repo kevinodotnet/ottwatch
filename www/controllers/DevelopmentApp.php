@@ -62,27 +62,36 @@ class DevelopmentAppController {
     <p/>
     <script>
 
-    function filterMatch() {
-      match = $('#filterMatchValue').val();
-      document.location.href = '?match='+match;
-    }
-    function filterSince() {
+    function doFilter(reset) {
       since = $('#filterSinceValue').val();
-      document.location.href = '?since='+since;
+      match = $('#filterMatchValue').val();
+      if (reset) {
+        since = '';
+        match = '';
+      }
+      document.location.href = '?since='+since+'&match='+match;
     }
     </script>
 
-    <div class="input-prepend input-append">
+    <form class="form-inline">
+    Search for
+    <input id="filterMatchValue" type="text" placeholder="streetname..." value="<?php print $match; ?>" style="width: 100px;">
+    since
+    <input id="filterSinceValue" type="text" placeholder="7" value="<?php print $since; ?>" style="width: 50px;"> days ago
+    <button class="btn btn-primary" type="button" onclick="doFilter()"><i class="icon-search"></i> Go</button>
+    <button class="btn" type="button" onclick="doFilter(1)"> Reset</button>
+    </form>
+
+    <!--
+    <div class="input-prepend">
     <span class="add-on">Contains:</span>
-    <input id="filterMatchValue" class="span10" type="text" name="" placeholder="Streetname..." value="<?php print $match; ?>">
-    <button class="btn" type="button" onclick="filterMatch()">Search</button>
+    <span class="add-on">Updated Since:</span>
     </div>
 
-    <div class="input-prepend input-append">
-    <span class="add-on">Updated Since:</span>
-    <input id="filterSinceValue" class="span10" type="text" name="" placeholder="yyyy-mm-dd or 'X' for 'days-ago'" value="<?php print $since; ?>">
-    <button class="btn" type="button" onclick="filterSince()">Limit</button>
+    <div class="input-prepend">
+    <input id="filterSinceValue" type="text" name="" placeholder="yyyy-mm-dd or 'X' for 'days-ago'" value="<?php print $since; ?>">
     </div>
+    -->
 
     <div style="overflow:scroll; height: 500px;">
     <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
