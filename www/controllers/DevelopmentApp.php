@@ -61,6 +61,17 @@ class DevelopmentAppController {
     Displaying <b><?php print count($apps); ?></b> applications updated since <?php print $sinceDisplay; ?>
     <p/>
     <script>
+
+    /* for mobile, but for anyone really */
+    if (navigator.geolocation) { // device can return its location
+      navigator.geolocation.getCurrentPosition(function(position) {
+        var newLatlng = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
+        map.panTo(newLatlng);
+//        console.log(position.coords.latitude);
+//        console.log(position.coords.longitude);
+      });
+    }
+
     function filterMatch() {
       match = $('#filterMatchValue').val();
       document.location.href = '?match='+match;
@@ -121,8 +132,12 @@ class DevelopmentAppController {
     <div id="map_canvas" style="width:100%; height:600px;"></div>
     <script>
       $(document).ready(function() {
-        var mapOptions = { center: new google.maps.LatLng(45.420833,-75.69), zoom: 8, mapTypeId: google.maps.MapTypeId.ROADMAP };
-        var map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
+        var mapOptions = { 
+          center: new google.maps.LatLng(45.420833,-76.59), 
+          zoom: 12, 
+          mapTypeId: google.maps.MapTypeId.ROADMAP 
+        };
+        map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
 
         <?php
         foreach ($apps as $a) {
