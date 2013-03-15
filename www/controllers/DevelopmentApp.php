@@ -133,7 +133,7 @@ class DevelopmentAppController {
     <script>
       $(document).ready(function() {
         var mapOptions = { 
-          center: new google.maps.LatLng(45.420833,-76.59), 
+          center: new google.maps.LatLng(45.420833,-75.69), 
           zoom: 12, 
           mapTypeId: google.maps.MapTypeId.ROADMAP 
         };
