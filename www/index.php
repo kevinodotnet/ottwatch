@@ -6,10 +6,12 @@ include_once 'controllers/ApiController.php';
 include_once 'controllers/MeetingController.php';
 include_once 'controllers/DevelopmentApp.php';
 include_once 'controllers/LobbyistController.php';
+include_once 'controllers/LoginController.php';
 
 Epi::setPath('base', 'epiphany/src');
 Epi::init('route');
 Epi::init('api');
+Epi::init('route','session-php');
 
 getApi()->get('/api/point', array('ApiController', 'point'), EpiApi::external);
 getApi()->get('/api/wards/(\d+)', array('ApiController', 'ward'), EpiApi::external);
@@ -21,6 +23,13 @@ getRoute()->get('/', 'dashboard');
 getRoute()->get('/about', 'about');
 getRoute()->get('/ideas', 'ideas');
 #getRoute()->get('/dashboard', 'dashboard');
+
+getRoute()->get('/user/home', array('LoginController','home'));
+getRoute()->get('/user/register', array('LoginController','displayRegister'));
+getRoute()->post('/user/register', array('LoginController','doRegister'));
+getRoute()->get('/user/login', array('LoginController','display'));
+getRoute()->post('/user/login', array('LoginController','doLogin'));
+getRoute()->get('/user/logout', array('LoginController','logout'));
 
 getRoute()->get('/lobbying/search/(.*)', array('LobbyistController','search'));
 getRoute()->get('/lobbying/lobbyists/(.*)', array('LobbyistController','showLobbyist'));
@@ -284,12 +293,11 @@ function error404() {
   bottom();
 }
 
-function top($title) {
+function top($title = '') {
   global $OTT_WWW;
 ?>
 <!DOCTYPE html>
 <html>
-<!-- <?php print $_SERVER['REQUEST_URI']; ?> -->
 <head>
 <title><?php print $title; ?></title>
 <meta charset="utf-8">
@@ -320,6 +328,18 @@ function copyToClipboard (text) {
 <!--<li><a href="<?php print $OTT_WWW; ?>/dashboard">Dashboard</a></li>-->
 <li><a href="<?php print $OTT_WWW; ?>/about">About</a></li>
 <li><a href="<?php print $OTT_WWW; ?>/ideas">Ideas</a></li>
+<?php
+if (!LoginController::isLoggedIn()) {
+  ?>
+  <li><a href="<?php print $OTT_WWW; ?>/user/login">Login</a></li>
+  <?php
+} else {
+  ?>
+  <li><a href="<?php print $OTT_WWW; ?>/user/home"><?php print getSession()->get('user_email'); ?></a></li>
+  <li><a href="<?php print $OTT_WWW; ?>/user/logout">Logout</a></li>
+  <?php
+}
+?>
 </ul>
 </div></div>
 </div>
@@ -344,12 +364,12 @@ function copyToClipboard (text) {
 function bottom() {
   global $OTT_WWW;
   ?>
-<div style="margin-top: 10px; background: #fcfcfc; padding: 10px; border: #c0c0c0 solid 1px;">
+<div class="well">
 <a href="<?php print $OTT_WWW; ?>"><img alt="Ottawa Watch Logo" style="float: right; padding-left: 5px; width: 50px; height: 50px;" src="<?php print $OTT_WWW; ?>/img/ottwatch.png"/></a>
 <i>
 Follow <b><a href="http://twitter.com/OttWatch">@OttWatch</a></b> on Twitter too.
 Created by <a href="http://kevino.ca"><b>Kevin O'Donnell</b></a> to make it easier to be part of the political conversation in Ottawa.</i>
-<div style="clear: both;"></div>
+<div class="clearfix"></div>
 </div>
   <?php
   googleAnalytics();

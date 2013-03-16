@@ -14,6 +14,8 @@ create table people (
   id mediumint not null auto_increment,
   name varchar(100),
   email varchar(100),
+  password varchar(32),
+  created datetime default CURRENT_TIMESTAMP,
   primary key (id)
 ) engine = innodb;
 
