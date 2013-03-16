@@ -10,6 +10,11 @@ class OttWatchConfig {
   const FILE_DIR = "/Users/kevino/Sites/var_ottwatch";
   const WWW = "http://localhost/ottwatch";
   const GOOGLE_API_KEY = "GET_FROM https://code.google.com/apis/console";
+  const GOOGLE_ANALYTICS = "UA-CHANGE-ME";
+  const TWITTER_CONSUMER_KEY = 'change_me';
+  const TWITTER_CONSUMER_SECRET = 'change_me';
+  const TWITTER_ACCESS_TOKEN = 'change_me';
+  const TWITTER_TOKEN_SECRET = 'change_me';
 }
 
 ?>
