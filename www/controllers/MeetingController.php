@@ -420,17 +420,11 @@ class MeetingController {
 
     # get members information
     $members = array();
-    $parse = 0;
     $raw = '';
     for ($x = 0; $x < count($lines); $x++) {
-      if (preg_match("/Committee Members:/",$lines[$x])) {
-        $parse = 1;
-      }
+      $raw .= $lines[$x];
       if (preg_match("/DECLARATIONS/i",$lines[$x])) {
-        $parse = 0;
-      }
-      if ($parse) {
-        $raw .= $lines[$x];
+				break;
       }
     }
     $raw = preg_replace("/[^a-zA-Z-]+/"," ",$raw);
