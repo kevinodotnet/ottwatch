@@ -22,6 +22,7 @@ if (1) {
 	Epi::setSetting('exceptions', true);
 	EpiDatabase::employ(OttWatchConfig::DB_TYPE, OttWatchConfig::DB_NAME, OttWatchConfig::DB_HOST, OttWatchConfig::DB_USER, OttWatchConfig::DB_PASS);
 
+	include_once 'controllers/EventController.php';
 	include_once 'controllers/MeetingController.php';
 	include_once 'controllers/DevelopmentApp.php';
 	include_once 'controllers/LobbyistController.php';
@@ -83,10 +84,10 @@ function tweet($tweet,$allowDup=0) {
 	file_put_contents($hashfile,$tweet);
 
 	# todo: move to non-git configuration file
-  $consumerKey = 'aPqhRRoL1X4lDRGbRpdjA';
-  $consumerSecret = '9Cz0ot2iUfzAaoRNesHmxKl4se7zYMDpka0x2F9imG0';
-  $accessToken = '1206679020-ZDNk6AZT5cYhGWiyFXB4K5BsQK3ItQf5m4Cpt5t';
-  $accessTokenSecret = 'EmT6yieQC9LxAwYIDHKFnUOqf1jX31jHHwxwspX5TnI';
+  $consumerKey = OttWatchConfig::TWITTER_CONSUMER_KEY;
+  $consumerSecret = OttWatchConfig::TWITTER_CONSUMER_SECRET;
+  $accessToken = OttWatchConfig::TWITTER_ACCESS_TOKEN;
+  $accessTokenSecret = OttWatchConfig::TWITTER_TOKEN_SECRET;
 
   $twitter = new TwitterOAuth($consumerKey, $consumerSecret, $accessToken, $accessTokenSecret);
 	print "Sending... $tweet\n";
@@ -206,7 +207,7 @@ function googleAnalytics() {
 <script type="text/javascript">
 
   var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-6324294-24']);
+  _gaq.push(['_setAccount', '<?php print OttWatchConfig::GOOGLE_ANALYTICS; ?>']);
   _gaq.push(['_trackPageview']);
 
   (function() {
