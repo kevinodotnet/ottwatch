@@ -4,6 +4,12 @@ class ApiController {
 
   /* Initialize a "success" result */
 
+  public static function about() {
+    top();
+    include("about_api.html");
+    bottom();
+  }
+
   public static function errResult($message) {
     $result = array();
     $result['status'] = 0;

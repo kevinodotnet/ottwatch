@@ -14,6 +14,7 @@ Epi::init('route');
 Epi::init('api');
 Epi::init('route','session-php');
 
+getApi()->get('/api/about', array('ApiController', 'about'), EpiApi::external);
 getApi()->get('/api/point', array('ApiController', 'point'), EpiApi::external);
 getApi()->get('/api/roads/(\d+)/([^/]+)', array('ApiController', 'road'), EpiApi::external);
 getApi()->get('/api/roads/(\d+)/([^/]+)/(.*)', array('ApiController', 'road'), EpiApi::external);
@@ -333,6 +334,7 @@ function copyToClipboard (text) {
 <!--<li><a href="<?php print $OTT_WWW; ?>/dashboard">Dashboard</a></li>-->
 <li><a href="<?php print $OTT_WWW; ?>/about">About</a></li>
 <li><a href="<?php print $OTT_WWW; ?>/ideas">Ideas</a></li>
+<li><a href="<?php print $OTT_WWW; ?>/api/about">API</a></li>
 <?php
 if (!LoginController::isLoggedIn()) {
   ?>

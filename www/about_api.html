@@ -1,0 +1,63 @@
+<div class="row-fluid">
+
+<div class="span6">
+<h1>Introduction</h1>
+<p>OttWatch exposes several JSON/REST api pages to facilitate
+application development by third-parties, including other
+Apps4Ottawa contestants.</p>
+<p>I'm comfortable handling the Mysql/GIS infrastructure
+if you're comfortable handling the fancy mobile apps and 
+use cases I didn't bother with.</p>
+<p>There is lots of room in the world for more than one
+solution. I only ask that you not abuse the API to the point
+that it brings down my server. Let me know if a particular
+dataset is missing, or a change in format would help you 
+out.</p>
+</div>
+
+<div class="span6">
+<h1>Points</h1>
+<p>
+Given any lat/lon pair, returns information about the
+point, such as containing ward and councillor information.
+This is useful for GPS and Geolocation apps to start to 
+learn where the user is.
+</p><p>
+<a href="point?lat=45.265309&lon=-75.777104">latitude 45.265309, longitude -75.777104</a>
+</p>
+
+<h1>Roads</h1>
+<p>
+Given a street number, name, and optional suffix (required when duplicate streetnames happen), returns 
+information about the enclosing road segment from the "roadways" opendata.
+</p><p>
+<a href="roads/166/westhaven">166 Westhaven</a><br/>
+<a href="roads/360/lisgar/st">360 Lisgar St</a><br/>
+<a href="roads/360/lisgar/rd">360 Lisgar Rd</a> (there are two Lisgars in Ottawa, so suffix is mandatory)<br/>
+</p>
+
+<h1>Wards</h1>
+<p>
+Given a ward number, returns councillor information.
+</p><p>
+<a href="wards/5">Ward 5</a><br/>
+<a href="wards/15">Ward 15</a><br/>
+</p>
+
+<h1>Committees</h1>
+<p>
+Returns information about all committees
+</p><p>
+<a href="committees">JSON about all committees</a>
+</p>
+
+<h1>Councillors</h1>
+<p>
+Given a last and first name, returns information about a councillor:
+</p><p>
+<a href="councillors/Harder/Jan">Harder, Jan</a><br/>
+<a href="councillors/Chernushenko/David">Chernushenko, David</a>
+</p>
+</div>
+
+</div><!-- /row -->
