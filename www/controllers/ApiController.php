@@ -11,16 +11,106 @@ class ApiController {
     return $result;
   }
 
+  public static function getLinestringAsArray($text) {
+    # LINESTRING(-75.74452847405216 45.38879029192849, ..., -75.74384484749845 45.389000882100305)
+    $text = preg_replace('/LINESTRING\(/',"",$text);
+    $text = preg_replace('/\)/',"",$text);
+    $points = array();
+    foreach (explode(",",$text) as $p) {
+      $t = explode(" ",$p);
+      $np = array();
+      $np['lat'] = $t[1];
+      $np['lon'] = $t[0];
+      $points[] = $np;
+    }
+    return $points;
+    
+  }
+
+  public static function getLatLonFromPoint($text) {
+    # POINT(-75.74431034266786 45.38770326435866)
+    $matches = array();
+    $result = array();
+    if (preg_match("/POINT\(([^ ]+) ([^\)]+)\)/",$text,$matches)) {
+      $result['lat'] = $matches[2];
+      $result['lon'] = $matches[1];
+    }
+    return $result;
+  }
+
+  public static function road($name,$number) {
+    $result = array();
+#    $result['number'] = $number;
+#    $result['name'] = $name;
+
+    /*
+        :number between left_from and left_to bet_left_f_t,
+        :number between left_to and left_from bet_left_t_f,
+        :number between right_from and right_to bet_right_f_t,
+        :number between right_to and right_from bet_right_t_f,
+    */
+
+    $row = getDatabase()->all(" 
+      select 
+        astext(shape) as points, 
+        astext(pointN(shape,numpoints(shape)/2)) midpoint,
+        rd_name,
+        rd_suffix,
+        rd_directi,
+        left_from,
+        left_to,
+        right_from,
+        right_to 
+      from roadways 
+      where 
+        rd_name  = upper(:name) 
+        and (
+          (:number % 2 = left_from % 2 and (:number between cast(left_from as unsigned) and cast(left_to as unsigned)))
+          or (:number % 2 = left_from % 2 and (:number between cast(left_to as unsigned) and cast(left_from as unsigned)))
+          or (:number % 2 = right_from % 2 and (:number between cast(right_from as unsigned) and cast(right_to as unsigned)))
+          or (:number % 2 = right_from % 2 and (:number between cast(right_to as unsigned) and cast(right_from as unsigned)))
+        )
+      ",array(
+      'name' => $name,
+      'number' => $number
+      ));
+    if (count($row) == 0) {
+      $result['error'] = "Street name and number match not found";
+      return $result;
+    } 
+    if (count($row) > 1) {
+      # should not happen
+      $result['error'] = "Matched ".count($row)." streets; should not be possible";
+      return $result;
+    } 
+    $row = $row[0];
+    foreach ($row as $k => $v) {
+      $result[$k] = $v;
+    }
+    $midpoint =  self::getLatLonFromPoint($row['midpoint']);
+    unset($result['midpoint']); # = $midpoint;
+    $points = self::getLinestringAsArray($row['points']);
+    $result['points'] = $points;
+    $t = self::point($midpoint['lat'],$midpoint['lon']);
+    $result['ward'] = $t['ward'];
+
+    return $result;
+  }
+
   /* Takes "lat" and "long" GET parameters and returns data about the point */
-  public static function point() {
-    $lat = $_GET['lat'];
-    $lon = $_GET['lon'];
+  public static function point($lat,$lon) {
+    if ($lat == '') {
+      $lat = $_GET['lat'];
+    }
+    if ($lon == '') {
+      $lon = $_GET['lon'];
+    }
 
     if (! preg_match("/^-{0,1}\d+\.\d+/",$lat)) {
       return self::errResult("Bad lat");
     }
     if (! preg_match("/^-{0,1}\d+\.\d+/",$lon)) {
-      return self::errResult("Bad lan");
+      return self::errResult("Bad lon");
     }
 
     $result = array();

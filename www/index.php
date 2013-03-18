@@ -14,6 +14,7 @@ Epi::init('api');
 Epi::init('route','session-php');
 
 getApi()->get('/api/point', array('ApiController', 'point'), EpiApi::external);
+getApi()->get('/api/roads/([^/]+)/(\d+)', array('ApiController', 'road'), EpiApi::external);
 getApi()->get('/api/wards/(\d+)', array('ApiController', 'ward'), EpiApi::external);
 getApi()->get('/api/committees', array('ApiController', 'committees'), EpiApi::external);
 getApi()->get('/api/councillors/(\d+)', array('ApiController', 'councillorById'), EpiApi::external);
