@@ -38,10 +38,10 @@ class ApiController {
     return $result;
   }
 
-  public static function road($name,$number) {
+  public static function road($number,$name,$suff) {
     $result = array();
-#    $result['number'] = $number;
-#    $result['name'] = $name;
+    $result['number'] = $number;
+    $result['name'] = $name;
 
     /*
         :number between left_from and left_to bet_left_f_t,
@@ -49,9 +49,14 @@ class ApiController {
         :number between right_from and right_to bet_right_f_t,
         :number between right_to and right_from bet_right_t_f,
     */
+    $where_suffix = '';
+    if ($suff != '') {
+      $where_suffix = " and rd_suffix = upper(:suffix) ";
+    }
 
     $row = getDatabase()->all(" 
       select 
+        OGR_FID id,
         astext(shape) as points, 
         astext(pointN(shape,numpoints(shape)/2)) midpoint,
         rd_name,
@@ -64,6 +69,7 @@ class ApiController {
       from roadways 
       where 
         rd_name  = upper(:name) 
+        $where_suffix
         and (
           (:number % 2 = left_from % 2 and (:number between cast(left_from as unsigned) and cast(left_to as unsigned)))
           or (:number % 2 = left_from % 2 and (:number between cast(left_to as unsigned) and cast(left_from as unsigned)))
@@ -72,7 +78,8 @@ class ApiController {
         )
       ",array(
       'name' => $name,
-      'number' => $number
+      'number' => $number,
+      'suffix' => $suff
       ));
     if (count($row) == 0) {
       $result['error'] = "Street name and number match not found";
@@ -80,7 +87,8 @@ class ApiController {
     } 
     if (count($row) > 1) {
       # should not happen
-      $result['error'] = "Matched ".count($row)." streets; should not be possible";
+      $result['error'] = "Matched ".count($row)." streets; should not be possible. Try appending a street suffix?";
+      $result['raw'] = $row;
       return $result;
     } 
     $row = $row[0];

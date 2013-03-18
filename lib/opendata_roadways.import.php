@@ -16,4 +16,7 @@ print `$cmd`;
 
 `rm -rf t`;
 
+print "You need to fix some of the data: update roadways set rd_suffix = 'AVE' where rd_suffix = 'AV.';\n";
+
+
 ?>

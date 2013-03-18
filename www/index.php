@@ -7,6 +7,7 @@ include_once 'controllers/MeetingController.php';
 include_once 'controllers/DevelopmentApp.php';
 include_once 'controllers/LobbyistController.php';
 include_once 'controllers/LoginController.php';
+include_once 'controllers/UserController.php';
 
 Epi::setPath('base', 'epiphany/src');
 Epi::init('route');
@@ -14,7 +15,8 @@ Epi::init('api');
 Epi::init('route','session-php');
 
 getApi()->get('/api/point', array('ApiController', 'point'), EpiApi::external);
-getApi()->get('/api/roads/([^/]+)/(\d+)', array('ApiController', 'road'), EpiApi::external);
+getApi()->get('/api/roads/(\d+)/([^/]+)', array('ApiController', 'road'), EpiApi::external);
+getApi()->get('/api/roads/(\d+)/([^/]+)/(.*)', array('ApiController', 'road'), EpiApi::external);
 getApi()->get('/api/wards/(\d+)', array('ApiController', 'ward'), EpiApi::external);
 getApi()->get('/api/committees', array('ApiController', 'committees'), EpiApi::external);
 getApi()->get('/api/councillors/(\d+)', array('ApiController', 'councillorById'), EpiApi::external);
@@ -25,7 +27,9 @@ getRoute()->get('/about', 'about');
 getRoute()->get('/ideas', 'ideas');
 #getRoute()->get('/dashboard', 'dashboard');
 
-getRoute()->get('/user/home', array('LoginController','home'));
+getRoute()->get('/user/home', array('UserController','home'));
+getRoute()->post('/user/add/place', array('UserController','addPlace'));
+
 getRoute()->get('/user/register', array('LoginController','displayRegister'));
 getRoute()->post('/user/register', array('LoginController','doRegister'));
 getRoute()->get('/user/login', array('LoginController','display'));

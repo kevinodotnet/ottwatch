@@ -23,17 +23,6 @@ class LoginController {
     return true;
   }
 
-  static public function home() {
-    top();
-    ?>
-    <h1><?php print getSession()->get('user_email'); ?></h1>
-    <p>
-    Welcome back! There's nothing to do here yet.
-    </p>
-    <?php
-    bottom();
-  }
-
   static public function displayRegister() {
     top();
     $err = $_GET['err'];

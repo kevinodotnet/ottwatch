@@ -19,6 +19,18 @@ create table people (
   primary key (id)
 ) engine = innodb;
 
+drop table if exists places;
+create table places (
+  id mediumint not null auto_increment,
+  roadid int(11) not null,
+  rd_num mediumint not null,
+  personid mediumint,
+  primary key (id),
+  constraint foreign key (personid) references people (id) on delete cascade on update cascade,
+  constraint foreign key (roadid) references roadways (OGR_FID) on delete cascade on update cascade
+) engine = innodb;
+create unique index places_in1 on places (roadid,rd_num,personid);
+
 drop table if exists lobbying;
 drop table if exists lobbyfile;
 create table lobbyfile (
