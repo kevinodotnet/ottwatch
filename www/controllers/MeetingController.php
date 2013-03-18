@@ -275,8 +275,12 @@ class MeetingController {
       </tr>
     <?php
     $members = $m['members'];
-    $members = json_decode($members);
-    $rows = getDatabase()->all(" select * from electedofficials where id in (".implode(",",$members).") ");
+    if ($members != '') {
+      $members = json_decode($members);
+      $rows = getDatabase()->all(" select * from electedofficials where id in (".implode(",",$members).") ");
+    } else {
+      $rows = array();
+    }
     $emails = array();
     foreach ($rows as $r) {
       $emails[] = $r['email'];
