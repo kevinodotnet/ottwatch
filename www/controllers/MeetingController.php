@@ -513,8 +513,7 @@ class MeetingController {
             # fall back to <a>
 	          $title = $xml->xpath("//a"); 
             $title = $title[0].'';
-          }
-          if (count($title) > 0) {
+          } else {
             $title = $title[0].'';
           }
 
@@ -527,7 +526,6 @@ class MeetingController {
 	        #$title = preg_replace("/\)\s*$/","",$title);
 	        $title = preg_replace("/\( +/","(",$title);
 	        $title = preg_replace("/ +\)/",")",$title);
-
 
 				}
 	  	  $dbitemid = getDatabase()->execute('insert into item (meetingid,itemid,title) values (:meetingid,:itemid,:title) ', array(
