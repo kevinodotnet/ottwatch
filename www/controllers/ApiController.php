@@ -176,11 +176,10 @@ class ApiController {
     return $result;
   }
 
-  public static function wardPollMapStatic($wardnum,$year,$pollnum) {
+  public static function wardPollMapStaticUrl($wardnum,$year,$pollnum) {
     $poll = self::wardPoll($wardnum,$year,$pollnum);
     if (!$poll['ward']) {
-      print "Not found\n";
-      return;
+      return "http://example.com/poll/not/found/brah.png";
     }
 
     $url = "http://maps.googleapis.com/maps/api/staticmap";
@@ -192,6 +191,16 @@ class ApiController {
     foreach ($poll['polygon'] as $p) {
       $url .= "|{$p['lat']},{$p['lon']}";
     }
+    return $url;
+  }
+
+  public static function wardPollMapStatic302($wardnum,$year,$pollnum) {
+    $url = self::wardPollMapStaticUrl($wardnum,$year,$pollnum);
+    header("Location: $url");
+  }
+
+  public static function wardPollMapStatic($wardnum,$year,$pollnum) {
+    $url = self::wardPollMapStaticUrl($wardnum,$year,$pollnum);
     print "<img src=\"$url\"/>";
   }
 
