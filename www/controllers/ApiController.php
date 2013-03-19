@@ -282,7 +282,7 @@ google.maps.Polygon.prototype.getBounds = function() {
     $polls = array();
     foreach ($rows as $r) { $polls[] = $r['vot_subd']; }
     $result['2010'] = $polls;
-    pr($result);
+    return $result;
   }
 
   public static function ward($wardnum) {
