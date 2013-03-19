@@ -462,6 +462,14 @@ class MeetingController {
         $coordEmail = preg_replace("/<.*/","",$coordEmail);
         break;
       }
+      if (preg_match("/(.*), Coordinator/",$lines[$x],$matches)) {
+        $coordName = $matches[1];
+        $coordPhone = $lines[$x+1];
+        $coordEmail = $lines[$x+2];
+        $coordPhone = preg_replace("/<.*/","",$coordPhone);
+        $coordEmail = preg_replace("/<.*/","",$coordEmail);
+        break;
+      }
     }
     getDatabase()->execute(" update meeting set contactName = :name, contactEmail = :email, contactPhone = :phone where id = :id ",array(
       'name' => $coordName,
