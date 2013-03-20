@@ -207,7 +207,7 @@ class MeetingController {
     <li><a href="#tabmap" data-toggle="tab">Map</a></li>
     <li><a href="#tabcomments" data-toggle="tab">Comments</a></li>
     <li><a href="#tabdelegation" data-toggle="tab"><big><b>Public Delegations</b></big></a></li>
-    <li><a href="#tababout" data-toggle="tab">About</a></li>
+    <!--<li><a href="#tababout" data-toggle="tab">About</a></li>-->
     </ul>
 
     <div id="tabcontent" class="tab-content">
@@ -287,64 +287,13 @@ class MeetingController {
     </div>
     </div><!-- /tab -->
 
-    <div class="tab-pane fade" id="tabdelegation">
-    <div style="padding: 10px; padding-top: 0px; overflow: scroll; height: 600px;">
-    <h3>What is a "Public Delegation"?</h3>
-    <p>
-    Everyone is entitled to attend committee meetings and provide a verbal statement (up to 5 minutes long)
-    before Councillors vote on each agenda item. If you are not able to attend a meeting, you can also email
-    your comments to councillors. Either way, your statements become part of the official record - and this
-    is the single most important step to shaping the outcome of your city.
-    </p>
-
-    <?php
-    $date = substr($m['starttime'],0,10);
-    $title = meeting_category_to_title($m['category']);
-    $subject = urlencode("Public Delegation for $title on $date");
-    $mailto = "mailto:{$m['contactEmail']}?Subject=$subject";
-    if ($m['contactName'] != '') {
-	    ?>
-	    <p>
-	    This meeting's coordinator is:
-	    <blockquote><b><?php print $m['contactName']; ?></b><br/>
-	    <a target="_blank" href="<?php print $mailto; ?>"><?php print "{$m['contactEmail']}"; ?></a><br/>
-	    <?php print $m['contactPhone']; ?></blockquote>
-	    </p>
-	    <?php 
-    } else {
-      ?>
-	    <p>
-	    This meeting's coordinator <b>was not autodetected - oops</b>! But you can read it yourself - it's at the top of the Agenda.
-      </p>
-	    <?php 
-    }
-    ?>
-    <p>You can also email the councillors directly. Convenient links for that are on the "About" tab.</p>
-    <h3>What should I say? I'm scared! I'm not an expert!</h3>
-    <p>
-    Here's a little secret: councillors aren't experts either, so don't let that stop you. They are also
-    regular people and benefit from feedback from the public on the decisions they are about to make.
-    </p>
-    <p>
-    Anything you choose to write or say as a "public delegation" is good. But if you want some tips, here they are.
-    Don't feel limited to these points though - you have rights in this democracy - use them!
-    </p>
-    <ul>
-    <li><b>Be respectful and concise</b>: Make your point in the first paragraph, and leave the proof till later. You have the right to say your peace, but truth be told, I don't know if councillors read these things. So shorter is better.</li>
-    <li><b>Come in person if at all possible</b>: Public delegations by email are good, but showing up in person is better. Councillors may skip reading the emails, but they can't avoid listening to you for five minutes if you can make it.</li>
-    <li><b>Don't pick on staff</b>: Often staff seem to do things that the public dislikes, but that's because staff only do what Council has instructed them to do in the first place. So if you have a beef, make it a beef with Councillors. (and remember, respectful and concise)</li>
-    <li><b>Don't be shy</b>: 
-    If you're reviewed the Lobbyist Registry you'll know that business has no shame in pushing agendas at City Hall. If you're reading this, you are the 1 in 5,000 who might take action and change Ottawa's future. 
-    So don't be shy or nervous about it! "Power to the people" and all that good stuff, you know?
-    </li>
-    </ul>
-
-    </div>
-    </div><!-- /tab -->
-
+    <!--
     <div class="tab-pane fade" id="tababout">
     <div style="padding: 10px; padding-top: 0px; overflow: scroll; height: 600px;">
     <h3>Contact Information</h3>
+    <?php
+    ob_start();
+    ?>
     <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
       <tr>
       <th>Name</th>
@@ -377,13 +326,80 @@ class MeetingController {
     $mailto = "mailto:".implode(",",$emails)."?Subject={$title} on ".substr($m['starttime'],0,10);
     ?>
     </table>
+    <?php
+    $membersTable = ob_get_contents();
+    ob_end_clean();
+    print $membersTable;
+
+    ?>
     <h3>Send Your Thoughts</h3>
     <p>Want to contact the meeting members? Here's two easy ways:</p>
     <blockquote><a target="_blank" href="<?php print $mailto; ?>">Click on this convenient MAILTO link</a>.</blockquote>
     <p>Cut and paste these email addresses into your email program:</p>
     <blockquote><?php print implode("<br/>",$emails); ?></blockquote>
     </div>
+    </div>
+    -->
+
+    <div class="tab-pane fade" id="tabdelegation">
+
+    <div style="padding: 10px; padding-top: 0px; overflow: scroll; height: 600px;">
+    <h3>What is a "Public Delegation"?</h3>
+    <p>
+    Everyone is entitled to attend committee meetings and provide a verbal statement (up to 5 minutes long)
+    before Councillors vote on each agenda item. If you are not able to attend a meeting, you can also email
+    your comments to councillors. Either way, your statements become part of the official record - and this
+    is the single most important step to shaping the outcome of your city.
+    </p>
+
+    <?php
+    $date = substr($m['starttime'],0,10);
+    $title = meeting_category_to_title($m['category']);
+    $subject = urlencode("Public Delegation for $title on $date");
+    $mailto = "mailto:{$m['contactEmail']}?Subject=$subject";
+    if ($m['contactName'] != '') {
+	    ?>
+	    <p>
+	    This meeting's coordinator is:
+	    <blockquote><b><?php print $m['contactName']; ?></b><br/>
+	    <a target="_blank" href="<?php print $mailto; ?>"><?php print "{$m['contactEmail']}"; ?></a><br/>
+	    <?php print $m['contactPhone']; ?></blockquote>
+	    </p>
+	    <?php 
+    } else {
+      ?>
+	    <p>
+	    This meeting's coordinator <b>was not autodetected - oops</b>! But you can read it yourself - it's at the top of the Agenda.
+      </p>
+	    <?php 
+    }
+    ?>
+    <p>Click here to <a href="<?php print $mailto; ?>">email the councillors directly</a>. Here is their full contact information:</p>
+
+    <?php print $membersTable; ?>
+
+    <h3>What should I say? I'm scared! I'm not an expert!</h3>
+    <p>
+    Here's a little secret: councillors aren't experts either, so don't let that stop you. They are also
+    regular people and benefit from feedback from the public on the decisions they are about to make.
+    </p>
+    <p>
+    Anything you choose to write or say as a "public delegation" is good. But if you want some tips, here they are.
+    Don't feel limited to these points though - you have rights in this democracy - use them!
+    </p>
+    <ul>
+    <li><b>Be respectful and concise</b>: Make your point in the first paragraph, and leave the proof till later. You have the right to say your peace, but truth be told, I don't know if councillors read these things. So shorter is better.</li>
+    <li><b>Come in person if at all possible</b>: Public delegations by email are good, but showing up in person is better. Councillors may skip reading the emails, but they can't avoid listening to you for five minutes if you can make it.</li>
+    <li><b>Don't pick on staff</b>: Often staff seem to do things that the public dislikes, but that's because staff only do what Council has instructed them to do in the first place. So if you have a beef, make it a beef with Councillors. (and remember, respectful and concise)</li>
+    <li><b>Don't be shy</b>: 
+    If you're reviewed the Lobbyist Registry you'll know that business has no shame in pushing agendas at City Hall. If you're reading this, you are the 1 in 5,000 who might take action and change Ottawa's future. 
+    So don't be shy or nervous about it! "Power to the people" and all that good stuff, you know?
+    </li>
+    </ul>
+
+    </div>
     </div><!-- /tab -->
+
 
     </div><!-- /tabcontent -->
 
