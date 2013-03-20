@@ -380,8 +380,25 @@ function bottom() {
 <div class="well">
 <a href="<?php print $OTT_WWW; ?>"><img alt="Ottawa Watch Logo" style="float: right; padding-left: 5px; width: 50px; height: 50px;" src="<?php print $OTT_WWW; ?>/img/ottwatch.png"/></a>
 <i>
-Follow <b><a href="http://twitter.com/OttWatch">@OttWatch</a></b> on Twitter too.
-Created by <a href="http://kevino.ca"><b>Kevin O'Donnell</b></a> to make it easier to be part of the political conversation in Ottawa.</i>
+Created by <a href="http://kevino.ca"><b>Kevin O'Donnell</b></a> to make it easier to be part of the political conversation in Ottawa.</i><br/>
+On Twitter? Follow <b><a href="http://twitter.com/OttWatch">@OttWatch</a></b> and <b><a href="http://twitter.com/ODonnell_K">@ODonnell_K</a></b><br/>
+
+<div id="clock">
+<script language="JavaScript">
+TargetDate = "10/27/2014 6:00 PM";
+BackColor = "ffffff";
+ForeColor = "ed1b24";
+CountActive = true;
+CountStepper = -1;
+LeadingZero = true;
+DisplayFormat = "<span class=\"clockdigit\">%%D%%</span> days until election day!";
+FinishMessage = "It is finally here!";
+</script>
+<script language="JavaScript" src="http://scripts.hashemian.com/js/countdown.js"></script>
+</div>
+</i>
+
+
 <div class="clearfix"></div>
 </div>
   <?php
