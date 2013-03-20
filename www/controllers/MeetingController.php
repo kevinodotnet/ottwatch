@@ -216,11 +216,16 @@ class MeetingController {
     <iframe id="focusFrame" src="<?php print $focusFrameSrc; ?>" style="width: 100%; height: 600px; border: 0px;"></iframe>
     </div><!-- /tab -->
 
-    <div class="tab-pane fade" id="tabmap">
+    <div class="tab-pane" id="tabmap">
     <div id="map_canvas" style="width:100%; height:590px;">
       <script>
+
+      $('a[data-toggle="tab"]').on('shown', function (e) {
+        google.maps.event.trigger(map, 'resize');
+        map.panTo(new google.maps.LatLng(45.420833,-75.59));
+      });
         var mapOptions = { 
-          center: new google.maps.LatLng(45.420833,-75.69), 
+          center: new google.maps.LatLng(45.420833,-75.59), 
           zoom: 10, 
           mapTypeId: google.maps.MapTypeId.ROADMAP 
         };
