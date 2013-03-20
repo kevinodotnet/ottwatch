@@ -22,12 +22,19 @@ create table people (
 drop table if exists places;
 create table places (
   id mediumint not null auto_increment,
-  roadid int(11) not null,
+  /* if a specific POINT, or other geometry is availalbe, add it here */
+  shape geometry, 
+  /* when the place refers to a street address, link to the "road" via roads table, save specific numeral address here */
   rd_num mediumint not null,
+  roadid int(11), 
+  /* if place is associated with a person, link here */
   personid mediumint,
+  /* if place is associated with a meeting.ITEM, link here */
+  itemid mediumint(9),
   primary key (id),
   constraint foreign key (personid) references people (id) on delete cascade on update cascade,
   constraint foreign key (roadid) references roadways (OGR_FID) on delete cascade on update cascade
+  constraint foreign key (itemid) references item (id) on delete cascade on update cascade
 ) engine = innodb;
 create unique index places_in1 on places (roadid,rd_num,personid);
 

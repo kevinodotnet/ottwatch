@@ -48,17 +48,6 @@ class ApiController {
     
   }
 
-  public static function getLatLonFromPoint($text) {
-    # POINT(-75.74431034266786 45.38770326435866)
-    $matches = array();
-    $result = array();
-    if (preg_match("/POINT\(([^ ]+) ([^\)]+)\)/",$text,$matches)) {
-      $result['lat'] = $matches[2];
-      $result['lon'] = $matches[1];
-    }
-    return $result;
-  }
-
   public static function road($number,$name,$suff) {
     $result = array();
     $result['number'] = $number;
@@ -116,7 +105,7 @@ class ApiController {
     foreach ($row as $k => $v) {
       $result[$k] = $v;
     }
-    $midpoint = self::getLatLonFromPoint($row['midpoint']);
+    $midpoint = getLatLonFromPoint($row['midpoint']);
     unset($result['midpoint']); # = $midpoint;
     $points = self::getLinestringAsArray($row['points']);
     $result['points'] = $points;
@@ -282,7 +271,7 @@ google.maps.Polygon.prototype.getBounds = function() {
     $result['year'] = $year;
     $result['pollnum'] = $pollnum;
     $result['polygon'] = self::getPolygonAsArray($row['polygon']);
-    $result['center'] = self::getLatLonFromPoint($row['center']);
+    $result['center'] = getLatLonFromPoint($row['center']);
     return $result;
   }
 

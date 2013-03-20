@@ -268,4 +268,22 @@ function renderShareLinks($text,$url) {
   <?php
 }
 
+function getAddressLatLon($number,$name) {
+  $arg = "$number $name, Ottawa, Ontario";
+  $url = "http://maps.googleapis.com/maps/api/geocode/json?sensor=true&address=".urlencode($arg);
+  $result = json_decode(file_get_contents($url));
+  return $result;
+}
+
+  function getLatLonFromPoint($text) {
+    # POINT(-75.74431034266786 45.38770326435866)
+    $matches = array();
+    $result = array();
+    if (preg_match("/POINT\(([^ ]+) ([^\)]+)\)/",$text,$matches)) {
+      $result['lat'] = $matches[2];
+      $result['lon'] = $matches[1];
+    }
+    return $result;
+  }
+
 ?>

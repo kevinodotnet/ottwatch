@@ -103,6 +103,20 @@ class MeetingController {
     $items = getDatabase()->all(" select * from item where meetingid = :meetingid order by id ",array("meetingid"=>$m['id']));
     top($title . " on " . substr($m['starttime'],0,10));
 
+    # any places for this meeting?
+    $places = getDatabase()->all( " 
+      select 
+        concat(p.rd_num,' ', r.rd_name,' ',r.rd_suffix,' ',coalesce(r.rd_directi,'')) addr,
+        astext(p.shape) point,
+        i.itemid,
+        p.rd_num,
+        r.rd_name,
+        r.rd_suffix,
+        r.rd_directi
+      from places p
+        join roadways r on p.roadid = r.OGR_FID
+        join item i on p.itemid = i.id
+      where p.itemid in (select id from item where meetingid = :meetingid) ",array("meetingid"=>$m['id']));
     # LEFT hand navigation, items and files links
     ?>
 
@@ -162,6 +176,10 @@ class MeetingController {
     <div id="agendanav" style="overflow:scroll; height: 620px;">
     <?php
     foreach ($items as $i) {
+      if ($i['title'] == '') {
+        // ODD, parser is broken in some way; meh
+        continue;
+      }
       #print "<pre>"; print print_r($i); print "</pre>";
       print "<b><a href=\"javascript:focusOn('item',{$i['itemid']})\">{$i['title']}</a></b><br/>\n";
       $files = getDatabase()->all(" select * from ifile where itemid = :itemid order by id ",array("itemid"=>$i['id']));
@@ -180,10 +198,11 @@ class MeetingController {
     </div>
 
     <!-- column 2 -->
-    <div class="span8" style=" border: 0px; border-left: 1px solid #000000; height: 620px;"></iframe>
+    <div class="span8" style=" border: 0px; border-left: 1px solid #000000; height: 620px;">
 
     <ul id="tablist" class="nav nav-tabs">
     <li><a href="#tabagenda" data-toggle="tab">Agenda</a></li>
+    <li><a href="#tabmap" data-toggle="tab">Map</a></li>
     <li><a href="#tabcomments" data-toggle="tab">Comments</a></li>
     <li><a href="#tabdelegation" data-toggle="tab"><big><b>Public Delegations</b></big></a></li>
     <li><a href="#tababout" data-toggle="tab">About</a></li>
@@ -191,8 +210,56 @@ class MeetingController {
 
     <div id="tabcontent" class="tab-content">
 
-    <div class="tab-pane active in" id="tabagenda">
+    <div class="tab-pane fade" id="tabagenda">
     <iframe id="focusFrame" src="<?php print $focusFrameSrc; ?>" style="width: 100%; height: 600px; border: 0px;"></iframe>
+    </div><!-- /tab -->
+
+    <div class="tab-pane active in" id="tabmap">
+    <div id="map_canvas" style="width:100%; height:590px;">
+      <script>
+        var mapOptions = { 
+          center: new google.maps.LatLng(45.420833,-75.69), 
+          zoom: 10, 
+          mapTypeId: google.maps.MapTypeId.ROADMAP 
+        };
+        infowindow = new google.maps.InfoWindow({ content: '' });
+        map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
+        <?php
+        foreach ($places as $p) {
+          $title = '';
+          foreach ($items as $tempi) {
+            if ($tempi['itemid'] == $p['itemid']) {
+              $title = $tempi['title'];
+            }
+          }
+          # use anonymous functions so variable scope is not insane
+					# [addr] => 265 CARLING AVE 
+					# [point] => POINT(-75.6998273 45.4011291)
+					# [itemid] => 2399
+          $loc = getLatLonFromPoint($p['point']);
+          # print "<b><a href=\"javascript:focusOn('item',{$i['itemid']})\">{$i['title']}</a></b><br/>\n";
+          ?>
+          (function(){
+		        myLatlng = new google.maps.LatLng(<?php print $loc['lat']; ?>,<?php print $loc['lon']; ?>);
+			      marker = new google.maps.Marker({ position: myLatlng, map: map, title: '<?php print $p['addr']; ?>' }); 
+            google.maps.event.addListener(marker, 'click', (function(marker) {
+              return function() {
+                infowindow.setContent(
+			            '<div>' + 
+			            '<b><?php print $p['addr']; ?></b> ' + 
+		              '<a href="javascript:focusOn(\'item\',<?php print $p['itemid']; ?>)">(Goto Agenda)</a><br/>' +
+                  '<?php print $title; ?>' +
+			            '</div>'
+                );
+                infowindow.open(map, marker);
+              }
+            })(marker));
+          })();
+          <?php
+        }
+        ?>
+      </script>
+    </div>
     </div><!-- /tab -->
 
     <div class="tab-pane fade" id="tabcomments">
@@ -412,7 +479,7 @@ class MeetingController {
 
     # get agenda HTML
     $agenda = file_get_contents(self::getDocumentUrl($m['meetid'],'AGENDA')); 
-    #file_put_contents("agenda.html",$agenda);
+    file_put_contents("agenda.html",$agenda);
     #$agenda = file_get_contents("agenda.html");
 
     # charset issues
@@ -547,7 +614,7 @@ class MeetingController {
         array_push($spool,$line);
       }
 	  }
-
+    
     # purge existing files; not needed as delete ITEM cascades
     # getDatabase()->execute(" delete from ifile where itemid in (select id from item where meetingid = :id) ",array('id'=>$id));
 
@@ -557,6 +624,55 @@ class MeetingController {
 
 	  foreach ($items as $item) {
       print "  item:{$item['id']} title: {$item['title']}\n";
+
+      # look for references to addresses in the item title
+      $words = explode(" ",$item['title']);
+      for ($x = 0; $x < (count($words)-1); $x++) {
+        $number = $words[$x];
+        if (!preg_match("/\d+/",$number)) {
+         continue;
+        }
+        # try name=X=1 and also name="(x+1) (x+1)"
+        for ($y = 1; $y <= 2; $y++) {
+          $name = '';
+          for ($z = 0; $z < $y; $z++) {
+  	        $name .= $words[$x+1+$z]." ";
+          }
+          $name = trim($name);
+	        $roads = getDatabase()->all("
+	          select *
+			      from roadways 
+			      where 
+			        rd_name = upper(:name) 
+			        and (
+			          (:number % 2 = left_from % 2 and (:number between cast(left_from as unsigned) and cast(left_to as unsigned)))
+			          or (:number % 2 = left_from % 2 and (:number between cast(left_to as unsigned) and cast(left_from as unsigned)))
+			          or (:number % 2 = right_from % 2 and (:number between cast(right_from as unsigned) and cast(right_to as unsigned)))
+			          or (:number % 2 = right_from % 2 and (:number between cast(right_to as unsigned) and cast(right_from as unsigned)))
+			        )
+	          ",array(
+		          'number' => $number,
+		          'name' => $name
+	        ));
+	        if (count($roads) > 0) {
+            #TODO: what if match may? should probably disambituate based on suffix.
+            $road = $roads[0];
+	          print "[$x]: ".$words[$x]." -- ".$words[$x+1]." matched ".count($roads)." roads \n";
+				    $placeid = getDatabase()->execute(" insert into places (roadid,rd_num,itemid) values (:roadid,:rd_num,:itemid) ",array(
+				      'roadid' => $road['OGR_FID'],
+				      'rd_num' => $number,
+				      'itemid' => $item['id'],
+				    ));
+            $geo = getAddressLatLon($number,$name);
+            if ($geo->status == 'OK') {
+              $lat = $geo->results[0]->geometry->location->lat;
+              $lon = $geo->results[0]->geometry->location->lng;
+  				    getDatabase()->execute(" update places set shape = PointFromText('POINT($lon $lat)') where id = $placeid ");
+            }
+	        }
+        }
+      }
+
 	    $html = file_get_contents(self::getItemUrl($item['itemid']));
 		  $lines = explode("\n",$html);
 	    $files = array();
