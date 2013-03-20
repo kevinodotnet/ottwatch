@@ -210,11 +210,11 @@ class MeetingController {
 
     <div id="tabcontent" class="tab-content">
 
-    <div class="tab-pane fade" id="tabagenda">
+    <div class="tab-pane active in" id="tabagenda">
     <iframe id="focusFrame" src="<?php print $focusFrameSrc; ?>" style="width: 100%; height: 600px; border: 0px;"></iframe>
     </div><!-- /tab -->
 
-    <div class="tab-pane active in" id="tabmap">
+    <div class="tab-pane fade" id="tabmap">
     <div id="map_canvas" style="width:100%; height:590px;">
       <script>
         var mapOptions = { 
