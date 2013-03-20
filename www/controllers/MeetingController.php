@@ -33,6 +33,8 @@ class MeetingController {
   static public function getFileCacheUrl ($fileid) {
     # get the data
     $url = 'http://app05.ottawa.ca/sirepub/view.aspx?cabinet=published_meetings&fileid=' . $fileid;
+    header("Location: $url");
+    return;
     $data = file_get_contents($url);
     # <script>document.location = 'cache/2/lkwtpr5l2u0ppewlizialyuu/4692203012013020316562.PDF';</script>
     $data = preg_replace("/';.*/","",$data);
