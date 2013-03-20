@@ -648,4 +648,59 @@ class LobbyistController {
 	  return $response;
 	}
 
+  public static function tweetNewActivities() {
+
+    #setvar('lobbytweet.last','1362459600');
+
+    $last = getvar('lobbytweet.last');
+    if ($last == '') {
+      # defaulting now NOW
+      $last = time();
+    }
+    # update the touch time to NOW, even if we fail to tweet.
+    setvar('lobbytweet.last',time());
+
+    # find all the lobbying that has happened since LAST
+    $rows = getDatabase()->all("
+      select
+        *
+      from lobbying l
+        join lobbyfile f on f.id = l.lobbyfileid
+      where
+        l.created >= from_unixtime(:last)
+      order by 
+        l.created desc, l.id
+      ",array(
+      'last'=>$last
+    ));
+    # assemble a new list of tweets, key=url
+    $tweets = array();
+    foreach ($rows as $r) {
+
+#     [id] => 86
+#     [lobbyfileid] => 86
+#     [lobbydate] => 2013-03-06 00:00:00
+#     [activity] => Meeting
+#     [lobbied] => Smit, John : Mgr, Development Review - Urban
+#     [created] => 2013-03-06 00:00:00
+#     [lobbyist] => Alan Cohen
+#     [client] => Ferguslea Proerties Limited
+#     [issue] => Section 26 Review
+
+      $tweet = "Lobbying: {$r['lobbyist']} ({$r['client']}) {$r['issue']}";
+      $url = OttWatchConfig::WWW."/lobbying/files/".$r['lobbyfileid'];
+      $tweets[$url] = $tweet;
+    }
+    # keying by URL guarantees we don't double-tweet because of multiple new activities 
+    # on the same lobbyfile
+    foreach ($tweets as $url => $text) {
+      $tweet = tweet_txt_and_url($text,$url);
+      # allow duplicates because subsequent tweets about the same file
+      # will be the same, but spaced in time according to the lobbyist
+      # activity dates
+      tweet($tweet,1);
+    }
+    
+  }
+
 }

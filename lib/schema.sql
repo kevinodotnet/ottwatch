@@ -8,6 +8,13 @@
 -- 
 -- Then edit config-sample.php with appropriate values, and save it as config.php
 
+drop table if exists variable;
+create table variable (
+  name varchar(64) not null,
+  value longtext,
+  primary key (name)
+) engine = innodb;
+
 -- Combined "registered users" and "natural persons" table.
 drop table if exists people;
 create table people (

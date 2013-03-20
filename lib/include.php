@@ -275,6 +275,22 @@ function getAddressLatLon($number,$name) {
   return $result;
 }
 
+function getvar ($name) {
+  $row = getDatabase()->one(" select value from variable where name = :name ",array('name'=>$name));
+  if ($row['value']) {
+    return unserialize($row['value']);
+  }
+  return '';
+}
+
+function setvar ($name,$value) {
+  $serialized_value = serialize($value);
+  getDatabase()->execute(" insert into variable (name, value) values (:name,:value) on duplicate key update value = :value ",array(
+    'name' => $name,
+    'value' => $serialized_value
+  ));
+}
+
   function getLatLonFromPoint($text) {
     # POINT(-75.74431034266786 45.38770326435866)
     $matches = array();
