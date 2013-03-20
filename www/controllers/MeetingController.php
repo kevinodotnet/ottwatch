@@ -220,9 +220,15 @@ class MeetingController {
     <div id="map_canvas" style="width:100%; height:590px;">
       <script>
 
+      var firstResize = 1;
       $('a[data-toggle="tab"]').on('shown', function (e) {
-        google.maps.event.trigger(map, 'resize');
-        map.panTo(new google.maps.LatLng(45.420833,-75.59));
+        if (e.target.text == 'Map') {
+          if (firstResize == 1) {
+            google.maps.event.trigger(map, 'resize');
+            map.panTo(new google.maps.LatLng(45.420833,-75.59));
+            firstResize = 0;
+          }
+        }
       });
         var mapOptions = { 
           center: new google.maps.LatLng(45.420833,-75.59), 
