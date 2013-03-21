@@ -162,7 +162,11 @@ class DevelopmentAppController {
             '<b><a target="_blank" href="<?php print $url; ?>"><?php print $a['devid']; ?></a>: ' +
             '<?php print $a['apptype']; ?></b><br/>' +
             '<?php print $a['status']; ?><br/>' +
-            'Updated: <?php print strftime("%Y-%m-%d",strtotime($a['statusdate'])); ?>' +
+            'Updated: <?php print strftime("%Y-%m-%d",strtotime($a['statusdate'])); ?><br/>' +
+            '<br/>' +
+            '<i>' +
+            '<?php print $a['description']; ?>' +
+            '</i>' +
             '</div>';
 	        var infowindow<?php print $a['id']; ?> = new google.maps.InfoWindow({ content: contentString<?php print $a['id']; ?> });
 
