@@ -109,8 +109,12 @@ class DevelopmentAppController {
       <td><b><nobr><a href="<?php print $url; ?>"><?php print $a['devid']; ?></a></nobr></b><br/>
       <nobr><?php print strftime("%Y-%m-%d",strtotime($a['statusdate'])); ?> updated</nobr><br/>
       <nobr><?php print strftime("%Y-%m-%d",strtotime($a['receiveddate'])); ?> started</nobr></td>
-      <td><b><?php print $a['apptype']; ?></b><br/>
-      <?php print $a['status']; ?></td>
+      <td>
+      <b><?php print $a['apptype']; ?></b><br/>
+      <?php 
+      print "<i>".$a['status']."</i><br/>";
+      print $a['description'];
+      ?></td>
       <td>
       <?php
       $addr = json_decode($a['address']);
@@ -359,12 +363,16 @@ class DevelopmentAppController {
     $labels['date_received'] = strftime('%Y-%m-%d',strtotime($labels['Date Received']));
     unset($labels['Date Received']);
 
+    if (strlen($labels['Description']) > 2040) {
+      $labels['Description'] = substr($labels['Description'],2040);
+    }
+
     getDatabase()->execute(" delete from devapp where appid = :appid ",array("appid"=>$appid));
     $id = getDatabase()->execute(" 
       insert into devapp 
-      (address,appid,devid,ward,apptype,status,statusdate,receiveddate,created,updated)
+      (address,appid,devid,ward,apptype,status,statusdate,receiveddate,created,updated,description)
       values
-      (:address,:appid,:devid,:ward,:apptype,:status,:statusdate,:receiveddate,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP)",array(
+      (:address,:appid,:devid,:ward,:apptype,:status,:statusdate,:receiveddate,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP,:description)",array(
         'devid'=> $labels['Application #'],
         'address'=> json_encode($addresses),
         'appid'=> $appid,
@@ -373,6 +381,7 @@ class DevelopmentAppController {
         'status' => $labels['Review Status'],
         'statusdate' => $labels['status_date'],
         'receiveddate' =>$labels['date_received'],
+        'description' =>$labels['Description'],
     ));
 
     foreach ($files as $f) {
