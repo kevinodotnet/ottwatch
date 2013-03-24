@@ -1,7 +1,73 @@
 <?php
 
 class MeetingController {
- 
+
+  # new/updated meeting tweeter
+  static public function tweetNewMeetings() {
+
+    $last = getvar('meetingtweet.last');
+    if ($last == '') {
+      # defaulting now NOW
+      $last = time();
+    }
+
+    # update the touch time to NOW, even if we fail to tweet.
+    setvar('meetingtweet.last',time());
+
+    # find all meetings that have yet to happen, that have been updated
+    # since last tweet meetings run.
+    $rows = getDatabase()->all(" 
+      select * 
+      from meeting 
+      where 
+        updated >= from_unixtime(:last)
+        and starttime >= CURRENT_TIMESTAMP
+      order by created 
+      ",array( 'last'=>$last)); 
+
+    # assemble a new list of tweets, key=url
+    $tweets = array();
+    foreach ($rows as $r) {
+
+			# id] => 370
+			# rssguid] => 2477 City Council 2013-Mar-22 4:34:47 PM
+			# meetid] => 2477
+			# starttime] => 2013-03-27 10:00:00
+			# title] => City Council - 2013-Mar-27 10:00 am
+			# category] => City Council
+			# created] => 2013-03-24 13:25:33
+			# updated] => 2013-03-24 13:25:55
+			# contactName] => 
+			# contactEmail] => 
+			# contactPhone] => 
+			# members] =>j 
+
+      $title = $r['title'];
+		  $title = preg_replace("/ AM$/"," am",$title);
+		  $title = preg_replace("/ PM$/"," pm",$title);
+		  $title = preg_replace("/ am$/","am",$title);
+		  $title = preg_replace("/ pm$/","pm",$title);
+
+      $meetingDate = explode(" - ",$title);
+      $meetingDate = $meetingDate[1];
+    	$link = OttWatchConfig::WWW."/meetings/meetid/".$r['meetid'];
+      $tweet = "Meeting: ".meeting_category_to_title($r['category'])." on $meetingDate is updated";
+      $tweets[$link] = $tweet;
+
+    }
+
+    # keying by URL guarantees we don't double-tweet because of multiple new activities 
+    # on the same lobbyfile
+    foreach ($tweets as $url => $text) {
+      $tweet = tweet_txt_and_url($text,$url);
+      # allow duplicates because subsequent tweets about the same file
+      # will be the same, but spaced in time according to the lobbyist
+      # activity dates
+      tweet($tweet,1);
+    }
+    
+  }
+
   # trim file titles if they match the item title
   static public function trimFileTitle ($itemTitle,$fileTitle) {
     $o = $fileTitle;
@@ -508,7 +574,7 @@ class MeetingController {
 
     # get agenda HTML
     $agenda = file_get_contents(self::getDocumentUrl($m['meetid'],'AGENDA')); 
-    file_put_contents("agenda.html",$agenda);
+    #file_put_contents("agenda.html",$agenda);
     #$agenda = file_get_contents("agenda.html");
 
     # charset issues
