@@ -89,8 +89,14 @@ function tweet($tweet,$allowDup=0) {
   $accessToken = OttWatchConfig::TWITTER_ACCESS_TOKEN;
   $accessTokenSecret = OttWatchConfig::TWITTER_TOKEN_SECRET;
 
-  $twitter = new TwitterOAuth($consumerKey, $consumerSecret, $accessToken, $accessTokenSecret);
 	print "Sending... $tweet\n";
+
+  if ($consumerKey == '') {
+    # we are in debug mode, so silently discard
+    return 1;
+  }
+
+  $twitter = new TwitterOAuth($consumerKey, $consumerSecret, $accessToken, $accessTokenSecret);
   $twitter->post('statuses/update', array('status' => $tweet));
 	$code = $twitter->http_code;
 	if ($code == 200) {
