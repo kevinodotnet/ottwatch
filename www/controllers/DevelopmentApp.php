@@ -290,7 +290,7 @@ class DevelopmentAppController {
           $statusdate = $matches[1];
           $statusdate = strftime("%Y-%m-%d",strtotime($statusdate));
           $app = getDatabase()->one(" 
-            select devappid,date(max(statusdate)) statusdate from devappstatus where devappid = (select id from devapp where appid = :appid)
+            select devappid id,date(max(statusdate)) statusdate from devappstatus where devappid = (select id from devapp where appid = :appid)
             ",array("appid"=>$appid));
           $action = '';
           if ($app['id']) {
