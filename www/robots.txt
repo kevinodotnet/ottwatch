@@ -5,4 +5,5 @@ User-agent: *
 # caller. 2x data hit, and some files are big, so 
 # disallow
 Disallow: /meetings/file/
+Disallow: /api/
 
