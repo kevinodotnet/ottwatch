@@ -32,7 +32,7 @@ class DevelopmentAppController {
       $matchWhere = " ( ";
       $matchWhere .= " devid like '%$safe%' ";
       $matchWhere .= " or ward like '%$safe%' ";
-      $matchWhere .= " or status like '%$safe%' ";
+#      $matchWhere .= " or status like '%$safe%' ";
       $matchWhere .= " or address like '%$safe%' ";
       $matchWhere .= " ) and ";
     }
@@ -103,16 +103,21 @@ class DevelopmentAppController {
     <?php
     foreach ($apps as $a) {
       $url = self::getLinkToApp($a['appid']);
+
+      # double load for the status and date
+      $status = getDatabase()->one(" select max(id) id from devappstatus where devappid = :id ",array('id'=>$a['id']));
+      $status = getDatabase()->one(" select * from devappstatus where id = :id ",array('id'=>$status['id']));
+
       # $url = OttWatchConfig::WWW."/devapps/{$a['devid']}";
       ?>
       <tr>
       <td><b><nobr><a href="<?php print $url; ?>"><?php print $a['devid']; ?></a></nobr></b><br/>
-      <nobr><?php print strftime("%Y-%m-%d",strtotime($a['statusdate'])); ?> updated</nobr><br/>
+      <nobr><?php print strftime("%Y-%m-%d",strtotime($status['statusdate'])); ?> updated</nobr><br/>
       <nobr><?php print strftime("%Y-%m-%d",strtotime($a['receiveddate'])); ?> started</nobr></td>
       <td>
       <b><?php print $a['apptype']; ?></b><br/>
       <?php 
-      print "<i>".$a['status']."</i><br/>";
+      print "<i>".$status['status']."</i><br/>";
       print $a['description'];
       ?></td>
       <td>
@@ -149,6 +154,11 @@ class DevelopmentAppController {
 
         <?php
         foreach ($apps as $a) {
+
+		      # double load for the status and date
+		      $status = getDatabase()->one(" select max(id) id from devappstatus where devappid = :id ",array('id'=>$a['id']));
+		      $status = getDatabase()->one(" select * from devappstatus where id = :id ",array('id'=>$status['id']));
+
           $url = self::getLinkToApp($a['appid']);
           $addr = json_decode($a['address']);
           $addr = $addr[0];
@@ -161,8 +171,8 @@ class DevelopmentAppController {
             '<div>' + 
             '<b><a target="_blank" href="<?php print $url; ?>"><?php print $a['devid']; ?></a>: ' +
             '<?php print $a['apptype']; ?></b><br/>' +
-            '<?php print $a['status']; ?><br/>' +
-            'Updated: <?php print strftime("%Y-%m-%d",strtotime($a['statusdate'])); ?><br/>' +
+            '<?php print $status['status']; ?><br/>' +
+            'Updated: <?php print strftime("%Y-%m-%d",strtotime($status['statusdate'])); ?><br/>' +
             '<br/>' +
             '<i>' +
             '<?php print $a['description']; ?>' +
@@ -279,7 +289,9 @@ class DevelopmentAppController {
         if (preg_match('/<td class="subRowGray15">(.*)</',$l,$matches)) {
           $statusdate = $matches[1];
           $statusdate = strftime("%Y-%m-%d",strtotime($statusdate));
-          $app = getDatabase()->one(" select id,date(statusdate) statusdate from devapp where appid = :appid ",array("appid"=>$appid));
+          $app = getDatabase()->one(" 
+            select devappid,date(max(statusdate)) statusdate from devappstatus where devappid = (select id from devapp where appid = :appid)
+            ",array("appid"=>$appid));
           $action = '';
           if ($app['id']) {
             if ($app['statusdate'] != $statusdate) {
@@ -371,22 +383,54 @@ class DevelopmentAppController {
       $labels['Description'] = substr($labels['Description'],2040);
     }
 
-    getDatabase()->execute(" delete from devapp where appid = :appid ",array("appid"=>$appid));
-    $id = getDatabase()->execute(" 
-      insert into devapp 
-      (address,appid,devid,ward,apptype,status,statusdate,receiveddate,created,updated,description)
-      values
-      (:address,:appid,:devid,:ward,:apptype,:status,:statusdate,:receiveddate,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP,:description)",array(
-        'devid'=> $labels['Application #'],
-        'address'=> json_encode($addresses),
-        'appid'=> $appid,
-        'ward' => $labels['Ward'],
-        'apptype' => $labels['Application'],
+    $row = getDatabase()->one(" select * from devapp where appid = :appid ",array("appid"=>$appid));
+    if ($row['id']) {
+      print "...existing, updating\n";
+      $id = $row['id'];
+	    getDatabase()->execute(" 
+	      update devapp set 
+          address = :address,
+          updated = CURRENT_TIMESTAMP,
+          description = :description
+        where appid = :appid
+        ",array(
+	        'address'=> json_encode($addresses),
+	        'description' =>$labels['Description'],
+	        'appid'=> $appid,
+	    ));
+      try {
+	      getDatabase()->execute(" insert into devappstatus (devappid,status,statusdate) values (:devappid,:status,:statusdate) ",array(
+	        'devappid' => $id,
+	        'status' => $labels['Review Status'],
+	        'statusdate' => $labels['status_date'],
+	      ));
+      } catch (Exception $e) {
+        # duplicate key is expected
+        if (!preg_match('/devappstatus_in1/',$e)) {
+          throw($e);
+        }
+      }
+    } else {
+      print "...new, inserting\n";
+	    $id = getDatabase()->execute(" 
+	      insert into devapp 
+	      (address,appid,devid,ward,apptype,receiveddate,created,updated,description)
+	      values
+	      (:address,:appid,:devid,:ward,:apptype,:receiveddate,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP,:description)",array(
+	        'devid'=> $labels['Application #'],
+	        'address'=> json_encode($addresses),
+	        'appid'=> $appid,
+	        'ward' => $labels['Ward'],
+	        'apptype' => $labels['Application'],
+	        'receiveddate' =>$labels['date_received'],
+	        'description' =>$labels['Description'],
+	    ));
+      getDatabase()->execute(" insert into devappstatus (devappid,status,statusdate) values (:devappid,:status,:statusdate) ",array(
+        'devappid' => $id,
         'status' => $labels['Review Status'],
         'statusdate' => $labels['status_date'],
-        'receiveddate' =>$labels['date_received'],
-        'description' =>$labels['Description'],
-    ));
+      ));
+    }
 
     foreach ($files as $f) {
       getDatabase()->execute(" insert into devappfile (devappid,href,title,created,updated) values (:devappid,:href,:title,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP) ",array(

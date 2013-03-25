@@ -70,6 +70,7 @@ create table lobbying (
 create unique index lobbying_in1 on lobbying (lobbyfileid,lobbydate,activity,lobbied);
 
 drop table if exists devappfile;
+drop table if exists devappstatus;
 drop table if exists devapp;
 create table devapp (
   id mediumint not null auto_increment,
@@ -78,14 +79,21 @@ create table devapp (
   ward varchar(100),
   address varchar(2048), -- big because JSON encoded array of multiple addresses with lat/lon too
   apptype varchar(100),
-  status varchar(100),
   description varchar(2048),
-  statusdate datetime,
   receiveddate datetime,
   created datetime,
   updated datetime,
   primary key (id)
 ) engine = innodb;
+create table devappstatus (
+  id mediumint not null auto_increment,
+  devappid mediumint not null,
+  statusdate datetime,
+  status varchar(100),
+  primary key (id),
+  constraint foreign key (devappid) references devapp (id) on delete cascade on update cascade
+) engine = innodb;
+create unique index devappstatus_in1 on devappstatus (devappid,statusdate,status);
 create table devappfile (
   id mediumint not null auto_increment,
   devappid mediumint not null,

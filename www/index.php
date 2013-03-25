@@ -216,7 +216,6 @@ function dashboard() {
   <?php
   $count = getDatabase()->one(" select count(1) c from devapp ");
   $count = $count['c'];
-  $apps = getDatabase()->all(" select appid,devid,date(statusdate),apptype statusdate from devapp order by statusdate desc limit 1 ");
   $apps = getDatabase()->all(" select * from devapp order by updated desc limit 5 ");
   foreach ($apps as $a) {
     $url = DevelopmentAppController::getLinkToApp($a['appid']);
