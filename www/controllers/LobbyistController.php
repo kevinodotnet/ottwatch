@@ -45,7 +45,7 @@ class LobbyistController {
     #pr($rows);
     ?>
     <div class="row-fluid">
-    <div class="span12">
+    <div class="span6">
     <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
       <tr>
       <th>Date</th>
@@ -81,8 +81,15 @@ class LobbyistController {
     }
     ?>
     </table>
+    </div><!-- /span -->
+
+
+    <div class="span6">
+    <h1>Discus this lobbying!</h1>
+    <?php disqus(); ?>
     </div>
-    </div>
+
+    </div><!-- /row -->
 
     <?php
     bottom();
