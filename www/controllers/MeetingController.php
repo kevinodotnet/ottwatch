@@ -152,7 +152,11 @@ class MeetingController {
 
   static public function meetingDetails ($category,$meetid,$itemid) {
 
-    $m = getDatabase()->one(" select * from meeting where meetid = :meetid ",array("meetid" => $meetid));
+    $m = getDatabase()->one(" 
+      select 
+        *,
+        case when starttime <= date_sub(CURRENT_TIMESTAMP,interval 2 day) then 1 else 0 end as started
+      from meeting where meetid = :meetid ",array("meetid" => $meetid));
     if (!$m['id']) {
       # meeting ID was not found
       self::doList($category);
@@ -160,6 +164,8 @@ class MeetingController {
     }
 
     $focusFrameSrc = self::getDocumentUrl($meetid,'AGENDA');
+    $isStarted = $m['started'];
+    $summarySrc = self::getDocumentUrl($meetid,'SUMMARY');
     $title = meeting_category_to_title($m['category']);
     if ($itemid != '') {
       $item = getDatabase()->one(" select * from item where itemid = :itemid ",array("itemid"=>$itemid));
@@ -270,6 +276,9 @@ class MeetingController {
 
     <ul id="tablist" class="nav nav-tabs">
     <li><a href="#tabagenda" data-toggle="tab">Agenda</a></li>
+    <?php if ($isStarted) { ?>
+    <li><a href="#tabsummary" data-toggle="tab">Summary</a></li>
+    <?php } ?>
     <li><a href="#tabmap" data-toggle="tab">Map</a></li>
     <li><a href="#tabcomments" data-toggle="tab">Comments</a></li>
     <li><a href="#tabdelegation" data-toggle="tab"><big><b>Public Delegations</b></big></a></li>
@@ -280,6 +289,10 @@ class MeetingController {
 
     <div class="tab-pane active in" id="tabagenda">
     <iframe id="focusFrame" src="<?php print $focusFrameSrc; ?>" style="width: 100%; height: 600px; border: 0px;"></iframe>
+    </div><!-- /tab -->
+
+    <div class="tab-pane" id="tabsummary">
+    <iframe src="<?php print $summarySrc; ?>" style="width: 100%; height: 600px; border: 0px;"></iframe>
     </div><!-- /tab -->
 
     <div class="tab-pane" id="tabmap">
