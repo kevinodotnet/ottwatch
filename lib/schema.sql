@@ -90,6 +90,7 @@ create table devappstatus (
   devappid mediumint not null,
   statusdate datetime,
   status varchar(100),
+  created datetime default CURRENT_TIMESTAMP,
   primary key (id),
   constraint foreign key (devappid) references devapp (id) on delete cascade on update cascade
 ) engine = innodb;
