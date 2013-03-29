@@ -285,7 +285,6 @@ class DevelopmentAppController {
         if (preg_match('/appDetails.jsf.*appId=([^"]+)".*>(D[^ <]+)/',$l,$matches)) {
           $appid = $matches[1];
           $devid = $matches[2];
-					print "RAW appid: $appid devid: $devid\n";
         }
         if (preg_match('/<td class="subRowGray15">(.*)</',$l,$matches)) {
           $statusdate = $matches[1];
@@ -297,14 +296,12 @@ class DevelopmentAppController {
           if ($app['id']) {
             if ($app['statusdate'] != $statusdate) {
               $changed = 1;
-							print "FROM DATABASE for $appid on MY statusdate '$statusdate' for UPDATE:\n"; print print_r($app); print "\n";
+							print "page $p: FROM DATABASE for $appid / $devid on MY statusdate '$statusdate' for UPDATE:\n"; print print_r($app); print "\n";
               self::injestApplication($appid,'update');
-            } else {
-							print "FROM DATABASE for $appid on MY statusdate '$statusdate' for NOCHANGE:\n";
-						}
+            }
           } else {
             $changed = 1;
-						print "FROM DATABASE for $appid on MY statusdate '$statusdate' for INSERT\n"; print print_r($app); print "\n";
+						print "page $p: FROM DATABASE for $appid on MY statusdate '$statusdate' for INSERT\n"; print print_r($app); print "\n";
             self::injestApplication($appid,'insert');
           }
         }
@@ -312,7 +309,6 @@ class DevelopmentAppController {
       if (! $changed) {
         # nothing changed on this search results page;
         # no need to keep going on other serach pages
-				print "No changes on page $p, so existing\n";
         break;
       }
     }
