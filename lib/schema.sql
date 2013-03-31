@@ -181,6 +181,8 @@ insert into category values ('OBHAC','Ottawa Built Heritage Advisory Committee')
 insert into category values ('OTC','Transit Commission');
 insert into category values ('PLC','Planning Committee');
 insert into category values ('TRC','Transportation Committee');
+insert into category values ('ESAC','Environmental Stewardship Advisory Committee');
+insert into category values ('BHSC','Built Heritage Sub-Committee');
 
 create table electedofficials (
   id mediumint not null auto_increment,
