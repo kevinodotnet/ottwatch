@@ -56,6 +56,7 @@ getRoute()->get('/lobbyist/([^\/]*)', 'lobbyist'); # legacy REST location
 getRoute()->get('/devapps', array('DevelopmentAppController','listAll'));
 getRoute()->get('/devapps/([^\/]+)', array('DevelopmentAppController','viewDevApp'));
 
+getRoute()->get('/meetings/calendar', array('MeetingController','calendar'));
 getRoute()->get('/meetings/file/(\d+)', array('MeetingController','getFileCacheUrl'));
 getRoute()->get('/meetings', array('MeetingController','dolist')); // meetings
 getRoute()->get('/meetings/([^\/]*)', array('MeetingController','dolist')); // meetings/CATEGORY
