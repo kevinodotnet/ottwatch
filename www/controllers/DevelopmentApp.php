@@ -296,10 +296,12 @@ class DevelopmentAppController {
           if ($app['id']) {
             if ($app['statusdate'] != $statusdate) {
               $changed = 1;
+							print "page $p: FROM DATABASE for $appid / $devid on MY statusdate '$statusdate' for UPDATE:\n"; print print_r($app); print "\n";
               self::injestApplication($appid,'update');
             }
           } else {
             $changed = 1;
+						print "page $p: FROM DATABASE for $appid on MY statusdate '$statusdate' for INSERT\n"; print print_r($app); print "\n";
             self::injestApplication($appid,'insert');
           }
         }
@@ -406,6 +408,7 @@ class DevelopmentAppController {
 	      ));
       } catch (Exception $e) {
         # duplicate key is expected
+				$action = 'notweet';
         if (!preg_match('/devappstatus_in1/',$e)) {
           throw($e);
         }
@@ -457,14 +460,15 @@ class DevelopmentAppController {
     } else if ($action == 'update') {
       $tweet = "Updated {$labels['Application']}: ".$addr." {$labels['Application #']} in $ward";
     } else {
+			print "action: $action so no tweeeting\n";
 			# no tweeting!
 			return;
 		}
 
 		# allow dups because a devapp will be updated multiple times
     $newtweet = tweet_txt_and_url($tweet,$url);
-		print "$newtweet\n";
-		tweet($newtweet,1);
+		print "SKIPPING tweet: $newtweet\n";
+		#tweet($newtweet,1);
   }
 
   static function suckToNextDiv ($lines,$x) {
