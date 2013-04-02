@@ -65,7 +65,7 @@ foreach ($items as $i) {
   $mdb = getDatabase()->one('select id,rssguid from meeting where meetid = :meetid ', array(':meetid' => $meetid));
   $meetingid = $mdb['id'];
   if ($mdb['id']) {
-    print "$meetid has changed guid\n";
+    print "$category ($meetid) has changed guid\n";
     # meeting has changed guid, so needs rescraping.
 	  getDatabase()->execute(' 
       update meeting set 
@@ -77,7 +77,7 @@ foreach ($items as $i) {
     ));
   } else {
     # meeting has never been seen before
-    print "$meetid is new\n";
+    print "$category ($meetid) is new\n";
 	  $meetingid = getDatabase()->execute('
 			insert into meeting (rssguid,meetid,title,category,starttime,created,updated) 
 			values (:rssguid,:meetid,:title,:category,:starttime,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP); ', array(
