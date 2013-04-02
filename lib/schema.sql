@@ -195,3 +195,25 @@ create table electedofficials (
   primary key (id)
 ) engine = innodb;
 
+drop table permit;
+create table permit (
+  id mediumint not null auto_increment,
+  st_num varchar(20),
+  st_name varchar(100),
+  postal varchar(7),
+  ward tinyint,
+  plan_num varchar(30),
+  lot_num varchar(30),
+  contractor varchar(200),
+  building_type varchar(200),
+  description varchar(1024),
+  du mediumint,
+  value int,
+  area mediumint,
+  permit_number mediumint,
+  app_type varchar(100),
+  issued_date date,
+  created datetime default CURRENT_TIMESTAMP,
+  primary key (id)
+) engine = innodb;
+
