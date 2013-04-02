@@ -5,7 +5,7 @@ define('DATE_ICAL', 'Ymd\THis\Z');
 class MeetingController {
 
   static public function calendar () {
-	print "BEGIN: VCALENDAR\r\n";
+	print "BEGIN:VCALENDAR\r\n";
 	print "VERSION:2.0\r\n";
 	print "PRODID:-//OttWatch//NONSGML OttWatch//EN\r\n";
   $rows = getDatabase()->all(" select * from meeting order by starttime desc ");
@@ -18,7 +18,7 @@ class MeetingController {
     print "SUMMARY:$title\r\n";
     print "END:VEVENT\r\n";
   }
-		print "END: VCALENDAR\r\n";
+		print "END:VCALENDAR\r\n";
     return;
   }
 
