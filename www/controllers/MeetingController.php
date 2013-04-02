@@ -1,6 +1,30 @@
 <?php
 
+define('DATE_ICAL', 'Ymd\THis\Z');
+
 class MeetingController {
+
+  static public function calendar () {
+?>
+BEGIN: VCALENDAR
+VERSION:2.0
+PRODID:1239872340
+<?php
+  $rows = getDatabase()->all(" select * from meeting order by starttime desc ");
+  foreach ($rows as $r) {
+   	$link = OttWatchConfig::WWW."/meetings/meetid/".$r['meetid'];
+    $title = meeting_category_to_title($r['category']);
+    print "BEGIN:VEVENT\n";
+    print "DTSTAMP:".date(DATE_ICAL, strtotime($r['starttime']))."\n";
+    print "UID:{$r['meetid']}\n";
+    print "SUMMARY:$title\n";
+    print "END:VEVENT\n";
+  }
+?>
+END: VCALENDAR
+<?php
+    return;
+  }
 
   # new/updated meeting tweeter
   static public function tweetNewMeetings() {
