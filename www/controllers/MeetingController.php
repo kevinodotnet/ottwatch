@@ -5,24 +5,20 @@ define('DATE_ICAL', 'Ymd\THis\Z');
 class MeetingController {
 
   static public function calendar () {
-?>
-BEGIN: VCALENDAR
-VERSION:2.0
-PRODID:-//OttWatch//NONSGML OttWatch//EN
-<?php
+	print "BEGIN: VCALENDAR\r\n";
+	print "VERSION:2.0\r\n";
+	print "PRODID:-//OttWatch//NONSGML OttWatch//EN\r\n";
   $rows = getDatabase()->all(" select * from meeting order by starttime desc ");
   foreach ($rows as $r) {
    	$link = OttWatchConfig::WWW."/meetings/meetid/".$r['meetid'];
     $title = meeting_category_to_title($r['category']);
-    print "BEGIN:VEVENT\n";
-    print "DTSTAMP:".date(DATE_ICAL, strtotime($r['starttime']))."\n";
-    print "UID:{$r['meetid']}\n";
-    print "SUMMARY:$title\n";
-    print "END:VEVENT\n";
+    print "BEGIN:VEVENT\r\n";
+    print "DTSTAMP:".date(DATE_ICAL, strtotime($r['starttime']))."\r\n";
+    print "UID:{$r['meetid']}\r\n";
+    print "SUMMARY:$title\r\n";
+    print "END:VEVENT\r\n";
   }
-?>
-END: VCALENDAR
-<?php
+		print "END: VCALENDAR\r\n";
     return;
   }
 
