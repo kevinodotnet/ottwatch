@@ -8,7 +8,7 @@ class MeetingController {
 ?>
 BEGIN: VCALENDAR
 VERSION:2.0
-PRODID:1239872340
+PRODID:-//OttWatch//NONSGML OttWatch//EN
 <?php
   $rows = getDatabase()->all(" select * from meeting order by starttime desc ");
   foreach ($rows as $r) {
