@@ -11,7 +11,7 @@ if (1) {
   set_include_path(get_include_path() . PATH_SEPARATOR . "$base/lib");
   set_include_path(get_include_path() . PATH_SEPARATOR . "$base/www");
   set_include_path(get_include_path() . PATH_SEPARATOR . "$base/www/epiphany/src");
-  set_include_path(get_include_path() . PATH_SEPARATOR . "$base/phpexcel/Classes");
+  set_include_path(get_include_path() . PATH_SEPARATOR . "$base/lib/phpexcel");
 
 	include_once 'bitly.php';
 	include_once 'Epi.php';
