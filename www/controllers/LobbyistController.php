@@ -85,7 +85,7 @@ class LobbyistController {
 
 
     <div class="span6">
-    <h1>Discus this lobbying!</h1>
+    <h1>Discuss this lobbying!</h1>
     <?php disqus(); ?>
     </div>
 
