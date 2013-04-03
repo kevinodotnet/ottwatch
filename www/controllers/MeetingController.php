@@ -9,7 +9,7 @@ class MeetingController {
 		top();
 ?>
 <iframe 
-	src="https://www.google.com/calendar/embed?height=600&amp;wkst=1&amp;bgcolor=%23FFFFFF&amp;src=cereh4hjdjfg99pmur7bkffcg9k83pnh%40import.calendar.google.com&amp;color=%235229A3&amp;ctz=America%2FMontreal" style=" border-width:0 " width="800" height="600" frameborder="0" scrolling="no"></iframe>
+	src="https://www.google.com/calendar/embed?height=600&amp;wkst=1&amp;bgcolor=%23FFFFFF&amp;src=cereh4hjdjfg99pmur7bkffcg9k83pnh%40import.calendar.google.com&amp;color=%235229A3&amp;ctz=America%2FMontreal" style=" border-width:0" width="100%" height="600" frameborder="0" scrolling="no"></iframe>
 <?php
 		bottom();
 	}

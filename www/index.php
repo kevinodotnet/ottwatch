@@ -154,7 +154,8 @@ function dashboard() {
   ?>
   <tr>
   <td colspan="3">
-  <a href="<?php print $OTT_WWW; ?>/meetings/all">See all meetings</a>
+  <a class="btn-mini btn" href="<?php print $OTT_WWW; ?>/meetings/all"><i class="icon-list"></i> All Meetings</a>
+  <a class="btn-mini btn" href="<?php print $OTT_WWW; ?>/meetings/calendar"><i class="icon-calendar"></i> Calendar</a>
   </td>
   </tr>
   </table>
