@@ -1,20 +1,27 @@
 <?php
 
-define('DATE_ICAL', 'Ymd\THis\Z');
+#define('DATE_ICAL', 'Ymd\THis\Z');
+define('DATE_ICAL', 'Ymd\THis');
 
 class MeetingController {
 
   static public function calendar () {
+	header('Content-type: text/calendar; charset=utf-8');
+	header('Content-Disposition: inline; filename=ottwatch.ics');
 	print "BEGIN:VCALENDAR\r\n";
 	print "VERSION:2.0\r\n";
 	print "PRODID:-//OttWatch//NONSGML OttWatch//EN\r\n";
-  $rows = getDatabase()->all(" select * from meeting order by starttime desc ");
+  $rows = getDatabase()->all(" select meetid,category,(starttime + interval 4 hour) starttime,(starttime + interval 5 hour) endtime from meeting order by starttime desc ");
   foreach ($rows as $r) {
    	$link = OttWatchConfig::WWW."/meetings/meetid/".$r['meetid'];
     $title = meeting_category_to_title($r['category']);
     print "BEGIN:VEVENT\r\n";
     print "DTSTAMP:".date(DATE_ICAL, strtotime($r['starttime']))."\r\n";
-    print "UID:{$r['meetid']}\r\n";
+    print "DTSTART:".date(DATE_ICAL, strtotime($r['starttime']))."\r\n";
+    print "DTEND:".date(DATE_ICAL, strtotime($r['endtime']))."\r\n";
+    print "UID:{$r['meetid']}@ottwatch.ca\r\n";
+    print "DESCRIPTION:$link\r\n";
+    print "URL:$link\r\n";
     print "SUMMARY:$title\r\n";
     print "END:VEVENT\r\n";
   }
