@@ -175,7 +175,7 @@ class DevelopmentAppController {
             'Updated: <?php print strftime("%Y-%m-%d",strtotime($status['statusdate'])); ?><br/>' +
             '<br/>' +
             '<i>' +
-            '<?php print htmlentities($a['description']); ?>' +
+            '<?php print preg_replace("/'/",'"',$a['description']); ?>' +
             '</i>' +
             '</div>';
 	        var infowindow<?php print $a['id']; ?> = new google.maps.InfoWindow({ content: contentString<?php print $a['id']; ?> });
