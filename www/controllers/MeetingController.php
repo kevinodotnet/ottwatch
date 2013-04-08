@@ -449,7 +449,7 @@ class MeetingController {
       </tr>
       <?php
     }
-    $mailto = "mailto:".implode(",",$emails)."?Subject={$title} on ".substr($m['starttime'],0,10);
+    $cmtmailto = "mailto:".implode(",",$emails)."?Subject={$title} on ".substr($m['starttime'],0,10);
     ?>
     </table>
     <?php
@@ -460,7 +460,7 @@ class MeetingController {
     ?>
     <h3>Send Your Thoughts</h3>
     <p>Want to contact the meeting members? Here's two easy ways:</p>
-    <blockquote><a target="_blank" href="<?php print $mailto; ?>">Click on this convenient MAILTO link</a>.</blockquote>
+    <blockquote><a target="_blank" href="<?php print $cmtmailto; ?>">Click on this convenient MAILTO link</a>.</blockquote>
     <p>Cut and paste these email addresses into your email program:</p>
     <blockquote><?php print implode("<br/>",$emails); ?></blockquote>
     </div>
@@ -500,7 +500,7 @@ class MeetingController {
 	    <?php 
     }
     ?>
-    <p>Click here to <a href="<?php print $mailto; ?>">email the councillors directly</a>. Here is their full contact information:</p>
+    <p>Click here to <a href="<?php print $cmtmailto; ?>">email the councillors directly</a>. Here is their full contact information:</p>
 
     <?php print $membersTable; ?>
 
