@@ -134,10 +134,23 @@ class MeetingController {
   # for a given fileid, resolve the "cache" trick, then proxy download the real PDF
   static public function getFileCacheUrl ($fileid) {
     # get the data
-    $url = 'http://app05.ottawa.ca/sirepub/view.aspx?cabinet=published_meetings&fileid=' . $fileid;
-    $data = file_get_contents($url);
+    $curl = 'http://app05.ottawa.ca/sirepub/view.aspx?cabinet=published_meetings&fileid=' . $fileid;
+    $odata = file_get_contents($curl);
+    if (!preg_match('/script/',$odata)) {
+      ?>
+      <center>
+      <h1>Error</h1>
+      The file is not currently accessible due to an error on ottawa.ca
+      <p/>
+      Please try again later
+      </center>
+      <?php
+      return;
+    }
+    print "is avail\n";
+    return;
     # <script>document.location = 'cache/2/lkwtpr5l2u0ppewlizialyuu/4692203012013020316562.PDF';</script>
-    $data = preg_replace("/';.*/","",$data);
+    $data = preg_replace("/';.*/","",$odata);
     $data = preg_replace("/.*'/","",$data);
     $url = "http://app05.ottawa.ca/sirepub/$data";
     header("Location: $url");
