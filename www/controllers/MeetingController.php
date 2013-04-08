@@ -147,8 +147,6 @@ class MeetingController {
       <?php
       return;
     }
-    print "is avail\n";
-    return;
     # <script>document.location = 'cache/2/lkwtpr5l2u0ppewlizialyuu/4692203012013020316562.PDF';</script>
     $data = preg_replace("/';.*/","",$odata);
     $data = preg_replace("/.*'/","",$data);
