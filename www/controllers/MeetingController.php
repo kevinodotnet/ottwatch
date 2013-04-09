@@ -449,7 +449,7 @@ class MeetingController {
       </tr>
       <?php
     }
-    $cmtmailto = "mailto:".implode(",",$emails)."?Subject={$title} on ".substr($m['starttime'],0,10);
+    $cmtmailto = "mailto:".implode(",",$emails)."?Subject={$m['title']} on ".substr($m['starttime'],0,10);
     ?>
     </table>
     <?php
