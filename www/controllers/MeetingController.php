@@ -630,6 +630,10 @@ class MeetingController {
       return; 
     }
 
+    # detect 'diff' in items/files
+    $orig_items = getDatabase()->all(" select * from item where meetingid = $id ");
+    $orig_files = getDatabase()->all(" select * from ifile where itemid in (select id from item where meetingid = $id) ");
+
     print "downloadAndParseMeeting for meeting:$id\n";
 
     # get agenda HTML
@@ -853,6 +857,42 @@ class MeetingController {
 		    }
 		  }
 	  }
+
+
+    # detect 'diff' in items/files
+    $now_items = getDatabase()->all(" select * from item where meetingid = $id ");
+    $now_files = getDatabase()->all(" select * from ifile where itemid in (select id from item where meetingid = $id) ");
+
+    $origitemids = array();
+    foreach ($orig_items as $i) { $origitemids[] = $i['itemid']; }
+    $nowitemids = array();
+    foreach ($now_items as $i) { $nowitemids[] = $i['itemid']; }
+
+    $title = $m['title'];
+	  $title = preg_replace("/ AM$/"," am",$title);
+	  $title = preg_replace("/ PM$/"," pm",$title);
+	  $title = preg_replace("/ am$/","am",$title);
+	  $title = preg_replace("/ pm$/","pm",$title);
+    $meetingDate = explode(" - ",$title);
+    $meetingDate = $meetingDate[1];
+
+    if (count($origitemids) > 0) {
+      # not a "new" meeting
+	    $newitems = array_diff($nowitemids,$origitemids);
+	    if (count($newitems) > 0) {
+        foreach ($newitems as $n) {
+          $row = getDatabase()->one(" select * from item where itemid = $n ");
+          if ($row['id']) {
+            $title = $row['title'];
+            $itemid = $row['itemid'];
+            $tweet = "New mtg item: {$row['title']} - ".meeting_category_to_title($m['category'])." on $meetingDate";
+          	$link = OttWatchConfig::WWW."/meetings/meetid/".$m['meetid'];
+            $tweet = tweet_txt_and_url($tweet,$link);
+            tweet($tweet,1);
+          }
+        }
+	    }
+    }
 
   }
 
