@@ -467,8 +467,8 @@ class DevelopmentAppController {
 
 		# allow dups because a devapp will be updated multiple times
     $newtweet = tweet_txt_and_url($tweet,$url);
-		print "SKIPPING tweet: $newtweet\n";
-		#tweet($newtweet,1);
+		#print "SKIPPING tweet: $newtweet\n";
+		tweet($newtweet,1);
   }
 
   static function suckToNextDiv ($lines,$x) {
