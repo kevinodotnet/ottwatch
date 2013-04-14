@@ -23,7 +23,6 @@ class ApiController {
       $row['statuses'][] = $d;
     }
     unset($row['id']);
-    pr($row);
     return $row;
   }
 
