@@ -29,6 +29,9 @@ getApi()->get('/api/committees', array('ApiController', 'committees'), EpiApi::e
 getApi()->get('/api/councillors/(\d+)', array('ApiController', 'councillorById'), EpiApi::external);
 getApi()->get('/api/councillors/([^/]+)/(.*)', array('ApiController', 'councillorByName'), EpiApi::external);
 
+getApi()->get('/api/devapps/all', array('ApiController', 'devAppAll'), EpiApi::external);
+getApi()->get('/api/devapps/([D_].*)', array('ApiController', 'devApp'), EpiApi::external);
+
 getRoute()->get('/', 'dashboard');
 getRoute()->get('/about', 'about');
 getRoute()->get('/ideas', 'ideas');
