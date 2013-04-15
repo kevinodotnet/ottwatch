@@ -10,9 +10,60 @@ class DevelopmentAppController {
       bottom();
       return;
     }
-    top();
+    top($a['devid'] . " - ". $a['apptype'] . " - " . $a['appid']);
 
-    pr($a);
+    #$a['ward'] = preg_replace("/Ward /","",$a['ward']);
+    #$a['ward'] = preg_replace("/ .*/","",$a['ward']);
+    $a['address'] = json_decode($a['address']);
+
+    ?>
+    <h1><?php print $a['devid']; ?></h1>
+
+    <div class="row-fluid">
+    <div class="span6">
+    <p>
+    <b><?php print $a['apptype']; ?></b>: <?php print $a['description']; ?>
+    </p>
+    <p>
+    <a target="_new" href="<?php print self::getLinkToApp($a['appid']); ?>"><i class="icon-share-alt"></i> View application and associated documents on ottawa.ca</a>
+    </p>
+    </div>
+    </div>
+    <div class="row-fluid">
+
+    <div class="span6">
+    <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
+    <tr><td>Ward</td><td><?php print $a['ward']; ?></td></tr>
+    <tr><td>Received</td><td><?php print $a['receiveddate']; ?></td></tr>
+    <tr><td>Updated</td><td><?php print $a['updated']; ?></td></tr>
+    <tr><td>Addresses</td><td>
+    <?php 
+    foreach ($a['address'] as $addr) {
+      print $addr->addr;
+      print "<br/>\n";
+    }
+    ?>
+    </td></tr>
+    <tr>
+    <th style="text-align: center;">Date</th>
+    <th style="text-align: center;">Status</th>
+    </tr>
+    <?php
+    $dates = getDatabase()->all(" select date(statusdate) statusdate,status from devappstatus where devappid = :id ",array('id'=>$a['id']));
+    foreach ($dates as $d) {
+      ?>
+      <tr>
+      <td><?php print $d['statusdate']; ?></td>
+      <td><?php print $d['status']; ?></td>
+      </tr>
+      <?php
+    }
+    ?>
+    </table>
+    </div>
+
+    </div><!-- row -->
+    <?php
 
     bottom();
   }
@@ -102,7 +153,8 @@ class DevelopmentAppController {
     </tr>
     <?php
     foreach ($apps as $a) {
-      $url = self::getLinkToApp($a['appid']);
+      # $url = self::getLinkToApp($a['appid']);
+      $url = OttWatchConfig::WWW . "/devapps/{$a['devid']}"; # self::getLinkToApp($a['appid']);
 
       # double load for the status and date
       $status = getDatabase()->one(" select max(id) id from devappstatus where devappid = :id ",array('id'=>$a['id']));
@@ -159,7 +211,8 @@ class DevelopmentAppController {
 		      $status = getDatabase()->one(" select max(id) id from devappstatus where devappid = :id ",array('id'=>$a['id']));
 		      $status = getDatabase()->one(" select * from devappstatus where id = :id ",array('id'=>$status['id']));
 
-          $url = self::getLinkToApp($a['appid']);
+          # $url = self::getLinkToApp($a['appid']);
+          $url = OttWatchConfig::WWW . "/devapps/{$a['devid']}"; # self::getLinkToApp($a['appid']);
           $addr = json_decode($a['address']);
           $addr = $addr[0];
           if (count($addr) == 0) {
@@ -452,6 +505,7 @@ class DevelopmentAppController {
     $ward = "{$ward[0]}, {$ward[1]}";
 
     $url = "http://app01.ottawa.ca/postingplans/appDetails.jsf?lang=en&appId=$appid";
+    $url = OttWatchConfig::WWW . "/devapps/{$labels['Application #']}"; # self::getLinkToApp($a['appid']);
 
 		$addr = '';
 		if (count($addresses) > 0) {

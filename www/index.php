@@ -224,7 +224,8 @@ function dashboard() {
   $count = $count['c'];
   $apps = getDatabase()->all(" select * from devapp order by updated desc limit 5 ");
   foreach ($apps as $a) {
-    $url = DevelopmentAppController::getLinkToApp($a['appid']);
+    # $url = DevelopmentAppController::getLinkToApp($a['appid']);
+    $url = OttWatchConfig::WWW."/devapps/{$a['devid']}"; # DevelopmentAppController::getLinkToApp($a['appid']);
     $addr = json_decode($a['address']);
     $addrcount = count($addr);
     $addr = $addr[0];
