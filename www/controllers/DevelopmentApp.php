@@ -27,11 +27,7 @@ class DevelopmentAppController {
     <p>
     <a target="_new" href="<?php print self::getLinkToApp($a['appid']); ?>"><i class="icon-share-alt"></i> View application and associated documents on ottawa.ca</a>
     </p>
-    </div>
-    </div>
-    <div class="row-fluid">
 
-    <div class="span6">
     <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
     <tr><td>Ward</td><td><?php print $a['ward']; ?></td></tr>
     <tr><td>Received</td><td><?php print $a['receiveddate']; ?></td></tr>
@@ -61,6 +57,29 @@ class DevelopmentAppController {
     ?>
     </table>
     </div>
+
+    <?php
+    $a = $a['address'];
+    if ($a && count($a>0)) {
+      $a = $a[0];
+    ?>
+    <div class="span6">
+    <div id="map_canvas" style="width:100%; height:600px;"></div>
+    <script>
+      $(document).ready(function() {
+        var mapOptions = { 
+          center: new google.maps.LatLng(45.420833,-75.69), 
+          zoom: 16, 
+          mapTypeId: google.maps.MapTypeId.ROADMAP 
+        };
+        map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
+        var myLatlng = new google.maps.LatLng(<?php print $a->lat; ?>,<?php print $a->lon; ?>);
+        var marker = new google.maps.Marker({ position: myLatlng, map: map, title: '<?php print "FOO"; ?>' }); 
+        map.panTo(myLatlng);
+      });
+    </script>
+    </div>
+    <?php } ?>
 
     </div><!-- row -->
     <?php
