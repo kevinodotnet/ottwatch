@@ -49,7 +49,7 @@ class DevelopmentAppController {
     <th style="text-align: center;">Status</th>
     </tr>
     <?php
-    $dates = getDatabase()->all(" select date(statusdate) statusdate,status from devappstatus where devappid = :id ",array('id'=>$a['id']));
+    $dates = getDatabase()->all(" select date(statusdate) statusdate,status from devappstatus where devappid = :id order by statusdate desc ",array('id'=>$a['id']));
     foreach ($dates as $d) {
       ?>
       <tr>
