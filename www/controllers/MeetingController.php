@@ -1004,10 +1004,10 @@ class MeetingController {
 
       $votes = simplexml_load_string($votes->asXML()); # xpath doesn't scope to children or something? workaround by re-parsing
       $attendees = $votes->xpath("//td[@class='attendee']"); 
-      $votefors = $votes->xpath("//td[@class='votefor']");
+      $votefors = $votes->xpath("//td[@class='votefor' or @class='voteabsent' or @class='voteagainst']");
       if (count($attendees) != count($votefors)) {
         # should not be possible.
-        print "attendees/votefors does not match; should not happen\n";
+        print "\n\nERROR: attendees/votefors does not match; should not happen\n\n";
         return;
       }
       for ($x = 0; $x < count($attendees); $x ++) {
