@@ -835,6 +835,7 @@ class MeetingController {
       }
 
 	    $html = file_get_contents(self::getItemUrl($item['itemid']));
+      self::parseVotingResults($item,$html);
 		  $lines = explode("\n",$html);
 	    $files = array();
 		  foreach ($lines as $line) {
@@ -952,6 +953,82 @@ class MeetingController {
         ));
         $docoffset ++;
       }
+    }
+
+  }
+
+  public function parseVotingResults($item,$html) {
+
+    if (preg_match('/Item not found/',$html)) {
+      return;
+    }
+    if (preg_match('/No voting recorded/',$html)) {
+      # nada!
+      return;
+    }
+
+    # scope HTML to the voting results block.
+    $html = preg_replace("/&nbsp;/"," ",$html);
+    $html = preg_replace("/<br>/","\n",$html);
+    $html = preg_replace("/\r/","",$html);
+    $html = preg_replace("/\n/"," ",$html);
+    $html = preg_replace('/.*<table id="MotionVotesResultsTable"/',"<table ",$html);
+    $html = preg_replace('/<table id="Table1".*/','',$html);
+
+    $xml = simplexml_load_string($html);
+    if (!is_object($xml)) {
+      print "Error creating voting snippet\n";
+      return;
+    }
+
+    # now XPATH and tease out the votes
+    $tblVotes = array_shift($xml->xpath("//table[@id='tblVotes']"));
+    $trs = $tblVotes->xpath("tr");
+    while (count($trs) > 0) {
+
+      $vote = array();
+      $vote['motion'] = '';
+      $vote['votes'] = array();
+
+      # eat "<tr>" two at a time
+      $what = array_shift($trs);
+      $votes = array_shift($trs);
+
+      $what = $what->asXML();
+      $what = preg_replace('/<span.*<\/span>/','',$what); # remove "passed/failed" text from motion text
+      $motion = trim(strip_tags($what));
+      $motion = preg_replace('/  /',' ',$motion);
+      $motion = preg_replace('/  /',' ',$motion);
+      $motion = preg_replace('/  /',' ',$motion);
+      $vote['motion'] = $motion;
+
+      $votes = simplexml_load_string($votes->asXML()); # xpath doesn't scope to children or something? workaround by re-parsing
+      $attendees = $votes->xpath("//td[@class='attendee']"); 
+      $votefors = $votes->xpath("//td[@class='votefor']");
+      if (count($attendees) != count($votefors)) {
+        # should not be possible.
+        print "attendees/votefors does not match; should not happen\n";
+        return;
+      }
+      for ($x = 0; $x < count($attendees); $x ++) {
+        $who = trim($attendees[$x]);
+        $votefor = trim($votefors[$x]);
+        array_push($vote['votes'],array('name'=>$who,'voted'=>$votefor));
+      }
+
+      # TODO: do something with this vote
+
+      print "\n";
+      print "\tMOTION :: $motion\n";
+      foreach ($vote['votes'] as $v) {
+        print "\t\t{$v['voted']} :: {$v['name']}\n";
+      }
+      print "\n";
+
+      #print "\n\n";
+      #pr($vote);
+      #print "\n\n";
+
     }
 
   }
