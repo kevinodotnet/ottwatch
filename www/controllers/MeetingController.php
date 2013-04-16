@@ -430,7 +430,9 @@ class MeetingController {
       </tr>
     <?php
     $members = $m['members'];
-    if ($members != '') {
+    if ($m['category'] == 'City Council') {
+      $rows = getDatabase()->all(" select * from electedofficials ");
+    } else if ($members != '') {
       $members = json_decode($members);
       $rows = getDatabase()->all(" select * from electedofficials where id in (".implode(",",$members).") ");
     } else {
@@ -629,6 +631,10 @@ class MeetingController {
       print "downloadAndParseMeeting for $id :: NOT FOUDN\n";
       return; 
     }
+
+    # detect 'diff' in items/files
+    $orig_items = getDatabase()->all(" select * from item where meetingid = $id ");
+    $orig_files = getDatabase()->all(" select * from ifile where itemid in (select id from item where meetingid = $id) ");
 
     print "downloadAndParseMeeting for meeting:$id\n";
 
@@ -829,6 +835,7 @@ class MeetingController {
       }
 
 	    $html = file_get_contents(self::getItemUrl($item['itemid']));
+      self::parseVotingResults($item,$html);
 		  $lines = explode("\n",$html);
 	    $files = array();
 		  foreach ($lines as $line) {
@@ -853,6 +860,42 @@ class MeetingController {
 		    }
 		  }
 	  }
+
+
+    # detect 'diff' in items/files
+    $now_items = getDatabase()->all(" select * from item where meetingid = $id ");
+    $now_files = getDatabase()->all(" select * from ifile where itemid in (select id from item where meetingid = $id) ");
+
+    $origitemids = array();
+    foreach ($orig_items as $i) { $origitemids[] = $i['itemid']; }
+    $nowitemids = array();
+    foreach ($now_items as $i) { $nowitemids[] = $i['itemid']; }
+
+    $title = $m['title'];
+	  $title = preg_replace("/ AM$/"," am",$title);
+	  $title = preg_replace("/ PM$/"," pm",$title);
+	  $title = preg_replace("/ am$/","am",$title);
+	  $title = preg_replace("/ pm$/","pm",$title);
+    $meetingDate = explode(" - ",$title);
+    $meetingDate = $meetingDate[1];
+
+    if (count($origitemids) > 0) {
+      # not a "new" meeting
+	    $newitems = array_diff($nowitemids,$origitemids);
+	    if (count($newitems) > 0) {
+        foreach ($newitems as $n) {
+          $row = getDatabase()->one(" select * from item where itemid = $n ");
+          if ($row['id']) {
+            $title = $row['title'];
+            $itemid = $row['itemid'];
+            $tweet = "New mtg item: {$row['title']} - ".meeting_category_to_title($m['category'])." on $meetingDate";
+          	$link = OttWatchConfig::WWW."/meetings/meetid/".$m['meetid'];
+            $tweet = tweet_txt_and_url($tweet,$link);
+            tweet($tweet,1);
+          }
+        }
+	    }
+    }
 
   }
 
@@ -910,6 +953,82 @@ class MeetingController {
         ));
         $docoffset ++;
       }
+    }
+
+  }
+
+  public function parseVotingResults($item,$html) {
+
+    if (preg_match('/Item not found/',$html)) {
+      return;
+    }
+    if (preg_match('/No voting recorded/',$html)) {
+      # nada!
+      return;
+    }
+
+    # scope HTML to the voting results block.
+    $html = preg_replace("/&nbsp;/"," ",$html);
+    $html = preg_replace("/<br>/","\n",$html);
+    $html = preg_replace("/\r/","",$html);
+    $html = preg_replace("/\n/"," ",$html);
+    $html = preg_replace('/.*<table id="MotionVotesResultsTable"/',"<table ",$html);
+    $html = preg_replace('/<table id="Table1".*/','',$html);
+
+    $xml = simplexml_load_string($html);
+    if (!is_object($xml)) {
+      print "Error creating voting snippet\n";
+      return;
+    }
+
+    # now XPATH and tease out the votes
+    $tblVotes = array_shift($xml->xpath("//table[@id='tblVotes']"));
+    $trs = $tblVotes->xpath("tr");
+    while (count($trs) > 0) {
+
+      $vote = array();
+      $vote['motion'] = '';
+      $vote['votes'] = array();
+
+      # eat "<tr>" two at a time
+      $what = array_shift($trs);
+      $votes = array_shift($trs);
+
+      $what = $what->asXML();
+      $what = preg_replace('/<span.*<\/span>/','',$what); # remove "passed/failed" text from motion text
+      $motion = trim(strip_tags($what));
+      $motion = preg_replace('/  /',' ',$motion);
+      $motion = preg_replace('/  /',' ',$motion);
+      $motion = preg_replace('/  /',' ',$motion);
+      $vote['motion'] = $motion;
+
+      $votes = simplexml_load_string($votes->asXML()); # xpath doesn't scope to children or something? workaround by re-parsing
+      $attendees = $votes->xpath("//td[@class='attendee']"); 
+      $votefors = $votes->xpath("//td[@class='votefor']");
+      if (count($attendees) != count($votefors)) {
+        # should not be possible.
+        print "attendees/votefors does not match; should not happen\n";
+        return;
+      }
+      for ($x = 0; $x < count($attendees); $x ++) {
+        $who = trim($attendees[$x]);
+        $votefor = trim($votefors[$x]);
+        array_push($vote['votes'],array('name'=>$who,'voted'=>$votefor));
+      }
+
+      # TODO: do something with this vote
+
+      print "\n";
+      print "\tMOTION :: $motion\n";
+      foreach ($vote['votes'] as $v) {
+        print "\t\t{$v['voted']} :: {$v['name']}\n";
+      }
+      print "\n";
+
+      #print "\n\n";
+      #pr($vote);
+      #print "\n\n";
+
     }
 
   }

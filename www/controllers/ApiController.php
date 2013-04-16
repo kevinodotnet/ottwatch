@@ -4,6 +4,33 @@ class ApiController {
 
   /* Initialize a "success" result */
 
+  public static function devApp($id) {
+    $row = getDatabase()->one("select id,appid,devid,apptype,ward,receiveddate,updated,address,description from devapp where appid = :id or devid = :id ",array('id'=>$id));
+    if (!$row['appid']) {
+	    $result = array();
+	    $result['status'] = 0;
+	    $result['message'] = 'Not found';
+      return $result;
+    }
+    $row['ward'] = preg_replace("/^Ward /","",$row['ward']);
+    $row['ward'] = preg_replace("/ .*/","",$row['ward']);
+    $row['address'] = json_decode($row['address']);
+    $row['statuses'] = array();
+    $dates = getDatabase()->all(" select * from devappstatus where devappid = :devid ",array('devid'=>$row['id']));
+    foreach ($dates as $d) {
+      unset($d['id']);
+      unset($d['devappid']);
+      $row['statuses'][] = $d;
+    }
+    unset($row['id']);
+    return $row;
+  }
+
+  public static function devAppAll() {
+    $rows = getDatabase()->all("select appid,devid,apptype,receiveddate,updated from devapp order by updated desc ");
+    return $rows;
+  }
+
   public static function about() {
     top();
     include("about_api.html");

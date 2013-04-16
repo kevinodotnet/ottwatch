@@ -10,9 +10,79 @@ class DevelopmentAppController {
       bottom();
       return;
     }
-    top();
+    top($a['devid'] . " - ". $a['apptype'] . " - " . $a['appid']);
 
-    pr($a);
+    #$a['ward'] = preg_replace("/Ward /","",$a['ward']);
+    #$a['ward'] = preg_replace("/ .*/","",$a['ward']);
+    $a['address'] = json_decode($a['address']);
+
+    ?>
+    <h1><?php print $a['devid']; ?></h1>
+
+    <div class="row-fluid">
+    <div class="span6">
+    <p>
+    <b><?php print $a['apptype']; ?></b>: <?php print $a['description']; ?>
+    </p>
+    <p>
+    <a target="_new" href="<?php print self::getLinkToApp($a['appid']); ?>"><i class="icon-share-alt"></i> View application and associated documents on ottawa.ca</a>
+    </p>
+
+    <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
+    <tr><td>Ward</td><td><?php print $a['ward']; ?></td></tr>
+    <tr><td>Received</td><td><?php print $a['receiveddate']; ?></td></tr>
+    <tr><td>Updated</td><td><?php print $a['updated']; ?></td></tr>
+    <tr><td>Addresses</td><td>
+    <?php 
+    foreach ($a['address'] as $addr) {
+      print $addr->addr;
+      print "<br/>\n";
+    }
+    ?>
+    </td></tr>
+    <tr>
+    <th style="text-align: center;">Date</th>
+    <th style="text-align: center;">Status</th>
+    </tr>
+    <?php
+    $dates = getDatabase()->all(" select date(statusdate) statusdate,status from devappstatus where devappid = :id order by statusdate desc ",array('id'=>$a['id']));
+    foreach ($dates as $d) {
+      ?>
+      <tr>
+      <td><?php print $d['statusdate']; ?></td>
+      <td><?php print $d['status']; ?></td>
+      </tr>
+      <?php
+    }
+    ?>
+    </table>
+    </div>
+
+    <?php
+    $a = $a['address'];
+    if ($a && count($a>0)) {
+      $a = $a[0];
+    ?>
+    <div class="span6">
+    <div id="map_canvas" style="width:100%; height:600px;"></div>
+    <script>
+      $(document).ready(function() {
+        var mapOptions = { 
+          center: new google.maps.LatLng(45.420833,-75.69), 
+          zoom: 16, 
+          mapTypeId: google.maps.MapTypeId.ROADMAP 
+        };
+        map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
+        var myLatlng = new google.maps.LatLng(<?php print $a->lat; ?>,<?php print $a->lon; ?>);
+        var marker = new google.maps.Marker({ position: myLatlng, map: map, title: '<?php print "FOO"; ?>' }); 
+        map.panTo(myLatlng);
+      });
+    </script>
+    </div>
+    <?php } ?>
+
+    </div><!-- row -->
+    <?php
 
     bottom();
   }
@@ -102,7 +172,8 @@ class DevelopmentAppController {
     </tr>
     <?php
     foreach ($apps as $a) {
-      $url = self::getLinkToApp($a['appid']);
+      # $url = self::getLinkToApp($a['appid']);
+      $url = OttWatchConfig::WWW . "/devapps/{$a['devid']}"; # self::getLinkToApp($a['appid']);
 
       # double load for the status and date
       $status = getDatabase()->one(" select max(id) id from devappstatus where devappid = :id ",array('id'=>$a['id']));
@@ -159,7 +230,8 @@ class DevelopmentAppController {
 		      $status = getDatabase()->one(" select max(id) id from devappstatus where devappid = :id ",array('id'=>$a['id']));
 		      $status = getDatabase()->one(" select * from devappstatus where id = :id ",array('id'=>$status['id']));
 
-          $url = self::getLinkToApp($a['appid']);
+          # $url = self::getLinkToApp($a['appid']);
+          $url = OttWatchConfig::WWW . "/devapps/{$a['devid']}"; # self::getLinkToApp($a['appid']);
           $addr = json_decode($a['address']);
           $addr = $addr[0];
           if (count($addr) == 0) {
@@ -296,13 +368,17 @@ class DevelopmentAppController {
           if ($app['id']) {
             if ($app['statusdate'] != $statusdate) {
               $changed = 1;
+              print "#####################################\n";
 							print "page $p: FROM DATABASE for $appid / $devid on MY statusdate '$statusdate' for UPDATE:\n"; print print_r($app); print "\n";
               self::injestApplication($appid,'update');
+              print "\n\n";
             }
           } else {
             $changed = 1;
+            print "#####################################\n";
 						print "page $p: FROM DATABASE for $appid on MY statusdate '$statusdate' for INSERT\n"; print print_r($app); print "\n";
             self::injestApplication($appid,'insert');
+            print "\n\n";
           }
         }
       }
@@ -448,6 +524,7 @@ class DevelopmentAppController {
     $ward = "{$ward[0]}, {$ward[1]}";
 
     $url = "http://app01.ottawa.ca/postingplans/appDetails.jsf?lang=en&appId=$appid";
+    $url = OttWatchConfig::WWW . "/devapps/{$labels['Application #']}"; # self::getLinkToApp($a['appid']);
 
 		$addr = '';
 		if (count($addresses) > 0) {
@@ -467,8 +544,8 @@ class DevelopmentAppController {
 
 		# allow dups because a devapp will be updated multiple times
     $newtweet = tweet_txt_and_url($tweet,$url);
-		print "SKIPPING tweet: $newtweet\n";
-		#tweet($newtweet,1);
+		#print "SKIPPING tweet: $newtweet\n";
+		tweet($newtweet,1);
   }
 
   static function suckToNextDiv ($lines,$x) {

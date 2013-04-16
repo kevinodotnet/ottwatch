@@ -29,6 +29,9 @@ getApi()->get('/api/committees', array('ApiController', 'committees'), EpiApi::e
 getApi()->get('/api/councillors/(\d+)', array('ApiController', 'councillorById'), EpiApi::external);
 getApi()->get('/api/councillors/([^/]+)/(.*)', array('ApiController', 'councillorByName'), EpiApi::external);
 
+getApi()->get('/api/devapps/all', array('ApiController', 'devAppAll'), EpiApi::external);
+getApi()->get('/api/devapps/([D_].*)', array('ApiController', 'devApp'), EpiApi::external);
+
 getRoute()->get('/', 'dashboard');
 getRoute()->get('/about', 'about');
 getRoute()->get('/ideas', 'ideas');
@@ -221,7 +224,8 @@ function dashboard() {
   $count = $count['c'];
   $apps = getDatabase()->all(" select * from devapp order by updated desc limit 5 ");
   foreach ($apps as $a) {
-    $url = DevelopmentAppController::getLinkToApp($a['appid']);
+    # $url = DevelopmentAppController::getLinkToApp($a['appid']);
+    $url = OttWatchConfig::WWW."/devapps/{$a['devid']}"; # DevelopmentAppController::getLinkToApp($a['appid']);
     $addr = json_decode($a['address']);
     $addrcount = count($addr);
     $addr = $addr[0];
