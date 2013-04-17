@@ -626,11 +626,12 @@ class MeetingController {
    */
   static public function downloadAndParseMeeting ($id) {
 
-    $m = getDatabase()->one(" select * from meeting where id = :id ",array('id'=>$id));
+    $m = getDatabase()->one(" select * from meeting where meetid = :id or id = :id ",array('id'=>$id));
     if (!$m['id']) { 
       print "downloadAndParseMeeting for $id :: NOT FOUDN\n";
       return; 
     }
+		$id = $m['id'];
 
     # detect 'diff' in items/files
     $orig_items = getDatabase()->all(" select * from item where meetingid = $id ");
@@ -642,6 +643,19 @@ class MeetingController {
     $agenda = file_get_contents(self::getDocumentUrl($m['meetid'],'AGENDA')); 
     #file_put_contents("agenda.html",$agenda);
     #$agenda = file_get_contents("agenda.html");
+
+		# are the minutes available?
+		$flippedToMinutes = 0; # only track the actual transition
+		if (!$m['minutes']) {
+			print "Checking for minutes\n";
+	    $minutes = file_get_contents(self::getDocumentUrl($m['meetid'],'MINUTES')); 
+			if (!preg_match('/The file could not be found/',$minutes)) {
+				# use the text of the minutes instead for processing
+				$agenda = $minutes;
+		    getDatabase()->execute(" update meeting set minutes = 1 where id = $id ");
+				print "Switching processing to minutes\n";
+			}
+		}
 
     # charset issues
     $agenda = mb_convert_encoding($agenda,"ascii");
