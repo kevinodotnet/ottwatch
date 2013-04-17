@@ -121,6 +121,7 @@ create table meeting (
   contactEmail varchar(100),
   contactPhone varchar(30),
   members varchar(300),
+	minutes boolean default false,
   created datetime,
   updated datetime,
   primary key (id)

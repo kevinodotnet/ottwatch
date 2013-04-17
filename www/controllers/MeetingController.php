@@ -211,13 +211,18 @@ class MeetingController {
     }
 
     $focusFrameSrc = self::getDocumentUrl($meetid,'AGENDA');
+		if ($m['minutes']) {
+	    $focusFrameSrc = self::getDocumentUrl($meetid,'MINUTES');
+		}
+		$focusFrameSrcBase = self::getDocumentUrl($meetid,'MINUTES');
+
     $isStarted = $m['started'];
     $summarySrc = self::getDocumentUrl($meetid,'SUMMARY');
     $title = meeting_category_to_title($m['category']);
     if ($itemid != '') {
       $item = getDatabase()->one(" select * from item where itemid = :itemid ",array("itemid"=>$itemid));
       $title = $item['title'];
-      $focusFrameSrc = self::getDocumentUrl($meetid,'AGENDA')."#Item$itemid";
+      $focusFrameSrc .= "#Item$itemid";
     }
 
     # display list of items, and break out with the files too
@@ -247,7 +252,7 @@ class MeetingController {
       if (type == 'item') {
         // move agenda to an item, and refocus on agenda tab just in case user is currently browsing
         // a different tab
-        $('#focusFrame').attr('src','<?php print self::getDocumentUrl($m['meetid'],'AGENDA'); ?>#Item' + id);
+        $('#focusFrame').attr('src','<?php print $focusFrameSrcBase; ?>#Item' + id);
         $('#tablist a[href="#tabagenda"]').tab('show'); 
         return;
       }
