@@ -646,7 +646,7 @@ class MeetingController {
     print "downloadAndParseMeeting for meeting:$id\n";
 
     $agenda = file_get_contents(self::getDocumentUrl($m['meetid'],'MINUTES')); 
-		if (preg_match('/The file could not be found/',$minutes)) {
+		if (preg_match('/The file could not be found/',$agenda)) {
       # need to use the agenda
       print "Using AGENDA\n";
       $agenda = file_get_contents(self::getDocumentUrl($m['meetid'],'AGENDA')); 
@@ -746,7 +746,7 @@ class MeetingController {
         $snippet = preg_replace("/\n/",' ',$snippet);
         $snippet = preg_replace("/\r/",' ',$snippet);
         $snippet = preg_replace("/<i>/","",$snippet);
-        $snippet = preg_replace("/<br[^>]+>/"," ",$snippet);
+        $snippet = preg_replace("/<br[^>]*>/"," ",$snippet);
         $snippet = preg_replace("/<\/i>/","",$snippet);
         $snippet = preg_replace("/  /"," ",$snippet);
         $snippet = preg_replace("/  /"," ",$snippet);
