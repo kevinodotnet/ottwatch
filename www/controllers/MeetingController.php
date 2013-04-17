@@ -644,23 +644,16 @@ class MeetingController {
 
     print "downloadAndParseMeeting for meeting:$id\n";
 
-    # get agenda HTML
-    $agenda = file_get_contents(self::getDocumentUrl($m['meetid'],'AGENDA')); 
-    #file_put_contents("agenda.html",$agenda);
-    #$agenda = file_get_contents("agenda.html");
-
-		# are the minutes available?
-		$flippedToMinutes = 0; # only track the actual transition
-		if (!$m['minutes']) {
-			print "Checking for minutes\n";
-	    $minutes = file_get_contents(self::getDocumentUrl($m['meetid'],'MINUTES')); 
-			if (!preg_match('/The file could not be found/',$minutes)) {
-				# use the text of the minutes instead for processing
-				$agenda = $minutes;
-		    getDatabase()->execute(" update meeting set minutes = 1 where id = $id ");
-				print "Switching processing to minutes\n";
-			}
-		}
+    $agenda = file_get_contents(self::getDocumentUrl($m['meetid'],'MINUTES')); 
+		if (preg_match('/The file could not be found/',$minutes)) {
+      # need to use the agenda
+      print "Using AGENDA\n";
+      $agenda = file_get_contents(self::getDocumentUrl($m['meetid'],'AGENDA')); 
+    } else {
+      # mark that we are in MINUTES mode for this meeting now
+      print "Using MINUTES\n";
+	    getDatabase()->execute(" update meeting set minutes = 1 where id = $id ");
+    }
 
     # charset issues
     $agenda = mb_convert_encoding($agenda,"ascii");
@@ -745,22 +738,24 @@ class MeetingController {
 	    if ($add && preg_match("/a>/",$line)) {
         $add = 0;
         array_push($spool,$line);
-        $snippet = "<a ".implode($spool)."\n";
+        $snippet = "<a ".implode(' ',$spool)."\n";
         $snippet = preg_replace("/<\/a>.*/","</a>",$snippet);
         $snippet = preg_replace("/target=pubright/",'',$snippet);
         $snippet = preg_replace("/lang=[^>]*/",'',$snippet);
         $snippet = preg_replace("/\n/",' ',$snippet);
         $snippet = preg_replace("/\r/",' ',$snippet);
         $snippet = preg_replace("/<i>/","",$snippet);
+        $snippet = preg_replace("/<br[^>]+>/"," ",$snippet);
         $snippet = preg_replace("/<\/i>/","",$snippet);
         $snippet = preg_replace("/  /"," ",$snippet);
         $snippet = preg_replace("/  /"," ",$snippet);
         $snippet = preg_replace("/  /"," ",$snippet);
         $snippet = preg_replace("/  /"," ",$snippet);
+        $snippet = preg_replace("/<b>/"," ",$snippet);
+        $snippet = preg_replace("/<\/b>/"," ",$snippet);
         $xml = simplexml_load_string($snippet);
 				if (!is_object($xml)) {
-					print "WARNING, bad snippet\n";
-					print ">> $snippet <<\n";
+					print "WARNING, bad snippet >> $snippet <<\n";
 					$title = '<i class="icon-warning-sign"></i> Doh! title autodection failed';
 				} else {
 	        $title = $xml->xpath("//span"); 
@@ -775,6 +770,13 @@ class MeetingController {
 	        # charset problems
 	        $title = preg_replace("/ \? /"," - ",$title);
 	        $title = preg_replace("/\?/","'",$title);
+	        $title = preg_replace("/  /"," ",$title);
+	        $title = preg_replace("/  /"," ",$title);
+	        $title = preg_replace("/  /"," ",$title);
+	        $title = preg_replace("/  /"," ",$title);
+	        $title = preg_replace("/  /"," ",$title);
+	        $title = preg_replace("/  /"," ",$title);
+          $title = trim($title);
 	
 	        # fix open/close brace, and spaces next to braces
 	        #$title = preg_replace("/^\(/","",$title);
@@ -783,11 +785,16 @@ class MeetingController {
 	        $title = preg_replace("/ +\)/",")",$title);
 
 				}
-	  	  $dbitemid = getDatabase()->execute('insert into item (meetingid,itemid,title) values (:meetingid,:itemid,:title) ', array(
-	  	    'meetingid' => $id,
-	  	    'itemid' => $itemid,
-	  	    'title' => $title,
-	  	  ));
+        if (strlen($title) > 100) {
+          $title = substr($title.'...',0,95);
+        }
+        if ($title != '') {
+		  	  $dbitemid = getDatabase()->execute('insert into item (meetingid,itemid,title) values (:meetingid,:itemid,:title) ', array(
+		  	    'meetingid' => $id,
+		  	    'itemid' => $itemid,
+		  	    'title' => $title,
+		  	  ));
+        }
         $spool = array();
       }
       if ($add) {
@@ -859,7 +866,7 @@ class MeetingController {
 	    $files = array();
 		  foreach ($lines as $line) {
 		    if (preg_match("/fileid=/",$line)) {
-          $line = preg_replace("/\n/","",$line);
+          $line = preg_replace("/\n/"," ",$line);
           $line = preg_replace("/\r/","",$line);
 
           $title = $line;
@@ -988,7 +995,7 @@ class MeetingController {
 
     # scope HTML to the voting results block.
     $html = preg_replace("/&nbsp;/"," ",$html);
-    $html = preg_replace("/<br>/","\n",$html);
+    $html = preg_replace("/<br>/"," ",$html);
     $html = preg_replace("/\r/","",$html);
     $html = preg_replace("/\n/"," ",$html);
     $html = preg_replace('/.*<table id="MotionVotesResultsTable"/',"<table ",$html);
