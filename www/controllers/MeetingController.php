@@ -328,7 +328,7 @@ class MeetingController {
 
     <ul id="tablist" class="nav nav-tabs">
     <li><a href="#tabagenda" data-toggle="tab">Agenda</a></li>
-    <?php if ($isStarted) { ?>
+    <?php if ($isStarted && !$m['minutes']) { ?>
     <li><a href="#tabsummary" data-toggle="tab">Summary</a></li>
     <?php } ?>
     <li><a href="#tabmap" data-toggle="tab">Map</a></li>
