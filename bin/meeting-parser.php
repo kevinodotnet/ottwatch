@@ -53,7 +53,7 @@ foreach ($items as $i) {
   $starttime = preg_replace("/ AM$/"," am",$starttime);
   $starttime = preg_replace("/ PM$/"," am",$starttime);
   $starttime = preg_replace("/ am$/","am",$starttime);
-  $starttime = preg_replace("/ pm$/","am",$starttime);
+  $starttime = preg_replace("/ pm$/","pm",$starttime);
   $starttime = strftime("%Y-%m-%d %H:%M:%S",strtotime($starttime));
 
   # is this guid in the database already
