@@ -912,7 +912,7 @@ class MeetingController {
 	    if (count($newitems) > 0) {
         foreach ($newitems as $n) {
           $row = getDatabase()->one(" select * from item where itemid = $n ");
-          if ($row['id']) {
+          if ($row['id'] && !preg_match('/ADJOURNMENT/i',$title)) {
             $title = $row['title'];
             $itemid = $row['itemid'];
             $tweet = "New mtg item: {$row['title']} - ".meeting_category_to_title($m['category'])." on $meetingDate";
