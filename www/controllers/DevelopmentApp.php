@@ -21,6 +21,8 @@ class DevelopmentAppController {
 
     <div class="row-fluid">
     <div class="span6">
+
+    <div class="pull-right"><?php renderShareLinks("{$a['devid']}","/devapps/{$a['devid']}"); ?></div>
     <p>
     <b><?php print $a['apptype']; ?></b>: <?php print $a['description']; ?>
     </p>
@@ -56,6 +58,10 @@ class DevelopmentAppController {
     }
     ?>
     </table>
+
+    <?php
+    disqus();
+    ?>
     </div>
 
     <?php
