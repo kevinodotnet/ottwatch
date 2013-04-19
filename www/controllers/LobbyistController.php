@@ -710,4 +710,48 @@ class LobbyistController {
     
   }
 
+	public function fixLobbyingNames() {
+
+		$rows = getDatabase()->all(" select distinct(lobbied) from lobbying ");
+		foreach ($rows as $r) {
+			$keep = 1;
+			#if (preg_match('/councillor/i',$r['lobbied'])) { $keep = 1; }
+			#if (preg_match('/ward/i',$r['lobbied'])) { $keep = 1; }
+			#if (preg_match('/assistant/i',$r['lobbied'])) { $keep = 0; }
+			#if (preg_match('/ Planner,/',$r['lobbied'])) { $keep = 0; }
+			#if (preg_match('/ Mgr,/i',$r['lobbied'])) { $keep = 0; }
+			#if (preg_match('/assistant/i',$r['lobbied'])) { $keep = 0; }
+			if (!$keep) { continue; }
+
+			$name = trim(array_shift(explode(":",$r['lobbied'])));
+
+			# dirty
+			if ($name == 'Hume, Peter E') { $name = 'Hume, Peter'; }
+			if ($name == 'Clark, Peter D') { $name = 'Clark, Peter'; }
+			if ($name == 'Tierney, Timothy') { $name = 'Tierney, Tim'; }
+
+			# is this an elected official?
+			$e = getDatabase()->one("
+				select * 
+				from electedofficials 
+				where 
+					concat(first,' ',last) = :name
+					or concat(last,', ',first) = :name
+				",array('name'=>$name));
+
+			if ($e['id']) {
+				print "--- $name >>> ";
+				print "### {$r['lobbied']}\n";
+			} else {
+				print "!!! $name >>> ";
+				print "### {$r['lobbied']}\n";
+			}
+#			print print_r($e);
+#			print "\n";
+
+		}
+
+	}
+
 }
+
