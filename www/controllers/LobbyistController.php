@@ -712,15 +712,15 @@ class LobbyistController {
 
 	public function fixLobbyingNames() {
 
-		$rows = getDatabase()->all(" select distinct(lobbied) from lobbying ");
+		$rows = getDatabase()->all(" select id,lobbied from lobbying where electedofficialid is null ");
 		foreach ($rows as $r) {
-			$keep = 1;
-			#if (preg_match('/councillor/i',$r['lobbied'])) { $keep = 1; }
-			#if (preg_match('/ward/i',$r['lobbied'])) { $keep = 1; }
-			#if (preg_match('/assistant/i',$r['lobbied'])) { $keep = 0; }
-			#if (preg_match('/ Planner,/',$r['lobbied'])) { $keep = 0; }
-			#if (preg_match('/ Mgr,/i',$r['lobbied'])) { $keep = 0; }
-			#if (preg_match('/assistant/i',$r['lobbied'])) { $keep = 0; }
+			$keep = 0;
+			if (preg_match('/mayor/i',$r['lobbied'])) { $keep = 1; }
+			if (preg_match('/councillor/i',$r['lobbied'])) { $keep = 1; }
+			if (preg_match('/ward/i',$r['lobbied'])) { $keep = 1; }
+			if (preg_match('/assistant/i',$r['lobbied'])) { $keep = 0; }
+			if (preg_match('/ Planner,/',$r['lobbied'])) { $keep = 0; }
+			if (preg_match('/ Mgr,/i',$r['lobbied'])) { $keep = 0; }
 			if (!$keep) { continue; }
 
 			$name = trim(array_shift(explode(":",$r['lobbied'])));
@@ -739,15 +739,12 @@ class LobbyistController {
 					or concat(last,', ',first) = :name
 				",array('name'=>$name));
 
-			if ($e['id']) {
-				print "--- $name >>> ";
-				print "### {$r['lobbied']}\n";
-			} else {
-				print "!!! $name >>> ";
-				print "### {$r['lobbied']}\n";
+			if (!$e['id']) {
+        # not an elected official
+        continue;
 			}
-#			print print_r($e);
-#			print "\n";
+
+      getDatabase()->execute(" update lobbying set electedofficialid = :eid where id = :id ",array('id'=>$r['id'],'eid'=>$e['id']));
 
 		}
 

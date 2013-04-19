@@ -58,12 +58,14 @@ create table lobbyfile (
 create table lobbying (
   id mediumint not null auto_increment,
   lobbyfileid mediumint not null,
+  electedofficialid mediumint,
   lobbydate datetime,
   activity varchar(100),
   lobbied varchar(200),
   created datetime,
   primary key (id),
   constraint foreign key (lobbyfileid) references lobbyfile (id) on delete cascade on update cascade
+  constraint foreign key (electedofficialid) references electedofficials (id) on delete cascade on update cascade
 ) engine = innodb;
 
 -- enforce unique on the lobbying table; used by INSERTER to avoid dups
