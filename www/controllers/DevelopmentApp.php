@@ -110,6 +110,7 @@ class DevelopmentAppController {
       $matchWhere .= " or ward like '%$safe%' ";
 #      $matchWhere .= " or status like '%$safe%' ";
       $matchWhere .= " or address like '%$safe%' ";
+      $matchWhere .= " or description like '%$safe%' ";
       $matchWhere .= " ) and ";
     }
 
