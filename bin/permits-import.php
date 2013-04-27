@@ -8,9 +8,9 @@ require_once('include.php');
 
 include 'PHPExcel/IOFactory.php';
 
-#$data = file_get_contents("http://app06.ottawa.ca/en/city_hall/statisticsdata/opendata/info/constr_demo_pool_permits/index.htm");
+$data = file_get_contents("http://app06.ottawa.ca/en/city_hall/statisticsdata/opendata/info/constr_demo_pool_permits/index.htm");
 #$data = file_put_contents("permits-index.html",$data);
-$data = file_get_contents("permits-index.html");
+#$data = file_get_contents("permits-index.html");
 
 $lines = explode("<a ",$data);
 foreach ($lines as $l) {
@@ -19,20 +19,27 @@ foreach ($lines as $l) {
     $url = $matches[1];
     $title = $matches[2];
     $url = "http://app06.ottawa.ca{$url}";
-#    injestXLS($url,$title);
+    injestXLS($url,$title);
   }
 }
 
-injestXLS("http://app06.ottawa.ca/cs/groups/content/@webottawa/documents/pdf/mdaw/mzq1/~edisp/cap348601.xls","February 2013");
+#injestXLS("http://app06.ottawa.ca/cs/groups/content/@webottawa/documents/pdf/mdaw/mzq1/~edisp/cap348601.xls","February 2013");
+#injestXLS("http://app06.ottawa.ca/cs/groups/content/@webottawa/documents/pdf/mdaw/mzy5/~edisp/cap365801.xls","March 2013");
 
 function injestXLS ($url,$title) {
-  
-  #$data = file_get_contents($url);
-	#$data = file_put_contents("permits.xls",$data);
-	$data = file_get_contents("permits.xls");
+
+  if (!preg_match('/2013/',$title)) { return; }
+
+  print "INJESTING: $title :: $url\n";
+
+  $data = file_get_contents($url);
+	$data = file_put_contents("permits.xls",$data);
+	#$data = file_get_contents("permits.xls");
 
   $objReader = PHPExcel_IOFactory::createReader('Excel5');
   $excel = $objReader->load("permits.xls");
+	unlink("permits.xls");
+
   $names = $excel->getSheetNames();
   for ($x = 0; $x < $excel->getSheetCount(); $x++) {
     if ($names[$x] != 'Details') {
@@ -71,6 +78,9 @@ function injestXLS ($url,$title) {
 
       # "Ward 3" becomes "3"
       $p['Ward'] = preg_replace("/Ward /",'',$p['Ward']);
+      if ($p['Ward'] == '') {
+        $p['Ward'] = 0;
+      }
       # Excel to Unix time.
       $p['Permit Issued Date'] = ($p['Permit Issued Date'] - 25569) * 86400;
       pr($p);
