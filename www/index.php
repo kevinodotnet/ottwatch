@@ -101,40 +101,46 @@ function dashboard() {
   <div class="row-fluid">
   <div class="span4">
   <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
-  <tr>
-  <td colspan="3">
-  <h4>Today's Meetings</h4>
-  </td>
-  </tr>
-  <?php
+  <?php 
   $meetings = getDatabase()->all(" select id,meetid,category,date(starttime) starttime from meeting where date(starttime) = date(CURRENT_TIMESTAMP) order by starttime ");
-  foreach ($meetings as $m) {
-    $mtgurl = htmlspecialchars("http://app05.ottawa.ca/sirepub/mtgviewer.aspx?meetid={$m['meetid']}&doctype");
-    ?>
-    <tr>
-      <td><?php print meeting_category_to_title($m['category']); ?></td>
-      <td style="text-align: center; width: 90px;"><?php print $m['starttime']; ?></td>
-      <td style="text-align: center;"><a class="btn btn-mini" href="<?php print "$OTT_WWW/meetings/{$m['category']}/{$m['meetid']}"; ?>">Agenda</a></td>
-    </tr>
-    <?php
+  if (count($meetings) > 0) {
+	  ?>
+	  <tr>
+	  <td colspan="3">
+	  <h4>Today's Meetings</h4>
+	  </td>
+	  </tr>
+	  <?php
+	  foreach ($meetings as $m) {
+	    $mtgurl = htmlspecialchars("http://app05.ottawa.ca/sirepub/mtgviewer.aspx?meetid={$m['meetid']}&doctype");
+	    ?>
+	    <tr>
+	      <td><?php print meeting_category_to_title($m['category']); ?></td>
+	      <td style="text-align: center; width: 90px;"><?php print $m['starttime']; ?></td>
+	      <td style="text-align: center;"><a class="btn btn-mini" href="<?php print "$OTT_WWW/meetings/{$m['category']}/{$m['meetid']}"; ?>">Agenda</a></td>
+	    </tr>
+	    <?php
+	  }
   }
-  ?>
-  <tr>
-  <td colspan="3">
-  <h4>Upcoming Meetings</h4>
-  </td>
-  </tr>
-  <?php
   $meetings = getDatabase()->all(" select id,category,date(starttime) starttime,meetid from meeting where date(starttime) > date(CURRENT_TIMESTAMP) order by starttime ");
-  foreach ($meetings as $m) {
-    $mtgurl = htmlspecialchars("http://app05.ottawa.ca/sirepub/mtgviewer.aspx?meetid={$m['meetid']}&doctype");
-    ?>
-    <tr>
-      <td><?php print meeting_category_to_title($m['category']); ?></td>
-      <td style="text-align: center; width: 90px;"><?php print $m['starttime']; ?></td>
-      <td style="text-align: center;"><a class="btn btn-mini" href="<?php print "$OTT_WWW/meetings/{$m['category']}/{$m['meetid']}"; ?>">Agenda</a></td>
-    </tr>
-    <?php
+  if (count($meetings) > 0) {
+	  ?>
+	  <tr>
+	  <td colspan="3">
+	  <h4>Upcoming Meetings</h4>
+	  </td>
+	  </tr>
+	  <?php
+	  foreach ($meetings as $m) {
+	    $mtgurl = htmlspecialchars("http://app05.ottawa.ca/sirepub/mtgviewer.aspx?meetid={$m['meetid']}&doctype");
+	    ?>
+	    <tr>
+	      <td><?php print meeting_category_to_title($m['category']); ?></td>
+	      <td style="text-align: center; width: 90px;"><?php print $m['starttime']; ?></td>
+	      <td style="text-align: center;"><a class="btn btn-mini" href="<?php print "$OTT_WWW/meetings/{$m['category']}/{$m['meetid']}"; ?>">Agenda</a></td>
+	    </tr>
+	    <?php
+	  }
   }
   ?>
   <tr>
