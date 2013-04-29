@@ -813,6 +813,8 @@ class MeetingController {
 	  foreach ($items as $item) {
       print "  item:{$item['id']} title: {$item['title']}\n";
 
+      self::matchItemToPark($item['id'],$item['title']);
+
       # look for references to addresses in the item title
       $words = explode(" ",$item['title']);
       for ($x = 0; $x < (count($words)-1); $x++) {
@@ -1060,6 +1062,19 @@ class MeetingController {
       #pr($vote);
       #print "\n\n";
 
+    }
+
+  }
+
+  public function matchItemToPark ($id,$title) {
+
+    # any park names contained in item title?
+    $rows = getDatabase()->all(" select * from 2010_parks_all_parkland where instr(upper(:title),upper(name)) > 0 ",array('title'=>$title));
+    foreach ($rows as $r) {
+      print "TODO: PARK DETECTED :: ITEM $id :: $title\n";
+      print "\t{$r['name']}\n";
+      print "\t{$r['address']}\n";
+      print "\t{$r['OGR_FID']} (OGR_FID)\n";
     }
 
   }
