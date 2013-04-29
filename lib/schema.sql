@@ -225,3 +225,5 @@ create table permit (
   primary key (id)
 ) engine = innodb;
 
+create unique index permit_in1 on permit (permit_number,st_num,st_name,contractor);
+

@@ -25,10 +25,11 @@ foreach ($lines as $l) {
 
 #injestXLS("http://app06.ottawa.ca/cs/groups/content/@webottawa/documents/pdf/mdaw/mzq1/~edisp/cap348601.xls","February 2013");
 #injestXLS("http://app06.ottawa.ca/cs/groups/content/@webottawa/documents/pdf/mdaw/mzy5/~edisp/cap365801.xls","March 2013");
+#injestXLS("file:///Users/kevino/aug2012.xls","August 2012");
 
 function injestXLS ($url,$title) {
 
-  if (!preg_match('/2013/',$title)) { return; }
+#  if (!preg_match('/2011/',$title)) { return; }
 
   print "INJESTING: $title :: $url\n";
 
@@ -42,7 +43,7 @@ function injestXLS ($url,$title) {
 
   $names = $excel->getSheetNames();
   for ($x = 0; $x < $excel->getSheetCount(); $x++) {
-    if ($names[$x] != 'Details') {
+    if (strtolower($names[$x]) != 'details') {
       continue;
     }
     $rows = $excel->getSheet($x)->toArray(null,true,true,true);
@@ -82,8 +83,15 @@ function injestXLS ($url,$title) {
         $p['Ward'] = 0;
       }
       # Excel to Unix time.
-      $p['Permit Issued Date'] = ($p['Permit Issued Date'] - 25569) * 86400;
-      pr($p);
+      if (preg_match('/^201\d\//',$p['Permit Issued Date'])) {
+        # convert from string date
+        # seems to only apply to outlyer August 2012 :(
+        $p['Permit Issued Date'] = strtotime($p['Permit Issued Date']);
+      } else {
+        $p['Permit Issued Date'] = ($p['Permit Issued Date'] - 25569) * 86400;
+      }
+
+      print "  {$p['Permit Number']} :: {$p['Street Number']} {$p['Street Name']} :: {$p['Building Type']}\n ";
 
 			# [Street Number] => 420  
 			# [Street Name] => VIA VERONA AVE 
@@ -101,9 +109,12 @@ function injestXLS ($url,$title) {
 			# [Permit Number] => 1300563
 			# [Application Type] => Construction
 			# [Permit Issued Date] => 41306.407210648
+
+      # ignore duplicate key
       getDatabase()->execute("
         insert into permit (st_num, st_name, postal, ward, plan_num, lot_num, contractor, building_type, description, du, value, area, permit_number, app_type, issued_date)
         values (:st_num, :st_name, :postal, :ward, :plan_num, :lot_num, :contractor, :building_type, :description, :du, :value, :area, :permit_number, :app_type, from_unixtime(:issued_date))
+        on duplicate key update st_num = st_num
         ",array(
 					'st_num' => $p['Street Number'],
 					'st_name' => $p['Street Name'],
