@@ -33,21 +33,27 @@ Crontab
 Here is the crontab I use on ottwatch.ca to scrape data and also post it to Twitter
 
   # Scape the SIREpub RSS feed every 30 minutes looking for new meeting details
+  
   00,30 * * * * php /mnt/www/ottwatch/bin/meeting-parser.php
   
   # Once a day hard-scrape upcoming meetings even if the RSS doesn't indicate changes
+  
   00 5 * * * php /mnt/www/ottwatch/bin/meeting-parser.php hardScan
   
   # Tweet meeting updates during daytimes only
+  
   05,35 8-17 * * * php /mnt/www/ottwatch/bin/meeting-tweeter.php
   
   # Scape and tweet about development applications, daytime only
+  
   15,45 8-16 * * * php /mnt/www/ottwatch/bin/devapp-tweeter.php
   
   # Scrape the lobbyist registry, going back 30 days
+  
   20,50 * * * * php /mnt/www/ottwatch/bin/lobby-scaper.php 30
   
   # Tweet the lobbyist registry, daytime only
+  
   25,55 7-18 * * * php /mnt/www/ottwatch/bin/lobby-tweeter2.php
 
 Contributions
@@ -58,3 +64,9 @@ uses the SIREpub system. Good luck! I'm happy to merge "pull requests" if you se
 the best path forward for other cities is to fork OttWatch into a generic SIREpub application and make that
 one better (and city generic).
 
+About Me
+========
+
+I live in Ottawa, like Open Data, and am neck-deep in pushing for a more sustainable city, environment,
+province and planet. For a living I write code. For my future I'm Deputy Leader of the Green Party 
+of Ontario. Deets here: http://kevino.ca and http://www.gpo.ca/about/deputy-leader/kevin-odonnell
