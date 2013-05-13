@@ -355,14 +355,18 @@ function copyToClipboard (text) {
 <li><a href="<?php print $OTT_WWW; ?>/api/about">API</a></li>
 <?php
 if (!LoginController::isLoggedIn()) {
+  /*
   ?>
   <li><a href="<?php print $OTT_WWW; ?>/user/login">Login</a></li>
   <?php
+  */
 } else {
+  /*
   ?>
   <li><a href="<?php print $OTT_WWW; ?>/user/home"><?php print getSession()->get('user_email'); ?></a></li>
   <li><a href="<?php print $OTT_WWW; ?>/user/logout">Logout</a></li>
   <?php
+  */
 }
 ?>
 </ul>
