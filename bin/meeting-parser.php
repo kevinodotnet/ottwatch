@@ -9,6 +9,9 @@ require_once('include.php');
 require_once('twitteroauth.php');
 
 if (count($argv) > 1) {
+  if ($argv[1] == 'hardScan') {
+    MeetingController::hardScan();
+	}
   if ($argv[1] == 'getMeeting') {
     $id = $argv[2];
     MeetingController::downloadAndParseMeeting($id);
