@@ -188,6 +188,7 @@ insert into category values ('ESAC','Environmental Stewardship Advisory Committe
 insert into category values ('BHSC','Built Heritage Sub-Committee');
 insert into category values ('CSAC','Community Services Advisory Committee');
 insert into category values ('ACHRAC','Arts, Culture, Heritage and Recreation Advisory Committee');
+insert into category values ('AAC','Accessibility Advisory Committee');
 
 create table electedofficials (
   id mediumint not null auto_increment,

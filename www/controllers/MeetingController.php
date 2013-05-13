@@ -1078,6 +1078,19 @@ class MeetingController {
     }
 
   }
+
+	/*
+	Sometimes fileID values on items go stale/bad. Once a day run all meetings that are yet to pass and
+	rescan to ensure fileid markers are still accurate (because without RSS change trigger, this may
+	not come to like and the GUI is broken.
+	*/
+	public function hardScan() {
+		$rows = getDatabase()->all(" select id,category,starttime from meeting where starttime > CURRENT_TIMESTAMP ");
+		foreach ($rows as $r) {
+			print $r['id']."\n";
+			self::downloadAndParseMeeting($r['id']);
+		}
+	}
   
 }
 
