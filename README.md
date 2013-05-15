@@ -1,7 +1,7 @@
 ottwatch
 ========
 
-Code for ottwatch.ca - parts of which should be compatible with any SIREPUB municipal records management system
+Code for <a href="http://ottwatch.ca">ottwatch.ca</a> - parts of which should be compatible with any SIREPUB municipal records management system
 
 Installation
 ============
