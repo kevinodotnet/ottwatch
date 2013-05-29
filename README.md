@@ -67,12 +67,10 @@ one better (and city generic).
 License
 =======
 
-All files are Copyright 2013 - Kevin O'Donnell unless otherwise stated, and are licensed under
-the Apache Licence, Version 2.0, see http://twitter.github.io/bootstrap/
-
-Bootstrap is re-distributed under the Apache Licence, Version 2.0, see http://twitter.github.io/bootstrap/
-Ephiphany is re-distributed with permission, see https://github.com/jmathai/epiphany
-Snapshots of Ottawa Open Data files (lib/opendata_*) re-distributed with permission, see http://ottawa.ca/en/open-data-terms-use
+* All files are Copyright 2013 - Kevin O'Donnell unless otherwise stated, and are licensed under the Apache Licence, Version 2.0, see http://www.apache.org/licenses/LICENSE-2.0
+* Bootstrap is re-distributed under the Apache Licence, Version 2.0, see http://twitter.github.io/bootstrap/
+* Ephiphany is re-distributed with permission, see https://github.com/jmathai/epiphany
+* Snapshots of Ottawa Open Data files (lib/opendata_*) re-distributed with permission, see http://ottawa.ca/en/open-data-terms-use
 
 About Me
 ========
