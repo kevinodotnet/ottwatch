@@ -186,7 +186,8 @@ function dashboard() {
     document.location.href = 'lobbying/search/'+v;
   }
   </script>
-  <h4>Recent Lobbying</h4>
+  <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
+  <tr><td colspan="2"><h4>Recent Lobbying</h4></td></tr>
   <?php
   $rows = getDatabase()->all(" 
     select
@@ -199,7 +200,6 @@ function dashboard() {
     limit 5
   ");
   ?>
-  <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
   <?php 
   foreach ($rows as $r) {
     ?>
@@ -210,17 +210,13 @@ function dashboard() {
     <?php
   }
   ?>
-  <tr>
-  <td colspan="2"><center>
-  <button class="btn" onclick="document.location.href = 'lobbying/search/'">Show All Lobbying</button>
-  </center>
-  </td>
-  </tr>
   </table>
+
   <h4>Search Lobbyist Registry</h4>
   <div class="input-prepend input-append">
   <input type="text" id="lobbyist_search_value" placeholder="Search...">
   <button class="btn" onclick="lobbyist_search_form_submit()"><i class="icon-search"></i> Search</button>
+  <button class="btn" onclick="document.location.href = 'lobbying/search/'">Show All</button>
   </div>
 
   <h4>Development Applications</h4>
