@@ -27,7 +27,7 @@ class DevelopmentAppController {
     <b><?php print $a['apptype']; ?></b>: <?php print $a['description']; ?>
     </p>
     <p>
-    <a target="_new" href="<?php print self::getLinkToApp($a['appid']); ?>"><i class="icon-share-alt"></i> View application and associated documents on ottawa.ca</a>
+    <a target="_new" href="<?php print self::getLinkToApp($a['appid']); ?>"><i class="icon-share-alt"></i> View application on ottawa.ca</a>
     </p>
 
     <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
@@ -39,6 +39,18 @@ class DevelopmentAppController {
     foreach ($a['address'] as $addr) {
       print $addr->addr;
       print "<br/>\n";
+    }
+    ?>
+    </td></tr>
+    <tr><td>Documents</td><td>
+    <?php
+    $docs = getDatabase()->all(" select * from devappfile where devappid = :id order by title ",array('id'=>$a['id']));
+    foreach ($docs as $d) {
+      $doctitle = $d['title'];
+      $doctitle = preg_replace("/{$a['devid']} /","",$doctitle);
+      ?>
+      <a target="_blank" href="<?php print $d['href']; ?>"><?php print $doctitle; ?></a><br/>
+      <?php
     }
     ?>
     </td></tr>
