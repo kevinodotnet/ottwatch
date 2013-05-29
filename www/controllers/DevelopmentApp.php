@@ -42,11 +42,9 @@ class DevelopmentAppController {
     }
     ?>
     </td></tr>
-    <!--
     <tr><td>Documents</td><td>
     <?php
     $docs = getDatabase()->all(" select * from devappfile where devappid = :id order by title ",array('id'=>$a['id']));
-    $docs = array(); // whoops; something broken in the scrape, resulting in dups.
     foreach ($docs as $d) {
       $doctitle = $d['title'];
       $doctitle = preg_replace("/{$a['devid']} /","",$doctitle);
@@ -56,7 +54,6 @@ class DevelopmentAppController {
     }
     ?>
     </td></tr>
-    -->
     <tr>
     <th style="text-align: center;">Date</th>
     <th style="text-align: center;">Status</th>
@@ -533,6 +530,7 @@ class DevelopmentAppController {
       ));
     }
 
+    getDatabase()->execute(" delete from devappfile where devappid = :devappid ",array( 'devappid' => $id,));
     foreach ($files as $f) {
       getDatabase()->execute(" insert into devappfile (devappid,href,title,created,updated) values (:devappid,:href,:title,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP) ",array(
         'devappid' => $id,
