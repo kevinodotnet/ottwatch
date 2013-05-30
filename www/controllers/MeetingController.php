@@ -333,9 +333,8 @@ class MeetingController {
     <li><a href="#tabsummary" data-toggle="tab">Summary</a></li>
     <?php } ?>
     <li><a href="#tabmap" data-toggle="tab">Map</a></li>
-    <li><a href="#tabcomments" data-toggle="tab">Comments</a></li>
     <li><a href="#tabdelegation" data-toggle="tab"><big><b>Public Delegations</b></big></a></li>
-    <!--<li><a href="#tababout" data-toggle="tab">About</a></li>-->
+    <li><a href="#tabcomments" data-toggle="tab">Comments</a></li>
     </ul>
 
     <div id="tabcontent" class="tab-content">
