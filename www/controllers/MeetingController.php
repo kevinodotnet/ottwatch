@@ -419,62 +419,6 @@ class MeetingController {
     </div>
     </div><!-- /tab -->
 
-    <!--
-    <div class="tab-pane fade" id="tababout">
-    <div style="padding: 10px; padding-top: 0px; overflow: scroll; height: 600px;">
-    <h3>Contact Information</h3>
-    <?php
-    ob_start();
-    ?>
-    <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
-      <tr>
-      <th>Name</th>
-      <th>Email</th>
-      <th>Phone</th>
-      <th>Ward</th>
-      <th>Office</th>
-      </tr>
-    <?php
-    $members = $m['members'];
-    if ($m['category'] == 'City Council') {
-      $rows = getDatabase()->all(" select * from electedofficials ");
-    } else if ($members != '') {
-      $members = json_decode($members);
-      $rows = getDatabase()->all(" select * from electedofficials where id in (".implode(",",$members).") ");
-    } else {
-      $rows = array();
-    }
-    $emails = array();
-    foreach ($rows as $r) {
-      $emails[] = $r['email'];
-      ?>
-      <tr>
-      <td><b><?php print "{$r['last']}, {$r['first']}"; ?></b></td>
-      <td><?php print "{$r['email']}"; ?></td>
-      <td><?php print "{$r['phone']}"; ?></td>
-      <td><?php print "{$r['ward']}"; ?> (Ward <?php print "{$r['wardnum']}"; ?>)</td>
-      <td><?php print "{$r['office']}"; ?></td>
-      </tr>
-      <?php
-    }
-    $cmtmailto = "mailto:".implode(",",$emails)."?Subject={$m['title']} on ".substr($m['starttime'],0,10);
-    ?>
-    </table>
-    <?php
-    $membersTable = ob_get_contents();
-    ob_end_clean();
-    print $membersTable;
-
-    ?>
-    <h3>Send Your Thoughts</h3>
-    <p>Want to contact the meeting members? Here's two easy ways:</p>
-    <blockquote><a target="_blank" href="<?php print $cmtmailto; ?>">Click on this convenient MAILTO link</a>.</blockquote>
-    <p>Cut and paste these email addresses into your email program:</p>
-    <blockquote><?php print implode("<br/>",$emails); ?></blockquote>
-    </div>
-    </div>
-    -->
-
     <div class="tab-pane fade" id="tabdelegation">
 
     <div style="padding: 10px; padding-top: 0px; overflow: scroll; height: 600px;">
@@ -508,7 +452,7 @@ class MeetingController {
 	    <?php 
     }
     ?>
-    <p>Click here to <a href="<?php print $cmtmailto; ?>">email the councillors directly</a>. Here is their full contact information:</p>
+    <p>Click here to <a href="<?php print $cmtmailto; ?>">email the councillor & coordinator directly</a>. Here is their full contact information:</p>
 
     <?php print $membersTable; ?>
 
