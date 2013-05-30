@@ -430,13 +430,32 @@ class MeetingController {
     </p>
 
     <?php
+
+    $members = $m['members'];
+    if ($m['category'] == 'City Council') {
+      $rows = getDatabase()->all(" select * from electedofficials ");
+    } else if ($members != '') {
+      $members = json_decode($members);
+      $rows = getDatabase()->all(" select * from electedofficials where id in (".implode(",",$members).") ");
+    } else {
+      $rows = array();
+    }
+    $emails = array();
+    foreach ($rows as $r) {
+      $emails[] = $r['email'];
+    }
+    $cmtmailto = 
+      "mailto:".implode(",",$emails).
+      "?Subject={$m['title']} on ".substr($m['starttime'],0,10).
+      "&Body=".urlencode("Please accept the following comments with regard to the ".meeting_category_to_title($m['category'])." meeting on ".substr($m['starttime'],0,10)."\n\n");
+
     $date = substr($m['starttime'],0,10);
     $title = meeting_category_to_title($m['category']);
     $subject = urlencode("Public Delegation for $title on $date");
     $mailto = "mailto:{$m['contactEmail']}?Subject=$subject";
     if ($m['contactName'] != '') {
       // add coordinator email to full committee distribution
-      $cmtmailto = preg_replace('/mailto:/',"mailto:{$m['contactEmail']}",$cmtmailto);
+      $cmtmailto = preg_replace('/mailto:/',"mailto:{$m['contactEmail']},",$cmtmailto);
 	    ?>
 	    <p>
 	    This meeting's coordinator is:
@@ -453,7 +472,7 @@ class MeetingController {
 	    <?php 
     }
     ?>
-    <p>Click here to <a href="<?php print $cmtmailto; ?>">email the councillor & coordinator directly</a>. Here is their full contact information:</p>
+    <p>Click here to <a target="_blank" href="<?php print $cmtmailto; ?>">email the councillor & coordinator directly</a>. Here is their full contact information:</p>
 
     <?php print $membersTable; ?>
 
