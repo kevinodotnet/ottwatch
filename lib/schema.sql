@@ -140,6 +140,25 @@ create table item (
   constraint foreign key (meetingid) references meeting (id) on delete cascade on update cascade
 ) engine = innodb;
 
+-- voting on items, one item may have many related motions
+create table itemvote (
+  id mediumint not null auto_increment,
+  itemid mediumint not null,
+  motion varchar(1024), -- text of the motion
+  primary key (id),
+  constraint foreign key (itemid) references item (id) on delete cascade on update cascade
+) engine = innodb;
+
+-- voting on items, one item may have many related motions
+create table itemvotecast (
+  id mediumint not null auto_increment,
+  itemvoteid mediumint not null,
+  vote varchar(1), -- Y for yes, N for no, A for absent
+  name varchar(200), -- name of person who voted
+  primary key (id),
+  constraint foreign key (itemvoteid) references itemvote (id) on delete cascade on update cascade
+) engine = innodb;
+
 -- "ifile" means "item file" but 'file' is a keyword
 create table ifile (
   id mediumint not null auto_increment,
