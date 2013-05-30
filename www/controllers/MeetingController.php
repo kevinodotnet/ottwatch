@@ -430,7 +430,17 @@ class MeetingController {
     </p>
 
     <?php
-
+    ob_start();
+    ?>
+    <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
+      <tr>
+      <th>Name</th>
+      <th>Email</th>
+      <th>Phone</th>
+      <th>Ward</th>
+      <th>Office</th>
+      </tr>
+    <?php
     $members = $m['members'];
     if ($m['category'] == 'City Council') {
       $rows = getDatabase()->all(" select * from electedofficials ");
@@ -443,7 +453,22 @@ class MeetingController {
     $emails = array();
     foreach ($rows as $r) {
       $emails[] = $r['email'];
+      ?>
+      <tr>
+      <td><b><?php print "{$r['last']}, {$r['first']}"; ?></b></td>
+      <td><?php print "{$r['email']}"; ?></td>
+      <td><?php print "{$r['phone']}"; ?></td>
+      <td><?php print "{$r['ward']}"; ?> (Ward <?php print "{$r['wardnum']}"; ?>)</td>
+      <td><?php print "{$r['office']}"; ?></td>
+      </tr>
+      <?php
     }
+    ?>
+    </table>
+    <?php
+    $membersTable = ob_get_contents();
+    ob_end_clean();
+
     $cmtmailto = 
       "mailto:".implode(",",$emails).
       "?Subject={$m['title']} on ".substr($m['starttime'],0,10).
