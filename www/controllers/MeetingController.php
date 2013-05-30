@@ -435,6 +435,8 @@ class MeetingController {
     $subject = urlencode("Public Delegation for $title on $date");
     $mailto = "mailto:{$m['contactEmail']}?Subject=$subject";
     if ($m['contactName'] != '') {
+      // add coordinator email to full committee distribution
+      $cmtmailto = preg_replace('/mailto:/',"mailto:{$m['contactEmail']}",$cmtmailto);
 	    ?>
 	    <p>
 	    This meeting's coordinator is:
