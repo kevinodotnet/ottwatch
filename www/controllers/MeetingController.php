@@ -324,11 +324,19 @@ class MeetingController {
 
     </div>
 
+    <?php 
+    // Is there a voting history
+    $votes = getDatabase()->all(" select * from itemvote where itemid in (select id from item where meetingid = :meetingid) order by id ",array("meetingid"=>$m['id']));
+    ?>
+
     <!-- column 2 -->
     <div class="span8" style=" border: 0px; border-left: 1px solid #000000; height: 620px;">
 
     <ul id="tablist" class="nav nav-tabs">
     <li><a href="#tabagenda" data-toggle="tab">Agenda</a></li>
+    <?php if (count($votes) > 0) { ?>
+    <li><a href="#tabvotes" data-toggle="tab">Votes</a></li>
+    <?php } ?>
     <?php if ($isStarted && !$m['minutes']) { ?>
     <li><a href="#tabsummary" data-toggle="tab">Summary</a></li>
     <?php } ?>
@@ -345,6 +353,72 @@ class MeetingController {
 
     <div class="tab-pane" id="tabsummary">
     <iframe src="<?php print $summarySrc; ?>" style="width: 100%; height: 600px; border: 0px;"></iframe>
+    </div><!-- /tab -->
+
+    <div class="tab-pane" id="tabvotes">
+    <div style="padding: 10px; padding-top: 0px; overflow: scroll; height: 600px;">
+    <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
+    <?php
+    $lastitemtitle = '';
+    foreach ($votes as $vote) {
+      $itemtitle = '';
+      foreach ($items as $i) {
+        if ($i['id'] == $vote['itemid']) {
+          $itemtitle = $i['title'];
+        }
+      }
+      if ($lastitemtitle != $itemtitle) {
+        ?>
+        <tr>
+        <td colspan="4"><h4>ITEM: <?php print "$itemtitle"; ?><h4></td>
+        </tr>
+		    <tr>
+		    <th style="width: 40%;">Motion</th>
+		    <th style="width: 20%;">Yes</th>
+		    <th style="width: 20%;">No</th>
+		    <th style="width: 20%;">Absent</th>
+		    </tr>
+        <?php
+      }
+
+      $casts = getDatabase()->all(" select * from itemvotecast where itemvoteid = :id order by itemvoteid,vote,id ",array('id'=>$vote['id']));
+      ?>
+      <tr>
+      <td style="vertical-align: top;"><?php print $vote['motion']; ?></td>
+      <td style="vertical-align: top;">
+      <?php
+      foreach ($casts as $c) {
+        if ($c['vote'] != 'y') { continue; }
+        print $c['name'];
+        print "<br/>";
+      }
+      ?>
+      </td>
+      <td style="vertical-align: top;">
+      <?php
+      foreach ($casts as $c) {
+        if ($c['vote'] != 'n') { continue; }
+        print $c['name'];
+        print "<br/>";
+      }
+      ?>
+      </td>
+      <td style="vertical-align: top;">
+      <?php
+      foreach ($casts as $c) {
+        if ($c['vote'] != 'a') { continue; }
+        print $c['name'];
+        print "<br/>";
+      }
+      ?>
+      </td>
+      </tr>
+      <?php
+      $lastitemtitle = $itemtitle;
+    }
+    ?>
+    </table>
+    </div>
     </div><!-- /tab -->
 
     <div class="tab-pane" id="tabmap">
