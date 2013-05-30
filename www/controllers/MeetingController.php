@@ -1038,18 +1038,15 @@ class MeetingController {
         array_push($vote['votes'],array('name'=>$who,'voted'=>$votefor));
       }
 
-      # TODO: do something with this vote
-
-      print "\n";
-      print "\tMOTION :: $motion\n";
+      $voteid = getDatabase()->execute('insert into itemvote (itemid,motion) values (:itemid,:motion) ', array('itemid'=>$item['id'],'motion'=>$motion));
       foreach ($vote['votes'] as $v) {
-        print "\t\t{$v['voted']} :: {$v['name']}\n";
+        if ($v['voted'] == 'Yes') { $vote = 'y'; }
+        else if ($v['voted'] == 'No') { $vote = 'n'; }
+        else if ($v['voted'] == 'Absent') { $vote = 'a'; }
+        else { $vote = 'u'; } // should never happen
+        getDatabase()->execute('insert into itemvotecast (itemvoteid,vote,name) values (:itemvoteid,:vote,:name) ', array('itemvoteid'=>$voteid,'vote'=>$vote,'name'=>$v['name']));
       }
       print "\n";
-
-      #print "\n\n";
-      #pr($vote);
-      #print "\n\n";
 
     }
 
