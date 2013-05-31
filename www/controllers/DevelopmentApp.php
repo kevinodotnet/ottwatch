@@ -42,6 +42,30 @@ class DevelopmentAppController {
     }
     ?>
     </td></tr>
+    <?php 
+    $sql = " select * from devapp where id != {$a['id']} and ( ";
+    $first = 1;
+    foreach ($a['address'] as $addr) {
+      if (!$first) {
+        $sql .= " or ";
+      }
+      $sql .= " address like '%{$addr->addr}%' ";
+      $first = 0;
+    }
+    $sql .= " ) ";
+    $related = getDatabase()->all($sql);
+    if (count($related) > 0) {
+      ?>
+      <tr><td>Possibly related devapp(s)</td><td>
+      <?php
+      foreach ($related as $dd) {
+        print "<a href=\"{$dd['devid']}\">{$dd['devid']} - {$dd['apptype']}</a><br/>";
+      }
+      ?>
+      </td></tr>
+      <?php
+    }
+    ?>
     <tr><td>Documents</td><td>
     <?php
     $docs = getDatabase()->all(" select * from devappfile where devappid = :id order by title ",array('id'=>$a['id']));
