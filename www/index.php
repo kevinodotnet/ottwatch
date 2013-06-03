@@ -357,7 +357,6 @@ function copyToClipboard (text) {
 <li><a href="<?php print $OTT_WWW; ?>/about">About</a></li>
 <li><a href="<?php print $OTT_WWW; ?>/ideas">Ideas</a></li>
 <li><a href="<?php print $OTT_WWW; ?>/api/about">API</a></li>
-<li><a style="font-weight: bold; color: red;" target="_blank" href="<?php print $OTT_WWW; ?>/about">VOTE for @OttWatch</a></li>
 <?php
 if (!LoginController::isLoggedIn()) {
   /*
