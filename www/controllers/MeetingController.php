@@ -10,7 +10,8 @@ class MeetingController {
   static public function formatMotion($motion) {
     $motion = preg_replace("/^Motion To: /","",$motion); # useless preamble
     $motion = preg_replace("/WHEREAS/","<br/><b>WHEREAS</b>",$motion);
-    $motion = preg_replace("/BE IT RESOLVED/","<br/><b>BE IT RESOLVED<b>",$motion);
+    $motion = preg_replace("/; BE IT RESOLVED/",";<br/><b>BE IT RESOLVED</b>",$motion);
+    $motion = preg_replace("/THEREFORE BE IT RESOLVED/",";<br/><b>THEREFORE BE IT RESOLVED</b>",$motion);
     $motion = preg_replace("/^<br\\/>/","",$motion); # strip opening BR that we might have added
     $motion = preg_replace("/<br\\/>/","<br/>\n",$motion); # strip opening BR that we might have added
     return $motion;
