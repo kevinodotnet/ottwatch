@@ -8,6 +8,9 @@ MeetingController::formatMotion("foo");
 class MeetingController {
 
   static public function formatMotion($motion) {
+    # needs fixin
+    return $motion;
+
     $motion = preg_replace("/^Motion To: /","",$motion); # useless preamble
     $motion = preg_replace("/WHEREAS/","<br/><b>WHEREAS</b>",$motion);
     $motion = preg_replace("/; BE IT RESOLVED/",";<br/><b>BE IT RESOLVED</b>",$motion);
@@ -383,7 +386,7 @@ class MeetingController {
         // http://app05.ottawa.ca/sirepub/agdocs.aspx?doctype=minutes&itemid=301229
         ?>
         <tr>
-        <td colspan="4"><h4>ITEM: <?php print "$itemtitle"; ?> <a target="_blank" href="http://app05.ottawa.ca/sirepub/agdocs.aspx?doctype=minutes&itemid=<?php print $i['itemid']; ?>"><i class="icon-share"></i></a><h4></td>
+        <td colspan="4"><h4>ITEM: <?php print "$itemtitle"; ?><h4></td>
         </tr>
 		    <tr>
 		    <th style="width: 40%;">Motion</th>
