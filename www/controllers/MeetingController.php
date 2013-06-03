@@ -3,7 +3,18 @@
 #define('DATE_ICAL', 'Ymd\THis\Z');
 define('DATE_ICAL', 'Ymd\THis');
 
+MeetingController::formatMotion("foo");
+
 class MeetingController {
+
+  static public function formatMotion($motion) {
+    $motion = preg_replace("/^Motion To: /","",$motion); # useless preamble
+    $motion = preg_replace("/WHEREAS/","<br/><b>WHEREAS</b>",$motion);
+    $motion = preg_replace("/BE IT RESOLVED/","<br/><b>BE IT RESOLVED<b>",$motion);
+    $motion = preg_replace("/^<br\\/>/","",$motion); # strip opening BR that we might have added
+    $motion = preg_replace("/<br\\/>/","<br/>\n",$motion); # strip opening BR that we might have added
+    return $motion;
+  }
 
   static public function calendarView () {
 		top();
@@ -384,7 +395,7 @@ class MeetingController {
       $casts = getDatabase()->all(" select * from itemvotecast where itemvoteid = :id order by itemvoteid,vote,id ",array('id'=>$vote['id']));
       ?>
       <tr>
-      <td style="vertical-align: top;"><?php print $vote['motion']; ?></td>
+      <td style="vertical-align: top;"><?php print self::formatMotion($vote['motion']); ?></td>
       <td style="vertical-align: top;">
       <?php
       foreach ($casts as $c) {
