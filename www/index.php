@@ -122,7 +122,15 @@ function dashboard() {
 	    <?php
 	  }
   }
-  $meetings = getDatabase()->all(" select id,category,date(starttime) starttime,meetid from meeting where date(starttime) > date(CURRENT_TIMESTAMP) order by starttime ");
+  # sometimes ottawa.ca ppl create meetings *way* in advance for testing purposes.
+  # only look 2 months in advance. Typically meetings aren't created until 2 wks in advance anyway
+  $meetings = getDatabase()->all(" 
+    select id,category,date(starttime) starttime,meetid 
+    from meeting 
+    where 
+      date(starttime) > date(CURRENT_TIMESTAMP) 
+      and datediff(starttime,current_timestamp()) < 60
+    order by starttime ");
   if (count($meetings) > 0) {
 	  ?>
 	  <tr>
