@@ -11,7 +11,7 @@ class MeetingController {
     $motion = preg_replace("/^Motion To: /","",$motion); # useless preamble
     $motion = preg_replace("/WHEREAS/","<br/><b>WHEREAS</b>",$motion);
     $motion = preg_replace("/; BE IT RESOLVED/",";<br/><b>BE IT RESOLVED</b>",$motion);
-    $motion = preg_replace("/THEREFORE BE IT RESOLVED/",";<br/><b>THEREFORE BE IT RESOLVED</b>",$motion);
+    $motion = preg_replace("/THEREFORE BE IT RESOLVED/","<br/><b>THEREFORE BE IT RESOLVED</b>",$motion);
     $motion = preg_replace("/^<br\\/>/","",$motion); # strip opening BR that we might have added
     $motion = preg_replace("/<br\\/>/","<br/>\n",$motion); # strip opening BR that we might have added
     return $motion;
@@ -380,9 +380,10 @@ class MeetingController {
         }
       }
       if ($lastitemtitle != $itemtitle) {
+        // http://app05.ottawa.ca/sirepub/agdocs.aspx?doctype=minutes&itemid=301229
         ?>
         <tr>
-        <td colspan="4"><h4>ITEM: <?php print "$itemtitle"; ?><h4></td>
+        <td colspan="4"><h4>ITEM: <?php print "$itemtitle"; ?> <a target="_blank" href="http://app05.ottawa.ca/sirepub/agdocs.aspx?doctype=minutes&itemid=<?php print $i['itemid']; ?>"><i class="icon-share"></i></a><h4></td>
         </tr>
 		    <tr>
 		    <th style="width: 40%;">Motion</th>
