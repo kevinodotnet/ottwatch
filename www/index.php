@@ -254,12 +254,12 @@ function dashboard() {
   <tr>
   <td colspan="3">
   <center>
-  <a href="devapps">View all <?php print $count; ?>  development applications</a>
+  <a class="btn" href="devapps"><i class="icon-search"></i> Search</a>
+  <a class="btn" href="devapps?since=999">View all <?php print $count; ?> development applications</a>
   </center>
   </td>
   </tr>
   </table>
-
 
   </div>
 
