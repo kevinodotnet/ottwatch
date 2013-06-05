@@ -411,17 +411,11 @@ class DevelopmentAppController {
           if ($app['id']) {
             if ($app['statusdate'] != $statusdate) {
               $changed = 1;
-              print "#####################################\n";
-							print "page $p: FROM DATABASE for $appid / $devid on MY statusdate '$statusdate' for UPDATE:\n"; print print_r($app); print "\n";
               self::injestApplication($appid,'update');
-              print "\n\n";
             }
           } else {
             $changed = 1;
-            print "#####################################\n";
-						print "page $p: FROM DATABASE for $appid on MY statusdate '$statusdate' for INSERT\n"; print print_r($app); print "\n";
             self::injestApplication($appid,'insert');
-            print "\n\n";
           }
         }
       }
@@ -506,7 +500,6 @@ class DevelopmentAppController {
 
     $row = getDatabase()->one(" select * from devapp where appid = :appid ",array("appid"=>$appid));
     if ($row['id']) {
-      print "...existing, updating\n";
       $id = $row['id'];
 	    getDatabase()->execute(" 
 	      update devapp set 
@@ -533,7 +526,6 @@ class DevelopmentAppController {
         }
       }
     } else {
-      print "...new, inserting\n";
 	    $id = getDatabase()->execute(" 
 	      insert into devapp 
 	      (address,appid,devid,ward,apptype,receiveddate,created,updated,description)
@@ -581,7 +573,6 @@ class DevelopmentAppController {
     } else if ($action == 'update') {
       $tweet = "Updated {$labels['Application']}: ".$addr." {$labels['Application #']} in $ward";
     } else {
-			print "action: $action so no tweeeting\n";
 			# no tweeting!
 			return;
 		}
