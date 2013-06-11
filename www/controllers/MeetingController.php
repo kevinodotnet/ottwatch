@@ -313,6 +313,7 @@ class MeetingController {
     print "<b>$title</b><br/>";
     print "<small>".substr($m['starttime'],0,10)." ";
     print "<a href=\"http://app05.ottawa.ca/sirepub/mtgviewer.aspx?meetid=".$meetid."&doctype=AGENDA\"><i class=\"icon-share\"></i> View on Ottawa.ca</a>";
+    print "</small>";
     ?>
 
     <div style="padding: 5px; 0px;">
