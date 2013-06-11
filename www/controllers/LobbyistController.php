@@ -13,17 +13,44 @@ class LobbyistController {
     return "<a href=\"".OttWatchConfig::WWW."/lobbying/files/{$id}\">{$issue}</a>";
   }
 
+  public static function getLongestRunningLobbyingFile() {
+		$sql = "
+			select 
+        f.id,
+			  datediff(max(i.lobbydate),min(i.lobbydate)) days
+			from lobbyfile f 
+			  join lobbying i on i.lobbyfileid = f.id
+			group by f.id
+			order by datediff(max(i.lobbydate),min(i.lobbydate)) desc
+			limit 1
+		";
+    $row = getDatabase()->one($sql);
+    return $row;
+  }
+
   public static function showFile ($id) {
     $file = getDatabase()->one(" select * from lobbyfile where id = :id",array('id'=>$id));
     $issue = substr($file['issue'],0,30);
     $issue .= '...';
     top($issue);
+
+    $longest = self::getLongestRunningLobbyingFile();
+    $isLongest = 0;
+    if ($id == $longest['id']) {
+      $isLongest = 1;
+    }
     ?>
 
     <div class="row-fluid">
     <div class="span4">
     <h4>Issue</h4>
-    <?php print $file['issue']; ?>
+    <?php 
+      print $file['issue']; 
+      if ($id == $longest['id']) {
+        print "<h4>Fun Fact</h4>";
+        print "At <b>{$longest['days']}</b> days this is the longest running lobbying file on record";
+      }
+    ?>
     </div>
     <div class="span4">
     <h4>Lobbyist</h4>
