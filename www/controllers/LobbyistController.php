@@ -682,6 +682,27 @@ class LobbyistController {
 	  return $response;
 	}
 
+  public static function tweetLongestFileBadge() {
+
+    # check if we have a flip in "longest lobbying file"
+    $last = getvar('lobbytweet.longest');
+    $longest = self::getLongestRunningLobbyingFile();
+    setvar('lobbytweet.longest',$longest['id']);
+
+    if ($last != $longest['id']) {
+      # we have a flip; just PRINT for
+      $oldfile = getDatabase()->one(" select * from lobbyfile where id = :id",array('id'=>$last));
+      $file = getDatabase()->one(" select * from lobbyfile where id = :id",array('id'=>$longest['id']));
+
+      $txt = "{$file['lobbyist']} has ousted {$oldfile['lobbyist']} for longest running lobby file: {$longest['days']} days";
+      $url = OttWatchConfig::WWW."/lobbying/files/".$file['id'];
+      print "\nBADGES!\n";
+      print "TXT: $txt\n";
+      print "URL: $url\n";
+    }
+
+  }
+
   public static function tweetNewActivities() {
 
     #setvar('lobbytweet.last','1362459600');
