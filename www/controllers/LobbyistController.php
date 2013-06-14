@@ -586,6 +586,7 @@ class LobbyistController {
         # print ">>> $l\n";
         # <a id="MainContent_gvSearchResults_LnkLobbyistName_0" href="javascript:__doPostBack(&#39;ctl00$MainContent$gvSearchResults$ctl02$LnkLobbyistName&#39;,&#39;&#39;)"><u>Bryan Huehn</u></a>
         $lobbyist = $matches[1];
+				print "lobyist: $lobbyist\n";
       }
       if (preg_match('/<span.*gvsrlblFromDate.*>(\d\d-\S\S\S-20\d\d)</',$l,$matches)) {
         # print ">>> $l\n";
@@ -599,6 +600,19 @@ class LobbyistController {
         $to = $matches[1];
         $to = strftime("%Y-%m-%d",strtotime($to));
       }
+			# sometimes 'issue' has ^M linefeeds
+      if (preg_match('/<span.*gvsrlblIssue.*>/',$l)) {
+				# great! but pull in mor elines if it doesnt have closing span
+				$m = 1;
+	      while (!preg_match('/<span.*gvsrlblIssue.*>([^<]+)</',$l,$matches)) {
+					$l .= $lines[$x+$m];
+					$l = preg_replace('/\r/',' ',$l);
+					$l = preg_replace('/\n/',' ',$l);
+					$l = preg_replace('/  /',' ',$l);
+					$m++;
+				}
+				# now next IF will match because we have pulled in the close span tag
+			}
       if (preg_match('/<span.*gvsrlblIssue.*>([^<]+)</',$l,$matches)) {
         # print ">>> $l\n";
         # <span id="MainContent_gvSearchResults_gvsrlblIssue_0">Presto pass mass distribution</span>
