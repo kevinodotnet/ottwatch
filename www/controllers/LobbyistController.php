@@ -586,7 +586,6 @@ class LobbyistController {
         # print ">>> $l\n";
         # <a id="MainContent_gvSearchResults_LnkLobbyistName_0" href="javascript:__doPostBack(&#39;ctl00$MainContent$gvSearchResults$ctl02$LnkLobbyistName&#39;,&#39;&#39;)"><u>Bryan Huehn</u></a>
         $lobbyist = $matches[1];
-				print "lobyist: $lobbyist\n";
       }
       if (preg_match('/<span.*gvsrlblFromDate.*>(\d\d-\S\S\S-20\d\d)</',$l,$matches)) {
         # print ">>> $l\n";
