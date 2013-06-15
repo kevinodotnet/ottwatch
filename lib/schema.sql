@@ -124,6 +124,7 @@ create table meeting (
   contactPhone varchar(30),
   members varchar(300),
 	minutes boolean default false,
+	youtube varchar(100),
   created datetime,
   updated datetime,
   primary key (id)
