@@ -599,6 +599,19 @@ class LobbyistController {
         $to = $matches[1];
         $to = strftime("%Y-%m-%d",strtotime($to));
       }
+			# sometimes 'issue' has ^M linefeeds
+      if (preg_match('/<span.*gvsrlblIssue.*>/',$l)) {
+				# great! but pull in mor elines if it doesnt have closing span
+				$m = 1;
+	      while (!preg_match('/<span.*gvsrlblIssue.*>([^<]+)</',$l,$matches)) {
+					$l .= $lines[$x+$m];
+					$l = preg_replace('/\r/',' ',$l);
+					$l = preg_replace('/\n/',' ',$l);
+					$l = preg_replace('/  /',' ',$l);
+					$m++;
+				}
+				# now next IF will match because we have pulled in the close span tag
+			}
       if (preg_match('/<span.*gvsrlblIssue.*>([^<]+)</',$l,$matches)) {
         # print ">>> $l\n";
         # <span id="MainContent_gvSearchResults_gvsrlblIssue_0">Presto pass mass distribution</span>
