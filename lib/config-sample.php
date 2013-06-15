@@ -15,6 +15,8 @@ class OttWatchConfig {
   const TWITTER_CONSUMER_SECRET = 'change_me';
   const TWITTER_ACCESS_TOKEN = 'change_me';
   const TWITTER_TOKEN_SECRET = 'change_me';
+  const YOUTUBE_USER = 'CHANGEME';
+  const YOUTUBE_PASS = 'CHANGEME';
 }
 
 ?>

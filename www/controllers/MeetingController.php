@@ -73,8 +73,8 @@ class MeetingController {
 		print "\n";
 
 		# Use external Youtube-Upload python to push to Youtube
-		$user_email = 'test@gmail.com';
-		$user_passwd = 'fake';
+		$user_email = OttWatchConfig::YOUTUBE_USER;
+		$user_passwd = OttWatchConfig::YOUTUBE_PASS;
 		$title = 'A title for the meeting, get from DB';
 		$desc = 'The description of the meeeting with URL back to ottwatch for details';
 		$cmd = " PYTHONPATH=$dirname/../lib/gdata/src python ";
