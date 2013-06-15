@@ -10,8 +10,16 @@ MeetingController::formatMotion("foo");
 
 class MeetingController {
 
-  static public function getVideo($meetid) {
-		global $dirname; # set by bin/XXXX.php scripts, UGLY
+  static public function getVideo($id) {
+		global $dirname; # set by bin/XXXX.php scripts, UGLY, should probably be passed in as FAR or a DEFINE
+
+		$m = getDatabase()->one(" select * from meeting where id = :id ",array('id'=>$id));
+		if (!$m['id']) {
+			# can't get video for a meeting we don't know about
+			return;
+		}
+
+		$meetid = $m['meetid'];
 
 		# Get the full HTML for the meeting (all frames and details)
     $url = "http://app05.ottawa.ca/sirepub/mtgviewer.aspx?meetid={$meetid}&doctype=AGENDA";
@@ -72,26 +80,41 @@ class MeetingController {
     }
 		print "\n";
 
+		# Mark the video URL as 'uploading' so that we know we've attempted it once
+		getDatabase()->execute(" update meeting set youtube = 'UPLOADING' where id = :id ",array('id'=>$m['id']));
+
 		# Use external Youtube-Upload python to push to Youtube
 		$user_email = OttWatchConfig::YOUTUBE_USER;
 		$user_passwd = OttWatchConfig::YOUTUBE_PASS;
-		$title = 'A title for the meeting, get from DB';
-		$desc = 'The description of the meeeting with URL back to ottwatch for details';
+
+		# video info
+    $meetingDate = explode(" - ",$m['title']);
+    $meetingDate = $meetingDate[1];
+  	$link = OttWatchConfig::WWW."/meetings/meetid/".$m['meetid'];
+    $title = "Ottawa ".meeting_category_to_title($m['category'])." - $meetingDate";
+    $desc = meeting_category_to_title($m['category'])." on $meetingDate. Full details: $link";
+
 		$cmd = " PYTHONPATH=$dirname/../lib/gdata/src python ";
 		$cmd .= " $dirname/../lib/youtube-upload/youtube_upload/youtube_upload.py ";
 		$cmd .= " --email=$user_email --password=$user_passwd ";
 		$cmd .= " '--title=$title' '--description=$desc' ";
 		$cmd .= " --category=News --keywords='ottwatch, Ottawa City Council' ";
 		$cmd .= " $video_file ";
+
+		# print $cmd; return;
 		$youtube_url = `$cmd`;
 		$youtube_url = preg_replace("/\n/","",$youtube_url);
 		$youtube_url = preg_replace("/\r/","",$youtube_url);
+		# dont need this now
+		# unlink($video_file);
 
-		print "----------------\n";
-		print "url: >> $youtube_url <<\n";
-		print "----------------\n";
+		if ($youtube_url == '') {
+			# mark as ERROR so we don't keep trying over and over again on this video; something must be wrong.
+			getDatabase()->execute(" update meeting set youtube = :url where id = :id ",array('id'=>$m['id'],'url'=>'ERROR'));
+		}
 
-    #print $manifest;
+		# eggcellent
+		getDatabase()->execute(" update meeting set youtube = :url where id = :id ",array('id'=>$m['id'],'url'=>$youtube_url));
 
   }
 
