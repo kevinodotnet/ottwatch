@@ -11,56 +11,81 @@ MeetingController::formatMotion("foo");
 class MeetingController {
 
   static public function getVideo($meetid) {
+		global $dirname; # set by bin/XXXX.php scripts, UGLY
+
+		# Get the full HTML for the meeting (all frames and details)
     $url = "http://app05.ottawa.ca/sirepub/mtgviewer.aspx?meetid={$meetid}&doctype=AGENDA";
     $html = `wget -qO - '$url'`; // file_get_contents($url);
 
     $tmp = preg_grep('/g_locationPrimary/',explode("\n",$html));
     if (count($tmp) == 0) {
+			print "NO video details found (g_locationPrimary)\n";
       // no video
       return;
     }
-    foreach ($tmp as $k => $v) { $tmp = $v; } # only one line anyway
 
+		# Extract just the URL from the HTML line that matched
+    foreach ($tmp as $k => $v) { $tmp = $v; }
     $tmp = preg_replace('/.*http/','http',$tmp);
     $tmp = preg_replace('/".*/','',$tmp);
     $isplUrl = $tmp;
+    $baseUrl = preg_replace('/\/[^\/]+$/','/',$isplUrl);
+
+		# Extract the first REF from ISPL xml document
+		print "Loading video ISPL file: $isplUrl\n";
     $spl = `wget -qO - '$isplUrl'`;
+		if ($spl == '') {
+			print "ISPL file not found or is not XML\n";
+			return;
+		}
     $xml = simplexml_load_string($spl);
     $ref = $xml->xpath('//ref/@src'); $ref = ''.$ref[0]; //$ref = $ref['src']; $ref = $ref[0];
 
-    $baseUrl = preg_replace('/\/[^\/]+$/','/',$isplUrl);
-    $ref = $baseUrl . $ref;
-
-    #print ">> $ref << \n";
-    #$manifest = `wget -qO - '$ref'`;
-    #file_put_contents('manifest.xml',$manifest);
-    #$manifest = file_get_contents('manifest.xml');
-    #$xml = simplexml_load_string($manifest);
-
-    $ism2 = $ref;
-    $ism2 = preg_replace('/\.ism/','-m3u8-aapl.ism',$ism2);
-    $ism2 = preg_replace('/manifest/','',$ism2);
-
-    # add Quality
-    $ism2 .= 'QualityLevels(464000)';
-
+		# Skip to the seemlingly consisten 'bitrate specific' manifest file
     # Manifest             'http://ca.sirecdn.net/SIRE/Ottawa/City Council/2472/393.ism/manifest'
     # Example video chunk: 'http://ca.sirecdn.net/SIRE/Ottawa/City Council/2472/393-m3u8-aapl.ism/QualityLevels(464000)/Fragments(Video=39600000000,format=m3u8-aapl)'
     # ISM2                 'http://ca.sirecdn.net/SIRE/Ottawa/City Council/2472/393-m3u8-aapl.ism/QualityLevels(464000)'
-
+    $ism2 = $baseUrl . $ref;
+    $ism2 = preg_replace('/\.ism/','-m3u8-aapl.ism',$ism2);
+    $ism2 = preg_replace('/manifest/','',$ism2);
+    $ism2 .= 'QualityLevels(464000)';
     $manifest = `wget -qO - '$ism2/manifest(format=m3u8-aapl)'`;
+
+		# This manifest file has all the fragment and timeoffset details. One HTTP request per
+		# Append each chunk to the overall video file
+    $video_file = "video_{$meetid}.mp2t";
+		# file_put_contents($video_file,"");
     $chunk = 0;
     $frags = preg_grep('/^Fragments/',explode("\n",$manifest));
+		print "Saving to $video_file ".count($frags)." chunks\n";
     foreach ($frags as $frag) {
-      print "\n";
-      print "$chunk/".count($frags)."\n";
+			break;
+      print "$chunk ";
+      $chunk ++;
+			if ($chunk < 300) { continue; }
       $frag = preg_replace("/\n/","",$frag);
       $frag = preg_replace("/\r/","",$frag);
       $fragUrl = "$ism2/$frag";
-      $filename = "{$meetid}_$chunk.mp2t";
-      print `wget -O $filename '$fragUrl'`;
-      $chunk ++;
+      $data = `wget -qO - '$fragUrl'`;
+			file_put_contents($video_file,$data,FILE_APPEND);
+			if ($chunk > 400) { break; }
     }
+		print "\n";
+
+		# Use external Youtube-Upload python to push to Youtube
+		$user_email = 'test@gmail.com';
+		$user_passwd = 'fake';
+		$title = 'A title for the meeting, get from DB';
+		$desc = 'The description of the meeeting with URL back to ottwatch for details';
+		$cmd = " python ";
+		$cmd .= " $dirname/../lib/youtube-upload/youtube_upload/youtube_upload.py ";
+		$cmd .= " --email=$user_email --password=$user_passwd ";
+		$cmd .= " --title=$title --description=$desc ";
+		$cmd .= " --category=News --keywords='ottwatch, Ottawa City Council' ";
+		$cmd .= " $video_file ";
+		$out = `$cmd`;
+
+		print $out;
 
     #print $manifest;
 
