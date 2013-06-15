@@ -77,15 +77,19 @@ class MeetingController {
 		$user_passwd = 'fake';
 		$title = 'A title for the meeting, get from DB';
 		$desc = 'The description of the meeeting with URL back to ottwatch for details';
-		$cmd = " python ";
+		$cmd = " PYTHONPATH=$dirname/../lib/gdata/src python ";
 		$cmd .= " $dirname/../lib/youtube-upload/youtube_upload/youtube_upload.py ";
 		$cmd .= " --email=$user_email --password=$user_passwd ";
-		$cmd .= " --title=$title --description=$desc ";
+		$cmd .= " '--title=$title' '--description=$desc' ";
 		$cmd .= " --category=News --keywords='ottwatch, Ottawa City Council' ";
 		$cmd .= " $video_file ";
-		$out = `$cmd`;
+		$youtube_url = `$cmd`;
+		$youtube_url = preg_replace("/\n/","",$youtube_url);
+		$youtube_url = preg_replace("/\r/","",$youtube_url);
 
-		print $out;
+		print "----------------\n";
+		print "url: >> $youtube_url <<\n";
+		print "----------------\n";
 
     #print $manifest;
 
