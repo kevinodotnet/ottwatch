@@ -10,6 +10,14 @@ MeetingController::formatMotion("foo");
 
 class MeetingController {
 
+  static public function getYoutubeEmbedCode($url) {
+    # convert from a URL to a youtbue watch page to the equivalent embed code.
+    # URL looks like this: http://www.youtube.com/watch?v=zwCZQV-D4J4
+    $id = $url;
+    $id = preg_replace("/.*\?v=/","",$id);
+    return '<iframe width="640" height="480" src="http://www.youtube.com/embed/'.$id.'?rel=0" frameborder="0" allowfullscreen></iframe>';
+  }
+
   static public function getVideo($id) {
 		global $dirname; # set by bin/XXXX.php scripts, UGLY, should probably be passed in as FAR or a DEFINE
 
@@ -466,6 +474,9 @@ class MeetingController {
 
     <ul id="tablist" class="nav nav-tabs">
     <li><a href="#tabagenda" data-toggle="tab">Agenda</a></li>
+    <?php if (preg_match('/http/',$m['youtube'])) { ?>
+    <li><a href="#tabvideo" data-toggle="tab">Video</a></li>
+    <?php } ?>
     <?php if (count($votes) > 0) { ?>
     <li><a href="#tabvotes" data-toggle="tab">Votes</a></li>
     <?php } ?>
@@ -486,6 +497,12 @@ class MeetingController {
     <div class="tab-pane" id="tabsummary">
     <iframe src="<?php print $summarySrc; ?>" style="width: 100%; height: 600px; border: 0px;"></iframe>
     </div><!-- /tab -->
+
+    <div class="tab-pane" id="tabvideo">
+    <center>
+    <?php print self::getYoutubeEmbedCode($m['youtube']); ?>
+    </center>
+    </div>
 
     <div class="tab-pane" id="tabvotes">
     <div style="padding: 10px; padding-top: 0px; overflow: scroll; height: 600px;">
