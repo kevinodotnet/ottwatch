@@ -125,6 +125,7 @@ create table meeting (
   members varchar(300),
 	minutes boolean default false,
 	youtube varchar(100),
+  youtubeset datetime,
   created datetime,
   updated datetime,
   primary key (id)
