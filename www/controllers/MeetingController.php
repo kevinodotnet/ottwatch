@@ -1,5 +1,8 @@
 <?php
 
+# NOTES:
+# VIDEO FILES are 'http://ca.sirecdn.net/SIRE/Ottawa/City%20Council/2472/393-m3u8-aapl.ism/QualityLevels(464000)/Fragments(Video=39600000000,format=m3u8-aapl)'
+
 #define('DATE_ICAL', 'Ymd\THis\Z');
 define('DATE_ICAL', 'Ymd\THis');
 
