@@ -10,6 +10,62 @@ MeetingController::formatMotion("foo");
 
 class MeetingController {
 
+  static public function getVideo($meetid) {
+    $url = "http://app05.ottawa.ca/sirepub/mtgviewer.aspx?meetid={$meetid}&doctype=AGENDA";
+    $html = `wget -qO - '$url'`; // file_get_contents($url);
+
+    $tmp = preg_grep('/g_locationPrimary/',explode("\n",$html));
+    if (count($tmp) == 0) {
+      // no video
+      return;
+    }
+    foreach ($tmp as $k => $v) { $tmp = $v; } # only one line anyway
+
+    $tmp = preg_replace('/.*http/','http',$tmp);
+    $tmp = preg_replace('/".*/','',$tmp);
+    $isplUrl = $tmp;
+    $spl = `wget -qO - '$isplUrl'`;
+    $xml = simplexml_load_string($spl);
+    $ref = $xml->xpath('//ref/@src'); $ref = ''.$ref[0]; //$ref = $ref['src']; $ref = $ref[0];
+
+    $baseUrl = preg_replace('/\/[^\/]+$/','/',$isplUrl);
+    $ref = $baseUrl . $ref;
+
+    #print ">> $ref << \n";
+    #$manifest = `wget -qO - '$ref'`;
+    #file_put_contents('manifest.xml',$manifest);
+    #$manifest = file_get_contents('manifest.xml');
+    #$xml = simplexml_load_string($manifest);
+
+    $ism2 = $ref;
+    $ism2 = preg_replace('/\.ism/','-m3u8-aapl.ism',$ism2);
+    $ism2 = preg_replace('/manifest/','',$ism2);
+
+    # add Quality
+    $ism2 .= 'QualityLevels(464000)';
+
+    # Manifest             'http://ca.sirecdn.net/SIRE/Ottawa/City Council/2472/393.ism/manifest'
+    # Example video chunk: 'http://ca.sirecdn.net/SIRE/Ottawa/City Council/2472/393-m3u8-aapl.ism/QualityLevels(464000)/Fragments(Video=39600000000,format=m3u8-aapl)'
+    # ISM2                 'http://ca.sirecdn.net/SIRE/Ottawa/City Council/2472/393-m3u8-aapl.ism/QualityLevels(464000)'
+
+    $manifest = `wget -qO - '$ism2/manifest(format=m3u8-aapl)'`;
+    $chunk = 0;
+    $frags = preg_grep('/^Fragments/',explode("\n",$manifest));
+    foreach ($frags as $frag) {
+      print "\n";
+      print "$chunk/".count($frags)."\n";
+      $frag = preg_replace("/\n/","",$frag);
+      $frag = preg_replace("/\r/","",$frag);
+      $fragUrl = "$ism2/$frag";
+      $filename = "{$meetid}_$chunk.mp2t";
+      print `wget -O $filename '$fragUrl'`;
+      $chunk ++;
+    }
+
+    #print $manifest;
+
+  }
+
   static public function formatMotion($motion) {
     # needs fixin
     return $motion;
