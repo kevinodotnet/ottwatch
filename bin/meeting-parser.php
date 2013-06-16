@@ -9,6 +9,23 @@ require_once('include.php');
 require_once('twitteroauth.php');
 
 if (count($argv) > 1) {
+  if ($argv[1] == 'getVideos') {
+		# only look back 45 days 
+		$rows = getDatabase()->all(" 
+			select * 
+			from meeting 
+			where 
+				starttime < current_timestamp 
+				and datediff(current_timestamp,starttime) < 45
+				and youtube is null or youtube = ''
+		order by starttime 
+		");
+		foreach ($rows as $m) {
+			print "\n\n---------------------------------------------------\n\n";
+			MeetingController::getVideo($m['id']);
+		}
+    return;
+	}
   if ($argv[1] == 'getVideo') {
     $id = $argv[2];
     MeetingController::getVideo($id);
