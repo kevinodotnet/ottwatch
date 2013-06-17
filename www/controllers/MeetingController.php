@@ -24,7 +24,7 @@ class MeetingController {
 		$m = getDatabase()->one(" select * from meeting where id = :id ",array('id'=>$id));
 		if (!$m['id']) {
 			# can't get video for a meeting we don't know about
-			return;
+			return -1;
 		}
 
 		$meetid = $m['meetid'];
@@ -35,9 +35,9 @@ class MeetingController {
 
     $tmp = preg_grep('/g_locationPrimary/',explode("\n",$html));
     if (count($tmp) == 0) {
-			print "NO video details found (g_locationPrimary)\n";
+			# print "NO video details found (g_locationPrimary)\n";
       // no video
-      return;
+			return -1;
     }
 
 		# Extract just the URL from the HTML line that matched
@@ -48,12 +48,21 @@ class MeetingController {
     $baseUrl = preg_replace('/\/[^\/]+$/','/',$isplUrl);
 
 		# Extract the first REF from ISPL xml document
-		print "Loading video ISPL file: $isplUrl\n";
+		# print "Loading video ISPL file: $isplUrl\n";
     $spl = `wget -qO - '$isplUrl'`;
 		if ($spl == '') {
-			print "ISPL file not found or is not XML\n";
-			return;
+			# print "ISPL file not found or is not XML\n";
+			return -1;
 		}
+
+		# ###############################################################
+		# FROM here down the video is expected to be present and work, so
+		# produce some debug output. SHould only be present when an actual
+		# video is found/downloaded/uploaded.
+		# ###############################################################
+
+		print "FOUND video for {$m['category']} on {$m['starttime']}\n\n";
+
     $xml = simplexml_load_string($spl);
     $ref = $xml->xpath('//ref/@src'); $ref = ''.$ref[0]; //$ref = $ref['src']; $ref = $ref[0];
 
