@@ -18,9 +18,9 @@ if (count($argv) > 1) {
 				starttime < current_timestamp 
 				and (youtube is null or youtube = '')
 				and datediff(current_timestamp,starttime) < 60
-				and category = 'City Council'
 			order by starttime desc
 		");
+#				and category = 'City Council'
 		foreach ($rows as $m) {
 #			print "\n---------------------------------------------------\n\n";
 #			print "MEETING: {$m['starttime']} {$m['category']}\n";
