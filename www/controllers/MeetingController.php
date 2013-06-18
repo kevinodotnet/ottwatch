@@ -56,10 +56,6 @@ class MeetingController {
 			return -1;
 		}
 
-		print "$spl\n";
-		exit;
-
-
     $xml = simplexml_load_string($spl);
     $ref = $xml->xpath('//ref/@src'); $ref = ''.$ref[0]; //$ref = $ref['src']; $ref = $ref[0];
 
