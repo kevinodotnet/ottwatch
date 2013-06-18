@@ -40,6 +40,7 @@ class MeetingController {
 			return -1;
     }
 
+
 		# Extract just the URL from the HTML line that matched
     foreach ($tmp as $k => $v) { $tmp = $v; }
     $tmp = preg_replace('/.*http/','http',$tmp);
@@ -55,13 +56,6 @@ class MeetingController {
 			return -1;
 		}
 
-		# ###############################################################
-		# FROM here down the video is expected to be present and work, so
-		# produce some debug output. SHould only be present when an actual
-		# video is found/downloaded/uploaded.
-		# ###############################################################
-
-		print "FOUND video for {$m['category']} on {$m['starttime']}\n\n";
 
     $xml = simplexml_load_string($spl);
     $ref = $xml->xpath('//ref/@src'); $ref = ''.$ref[0]; //$ref = $ref['src']; $ref = $ref[0];
@@ -76,13 +70,29 @@ class MeetingController {
     $ism2 .= 'QualityLevels(464000)';
     $manifest = `wget -qO - '$ism2/manifest(format=m3u8-aapl)'`;
 
+    $frags = preg_grep('/^Fragments/',explode("\n",$manifest));
+		if (count($frags) == 0) {
+			# looks like this happens when the meeting has started or "is live" ? but not
+			# yet available for post-download
+			return -1;
+		}
+
+		# ###############################################################
+		# FROM here down the video is expected to be present and work, so
+		# produce some debug output. SHould only be present when an actual
+		# video is found/downloaded/uploaded.
+		# ###############################################################
+
+		print "FOUND video for {$m['category']} on {$m['starttime']} id: {$m['id']} meetid: {$m['meetid']}\n\n";
+
 		# This manifest file has all the fragment and timeoffset details. One HTTP request per
 		# Append each chunk to the overall video file
     $video_file = "video_{$meetid}.mp2t";
-		# file_put_contents($video_file,"");
-    $chunk = 0;
-    $frags = preg_grep('/^Fragments/',explode("\n",$manifest));
+		touch($video_file);
+		unlink($video_file);
+
 		print "Saving to $video_file ".count($frags)." chunks\n";
+    $chunk = 0;
     foreach ($frags as $frag) {
       print "$chunk ";
       $chunk ++;
