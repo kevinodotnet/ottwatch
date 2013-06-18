@@ -56,6 +56,9 @@ class MeetingController {
 			return -1;
 		}
 
+		print "$spl\n";
+		exit;
+
 
     $xml = simplexml_load_string($spl);
     $ref = $xml->xpath('//ref/@src'); $ref = ''.$ref[0]; //$ref = $ref['src']; $ref = $ref[0];
@@ -828,7 +831,7 @@ class MeetingController {
     $rows = getDatabase()->all(" 
       select m.id,m.category,id,meetid,date(starttime) starttime
       from meeting m 
-        join category c on c.category = m.category 
+        left join category c on c.category = m.category 
       ".
       ($category == '' ? '' : ' where c.category = :category ')
       ."
