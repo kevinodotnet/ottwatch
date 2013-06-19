@@ -185,13 +185,21 @@ function dashboard() {
 
   <div class="span4">
   <script>
+  function devapp_search_form_submit() {
+    v = document.getElementById('devapp_search_value').value;
+    if (v == '') {
+      alert('Cannot perform an empty search');
+      return;
+    }
+    document.location.href = 'devapps?since=999&match=' + encodeURIComponent(v);
+  }
   function lobbyist_search_form_submit() {
     v = document.getElementById('lobbyist_search_value').value;
     if (v == '') {
       alert('Cannot perform an empty search');
       return;
     }
-    document.location.href = 'lobbying/search/'+v;
+    document.location.href = 'lobbying/search/'+encodeURIComponent(v);
   }
   </script>
   <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
@@ -251,15 +259,15 @@ function dashboard() {
     #pr($a);
   }
   ?>
-  <tr>
-  <td colspan="3">
-  <center>
-  <a class="btn" href="devapps"><i class="icon-search"></i> Search</a>
-  <a class="btn" href="devapps?since=999">View all <?php print $count; ?> development applications</a>
-  </center>
   </td>
   </tr>
   </table>
+
+  <div class="input-prepend input-append">
+  <input type="text" id="devapp_search_value" placeholder="Search...">
+  <a class="btn" onclick="devapp_search_form_submit()"><i class="icon-search"></i> Search</button>
+  <a class="btn" href="devapps?since=999">Show All</a>
+  </div>
 
   </div>
 
