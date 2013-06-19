@@ -624,7 +624,7 @@ class MeetingController {
 			            '<div>' + 
 			            '<b><?php print $p['addr']; ?></b> ' + 
 		              '<a href="javascript:focusOn(\'item\',<?php print $p['itemid']; ?>)">(Goto Agenda)</a><br/>' +
-                  '<?php print $title; ?>' +
+                  '<?php print preg_replace("/'/","",$title); ?>' +
 			            '</div>'
                 );
                 infowindow.open(map, marker);
