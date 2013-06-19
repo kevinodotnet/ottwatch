@@ -374,7 +374,7 @@ class LobbyistController {
         date(max(l.created)) desc
       ");
     if (count($rows) == 0) {
-      print "<h1>No matches</h1>\n";
+      print "<h1>'$query': No matches</h1>\n";
       bottom();
       return;
     }
