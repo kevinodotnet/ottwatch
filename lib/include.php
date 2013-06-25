@@ -50,6 +50,9 @@ function meeting_category_to_title($category) {
 }
 
 function tweet_txt_and_url($txt,$url) {
+  # fix HTML escapes
+  $txt = html_entity_decode($txt);
+
   if (!preg_match("/bitly/",$url)) {
     # shorten the url
   	$bitly = bitly_v3_shorten($url);
@@ -70,6 +73,9 @@ function tweet_txt_and_url($txt,$url) {
 function tweet($tweet,$allowDup=0) {
 
 	global $OTTVAR;
+
+  # fix HTML escapes
+  $tweet = html_entity_decode($tweet);
 
 	# send no tweet twice
   $hash = md5($tweet);
