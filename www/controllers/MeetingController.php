@@ -10,6 +10,70 @@ MeetingController::formatMotion("foo");
 
 class MeetingController {
 
+  static public function votesMember($name) {
+    top($name . " Voting History");
+    ?>
+    <h1><?php print $name; ?>: Voting History</h1>
+    <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
+    <?php
+
+    $votes = getDatabase()->all(" 
+      select 
+        ivc.vote,
+        iv.motion,
+        i.title,
+        m.title as meetingtitle,
+        m.category,
+        left(m.starttime,10) starttime,
+        m.meetid
+      from itemvotecast ivc 
+        join itemvote iv on iv.id = ivc.itemvoteid
+        join item i on i.id = iv.itemid
+        join meeting m on m.id = i.meetingid
+      where 
+        ivc.name = :name
+      order by
+        m.starttime desc,
+        ivc.id
+      ",array('name'=>$name));
+
+    $prevmeetid = '';
+    foreach ($votes as $v) {
+      if ($prevmeetid != $v['meetid']) {
+        ?>
+        <tr>
+        <td colspan="3" style="background: #f0f0f0;">
+        <h5><?php print meeting_category_to_title($v['category']); ?></h5>
+        <a href="<?php print OttWatchConfig::WWW."/meetings/{$v['category']}/{$v['meetid']}"; ?>"><?php print $v['starttime']; ?></a>
+        </td>
+        </tr>
+	      <tr>
+	      <th style="width: 10%;">Yes/No/Absent</th>
+	      <th style="width: 45%;">Motion</th>
+	      <th style="width: 45%;">Meeting Item</th>
+	      </tr>
+        <?php
+      }
+      $prevmeetid = $v['meetid'];
+      if ($v['vote'] == 'y') { $v['vote'] = 'Yes'; }
+      if ($v['vote'] == 'n') { $v['vote'] = 'No'; }
+      if ($v['vote'] == 'a') { $v['vote'] = 'Absent'; }
+      ?>
+      <tr>
+      <td style="width: 10%;"><?php print $v['vote']; ?></td>
+      <td style="width: 45%;"><?php print $v['motion']; ?></td>
+      <td style="width: 45%;"><?php print $v['title']; ?></td>
+      </tr>
+      <?php
+    }
+
+    ?>
+    </table>
+    <?php
+
+    bottom();
+  }
+
   static public function getYoutubeEmbedCode($url) {
     # convert from a URL to a youtbue watch page to the equivalent embed code.
     # URL looks like this: http://www.youtube.com/watch?v=zwCZQV-D4J4
@@ -556,8 +620,7 @@ class MeetingController {
       <?php
       foreach ($casts as $c) {
         if ($c['vote'] != 'y') { continue; }
-        print $c['name'];
-        print "<br/>";
+        print "<a href=\"".OttWatchConfig::WWW."/meetings/votes/member/".urlencode($c['name'])."\">".$c['name']."</a><br/>";
       }
       ?>
       </td>
@@ -565,8 +628,7 @@ class MeetingController {
       <?php
       foreach ($casts as $c) {
         if ($c['vote'] != 'n') { continue; }
-        print $c['name'];
-        print "<br/>";
+        print "<a href=\"".OttWatchConfig::WWW."/meetings/votes/member/".urlencode($c['name'])."\">".$c['name']."</a><br/>";
       }
       ?>
       </td>
@@ -574,8 +636,7 @@ class MeetingController {
       <?php
       foreach ($casts as $c) {
         if ($c['vote'] != 'a') { continue; }
-        print $c['name'];
-        print "<br/>";
+        print "<a href=\"".OttWatchConfig::WWW."/meetings/votes/member/".urlencode($c['name'])."\">".$c['name']."</a><br/>";
       }
       ?>
       </td>
