@@ -59,6 +59,9 @@ getRoute()->get('/lobbyist/([^\/]*)', 'lobbyist'); # legacy REST location
 getRoute()->get('/devapps', array('DevelopmentAppController','listAll'));
 getRoute()->get('/devapps/([^\/]+)', array('DevelopmentAppController','viewDevApp'));
 
+getRoute()->get('/meetings/votes', array('MeetingController','votesIndex'));
+getRoute()->get('/meetings/votes/member/([^\/]*)', array('MeetingController','votesMember'));
+
 getRoute()->get('/meetings/calendar', array('MeetingController','calendarView'));
 getRoute()->get('/meetings/calendar.ics', array('MeetingController','calendar'));
 getRoute()->get('/meetings/file/(\d+)', array('MeetingController','getFileCacheUrl'));
@@ -68,7 +71,6 @@ getRoute()->get('/meetings/meetid/(\d+)', array('MeetingController','meetidForwa
 getRoute()->get('/meetings/([^\/]*)/(\d+)', array('MeetingController','meetingDetails')); // meetings/CATEGORY/ID
 getRoute()->get('/meetings/([^\/]*)/(\d+)/item/(\d+)', array('MeetingController','meetingDetails')); // meetings/CATEGORY/ID
 getRoute()->get('/meetings/([^\/]*)/(\d+)/item/(\d+)/(files|files.json)', array('MeetingController','itemFiles')); // meetings/CATEGORY/ID
-getRoute()->get('/meetings/votes/member/([^\/]*)', array('MeetingController','votesMember'));
 
 getRoute()->get('.*', 'error404');
 getRoute()->run();
@@ -363,6 +365,7 @@ function copyToClipboard (text) {
 <ul class="nav">
 <li><a href="<?php print $OTT_WWW; ?>">Home</a></li>
 <!--<li><a href="<?php print $OTT_WWW; ?>/dashboard">Dashboard</a></li>-->
+<li><a href="<?php print $OTT_WWW; ?>/meetings/votes/index">Voting History</a></li>
 <li><a href="<?php print $OTT_WWW; ?>/about">About</a></li>
 <li><a href="<?php print $OTT_WWW; ?>/ideas">Ideas</a></li>
 <li><a href="<?php print $OTT_WWW; ?>/api/about">API</a></li>

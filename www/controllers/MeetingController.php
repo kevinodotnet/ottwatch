@@ -10,6 +10,23 @@ MeetingController::formatMotion("foo");
 
 class MeetingController {
 
+  static public function votesIndex() {
+    top();
+    ?>
+    Choose the name of a council or committee member to see their entire voting history.
+    <p/>
+    <ul>
+    <?php
+    $rows = getDatabase()->all(" select distinct(name) from itemvotecast order by name ");
+    foreach ($rows as $c) {
+      print "<li><a href=\"".OttWatchConfig::WWW."/meetings/votes/member/".urlencode($c['name'])."\">".$c['name']."</a></li>";
+    }
+    ?>
+    </ul>
+    <?php
+    bottom();
+  }
+
   static public function votesMember($name) {
     top($name . " Voting History");
     ?>
