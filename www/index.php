@@ -68,6 +68,7 @@ getRoute()->get('/meetings/meetid/(\d+)', array('MeetingController','meetidForwa
 getRoute()->get('/meetings/([^\/]*)/(\d+)', array('MeetingController','meetingDetails')); // meetings/CATEGORY/ID
 getRoute()->get('/meetings/([^\/]*)/(\d+)/item/(\d+)', array('MeetingController','meetingDetails')); // meetings/CATEGORY/ID
 getRoute()->get('/meetings/([^\/]*)/(\d+)/item/(\d+)/(files|files.json)', array('MeetingController','itemFiles')); // meetings/CATEGORY/ID
+getRoute()->get('/meetings/votes/member/([^\/]*)', array('MeetingController','votesMember'));
 
 getRoute()->get('.*', 'error404');
 getRoute()->run();
