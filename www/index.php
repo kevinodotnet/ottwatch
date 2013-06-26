@@ -367,6 +367,7 @@ function copyToClipboard (text) {
 <li><a href="<?php print $OTT_WWW; ?>">Home</a></li>
 <!--<li><a href="<?php print $OTT_WWW; ?>/dashboard">Dashboard</a></li>-->
 <li><a href="<?php print $OTT_WWW; ?>/meetings/votes">Voting History</a></li>
+<li><a href="<?php print $OTT_WWW; ?>/lobbying/latereport">Late Lobbying Report</a></li>
 <li><a href="<?php print $OTT_WWW; ?>/about">About</a></li>
 <li><a href="<?php print $OTT_WWW; ?>/ideas">Ideas</a></li>
 <li><a href="<?php print $OTT_WWW; ?>/api/about">API</a></li>
