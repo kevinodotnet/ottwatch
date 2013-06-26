@@ -51,8 +51,8 @@ class LobbyistController {
 
     <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
     <tr>
-    <th>Days Late*</th>
-    <th>Lobbying Date</th>
+    <th>Calendar Days*</th>
+    <th>Lobbying On</th>
     <th>Reported On</th>
     <th>Lobbyist</th>
     <th>Client</th>
