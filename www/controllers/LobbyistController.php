@@ -9,6 +9,81 @@ class LobbyistController {
   # GUI
   #################################################################################################
 
+  public static function latereport() {
+    top("Late Lobbying Report");
+
+    $rows = getDatabase()->all("
+      select 
+        ll.diff,
+        left(l.lobbydate,10) lobbydate,
+        left(l.created,10) created,
+        l.lobbied,
+        l.activity,
+        f.lobbyist,
+        f.client,
+        f.issue,
+        f.id as lobbyfileid,
+        l.id as lobbyid
+      from latelobbying ll 
+        join lobbying l on l.id = ll.id
+        join lobbyfile f on f.id = l.lobbyfileid
+      order by
+        l.created desc,
+        l.id desc
+    ");
+
+    ?>
+    <div class="row-fluid">
+    <div class="span6">
+    <h1>Late Lobbying Report</h1>
+    </div>
+    <div class="span6">
+    <p>
+    * Lobbyists are required to report their activities within <b>15 business days</b>.
+    This report shows all lobbying that was reported on or after <b>24 calendar days</b> 
+    had elapsed. In most cases this indicates a late report - unless the lobbyist was 
+    afforded additional time due to statuatory holidays. 
+    In other words, before getting excited that somebody failed to report a lobbying,
+    check your favourite holiday calendar.
+    </p>
+    </div>
+    </div>
+
+    <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
+    <tr>
+    <th>Days Late*</th>
+    <th>Lobbying Date</th>
+    <th>Reported On</th>
+    <th>Lobbyist</th>
+    <th>Client</th>
+    <th>Activity</th>
+    <th>Lobbied</th>
+    <th>Issue</th>
+    </tr>
+    <?php
+
+    foreach ($rows as $r) { 
+      ?>
+      <tr>
+      <td><?php print $r['diff']; ?></td>
+      <td><nobr><?php print $r['lobbydate']; ?></nobr></td>
+      <td><nobr><?php print $r['created']; ?></nobr></td>
+      <td><a href="<?php print OttWatchConfig::WWW."/lobbying/lobbyists/{$r['lobbyist']}"; ?>"><nobr><?php print $r['lobbyist']; ?></nobr></a></td>
+      <td><a href="<?php print OttWatchConfig::WWW."/lobbying/clients/{$r['client']}"; ?>"><?php print $r['client']; ?></a></td>
+      <td><?php print $r['activity']; ?></td>
+      <td><?php print $r['lobbied']; ?></td>
+      <td><a href="<?php print OttWatchConfig::WWW."/lobbying/files/{$r['lobbyfileid']}"; ?>"><?php print $r['issue']; ?></td>
+      </tr>
+      <?php
+    }
+
+    ?>
+    </table>
+    <?php
+
+    bottom();
+  }
+
   public static function getUrlForIssue ($id,$issue) {
     return "<a href=\"".OttWatchConfig::WWW."/lobbying/files/{$id}\">{$issue}</a>";
   }

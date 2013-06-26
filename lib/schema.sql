@@ -68,6 +68,18 @@ create table lobbying (
   constraint foreign key (electedofficialid) references electedofficials (id) on delete cascade on update cascade
 ) engine = innodb;
 
+-- lobbying must be declared within 15 business days. But with weekends and worst case, that means
+-- most things under 23 are legit. So only put 24 days late and up in the report
+create or replace view latelobbying as
+  select 
+	  id,
+	  lobbydate,
+	  created,
+	  datediff(created,lobbydate) diff
+  from lobbying 
+  where 
+    datediff(created,lobbydate) >= 24;
+
 -- enforce unique on the lobbying table; used by INSERTER to avoid dups
 create unique index lobbying_in1 on lobbying (lobbyfileid,lobbydate,activity,lobbied);
 
