@@ -46,6 +46,7 @@ getRoute()->get('/user/login', array('LoginController','display'));
 getRoute()->post('/user/login', array('LoginController','doLogin'));
 getRoute()->get('/user/logout', array('LoginController','logout'));
 
+getRoute()->get('/lobbying/latereport', array('LobbyistController','latereport'));
 getRoute()->get('/lobbying/search/(.*)', array('LobbyistController','search'));
 getRoute()->get('/lobbying/lobbyists/(.*)', array('LobbyistController','showLobbyist'));
 getRoute()->get('/lobbying/clients/(.*)', array('LobbyistController','showClient'));
