@@ -53,7 +53,10 @@ class DevelopmentAppController {
       $first = 0;
     }
     $sql .= " ) ";
-    $related = getDatabase()->all($sql);
+    $related = array();
+    if (count($a['address'])) > 0) {
+      $related = getDatabase()->all($sql);
+    }
     if (count($related) > 0) {
       ?>
       <tr><td>Possibly related devapp(s)</td><td>
