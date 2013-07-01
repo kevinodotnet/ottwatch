@@ -54,7 +54,7 @@ class DevelopmentAppController {
     }
     $sql .= " ) ";
     $related = array();
-    if (count($a['address'])) > 0) {
+    if (count($a['address']) > 0) {
       $related = getDatabase()->all($sql);
     }
     if (count($related) > 0) {
