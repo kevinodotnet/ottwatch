@@ -1020,6 +1020,15 @@ class MeetingController {
         break;
       }
     }
+    if (preg_match('/>/',$coordName)) {
+      $coordName = '';
+    }
+    if (!preg_match('/613-/',$coordPhone)) {
+      $coordPhone = '';
+    }
+    if (!preg_match('/ottawa.ca/',$coordEmail)) {
+      $coordEmail = '';
+    }
     getDatabase()->execute(" update meeting set contactName = :name, contactEmail = :email, contactPhone = :phone where id = :id ",array(
       'name' => $coordName,
       'phone' => $coordPhone,
@@ -1047,7 +1056,13 @@ class MeetingController {
 	    if ($add && preg_match("/a>/",$line)) {
         $add = 0;
         array_push($spool,$line);
-        $snippet = "<a ".implode(' ',$spool)."\n";
+        $raw = implode(' ',$spool);
+        if (!preg_match('/<a/',$raw)) {
+          $snippet = "<a ".$raw."\n";
+        } else {
+          $snippet = $raw;
+        }
+        $snippet = preg_replace("/name=Item\d+><\/a>/","",$snippet);
         $snippet = preg_replace("/<\/a>.*/","</a>",$snippet);
         $snippet = preg_replace("/target=pubright/",'',$snippet);
         $snippet = preg_replace("/lang=[^>]*/",'',$snippet);
@@ -1057,6 +1072,8 @@ class MeetingController {
         $snippet = preg_replace("/<br[^>]*>/"," ",$snippet);
         $snippet = preg_replace("/<\/i>/","",$snippet);
         $snippet = preg_replace("/  /"," ",$snippet);
+        $snippet = preg_replace("/<h\d>/i","",$snippet);
+        $snippet = preg_replace("/<\/h\d>/i","",$snippet);
         $snippet = preg_replace("/  /"," ",$snippet);
         $snippet = preg_replace("/  /"," ",$snippet);
         $snippet = preg_replace("/  /"," ",$snippet);
@@ -1066,9 +1083,14 @@ class MeetingController {
         $snippet = preg_replace("/align=right/"," ",$snippet);
         $snippet = preg_replace("/align=centre/"," ",$snippet);
         $snippet = preg_replace("/align=center/"," ",$snippet);
+        $snippet = preg_replace("/<a <\/span><\/span><\/a>/","<a></a> ",$snippet);
+        # WARNING, bad snippet >> <a </span></span></a>  <<
+        # WARNING, bad snippet >> <a name=Item110633></a>  <<
+
         $xml = simplexml_load_string($snippet);
 				if (!is_object($xml)) {
 					print "WARNING, bad snippet >> $snippet <<\n";
+					print "WARNING, RAW WAS THIS>> $raw <<\n";
 					$title = '<i class="icon-warning-sign"></i> Doh! title autodection failed';
 				} else {
 	        $title = $xml->xpath("//span"); 
@@ -1089,6 +1111,18 @@ class MeetingController {
 	        $title = preg_replace("/  /"," ",$title);
 	        $title = preg_replace("/  /"," ",$title);
 	        $title = preg_replace("/  /"," ",$title);
+	        $title = preg_replace("/''/","'",$title);
+	        $title = preg_replace("/''/","'",$title);
+	        $title = preg_replace("/''/","'",$title);
+	        $title = preg_replace("/''/","'",$title);
+	        $title = preg_replace("/''/","'",$title);
+	        $title = preg_replace("/''/","'",$title);
+	        $title = preg_replace("/''/","'",$title);
+	        $title = preg_replace("/''/","'",$title);
+	        $title = preg_replace("/''/","'",$title);
+	        $title = preg_replace("/''/","'",$title);
+	        $title = preg_replace("/''/","'",$title);
+	        $title = preg_replace("/''/","'",$title);
           $title = trim($title);
 	
 	        # fix open/close brace, and spaces next to braces
@@ -1123,7 +1157,7 @@ class MeetingController {
     $items = getDatabase()->all(' select * from item where meetingid = :id ', array('id' => $id));
 
 	  foreach ($items as $item) {
-      print "  item:{$item['id']} title: {$item['title']}\n";
+      # print "  item:{$item['id']} title: {$item['title']}\n";
 
       self::matchItemToPark($item['id'],$item['title']);
 
@@ -1159,7 +1193,7 @@ class MeetingController {
 	        if (count($roads) > 0) {
             #TODO: what if match may? should probably disambituate based on suffix.
             $road = $roads[0];
-	          print "[$x]: ".$words[$x]." -- ".$words[$x+1]." matched ".count($roads)." roads \n";
+	          # print "[$x]: ".$words[$x]." -- ".$words[$x+1]." matched ".count($roads)." roads \n";
 				    $placeid = getDatabase()->execute(" insert into places (roadid,rd_num,itemid) values (:roadid,:rd_num,:itemid) ",array(
 				      'roadid' => $road['OGR_FID'],
 				      'rd_num' => $number,
@@ -1192,7 +1226,7 @@ class MeetingController {
 		      $fileid = preg_replace("/.*fileid=/","",$fileid);
 		      $fileid = preg_replace('/".*/',"",$fileid);
 
-          print "    file: $title\n";
+          # print "    file: $title\n";
 		  	  getDatabase()->execute('insert into ifile (itemid,fileid,title,created,updated) values (:itemid,:fileid,:title,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP) ', array(
 		  	    'itemid' => $item['id'],
 		  	    'fileid' => $fileid,
@@ -1365,6 +1399,9 @@ class MeetingController {
         array_push($vote['votes'],array('name'=>$who,'voted'=>$votefor));
       }
 
+      if (strlen($motion) > 1020) {
+        $motion = substr($motion,0,1020);
+      }
       $voteid = getDatabase()->execute('insert into itemvote (itemid,motion) values (:itemid,:motion) ', array('itemid'=>$item['id'],'motion'=>$motion));
       foreach ($vote['votes'] as $v) {
         if ($v['voted'] == 'Yes') { $vote = 'y'; }
