@@ -174,15 +174,13 @@ class MeetingController {
 		print "Saving to $video_file ".count($frags)." chunks\n";
     $chunk = 0;
     foreach ($frags as $frag) {
-      print "$chunk ";
+      if ($chunk % 100 == 0) { print "$chunk "; }
       $chunk ++;
-#			if ($chunk < 300) { continue; }
       $frag = preg_replace("/\n/","",$frag);
       $frag = preg_replace("/\r/","",$frag);
       $fragUrl = "$ism2/$frag";
       $data = `wget -qO - '$fragUrl'`;
 			file_put_contents($video_file,$data,FILE_APPEND);
-#			if ($chunk > 400) { break; }
     }
 		print "\n";
 
@@ -217,10 +215,12 @@ class MeetingController {
 		if ($youtube_url == '') {
 			# mark as ERROR so we don't keep trying over and over again on this video; something must be wrong.
 			getDatabase()->execute(" update meeting set youtubeset = current_timestamp, youtube = :url where id = :id ",array('id'=>$m['id'],'url'=>'ERROR'));
-		}
-
-		# eggcellent
-		getDatabase()->execute(" update meeting set youtubeset = current_timestamp, youtube = :url where id = :id ",array('id'=>$m['id'],'url'=>$youtube_url));
+		} else {
+  		getDatabase()->execute(" update meeting set youtubeset = current_timestamp, youtube = :url where id = :id ",array('id'=>$m['id'],'url'=>$youtube_url));
+      print "\n";
+      print "Uploaded: $youtube_url\n";
+      print "\n";
+    }
 
   }
 
