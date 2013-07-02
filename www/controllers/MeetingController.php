@@ -1062,6 +1062,10 @@ class MeetingController {
         $snippet = preg_replace("/  /"," ",$snippet);
         $snippet = preg_replace("/<b>/"," ",$snippet);
         $snippet = preg_replace("/<\/b>/"," ",$snippet);
+        $snippet = preg_replace("/align=left/"," ",$snippet);
+        $snippet = preg_replace("/align=right/"," ",$snippet);
+        $snippet = preg_replace("/align=centre/"," ",$snippet);
+        $snippet = preg_replace("/align=center/"," ",$snippet);
         $xml = simplexml_load_string($snippet);
 				if (!is_object($xml)) {
 					print "WARNING, bad snippet >> $snippet <<\n";
@@ -1313,6 +1317,10 @@ class MeetingController {
     $html = preg_replace("/<br>/"," ",$html);
     $html = preg_replace("/\r/","",$html);
     $html = preg_replace("/\n/"," ",$html);
+    $html = preg_replace("/align=left/"," ",$html);
+    $html = preg_replace("/align=right/"," ",$html);
+    $html = preg_replace("/align=centre/"," ",$html);
+    $html = preg_replace("/align=center/"," ",$html);
     $html = preg_replace('/.*<table id="MotionVotesResultsTable"/',"<table ",$html);
     $html = preg_replace('/<table id="Table1".*/','',$html);
 
