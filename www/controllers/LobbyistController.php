@@ -842,6 +842,7 @@ class LobbyistController {
       # will be the same, but spaced in time according to the lobbyist
       # activity dates
       tweet($tweet,1);
+      sleep(5);
     }
     
   }
