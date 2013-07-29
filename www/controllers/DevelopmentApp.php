@@ -567,6 +567,22 @@ class DevelopmentAppController {
         'href' => $f['href'],
         'title' => $f['title'],
       ));
+			$meta = `HEAD {$f['href']}`;
+			$meta = explode("\n",$meta);
+			$lastmodified = preg_grep('/^Last-Modified: /',$meta);
+			if (count($lastmodified) > 0) {
+				$lastmodified = array_shift($lastmodified);
+				$lastmodified = preg_replace('/Last-Modified: /','',$lastmodified);
+				$lastmodified = strtotime($lastmodified);
+				$lastmodified = date("Y-m-d",$lastmodified);
+				if (preg_match('/^2\d\d\d-\d\d-\d\d$/',$lastmodified)) {
+					# update 'UPDATED' to reflect file time.
+		      getDatabase()->execute(" update devappfile set updated = :updated where href = :href  ",array(
+		        'href' => $f['href'],
+						'updated' => $lastmodified
+		      ));
+				}
+			}
     }
 
     $ward = $labels['Ward'];
