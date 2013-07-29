@@ -30,7 +30,7 @@ class DevelopmentAppController {
     <a target="_new" href="<?php print self::getLinkToApp($a['appid']); ?>"><i class="icon-share-alt"></i> View application on ottawa.ca</a>
     </p>
 
-    <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
+    <table class="table table-bordered table-condensed" style="width: 100%;">
     <tr><td>Ward</td><td><?php print $a['ward']; ?></td></tr>
     <tr><td>Received</td><td><?php print $a['receiveddate']; ?></td></tr>
     <tr><td>Updated</td><td><?php print $a['updated']; ?></td></tr>
@@ -72,14 +72,25 @@ class DevelopmentAppController {
     <tr><td>Documents</td><td>
     <?php
     $docs = getDatabase()->all(" select * from devappfile where devappid = :id order by updated desc,title ",array('id'=>$a['id']));
+    ?>
+    <table class="table table-condensed">
+      <tr>
+      <th>Title</th>
+      <th>Modified</th>
+      </tr>
+    <?php
     foreach ($docs as $d) {
       $doctitle = $d['title'];
       $doctitle = preg_replace("/{$a['devid']} /","",$doctitle);
       ?>
-      <a target="_blank" href="<?php print $d['href']; ?>"><?php print $doctitle; ?></a><br/>
+      <tr>
+      <td><a target="_blank" href="<?php print $d['href']; ?>"><?php print $doctitle; ?></a></td>
+      <td><?php print $d['updated']; ?></td>
+      </tr>
       <?php
     }
     ?>
+    </table>
     </td></tr>
     <tr>
     <th style="text-align: center;">Date</th>
