@@ -88,7 +88,7 @@ class DevelopmentAppController {
       ?>
       <tr>
       <td><a target="_blank" href="<?php print $d['href']; ?>"><?php print $doctitle; ?></a></td>
-      <td><?php print substr($d['updated'],0,10); ?></td>
+      <td><nobr><?php print substr($d['updated'],0,10); ?></nobr></td>
       </tr>
       <?php
     }
