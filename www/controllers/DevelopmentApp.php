@@ -81,7 +81,10 @@ class DevelopmentAppController {
     <?php
     foreach ($docs as $d) {
       $doctitle = $d['title'];
-      $doctitle = preg_replace("/{$a['devid']} /","",$doctitle);
+      $doctitle = preg_replace("/{$a['devid']}/","",$doctitle);
+      $doctitle = preg_replace("/  /"," ",$doctitle);
+      $doctitle = preg_replace("/  /"," ",$doctitle);
+      $doctitle = preg_replace("/  /"," ",$doctitle);
       ?>
       <tr>
       <td><a target="_blank" href="<?php print $d['href']; ?>"><?php print $doctitle; ?></a></td>
