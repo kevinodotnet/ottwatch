@@ -71,7 +71,7 @@ class DevelopmentAppController {
     ?>
     <tr><td>Documents</td><td>
     <?php
-    $docs = getDatabase()->all(" select * from devappfile where devappid = :id order by title ",array('id'=>$a['id']));
+    $docs = getDatabase()->all(" select * from devappfile where devappid = :id order by updated desc,title ",array('id'=>$a['id']));
     ?>
     <table class="table table-condensed">
       <tr>
@@ -561,7 +561,12 @@ class DevelopmentAppController {
     }
 
     getDatabase()->execute(" delete from devappfile where devappid = :devappid ",array( 'devappid' => $id,));
+		$touched = array();
     foreach ($files as $f) {
+			if (isset($touched[$f['href']])) {
+				continue;
+			}
+			$touched[$f['href']] = 1;
       getDatabase()->execute(" insert into devappfile (devappid,href,title,created,updated) values (:devappid,:href,:title,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP) ",array(
         'devappid' => $id,
         'href' => $f['href'],
