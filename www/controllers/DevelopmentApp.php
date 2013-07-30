@@ -32,8 +32,8 @@ class DevelopmentAppController {
 
     <table class="table table-bordered table-condensed" style="width: 100%;">
     <tr><td>Ward</td><td><?php print $a['ward']; ?></td></tr>
-    <tr><td>Received</td><td><?php print $a['receiveddate']; ?></td></tr>
-    <tr><td>Updated</td><td><?php print $a['updated']; ?></td></tr>
+    <tr><td>Received</td><td><?php print substr($a['receiveddate'],0,10); ?></td></tr>
+    <tr><td>Updated</td><td><?php print substr($a['updated'],0,10); ?></td></tr>
     <tr><td>Addresses</td><td>
     <?php 
     foreach ($a['address'] as $addr) {
@@ -85,7 +85,7 @@ class DevelopmentAppController {
       ?>
       <tr>
       <td><a target="_blank" href="<?php print $d['href']; ?>"><?php print $doctitle; ?></a></td>
-      <td><?php print $d['updated']; ?></td>
+      <td><?php print substr($d['updated'],0,10); ?></td>
       </tr>
       <?php
     }
