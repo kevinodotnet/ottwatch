@@ -8,6 +8,7 @@ include_once 'controllers/DevelopmentApp.php';
 include_once 'controllers/LobbyistController.php';
 include_once 'controllers/LoginController.php';
 include_once 'controllers/UserController.php';
+include_once 'controllers/ChartController.php';
 
 Epi::setPath('base', 'epiphany/src');
 Epi::init('route');
@@ -72,6 +73,9 @@ getRoute()->get('/meetings/meetid/(\d+)', array('MeetingController','meetidForwa
 getRoute()->get('/meetings/([^\/]*)/(\d+)', array('MeetingController','meetingDetails')); // meetings/CATEGORY/ID
 getRoute()->get('/meetings/([^\/]*)/(\d+)/item/(\d+)', array('MeetingController','meetingDetails')); // meetings/CATEGORY/ID
 getRoute()->get('/meetings/([^\/]*)/(\d+)/item/(\d+)/(files|files.json)', array('MeetingController','itemFiles')); // meetings/CATEGORY/ID
+
+getRoute()->get('/chart/test', array('ChartController','test'));
+getRoute()->get('/chart/lobbying/daily', array('ChartController','lobbyingDaily'));
 
 getRoute()->get('.*', 'error404');
 getRoute()->run();
