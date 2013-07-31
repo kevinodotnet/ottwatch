@@ -7,7 +7,8 @@ class ChartController {
     top();
     self::highJS();
 
-    $rows = getDatabase()->all(" select date(lobbydate) date, count(1) actions from lobbying where datediff(NOW(),lobbydate) <= 60 group by date(lobbydate) order by date(lobbydate) ");
+    #$rows = getDatabase()->all(" select date(lobbydate) date, count(1) actions from lobbying where datediff(NOW(),lobbydate) <= 60 group by date(lobbydate) order by date(lobbydate) ");
+    $rows = getDatabase()->all(" select date(lobbydate) date, count(1) actions from lobbying group by date(lobbydate) order by date(lobbydate) ");
     $startDate = $rows[0]['date'];
 
     $stats = array();
