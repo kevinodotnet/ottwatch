@@ -23,7 +23,7 @@ class ChartController {
     $done = FALSE;
     do {
       if ($checkDate >= $endDate) { $done = TRUE; }
-      $data[] = array(strtotime($checkDate), isset($stats[$checkDate]) ? $stats[$checkDate] : 0 );
+      $data[] = array($checkDate, isset($stats[$checkDate]) ? $stats[$checkDate] : 0 );
       $checkDate = date ("Y-m-d", strtotime ("+1 day", strtotime($checkDate)));
     } while (!$done);
 
