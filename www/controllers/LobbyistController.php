@@ -267,7 +267,7 @@ class LobbyistController {
     ?>
 
     <?php
-    $rows = getDatabase()->all(" select client,issue from lobbyfile f where lobbyist = :lobbyist ",array( 'lobbyist' => $lobbyist));
+    $rows = getDatabase()->all(" select client,issue from lobbyfile f where lobbyist = :lobbyist order by client ",array( 'lobbyist' => $lobbyist));
     $files = count($rows);
     ?>
     <div class="row-fluid">
