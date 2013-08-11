@@ -1000,6 +1000,9 @@ class MeetingController {
     ));
 
     # get coordinator information
+    $coordName = '';
+    $coordPhone = '';
+    $coordEmail = '';
     for ($x = 0; $x < count($lines); $x++) {
       $matches = array();
       $lines[$x] = preg_replace("/\r/","",$lines[$x]);
@@ -1020,6 +1023,7 @@ class MeetingController {
         break;
       }
     }
+
     if (preg_match('/>/',$coordName)) {
       $coordName = '';
     }
