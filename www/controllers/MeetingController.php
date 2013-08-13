@@ -284,12 +284,16 @@ class MeetingController {
 
     # find all meetings that have yet to happen, that have been updated
     # since last tweet meetings run.
+    #
+    # added "120" filter because sometimes Ottawa.ca puts in meetings that
+    # are years away - probably for testing stuff.
     $rows = getDatabase()->all(" 
       select * 
       from meeting 
       where 
         updated >= from_unixtime(:last)
         and starttime >= CURRENT_TIMESTAMP
+        and datediff(starttime,CURRENT_TIMESTAMP) < 120
       order by created 
       ",array( 'last'=>$last)); 
 
