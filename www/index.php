@@ -240,7 +240,7 @@ function dashboard() {
   <div class="input-prepend input-append">
   <input type="text" id="lobbyist_search_value" placeholder="Search...">
   <button class="btn" onclick="lobbyist_search_form_submit()"><i class="icon-search"></i> Search</button>
-  <button class="btn" onclick="document.location.href = 'lobbying/search/'">Show All</button>
+  <button class="btn btn-info" onclick="document.location.href = 'lobbying/search/'">Show All</button>
   </div>
 
   <h4>Development Applications</h4>
@@ -274,7 +274,7 @@ function dashboard() {
   <div class="input-prepend input-append">
   <input type="text" id="devapp_search_value" placeholder="Search...">
   <a class="btn" onclick="devapp_search_form_submit()"><i class="icon-search"></i> Search</button>
-  <a class="btn" href="devapps?since=999">Show All</a>
+  <a class="btn btn-info" href="devapps?since=999">Show All</a>
   </div>
 
   </div>
