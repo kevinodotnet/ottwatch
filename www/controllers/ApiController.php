@@ -303,6 +303,22 @@ google.maps.Polygon.prototype.getBounds = function() {
     $result['pollnum'] = $pollnum;
     $result['polygon'] = self::getPolygonAsArray($row['polygon']);
     $result['center'] = getLatLonFromPoint($row['center']);
+
+   
+    # Add roads that are in, or close, to the poll.
+    # "close" is required because roadway database takes the centerline, but poll boundaries might be on any 'side' of the road, so no overlap
+    $roads = getDatabase()->all("
+	    select 
+	      rd_name,rd_suffix,rd_directi,left_from,left_to,right_from,right_to 
+	    from roadways r 
+	      join $table p on 
+	        p.vot_subd = :vot_subd
+	        and st_distance(r.shape,p.shape) < .0007 
+	    where left_from+left_to+right_from+right_to > 0 
+	    order by rd_name,left_from
+      ",array('vot_subd'=>$pollnum));
+    $result['roads'] = $roads;
+
     return $result;
   }
 
