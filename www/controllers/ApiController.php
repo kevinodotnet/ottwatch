@@ -291,7 +291,13 @@ google.maps.Polygon.prototype.getBounds = function() {
       $result['error'] = "unknown election year: $year";
       return $result;
     }
-    $row = getDatabase()->one(" select OGR_FID,astext(shape) polygon,astext(centroid(shape)) center from $table where ward = :wardnum and vot_subd = :vot_subd ",array("wardnum"=>$wardnum,'vot_subd'=>$pollnum));
+    $row = getDatabase()->one(" 
+      select OGR_FID,astext(shape) polygon,astext(centroid(shape)) center 
+      from $table 
+      where 
+        cast(ward as unsigned) = :wardnum 
+        and vot_subd = :vot_subd ",
+      array("wardnum"=>$wardnum,'vot_subd'=>$pollnum));
     if (!$row['OGR_FID']) {
       $result = array();
       $result['error'] = "poll not found";
@@ -323,7 +329,7 @@ google.maps.Polygon.prototype.getBounds = function() {
   }
 
   public static function wardPolls($wardnum) {
-    $rows = getDatabase()->all(" select vot_subd from polls_2010 where ward = :wardnum ",array("wardnum"=>$wardnum));
+    $rows = getDatabase()->all(" select vot_subd from polls_2010 where cast(ward as unsigned) = :wardnum ",array("wardnum"=>$wardnum));
     $polls = array();
     foreach ($rows as $r) { $polls[] = $r['vot_subd']; }
     $result['2010'] = $polls;
