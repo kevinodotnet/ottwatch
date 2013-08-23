@@ -329,7 +329,7 @@ google.maps.Polygon.prototype.getBounds = function() {
   }
 
   public static function wardPolls($wardnum) {
-    $rows = getDatabase()->all(" select vot_subd from polls_2010 where cast(ward as unsigned) = :wardnum ",array("wardnum"=>$wardnum));
+    $rows = getDatabase()->all(" select vot_subd from polls_2010 where cast(ward as unsigned) = :wardnum order by vot_subd ",array("wardnum"=>$wardnum));
     $polls = array();
     foreach ($rows as $r) { $polls[] = $r['vot_subd']; }
     $result['2010'] = $polls;
