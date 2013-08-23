@@ -53,7 +53,11 @@ class ApiController {
       $t = explode(" ",$p);
       $np = array();
       $np['lat'] = $t[1];
+      $np['lat'] = preg_replace('/\)/','',$np['lat']);
+      $np['lat'] = preg_replace('/\(/','',$np['lat']);
       $np['lon'] = $t[0];
+      $np['lon'] = preg_replace('/\)/','',$np['lon']);
+      $np['lon'] = preg_replace('/\(/','',$np['lon']);
       $points[] = $np;
     }
     return $points;
