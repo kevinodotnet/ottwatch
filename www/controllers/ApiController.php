@@ -188,7 +188,7 @@ class ApiController {
   }
 
   public static function listWards() {
-    $rows = getDatabase()->all(" select * from wards_2010 ");
+    $rows = getDatabase()->all(" select * from wards_2010 order by ward_en ");
     $result = array();
     foreach ($rows as $r) {
       $result[$r['ward_num']] = $r['ward_en'];
