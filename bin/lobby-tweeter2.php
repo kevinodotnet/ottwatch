@@ -9,6 +9,6 @@ require_once('twitteroauth.php');
 
 LobbyistController::tweetNewActivities();
 
-LobbyistController::tweetLongestFileBadge();
+#LobbyistController::tweetLongestFileBadge();
 
 ?>
