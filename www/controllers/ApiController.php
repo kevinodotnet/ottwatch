@@ -2,7 +2,40 @@
 
 class ApiController {
 
-  /* Initialize a "success" result */
+  public static function arrayToCsv($array) {
+    if (count($array) == 0) {
+      return "";
+    }
+    ob_start();
+    $df = fopen("php://output", 'w');
+    fputcsv($df, array_keys(reset($array)));
+    foreach ($array as $row) {
+      fputcsv($df,$row);
+    }
+    fclose($df);
+    return ob_get_clean();
+  }
+
+  public static function lobbyingAllCsv() {
+    $rows = getDatabase()->all("
+      select 
+        f.id fileid,
+        f.lobbyist,
+        f.client,
+        f.issue,
+        l.id activityid,
+        l.lobbydate,
+        l.activity,
+        l.lobbied,
+        l.created reportedon
+      from lobbying l
+        join lobbyfile f on f.id = l.lobbyfileid
+      order by
+        l.created desc
+    ");
+    print self::arrayToCsv($rows);
+    return;
+  }
 
   public static function devApp($id) {
     $row = getDatabase()->one("select id,appid,devid,apptype,ward,receiveddate,updated,address,description from devapp where appid = :id or devid = :id ",array('id'=>$id));
