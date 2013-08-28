@@ -2,6 +2,124 @@
 
 class ChartController {
 
+  static public function lobbyingWeightedActivity($days) {
+    top();
+
+    $rows = getDatabase()->all("
+      select
+        f.client, count(1) hits,
+        count(distinct(f.id)) files,
+        count(distinct(f.lobbyist)) lobbyists,
+        sum(case 
+          when activity = 'Telephone' then 3
+          when activity = 'Meeting' then 5
+          when activity = 'Email' then 1
+          when activity = 'Mail' then 1
+          when activity = 'Other' then 1
+          else 1000 end) weighted
+      from lobbying l
+        join lobbyfile f on f.id = l.lobbyfileid
+      where 
+        datediff(NOW(),lobbydate) <= :days
+      group by
+        f.client
+      order by
+        weighted desc
+    ",array('days'=>$days));
+
+    ?>
+
+    <div class="row-fluid">
+    <div class="span6">
+    <h1>Lobbying intensity report</h1>
+    <b>Period:</b> last <?php print $days; ?> days
+    </div>
+    <div class="span6">
+    <b>Intensity</b> is calculated by allocating a number of points for each occurance of a lobbying activity:<br/>
+    In person:  5 points<br/>
+    Telephone call: 3 points<br/>
+    Email: 1 points<br/>
+    Postal Mail: 1 points<br/>
+    Other: 1 points
+    </div>
+    </div>
+
+    <table class="table table-bordered table-hover table-condensed" style="">
+      <tr>
+      <th>Intensity</th>
+      <th>Client</th>
+      <th>Active Files</th>
+      <th>Active Lobbyists</th>
+      <th>Unweighted Activities</th>
+      </tr>
+    <?php
+    foreach ($rows as $r) {
+      ?>
+      <tr>
+      <td><?php print $r['weighted']; ?></td>
+      <td><a href="<?php print OttWatchConfig::WWW."/lobbying/clients/{$r['client']}"; ?>"><?php print $r['client']; ?></a></td>
+      <td><?php print $r['files']; ?></td>
+      <td><?php print $r['lobbyists']; ?></td>
+      <td><?php print $r['hits']; ?></td>
+      </tr>
+      <?php
+    }
+    ?>
+    </table>
+    <?php
+
+    bottom();
+    return;
+
+    self::highJS();
+    ?>
+    <script src="http://code.highcharts.com/highcharts.js"></script>
+    <script src="http://code.highcharts.com/modules/exporting.js"></script>
+    <div id="container" style="min-width: 310px; margin: 0 auto;"></div>
+    <script>
+$(function () {
+        $('#container').highcharts({
+            chart: {
+                type: 'bar'
+            },
+            title: {
+                text: 'Stacked bar chart'
+            },
+            xAxis: {
+                categories: [ 'Lobbying' 
+                <?php
+	              foreach ($rows as $r) {
+//                   print "'".preg_replace("/'/",'',$c['client'])."',\n";
+                }
+                ?>
+                ]
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Weighted lobbying activity'
+                },
+            },
+            legend: {
+                borderColor: '#CCC',
+            },
+            plotOptions: {
+                series: {
+                  
+                }
+            },
+            series: [
+            { name: '', data: [5, 3, ] }, 
+            ],
+
+        });
+    });
+    </script>
+    <?php
+
+    bottom();
+  }
+
   static public function lobbyingDaily() {
   error_reporting(E_ALL);
     top();
@@ -93,3 +211,4 @@ print HighRoller::setHighChartsLocation(OttWatchConfig::WWW."/highcharts/js/high
 }
 
 ?>
+    

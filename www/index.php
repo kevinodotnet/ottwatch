@@ -77,6 +77,7 @@ getRoute()->get('/meetings/([^\/]*)/(\d+)/item/(\d+)', array('MeetingController'
 getRoute()->get('/meetings/([^\/]*)/(\d+)/item/(\d+)/(files|files.json)', array('MeetingController','itemFiles')); // meetings/CATEGORY/ID
 
 getRoute()->get('/chart/test', array('ChartController','test'));
+getRoute()->get('/chart/lobbying/weighted/(\d+)', array('ChartController','lobbyingWeightedActivity'));
 getRoute()->get('/chart/lobbying/daily', array('ChartController','lobbyingDaily'));
 
 getRoute()->get('.*', 'error404');
