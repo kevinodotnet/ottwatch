@@ -24,7 +24,8 @@ class ChartController {
       group by
         f.client
       order by
-        weighted desc
+        weighted desc,
+				f.client
     ",array('days'=>$days));
 
     ?>
