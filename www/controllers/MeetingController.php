@@ -323,7 +323,13 @@ class MeetingController {
       $meetingDate = explode(" - ",$title);
       $meetingDate = $meetingDate[1];
     	$link = OttWatchConfig::WWW."/meetings/meetid/".$r['meetid'];
-      $tweet = "Meeting: ".meeting_category_to_title($r['category'])." on $meetingDate is updated";
+
+      if ($r['created'] == $r['updated']) {
+        $tweet = "New Meeting: ".meeting_category_to_title($r['category'])." on $meetingDate";
+      } else {
+        $tweet = "Meeting: ".meeting_category_to_title($r['category'])." on $meetingDate is updated";
+      }
+
       $tweets[$link] = $tweet;
 
     }
