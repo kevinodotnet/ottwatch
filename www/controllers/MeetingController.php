@@ -1180,7 +1180,9 @@ class MeetingController {
         for ($y = 1; $y <= 2; $y++) {
           $name = '';
           for ($z = 0; $z < $y; $z++) {
-  	        $name .= $words[$x+1+$z]." ";
+  	        if (isset($words[$x+1+$z])) {
+    	        $name .= $words[$x+1+$z]." ";
+            }
           }
           $name = trim($name);
 	        $roads = getDatabase()->all("
