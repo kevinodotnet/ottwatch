@@ -33,17 +33,25 @@ class ChartController {
     <div class="row-fluid">
     <div class="span6">
     <h1>Lobbying intensity report</h1>
-    <b>Period:</b> last <?php print $days; ?> days
+    <b>Period:</b> last <?php print $days; ?> days.
+    <b>Switch to: </b>
+    <a href="7">1 week</a>,
+    <a href="14">2 weeks</a>,
+    <a href="30">1 month</a>,
+    <a href="60">2 months</a>,
+    <a href="180">6 months</a>
     </div>
     <div class="span6">
     <b>Intensity</b> is calculated by allocating a number of points for each occurance of a lobbying activity:<br/>
-    In person:  5 points<br/>
-    Telephone call: 3 points<br/>
-    Email: 1 points<br/>
-    Postal Mail: 1 points<br/>
-    Other: 1 points
+    <b>In person:</b>  5 points,
+    <b>Telephone:</b> 3 points,
+    <b>Email:</b> 1 points,
+    <b>Postal Mail:</b> 1 points,
+    <b>Other:</b> 1 points
     </div>
     </div>
+
+    <div>&nbsp;</div>
 
     <table class="table table-bordered table-hover table-condensed" style="">
       <tr>
