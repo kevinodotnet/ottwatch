@@ -11,12 +11,12 @@ class ChartController {
         count(distinct(f.id)) files,
         count(distinct(f.lobbyist)) lobbyists,
         sum(case 
-          when activity = 'Telephone' then 3
           when activity = 'Meeting' then 5
+          when activity = 'Telephone' then 3
           when activity = 'Email' then 1
           when activity = 'Mail' then 1
           when activity = 'Other' then 1
-          else 1000 end) weighted
+          else 1 end) weighted
       from lobbying l
         join lobbyfile f on f.id = l.lobbyfileid
       where 
