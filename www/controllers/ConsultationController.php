@@ -1,7 +1,5 @@
 <?php
 
-error_reporting(E_ALL);
-
 class ConsultationController {
 
   // main entry point for crawling public consultations
@@ -93,8 +91,5 @@ class ConsultationController {
   }
   
 }
-
-ConsultationController::crawlConsultations();
-#ConsultationController::crawlCategory("TEST","http://ottawa.ca/en/city-hall/public-consultations/transportation");
 
 ?>
