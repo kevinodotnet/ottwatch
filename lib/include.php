@@ -26,6 +26,7 @@ if (1) {
 	include_once 'controllers/MeetingController.php';
 	include_once 'controllers/DevelopmentApp.php';
 	include_once 'controllers/LobbyistController.php';
+	include_once 'controllers/ConsultationController.php';
 
 	#include_once('EpiDatabase.php');
 	#require_once('EpiException.php');
