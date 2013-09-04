@@ -27,6 +27,7 @@ class ConsultationController {
     #print "CATEGORY: $category, URL: $url\n";
     $html = file_get_contents($url);
 
+    # TODO: use self::getCityContent()
     $html = preg_replace("/\n/","KEVINO_NEWLINE",$html);
     $html = preg_replace("/<head.*<body/","<body",$html);
     $html = preg_replace("/<script[^<]+<\/script>/"," ",$html);
@@ -60,8 +61,8 @@ class ConsultationController {
     print "TITLE: $title\n";
     print "URL: $url\n";
 
-    #print "$url :: $title\n";
     $html = file_get_contents($url);
+    # TODO: use self::getCityContent()
     $html = preg_replace("/\n/","KEVINO_NEWLINE",$html);
     $html = preg_replace("/<head.*<body/","<body",$html);
     $html = preg_replace("/<script[^<]+<\/script>/"," ",$html);
@@ -84,10 +85,53 @@ class ConsultationController {
     foreach ($links as $a) {
       #print_r($a);
       $docLink = $a->attributes();
+      if (substr($docLink,0,1) == '/') {
+        $docLink = "http://ottawa.ca{$docLink}";
+      }
       $docTitle = $a[0];
-      print "  DOCUMENT: $docTitle $docLink\n";
-      print implode("|",array("CSV",$category,$title,$url,$docTitle,$docLink,"\n"));
+      self::crawlConsultationLink($category,$title,$url,$docTitle,$docLink);
     }
+  }
+
+  // crawl all links within the consultation page itself; might be links to other ottawa.ca/drupal nodes
+  // or to PDFs
+
+  public static function crawlConsultationLink ($category, $title, $url, $docTitle, $docLink) {
+
+    $data = file_get_contents($docLink);
+    if (preg_match('/<html/',$data)) {
+      $html = self::getCityContent($data);
+      $docMD5 = md5($html);
+    } else {
+      $docMD5 = md5($data);
+    }
+
+    print "  DOCUMENT: $docTitle $docLink $docMD5\n";
+    print implode("|",array("CSV",$category,$title,$url,$docTitle,$docLink,$docMD5,"\n"));
+
+  }
+
+  // given an HTML page served up by ottawa.ca drupal, return just the HTML that is the content region,
+  // and discard menues and navigation, etc
+
+  public static function getCityContent ($html) {
+
+    $html = preg_replace("/\n/","KEVINO_NEWLINE",$html);
+
+    # remove things that break XML parsing
+    $html = preg_replace("/<head.*<body/","<body",$html);
+    $html = preg_replace("/<script[^<]+<\/script>/"," ",$html);
+    $html = preg_replace("/KEVINO_NEWLINE/","\n",$html);
+    $html = preg_replace("/ & /"," and ",$html);
+    $html = strip_tags($html,"<div><a>");
+
+    # the view-dom-id CLASS changes randomly, so remove it
+    # example: view-dom-id-b477d62d0bdb286acc260d50c820060d
+    $html = preg_replace("/view-dom-id-[a-z0-9]+/","",$html);
+
+    $xml = simplexml_load_string($html);
+    $div = $xml->xpath('//div[@id="cityott-content"]');
+    return $div[0]->asXML();
   }
   
 }
