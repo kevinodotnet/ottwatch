@@ -89,6 +89,13 @@ class ConsultationController {
         $docLink = "http://ottawa.ca{$docLink}";
       }
       $docTitle = $a[0];
+
+			# skip things that go outside public consultations
+			if (!preg_match('/^http/',$docLink)) { continue; }
+			if (preg_match('/cgi-bin\/docs.pl/',$docLink)) { continue; }
+			if (preg_match('/mailto/',$docLink)) { continue; }
+			if ($docLink == '') { continue; }
+
       self::crawlConsultationLink($category,$title,$url,$docTitle,$docLink);
     }
   }
@@ -100,14 +107,15 @@ class ConsultationController {
 
     $data = file_get_contents($docLink);
     if (preg_match('/<html/',$data)) {
-      $html = self::getCityContent($data);
-      $docMD5 = md5($html);
+      $data = self::getCityContent($data);
+      $docMD5 = md5($data);
     } else {
       $docMD5 = md5($data);
     }
 
     print "  DOCUMENT: $docTitle $docLink $docMD5\n";
     print implode("|",array("CSV",$category,$title,$url,$docTitle,$docLink,$docMD5,"\n"));
+		file_put_contents($docMD5,$data);
 
   }
 
@@ -116,10 +124,17 @@ class ConsultationController {
 
   public static function getCityContent ($html) {
 
+		if (!preg_match('/cityott-content/',$html)) {
+			# not a drupal node
+			return $html;
+		}
+
+		$o = $html;
     $html = preg_replace("/\n/","KEVINO_NEWLINE",$html);
 
     # remove things that break XML parsing
     $html = preg_replace("/<head.*<body/","<body",$html);
+    $html = preg_replace("/&lang=en/","",$html); # not all HTML is escaped property, avoids <a href="...&lang=en" crap
     $html = preg_replace("/<script[^<]+<\/script>/"," ",$html);
     $html = preg_replace("/KEVINO_NEWLINE/","\n",$html);
     $html = preg_replace("/ & /"," and ",$html);
@@ -130,7 +145,22 @@ class ConsultationController {
     $html = preg_replace("/view-dom-id-[a-z0-9]+/","",$html);
 
     $xml = simplexml_load_string($html);
+#		print "\n\n";
+#		print print_r($xml);
+#		print "\n\n";
+#		if (!is_object($xml)) {
+#			print "A -----------------\n";
+#			print "$o\n";
+#			print "B -----------------\n";
+#			print "$html\n";
+#			print "C -----------------\n";
+#			exit;
+#		}
     $div = $xml->xpath('//div[@id="cityott-content"]');
+		if (count($div) == 0) {
+			# return original HTML
+			return $html;
+		}
     return $div[0]->asXML();
   }
   
