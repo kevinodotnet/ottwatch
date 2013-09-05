@@ -1354,6 +1354,12 @@ class MeetingController {
 
   public function parseVotingResults($item,$html) {
 
+		# remove shit from the HTML
+		$html = preg_replace('/class=MsoPlaceholderText/','',$html);
+		$html = preg_replace('/<\?xml[^>]+>/','',$html);
+		$html = preg_replace('/<w:[^>]+>/','',$html);
+		$html = preg_replace('/<\/w:[^>]+>/','',$html);
+
     if (preg_match('/Item not found/',$html)) {
       return;
     }
