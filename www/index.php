@@ -83,6 +83,7 @@ getRoute()->get('/chart/lobbying/daily', array('ChartController','lobbyingDaily'
 getRoute()->get('/consultations', array('ConsultationController','showMain'));
 getRoute()->get('/consultations/', array('ConsultationController','showMain'));
 getRoute()->get('/consultations/(\d+)', array('ConsultationController','showConsultation'));
+getRoute()->get('/consultations/(\d+)/content', array('ConsultationController','showConsultationContent'));
 
 getRoute()->get('.*', 'error404');
 getRoute()->run();
