@@ -37,7 +37,7 @@ getApi()->get('/api/devapps/([D_].*)', array('ApiController', 'devApp'), EpiApi:
 
 getRoute()->get('/', 'dashboard');
 getRoute()->get('/about', 'about');
-getRoute()->get('/ideas', 'ideas');
+#getRoute()->get('/ideas', 'ideas');
 #getRoute()->get('/dashboard', 'dashboard');
 
 getRoute()->get('/user/home', array('UserController','home'));
@@ -294,20 +294,20 @@ function dashboard() {
   bottom();
 }
 
-function ideas() {
-  top();
-  ?>
-  <h1>Got an idea for OttWatch?</h1>
-  <h4>Let me know by leaving a (public) comment below.</h4>
-  <p>
-  OttWatch is focused on the political/governance area so I don't plan to 
-  to transportation or recreation related things. You might also be interested in the
-  ongoing <a href="http://http://www.apps4ottawa.ca/">Apps4Ottawa</a> contest.
-  </p>
-  <?php
-  disqus();
-  bottom();
-}
+# function ideas() {
+#   top();
+#   ?>
+#   <h1>Got an idea for OttWatch?</h1>
+#   <h4>Let me know by leaving a (public) comment below.</h4>
+#   <p>
+#   OttWatch is focused on the political/governance area so I don't plan to 
+#   to transportation or recreation related things. You might also be interested in the
+#   ongoing <a href="http://http://www.apps4ottawa.ca/">Apps4Ottawa</a> contest.
+#   </p>
+#   <?php
+#   disqus();
+#   bottom();
+# }
 
 function about() {
   top();
@@ -375,11 +375,11 @@ function copyToClipboard (text) {
 <ul class="nav">
 <li><a href="<?php print $OTT_WWW; ?>">Home</a></li>
 <!--<li><a href="<?php print $OTT_WWW; ?>/dashboard">Dashboard</a></li>-->
+<li><a href="<?php print $OTT_WWW; ?>/consultations">Consultations</a></li>
 <li><a href="<?php print $OTT_WWW; ?>/meetings/votes">Voting History</a></li>
 <li><a href="<?php print $OTT_WWW; ?>/lobbying/latereport">Late Lobbying Report</a></li>
 <li><a href="<?php print $OTT_WWW; ?>/chart/lobbying/weighted/30">Lobbying Intensity Report</a></li>
 <li><a href="<?php print $OTT_WWW; ?>/about">About</a></li>
-<li><a href="<?php print $OTT_WWW; ?>/ideas">Ideas</a></li>
 <li><a href="<?php print $OTT_WWW; ?>/api/about">API</a></li>
 <?php
 if (!LoginController::isLoggedIn()) {
