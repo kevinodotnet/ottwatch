@@ -17,14 +17,13 @@ class ConsultationController {
       $url = $matches[1][$x];
       $category = $matches[2][$x];
       self::crawlCategory($category,"http://ottawa.ca{$url}");
-      #exit;
     }
   }
 
   // crawl a category for its consultations
 
   public static function crawlCategory ($category, $url) {
-    #print "CATEGORY: $category, URL: $url\n";
+    print "CATEGORY: $category\n";
     $html = file_get_contents($url);
 
     # TODO: use self::getCityContent()
@@ -48,7 +47,6 @@ class ConsultationController {
 
       $title = $a[0];
       self::crawlConsultation($category,$title,$url);
-      exit;
     }
 
   }
@@ -56,6 +54,7 @@ class ConsultationController {
   // crawl a specific consultation 
 
   public static function crawlConsultation ($category, $title, $url) {
+    print "  CONSULT: $title\n";
 
     $html = file_get_contents($url);
     # TODO: use self::getCityContent()
@@ -112,6 +111,7 @@ class ConsultationController {
   // or to PDFs
 
   public static function crawlConsultationLink ($parent, $title, $url) {
+    print "    LINK: $title\n";
 
     $data = file_get_contents($url);
     $md5 = md5($data);
@@ -159,17 +159,6 @@ class ConsultationController {
     $html = preg_replace("/view-dom-id-[a-z0-9]+/","",$html);
 
     $xml = simplexml_load_string($html);
-#		print "\n\n";
-#		print print_r($xml);
-#		print "\n\n";
-#		if (!is_object($xml)) {
-#			print "A -----------------\n";
-#			print "$o\n";
-#			print "B -----------------\n";
-#			print "$html\n";
-#			print "C -----------------\n";
-#			exit;
-#		}
     $div = $xml->xpath('//div[@id="cityott-content"]');
 		if (count($div) == 0) {
 			# return original HTML
