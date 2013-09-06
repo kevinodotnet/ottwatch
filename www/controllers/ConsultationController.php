@@ -4,8 +4,90 @@ class ConsultationController {
 
   // main entry point for crawling public consultations
 
+  public static function showConsultationContent($id) {
+    $row = getDatabase()->one(" select * from consultation where id = :id ",array('id'=>$id));
+    $html = file_get_contents(OttWatchConfig::FILE_DIR."/consultationmd5/".$row['md5']);
+    ?>
+    <html>
+    <head>
+    <base href="http://ottawa.ca" target="_blank">
+    <style>
+    body {
+      font-family: Verdana;
+      font-size: 10pt;
+    }
+    div {
+      padding-bottom: 2px;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    a {
+      text-decoration: none;
+    }
+    </style>
+    </head>
+    <body>
+    <?php
+    print $html;
+    ?>
+    </body>
+    </html>
+    <?php
+
+  }
+
   public static function showConsultation($id) {
-    top();
+    $row = getDatabase()->one("
+	    select 
+	      c.*,
+	      datediff( CURRENT_TIMESTAMP, c.updated) delta
+	    from consultation c
+	      left join (select consultationid,max(updated) docupdated from consultationdoc group by consultationid) d on d.consultationid = c.id
+	    where id = :id 
+      ",array('id'=>$id));
+    top($row['title']);
+    ?>
+
+		<h1><?php print $row['title']; ?></h1>
+		Last updated <?php print $row['delta']; ?> day(s) ago.<br/>
+
+    <div class="row-fluid">
+
+    <div class="span6">
+		<h2>Documents at a glance</h2>
+    <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
+	  <tr>
+	  </tr>
+    <?php
+    $docs = getDatabase()->all(" select *,datediff(CURRENT_TIMESTAMP,updated) delta from consultationdoc where consultationid = :id order by updated desc ",array('id'=>$row['id']));
+    foreach ($docs as $doc) {
+      ?>
+	    <tr>
+	    <td><?php print $doc['delta']; ?> day(s) ago</td>
+	    <td><a target="_blank" href="<?php print $doc['url']; ?>"><?php print $doc['title']; ?></a></td>
+	    </tr>
+      <?php
+    }
+    ?>
+    </table>
+    </div><!-- col -->
+
+    <?php
+    $frameSrc = "{$row['id']}/content";
+    ?>
+    <div class="span6">
+    <h2>Overview</h2>
+    <i>
+    The overview provided below will have formatting and readability problems.
+    You're better off <a target="_new" href="<?php print $row['url']; ?>">viewing the actual page on ottawa.ca</a> instead.</i>
+    <iframe src="<?php print $frameSrc ?>" style="margin-top: 10px; width: 100%; height: 600px; border: 2px solid #000000;"></iframe>
+    </div><!-- col -->
+
+    </div><!-- row -->
+
+
+    <?php
     bottom();
   }
 
@@ -29,15 +111,13 @@ class ConsultationController {
     order by 
       case when d.docupdated is null then c.updated else greatest(c.updated,d.docupdated) end desc,
 			title
-    ;
-
     ");
     foreach ($rows as $row) {
       ?>
 	    <tr>
-	    <th><a target="_blank" href="<?php print $row['url']; ?>"><?php print $row['title']; ?></a></th>
+	    <!-- <th><a target="_blank" href="<?php print $row['url']; ?>"><?php print $row['title']; ?></a></th> -->
+	    <th><a target="_blank" href="<?php print $row['id']; ?>"><?php print $row['title']; ?></a></th>
 	    <td><?php print $row['delta']; ?></td>
-	    <!-- <td><?php print $row['created']; ?></td> -->
 	    <td><?php print $row['category']; ?></td>
 	    </tr>
       <?php
