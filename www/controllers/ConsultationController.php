@@ -21,7 +21,8 @@ class ConsultationController {
     from consultation c
       left join (select consultationid,max(updated) docupdated from consultationdoc group by consultationid) d on d.consultationid = c.id
     order by 
-      case when d.docupdated is null then c.updated else greatest(c.updated,d.docupdated) end desc
+      case when d.docupdated is null then c.updated else greatest(c.updated,d.docupdated) end desc,
+			title
     ;
 
     ");
