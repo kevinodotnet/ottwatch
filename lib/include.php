@@ -315,4 +315,22 @@ function setvar ($name,$value) {
     return $result;
   }
 
+function db_insert($table, $values) {
+    return getDatabase()->execute(db_generate_insert($table, $values), $values);
+}
+function db_generate_insert($table, $values) {
+    $sql = "insert into $table (";
+    foreach ( $values as $k => $v ) {
+        $sql .= "{$k},";
+    }
+    $sql = rtrim($sql, ',');
+    $sql .= ") values (";
+    foreach ( $values as $k => $v ) {
+        $sql .= ":{$k},";
+    }
+    $sql = rtrim($sql, ',');
+    $sql .= ")";
+    return $sql;
+}
+
 ?>
