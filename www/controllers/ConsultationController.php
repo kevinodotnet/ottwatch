@@ -72,7 +72,7 @@ class ConsultationController {
   // crawl a category for its consultations
 
   public static function crawlCategory ($category, $url) {
-    print "CATEGORY: $category\n";
+    #print "CATEGORY: $category\n";
     $html = file_get_contents($url);
 
     # TODO: use self::getCityContent()
@@ -103,7 +103,7 @@ class ConsultationController {
   // crawl a specific consultation 
 
   public static function crawlConsultation ($category, $title, $url) {
-    print "  CONSULT: $title\n";
+    #print "  CONSULT: $title\n";
 
     $html = file_get_contents($url);
     # TODO: use self::getCityContent()
@@ -160,7 +160,7 @@ class ConsultationController {
   // or to PDFs
 
   public static function crawlConsultationLink ($parent, $title, $url) {
-    print "    LINK: $title\n";
+    #print "    LINK: $title\n";
 
     $data = file_get_contents($url);
     $md5 = md5($data);
