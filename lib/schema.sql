@@ -262,3 +262,28 @@ create table permit (
 
 create unique index permit_in1 on permit (permit_number,st_num,st_name,contractor);
 
+drop table consultation;
+create table consultation (
+  id mediumint not null auto_increment,
+  category varchar(300),
+  title varchar(300),
+  url varchar(300),
+  md5 varchar(50),
+  created datetime default CURRENT_TIMESTAMP,
+  updated datetime default CURRENT_TIMESTAMP,
+  primary key (id)
+) engine = innodb;
+
+drop table consultationdoc;
+create table consultationdoc (
+  id mediumint not null auto_increment,
+  consultationid mediumint not null,
+  title varchar(300),
+  url varchar(300),
+  md5 varchar(50),
+  created datetime default CURRENT_TIMESTAMP,
+  updated datetime default CURRENT_TIMESTAMP,
+  primary key (id),
+  constraint foreign key (consultationid) references consultation (id) on delete cascade on update cascade
+) engine = innodb;
+

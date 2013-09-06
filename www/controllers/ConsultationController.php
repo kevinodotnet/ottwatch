@@ -48,6 +48,7 @@ class ConsultationController {
 
       $title = $a[0];
       self::crawlConsultation($category,$title,$url);
+      exit;
     }
 
   }
@@ -55,11 +56,6 @@ class ConsultationController {
   // crawl a specific consultation 
 
   public static function crawlConsultation ($category, $title, $url) {
-
-    print "---------------------------------------\n";
-    print "CATEGORY: $category\n";
-    print "TITLE: $title\n";
-    print "URL: $url\n";
 
     $html = file_get_contents($url);
     # TODO: use self::getCityContent()
@@ -77,13 +73,25 @@ class ConsultationController {
     $xml = simplexml_load_string($html);
     $div = $xml->xpath('//div[@id="cityott-content"]');
     $contentMD5 = md5($div[0]->asXML());
-    print "MD5: $contentMD5\n";
-    file_put_contents($contentMD5,$div[0]->asXML());
+    file_put_contents(OttWatchConfig::FILE_DIR."/consultationmd5/".$contentMD5,$div[0]->asXML());
 
+    $row = getDatabase()->one(" select * from consultation where url = :url ",array('url'=>$url));
+    if ($row['id']) {
+      if ($row['md5'] != $contentMD5) {
+        print "consultation.id = {$row['id']} md5 changed from {$row['md5']} to $contentMD5\n";
+        getDatabase()->execute(" update consultation set md5 = :md5, updated = CURRENT_TIMESTAMP where id = :id ",array('id'=>$row['id'],'md5'=>$contentMD5));
+      }
+    } else {
+      db_insert("consultation",array( 'category'=>$category, 'title'=>$title, 'url'=>$url, 'md5'=>$contentMD5)); 
+    }
+
+    # reset from database, may have updated/inserted
+    $row = getDatabase()->one(" select * from consultation where url = :url ",array('url'=>$url));
+
+    # read individual documents.
     $div = simplexml_load_string($div[0]->asXML());
     $links = $div->xpath('//a');
     foreach ($links as $a) {
-      #print_r($a);
       $docLink = $a->attributes();
       if (substr($docLink,0,1) == '/') {
         $docLink = "http://ottawa.ca{$docLink}";
@@ -96,27 +104,33 @@ class ConsultationController {
 			if (preg_match('/mailto/',$docLink)) { continue; }
 			if ($docLink == '') { continue; }
 
-      self::crawlConsultationLink($category,$title,$url,$docTitle,$docLink);
+      self::crawlConsultationLink($row,$docTitle,$docLink);
     }
   }
 
   // crawl all links within the consultation page itself; might be links to other ottawa.ca/drupal nodes
   // or to PDFs
 
-  public static function crawlConsultationLink ($category, $title, $url, $docTitle, $docLink) {
+  public static function crawlConsultationLink ($parent, $title, $url) {
 
-    $data = file_get_contents($docLink);
+    $data = file_get_contents($url);
+    $md5 = md5($data);
     if (preg_match('/<html/',$data)) {
       $data = self::getCityContent($data);
-      $docMD5 = md5($data);
-    } else {
-      $docMD5 = md5($data);
+      $md5 = md5($data);
     }
 
-    print "  DOCUMENT: $docTitle $docLink $docMD5\n";
-    print implode("|",array("CSV",$category,$title,$url,$docTitle,$docLink,$docMD5,"\n"));
-		file_put_contents($docMD5,$data);
+    $row = getDatabase()->one(" select * from consultationdoc where url = :url ",array('url'=>$url));
+    if ($row['id']) {
+      if ($row['md5'] != $md5) {
+        print "consultation.id = {$parent['id']} doc.id = {$row['id']} md5 changed from {$row['md5']} to $contentMD5\n";
+        getDatabase()->execute(" update consultationdoc set md5 = :md5, updated = CURRENT_TIMESTAMP where id = :id ",array('id'=>$row['id'],'md5'=>$md5));
+      }
+    } else {
+      db_insert("consultationdoc",array('consultationid'=>$parent['id'],'title'=>$title, 'url'=>$url, 'md5'=>$md5)); 
+    }
 
+    file_put_contents(OttWatchConfig::FILE_DIR."/consultationmd5/".$md5,$data);
   }
 
   // given an HTML page served up by ottawa.ca drupal, return just the HTML that is the content region,
