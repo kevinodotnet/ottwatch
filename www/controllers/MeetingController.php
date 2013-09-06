@@ -341,7 +341,7 @@ class MeetingController {
       # allow duplicates because subsequent tweets about the same file
       # will be the same, but spaced in time according to the lobbyist
       # activity dates
-      tweet($tweet,1);
+      tweet($tweet);
     }
     
   }
@@ -1286,7 +1286,6 @@ class MeetingController {
             if (preg_match('/^COMMUNICATIONS$/i',$title)) { print "SKIPPING new item tweet: $tweet\n"; continue; }
             if (preg_match('/^CONFIRMATION OF MINUTES$/i',$title)) { print "SKIPPING new item tweet: $tweet\n"; continue; }
             print "SKIPPING (but would have sent) $tweet\n"; 
-            # tweet($tweet,1);
           }
         }
 	    }

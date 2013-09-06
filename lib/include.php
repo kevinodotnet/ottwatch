@@ -71,26 +71,13 @@ function tweet_txt_and_url($txt,$url) {
 	return $t;
 }
  
-function tweet($tweet,$allowDup=0) {
+function tweet($tweet) {
 
 	global $OTTVAR;
 
   # fix HTML escapes
   $tweet = html_entity_decode($tweet);
 
-	# send no tweet twice
-  $hash = md5($tweet);
-  $hashfile = "$OTTVAR/tweets/$hash";
-  if (file_exists($hashfile)) {
-		if (!$allowDup) {
-			return -1;
-		}
-	}
-
-	# check tweet cache and dont send if found
-	file_put_contents($hashfile,$tweet);
-
-	# todo: move to non-git configuration file
   $consumerKey = OttWatchConfig::TWITTER_CONSUMER_KEY;
   $consumerSecret = OttWatchConfig::TWITTER_CONSUMER_SECRET;
   $accessToken = OttWatchConfig::TWITTER_ACCESS_TOKEN;
