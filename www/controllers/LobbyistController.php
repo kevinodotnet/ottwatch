@@ -841,7 +841,7 @@ class LobbyistController {
       # allow duplicates because subsequent tweets about the same file
       # will be the same, but spaced in time according to the lobbyist
       # activity dates
-      tweet($tweet,1);
+      tweet($tweet);
       sleep(5);
     }
     
