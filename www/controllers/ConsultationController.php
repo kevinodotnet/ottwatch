@@ -4,6 +4,11 @@ class ConsultationController {
 
   // main entry point for crawling public consultations
 
+  public static function showConsultation($id) {
+    top();
+    bottom();
+  }
+
   public static function showMain() {
     top();
     ?>
