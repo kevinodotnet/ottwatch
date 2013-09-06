@@ -80,6 +80,7 @@ getRoute()->get('/chart/test', array('ChartController','test'));
 getRoute()->get('/chart/lobbying/weighted/(\d+)', array('ChartController','lobbyingWeightedActivity'));
 getRoute()->get('/chart/lobbying/daily', array('ChartController','lobbyingDaily'));
 
+getRoute()->get('/consultations', array('ConsultationController','showMain'));
 getRoute()->get('/consultations/', array('ConsultationController','showMain'));
 
 getRoute()->get('.*', 'error404');
@@ -375,7 +376,7 @@ function copyToClipboard (text) {
 <ul class="nav">
 <li><a href="<?php print $OTT_WWW; ?>">Home</a></li>
 <!--<li><a href="<?php print $OTT_WWW; ?>/dashboard">Dashboard</a></li>-->
-<li><a href="<?php print $OTT_WWW; ?>/consultations">Consultations</a></li>
+<li><a href="<?php print $OTT_WWW; ?>/consultations/">Consultations</a></li>
 <li><a href="<?php print $OTT_WWW; ?>/meetings/votes">Voting History</a></li>
 <li><a href="<?php print $OTT_WWW; ?>/lobbying/latereport">Late Lobbying Report</a></li>
 <li><a href="<?php print $OTT_WWW; ?>/chart/lobbying/weighted/30">Lobbying Intensity Report</a></li>
