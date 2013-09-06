@@ -4,6 +4,54 @@ class ConsultationController {
 
   // main entry point for crawling public consultations
 
+  public static function showMain() {
+    top();
+    ?>
+    <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
+    <tr>
+    <th>Consultation/Document Title</th>
+    <th>Updated</th>
+    <!-- <th>Created</th> -->
+    <th>Category</th>
+    </tr>
+    <?php
+    $rows = getDatabase()->all(" 
+    select 
+      c.*
+    from consultation c
+      left join (select consultationid,max(updated) docupdated from consultationdoc group by consultationid) d on d.consultationid = c.id
+    order by 
+      case when d.docupdated is null then c.updated else greatest(c.updated,d.docupdated) end desc
+    ;
+
+    ");
+    foreach ($rows as $row) {
+      ?>
+	    <tr>
+	    <th><a target="_blank" href="<?php print $row['url']; ?>"><?php print $row['title']; ?></a></th>
+	    <td><?php print substr($row['updated'],0,16); ?></td>
+	    <!-- <td><?php print $row['created']; ?></td> -->
+	    <td><?php print $row['category']; ?></td>
+	    </tr>
+      <?php
+      $docs = getDatabase()->all(" select * from consultationdoc where consultationid = :id order by updated desc ",array('id'=>$row['id']));
+      foreach ($docs as $doc) {
+        ?>
+		    <tr>
+		    <td style="padding-left: 20px;"><a target="_blank" href="<?php print $doc['url']; ?>"><?php print $doc['title']; ?></a></td>
+		    <td><?php print substr($doc['updated'],0,16); ?></td>
+		    <!-- <td><?php print $doc['created']; ?></td> -->
+		    <td></td>
+		    </tr>
+        <?php
+      }
+    }
+    ?>
+    </table>
+    <?php
+    bottom();
+  }
+
   public static function crawlConsultations() {
     # start at the stop level consultation listing.
     $html = file_get_contents("http://ottawa.ca/en/city-hall/public-consultations");
