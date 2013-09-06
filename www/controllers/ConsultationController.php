@@ -126,7 +126,7 @@ class ConsultationController {
     $row = getDatabase()->one(" select * from consultation where url = :url ",array('url'=>$url));
     if ($row['id']) {
       if ($row['md5'] != $contentMD5) {
-        print "consultation.id = {$row['id']} md5 changed from {$row['md5']} to $contentMD5\n";
+        print "consultation.id = {$row['id']} md5 changed from {$row['md5']} to $contentMD5 url: $url\n";
         getDatabase()->execute(" update consultation set md5 = :md5, updated = CURRENT_TIMESTAMP where id = :id ",array('id'=>$row['id'],'md5'=>$contentMD5));
       }
     } else {
@@ -172,7 +172,7 @@ class ConsultationController {
     $row = getDatabase()->one(" select * from consultationdoc where url = :url ",array('url'=>$url));
     if ($row['id']) {
       if ($row['md5'] != $md5) {
-        print "consultation.id = {$parent['id']} doc.id = {$row['id']} md5 changed from {$row['md5']} to $contentMD5\n";
+        print "consultation.id = {$parent['id']} doc.id = {$row['id']} md5 changed from {$row['md5']} to $contentMD5 url: $url\n";
         getDatabase()->execute(" update consultationdoc set md5 = :md5, updated = CURRENT_TIMESTAMP where id = :id ",array('id'=>$row['id'],'md5'=>$md5));
       }
     } else {
