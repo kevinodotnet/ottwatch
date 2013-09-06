@@ -82,6 +82,7 @@ getRoute()->get('/chart/lobbying/daily', array('ChartController','lobbyingDaily'
 
 getRoute()->get('/consultations', array('ConsultationController','showMain'));
 getRoute()->get('/consultations/', array('ConsultationController','showMain'));
+getRoute()->get('/consultations/(\d+)', array('ConsultationController','showConsultation'));
 
 getRoute()->get('.*', 'error404');
 getRoute()->run();
@@ -294,21 +295,6 @@ function dashboard() {
   <?php
   bottom();
 }
-
-# function ideas() {
-#   top();
-#   ?>
-#   <h1>Got an idea for OttWatch?</h1>
-#   <h4>Let me know by leaving a (public) comment below.</h4>
-#   <p>
-#   OttWatch is focused on the political/governance area so I don't plan to 
-#   to transportation or recreation related things. You might also be interested in the
-#   ongoing <a href="http://http://www.apps4ottawa.ca/">Apps4Ottawa</a> contest.
-#   </p>
-#   <?php
-#   disqus();
-#   bottom();
-# }
 
 function about() {
   top();
