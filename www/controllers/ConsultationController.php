@@ -4,6 +4,38 @@ class ConsultationController {
 
   // main entry point for crawling public consultations
 
+  public static function tweetUpdatedConsultations() {
+
+    // only tweet updates since last tweet
+    $last = getvar('consultationtweet.last');
+    if ($last == '') { $last = time(); }
+    setvar('consultationtweet.last',time());
+
+    // distinct set of consultations updated (either main, or sub-doc) since last tweet time
+    $rows = getDatabase()->all(" 
+      select * from consultation c
+        join (
+	        select id from consultation where updated > from_unixtime(:last)
+          union
+	        select consultationid id from consultationdoc where updated > from_unixtime(:last)
+	      ) u on u.id = c.id
+    ",array('last'=>$last));
+
+    # tweet each one
+    foreach ($rows as $row) {
+      $url = OttWatchConfig::WWW."/consultations/{$row['id']}";
+      if ($row['created'] == $row['updated']) {
+        $tweet = "NEW Consultation: {$row['title']}";
+      } else {
+        $tweet = "Consultation updated: {$row['title']}";
+      }
+      $tweet = tweet_txt_and_url($tweet,$url);
+      # leave as output for CRON review for now
+      print "WOULD HAVE SENT: $tweet\n";
+    }
+    
+  }
+
   public static function showConsultationContent($id) {
     $row = getDatabase()->one(" select * from consultation where id = :id ",array('id'=>$id));
     $html = file_get_contents(OttWatchConfig::FILE_DIR."/consultationmd5/".$row['md5']);
@@ -197,6 +229,7 @@ class ConsultationController {
         getDatabase()->execute(" update consultation set md5 = :md5, updated = CURRENT_TIMESTAMP where id = :id ",array('id'=>$row['id'],'md5'=>$contentMD5));
       }
     } else {
+      print "consultation.id = {$row['id']} is new\nurl: $url\n\n";
       db_insert("consultation",array( 'category'=>$category, 'title'=>$title, 'url'=>$url, 'md5'=>$contentMD5)); 
     }
 
@@ -243,6 +276,7 @@ class ConsultationController {
         getDatabase()->execute(" update consultationdoc set md5 = :md5, updated = CURRENT_TIMESTAMP where id = :id ",array('id'=>$row['id'],'md5'=>$md5));
       }
     } else {
+      print "consultation.id = {$parent['id']} DOC is new\nurl: $url\n\n";
       db_insert("consultationdoc",array('consultationid'=>$parent['id'],'title'=>$title, 'url'=>$url, 'md5'=>$md5)); 
     }
 
