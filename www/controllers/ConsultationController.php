@@ -252,7 +252,7 @@ class ConsultationController {
 			if (preg_match('/mailto/',$docLink)) { continue; }
 			if ($docLink == '') { continue; }
 
-      // self::crawlConsultationLink($row,$docTitle,$docLink);
+      self::crawlConsultationLink($row,$docTitle,$docLink);
     }
   }
 
