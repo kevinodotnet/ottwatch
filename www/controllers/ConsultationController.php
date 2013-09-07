@@ -16,9 +16,6 @@ class ConsultationController {
       font-family: Verdana;
       font-size: 10pt;
     }
-    div {
-      padding-bottom: 2px;
-    }
     a:hover {
       text-decoration: underline;
     }
@@ -161,14 +158,8 @@ class ConsultationController {
     #print "CATEGORY: $category\n";
     $html = file_get_contents($url);
 
-    # TODO: use self::getCityContent()
-    $html = preg_replace("/\n/","KEVINO_NEWLINE",$html);
-    $html = preg_replace("/<head.*<body/","<body",$html);
-    $html = preg_replace("/<script[^<]+<\/script>/"," ",$html);
-    $html = preg_replace("/KEVINO_NEWLINE/","\n",$html);
-    $html = preg_replace("/ & /"," and ",$html);
+		$html = self::getCityContent($html);
 
-    $html = strip_tags($html,"<div><a>");
     $xml = simplexml_load_string($html);
     $div = $xml->xpath('//div[@id="cityott-content"]');
     $div = simplexml_load_string($div[0]->asXML());
@@ -192,17 +183,7 @@ class ConsultationController {
     #print "  CONSULT: $title\n";
 
     $html = file_get_contents($url);
-    # TODO: use self::getCityContent()
-    $html = preg_replace("/\n/","KEVINO_NEWLINE",$html);
-    $html = preg_replace("/<head.*<body/","<body",$html);
-    $html = preg_replace("/<script[^<]+<\/script>/"," ",$html);
-    $html = preg_replace("/KEVINO_NEWLINE/","\n",$html);
-    $html = preg_replace("/ & /"," and ",$html);
-    $html = strip_tags($html,"<div><a>");
-
-    # the view-dom-id CLASS changes randomly, so remove it
-    # example: view-dom-id-b477d62d0bdb286acc260d50c820060d
-    $html = preg_replace("/view-dom-id-[a-z0-9]+/","",$html);
+		$html = self::getCityContent($html);
 
     $xml = simplexml_load_string($html);
     $div = $xml->xpath('//div[@id="cityott-content"]');
@@ -212,7 +193,7 @@ class ConsultationController {
     $row = getDatabase()->one(" select * from consultation where url = :url ",array('url'=>$url));
     if ($row['id']) {
       if ($row['md5'] != $contentMD5) {
-        print "consultation.id = {$row['id']} md5 changed from {$row['md5']} to $contentMD5 url: $url\n";
+        print "consultation.id = {$row['id']} md5 changed from {$row['md5']} to $contentMD5\nurl: $url\n\n";
         getDatabase()->execute(" update consultation set md5 = :md5, updated = CURRENT_TIMESTAMP where id = :id ",array('id'=>$row['id'],'md5'=>$contentMD5));
       }
     } else {
@@ -238,7 +219,7 @@ class ConsultationController {
 			if (preg_match('/mailto/',$docLink)) { continue; }
 			if ($docLink == '') { continue; }
 
-      self::crawlConsultationLink($row,$docTitle,$docLink);
+      // self::crawlConsultationLink($row,$docTitle,$docLink);
     }
   }
 
@@ -258,7 +239,7 @@ class ConsultationController {
     $row = getDatabase()->one(" select * from consultationdoc where url = :url ",array('url'=>$url));
     if ($row['id']) {
       if ($row['md5'] != $md5) {
-        print "consultation.id = {$parent['id']} doc.id = {$row['id']} md5 changed from {$row['md5']} to $md5 url: $url\n";
+        print "consultation.id = {$parent['id']} doc.id = {$row['id']} md5 changed from {$row['md5']} to $md5\nurl: $url\n\n";
         getDatabase()->execute(" update consultationdoc set md5 = :md5, updated = CURRENT_TIMESTAMP where id = :id ",array('id'=>$row['id'],'md5'=>$md5));
       }
     } else {
@@ -287,7 +268,10 @@ class ConsultationController {
     $html = preg_replace("/<script[^<]+<\/script>/"," ",$html);
     $html = preg_replace("/KEVINO_NEWLINE/","\n",$html);
     $html = preg_replace("/ & /"," and ",$html);
-    $html = strip_tags($html,"<div><a>");
+    $html = preg_replace("/<p[^>]+>/","",$html);
+    $html = preg_replace("/<\/p>/","__BR__",$html);
+    $html = strip_tags($html,"<div><br><a><h1><h2><h3><h4><h5>");
+    $html = preg_replace("/__BR__/","<br/><br/>",$html);
 
     # the view-dom-id CLASS changes randomly, so remove it
     # example: view-dom-id-b477d62d0bdb286acc260d50c820060d
