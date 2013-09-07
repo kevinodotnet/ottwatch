@@ -7,9 +7,6 @@ set_include_path(get_include_path() . PATH_SEPARATOR . "$dirname/../lib");
 set_include_path(get_include_path() . PATH_SEPARATOR . "$dirname/../www");
 require_once('include.php');
 
-# crawl for updates
-ConsultationController::crawlConsultations();
-# tweet any changes
 ConsultationController::tweetUpdatedConsultations();
 
 ?>
