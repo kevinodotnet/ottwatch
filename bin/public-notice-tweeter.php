@@ -14,6 +14,7 @@ $dirname = preg_replace("/\n/","",$dirname);
 set_include_path(get_include_path() . PATH_SEPARATOR . "$dirname/../lib");
 set_include_path(get_include_path() . PATH_SEPARATOR . "$dirname/../www");
 require_once('include.php');
+require_once('twitteroauth.php');
 
 $url = "http://ottawa.ca/en/city-hall/accountability-and-transparency/public-meetings-and-notices/notices";
 $html = file_get_contents($url);
