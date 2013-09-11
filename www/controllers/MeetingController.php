@@ -165,6 +165,9 @@ class MeetingController {
 
 		print "FOUND video for {$m['category']} on {$m['starttime']} id: {$m['id']} meetid: {$m['meetid']}\n\n";
 
+		# Ensure no other process starts in on this file.
+		getDatabase()->execute(" update meeting set youtube = 'SAVING' where id = :id ",array('id'=>$m['id']));
+
 		# This manifest file has all the fragment and timeoffset details. One HTTP request per
 		# Append each chunk to the overall video file
     $video_file = "video_{$meetid}.mp2t";
