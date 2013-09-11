@@ -30,8 +30,7 @@ class ConsultationController {
         $tweet = "Consultation updated: {$row['title']}";
       }
       $tweet = tweet_txt_and_url($tweet,$url);
-      # leave as output for CRON review for now
-      print "WOULD HAVE SENT: $tweet\n";
+      tweet($tweet);
     }
     
   }
