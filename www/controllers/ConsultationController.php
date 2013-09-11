@@ -228,8 +228,8 @@ class ConsultationController {
         getDatabase()->execute(" update consultation set md5 = :md5, updated = CURRENT_TIMESTAMP where id = :id ",array('id'=>$row['id'],'md5'=>$contentMD5));
       }
     } else {
-      print "consultation.id = {$row['id']} is new\nurl: $url\n\n";
-      db_insert("consultation",array( 'category'=>$category, 'title'=>$title, 'url'=>$url, 'md5'=>$contentMD5)); 
+      $id = db_insert("consultation",array( 'category'=>$category, 'title'=>$title, 'url'=>$url, 'md5'=>$contentMD5)); 
+      print "consultation.id = {$id} is new\nurl: $url\n\n";
     }
 
     # reset from database, may have updated/inserted
@@ -275,8 +275,8 @@ class ConsultationController {
         getDatabase()->execute(" update consultationdoc set md5 = :md5, updated = CURRENT_TIMESTAMP where id = :id ",array('id'=>$row['id'],'md5'=>$md5));
       }
     } else {
-      print "consultation.id = {$parent['id']} DOC is new\nurl: $url\n\n";
-      db_insert("consultationdoc",array('consultationid'=>$parent['id'],'title'=>$title, 'url'=>$url, 'md5'=>$md5)); 
+      $id = db_insert("consultationdoc",array('consultationid'=>$parent['id'],'title'=>$title, 'url'=>$url, 'md5'=>$md5)); 
+      print "consultation.id = {$parent['id']} doc.id = {$id} is new\nurl: $url\n\n";
     }
 
     file_put_contents(OttWatchConfig::FILE_DIR."/consultationmd5/".$md5,$data);
