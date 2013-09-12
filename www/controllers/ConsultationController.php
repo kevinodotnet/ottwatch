@@ -30,7 +30,8 @@ class ConsultationController {
         $tweet = "Consultation updated: {$row['title']}";
       }
       $tweet = tweet_txt_and_url($tweet,$url);
-      tweet($tweet);
+      print "WOULD HAVE tweetd >>> $tweet <<<\n\n");
+      #tweet($tweet);
     }
     
   }
