@@ -138,7 +138,12 @@ class MeetingController {
 		}
 
     $xml = simplexml_load_string($spl);
-    $ref = $xml->xpath('//ref/@src'); $ref = ''.$ref[0]; //$ref = $ref['src']; $ref = $ref[0];
+    $ref = $xml->xpath('//ref/@src'); 
+    if (count($ref) > 0) {
+      $ref = ''.$ref[0]; //$ref = $ref['src']; $ref = $ref[0];
+    } else {
+      $ref = '';
+    }
 
 		# Skip to the seemlingly consisten 'bitrate specific' manifest file
     # Manifest             'http://ca.sirecdn.net/SIRE/Ottawa/City Council/2472/393.ism/manifest'
