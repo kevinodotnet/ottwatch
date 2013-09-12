@@ -211,15 +211,12 @@ class ConsultationController {
   // crawl a specific consultation 
 
   public static function crawlConsultation ($category, $title, $url) {
-    #print "  CONSULT: $title\n";
 
     $html = file_get_contents($url);
 		$html = self::getCityContent($html);
 
-    $xml = simplexml_load_string($html);
-    $div = $xml->xpath('//div[@id="cityott-content"]');
-    $contentMD5 = md5($div[0]->asXML());
-    file_put_contents(OttWatchConfig::FILE_DIR."/consultationmd5/".$contentMD5,$div[0]->asXML());
+    $contentMD5 = md5($html);
+    file_put_contents(OttWatchConfig::FILE_DIR."/consultationmd5/".$contentMD5,$html);
 
     $row = getDatabase()->one(" select * from consultation where url = :url ",array('url'=>$url));
     if ($row['id']) {
@@ -236,6 +233,8 @@ class ConsultationController {
     $row = getDatabase()->one(" select * from consultation where url = :url ",array('url'=>$url));
 
     # read individual documents.
+    $xml = simplexml_load_string($html);
+    $div = $xml->xpath('//div[@id="cityott-content"]');
     $div = simplexml_load_string($div[0]->asXML());
     $links = $div->xpath('//a');
     foreach ($links as $a) {
@@ -293,9 +292,9 @@ class ConsultationController {
 		}
 
 		$o = $html;
-    $html = preg_replace("/\n/","KEVINO_NEWLINE",$html);
 
     # remove things that break XML parsing
+    $html = preg_replace("/\n/","KEVINO_NEWLINE",$html);
     $html = preg_replace("/<head.*<body/","<body",$html);
     $html = preg_replace("/&lang=en/","",$html); # not all HTML is escaped property, avoids <a href="...&lang=en" crap
     $html = preg_replace("/<script[^<]+<\/script>/"," ",$html);
@@ -316,7 +315,22 @@ class ConsultationController {
 			# return original HTML
 			return $html;
 		}
-    return $div[0]->asXML();
+    $newHTML = $div[0]->asXML();
+		if (preg_match('/cityott-sidebar/',$html)) {
+	    $sidediv = $xml->xpath('//div[@id="cityott-sidebar"]');
+			if (count($sidediv) > 0) {
+		    $sideHTML = $sidediv[0]->asXML();
+				$newHTML = "
+					<div id=\"fakeroot\">
+					<!-- NEW HTML -->
+					$newHTML
+					<!-- SIDEBAR HTML -->
+					$sideHTML
+					</div>
+				";
+			}
+		}
+		return $newHTML;
   }
   
 }
