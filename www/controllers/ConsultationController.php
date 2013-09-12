@@ -78,11 +78,8 @@ class ConsultationController {
     ?>
 
 		<h1><?php print $row['title']; ?></h1>
-		Last updated <?php print $row['delta']; ?> day(s) ago.<br/>
+		<b>Last updated</b>: <?php print $row['delta']; ?> day(s) ago.<br/>
 
-    <div class="row-fluid">
-
-    <div class="span6">
 		<h2>Documents at a glance</h2>
     <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
 	  <tr>
@@ -99,20 +96,16 @@ class ConsultationController {
     }
     ?>
     </table>
-    </div><!-- col -->
 
     <?php
     $frameSrc = "{$row['id']}/content";
     ?>
-    <div class="span6">
+
     <h2>Overview</h2>
     <i>
-    The overview provided below will have formatting and readability problems.
+    The overview provided below may have formatting and readability problems.
     You're better off <a target="_new" href="<?php print $row['url']; ?>">viewing the actual page on ottawa.ca</a> instead.</i>
     <iframe src="<?php print $frameSrc ?>" style="margin-top: 10px; width: 100%; height: 600px; border: 2px solid #000000;"></iframe>
-    </div><!-- col -->
-
-    </div><!-- row -->
 
 
     <?php
