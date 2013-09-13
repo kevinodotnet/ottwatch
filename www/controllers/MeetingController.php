@@ -960,7 +960,7 @@ class MeetingController {
 
     $m = getDatabase()->one(" select * from meeting where meetid = :id or id = :id ",array('id'=>$id));
     if (!$m['id']) { 
-      print "downloadAndParseMeeting for $id :: NOT FOUDN\n";
+      print "downloadAndParseMeeting for $id :: NOT FOUND\n";
       return; 
     }
 		$id = $m['id'];
@@ -969,16 +969,12 @@ class MeetingController {
     $orig_items = getDatabase()->all(" select * from item where meetingid = $id ");
     $orig_files = getDatabase()->all(" select * from ifile where itemid in (select id from item where meetingid = $id) ");
 
-    print "downloadAndParseMeeting for meeting:$id\n";
-
     $agenda = file_get_contents(self::getDocumentUrl($m['meetid'],'MINUTES')); 
 		if (preg_match('/The file could not be found/',$agenda)) {
       # need to use the agenda
-      print "Using AGENDA\n";
       $agenda = file_get_contents(self::getDocumentUrl($m['meetid'],'AGENDA')); 
     } else {
       # mark that we are in MINUTES mode for this meeting now
-      print "Using MINUTES\n";
 	    getDatabase()->execute(" update meeting set minutes = 1 where id = $id ");
     }
 
@@ -1466,7 +1462,6 @@ class MeetingController {
 	public function hardScan() {
 		$rows = getDatabase()->all(" select id,category,starttime from meeting where starttime > CURRENT_TIMESTAMP ");
 		foreach ($rows as $r) {
-			print $r['id']."\n";
 			self::downloadAndParseMeeting($r['id']);
 		}
 	}
