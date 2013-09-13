@@ -255,6 +255,11 @@ class ConsultationController {
     #print "    LINK: $title\n";
 
     $data = file_get_contents($url);
+		if ($data === FALSE) { 
+			# probably 403 or 404 error codes; ignore
+			return;
+		}
+
     $md5 = md5($data);
     if (preg_match('/<html/',$data)) {
       $data = self::getCityContent($data);
