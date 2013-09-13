@@ -446,7 +446,6 @@ class DevelopmentAppController {
   }
 
   static function injestApplication ($appid,$action) {
-    print "injestApplication($appid,$action)\n";
     $url = "http://app01.ottawa.ca/postingplans/appDetails.jsf?lang=en&appId=$appid";
     $html = file_get_contents($url);
     #file_put_contents("a.html",$html);
@@ -607,7 +606,7 @@ class DevelopmentAppController {
 		}
 
     if ($action == 'insert') {
-      $tweet = "New {$labels['Application']}: ".$addr." {$labels['Application #']} in $ward";
+      $tweet = "NEW {$labels['Application']}: ".$addr." {$labels['Application #']} in $ward";
     } else if ($action == 'update') {
       $tweet = "Updated {$labels['Application']}: ".$addr." {$labels['Application #']} in $ward";
     } else {
@@ -615,9 +614,7 @@ class DevelopmentAppController {
 			return;
 		}
 
-		# allow dups because a devapp will be updated multiple times
     $newtweet = tweet_txt_and_url($tweet,$url);
-		#print "SKIPPING tweet: $newtweet\n";
 		tweet($newtweet);
   }
 
