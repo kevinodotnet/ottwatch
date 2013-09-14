@@ -254,7 +254,7 @@ class ConsultationController {
   public static function crawlConsultationLink ($parent, $title, $url) {
     #print "    LINK: $title\n";
 
-    $data = file_get_contents($url);
+    $data = @file_get_contents($url);
 		if ($data === FALSE) { 
 			# probably 403 or 404 error codes; ignore
 			return;

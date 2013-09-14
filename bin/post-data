@@ -1,0 +1,1 @@
+[{"jsonrpc":"2.0","id":"gapiRpc","method":"fusiontables.query.sqlGet","params":{"sql":"Select Category,Layer,'Polygon Attributes','Attribute Description','Data Table ID','Points of Interest Table ID','Polygon Layer','Point Layer','Choropleth','Proportional Circle','Layer Definition' from 1HnZbd40clfRXipKK2Yndpf7Y1z3JA_YrvOXJ1OI"},"apiVersion":"v1"}]
