@@ -102,6 +102,8 @@ class MeetingController {
   static public function getVideo($id) {
 		global $dirname; # set by bin/XXXX.php scripts, UGLY, should probably be passed in as FAR or a DEFINE
 
+		$debug = 0;
+
 		$m = getDatabase()->one(" select * from meeting where id = :id ",array('id'=>$id));
 		if (!$m['id']) {
 			# can't get video for a meeting we don't know about
@@ -114,13 +116,18 @@ class MeetingController {
     $url = "http://app05.ottawa.ca/sirepub/mtgviewer.aspx?meetid={$meetid}&doctype=AGENDA";
     $html = `wget -qO - '$url'`; // file_get_contents($url);
 
+		if ($debug) {
+		print "\n\n-----------------------------------------\n\n";
+		print "$html\n";
+		print "\n\n-----------------------------------------\n\n";
+		}
+
     $tmp = preg_grep('/g_locationPrimary/',explode("\n",$html));
     if (count($tmp) == 0) {
 			# print "NO video details found (g_locationPrimary)\n";
       // no video
 			return -1;
     }
-
 
 		# Extract just the URL from the HTML line that matched
     foreach ($tmp as $k => $v) { $tmp = $v; }
@@ -135,6 +142,12 @@ class MeetingController {
 		if ($spl == '') {
 			# print "ISPL file not found or is not XML\n";
 			return -1;
+		}
+
+		if ($debug) {
+		print "\n\n-----------------------------------------\n\n";
+		print "spl: $spl\n";
+		print "\n\n-----------------------------------------\n\n";
 		}
 
     $xml = simplexml_load_string($spl);
@@ -154,6 +167,12 @@ class MeetingController {
     $ism2 = preg_replace('/manifest/','',$ism2);
     $ism2 .= 'QualityLevels(464000)';
     $manifest = `wget -qO - '$ism2/manifest(format=m3u8-aapl)'`;
+
+		if ($debug) {
+		print "\n\n-----------------------------------------\n\n";
+		print "manifest: $manifest\n";
+		print "\n\n-----------------------------------------\n\n";
+		}
 
     $frags = preg_grep('/^Fragments/',explode("\n",$manifest));
 		if (count($frags) == 0) {
@@ -212,6 +231,10 @@ class MeetingController {
 		$cmd .= " '--title=$title' '--description=$desc' ";
 		$cmd .= " --category=News --keywords='ottwatch, Ottawa City Council' ";
 		$cmd .= " $video_file ";
+
+		if ($debug) {
+		print "$cmd\n";
+		}
 
 		# print $cmd; return;
 		$youtube_url = `$cmd`;
