@@ -12,7 +12,7 @@ if (count($argv) > 1) {
   if ($argv[1] == 'setVideoStart') {
     $id = $argv[2];
     $start = $argv[3];
-    $row = getDatabase()->one(" select * from meeting where id = :id ",array('id'=>$id));
+    $row = getDatabase()->one(" select * from meeting where meetid = :id ",array('id'=>$id));
     if (!isset($row['id'])) {
       print "ERROR: meeting.id=$id not found\n";
       exit;
@@ -24,7 +24,7 @@ if (count($argv) > 1) {
       exit;
     }
     $seconds = $matches[1] * 60 + $matches[2];
-    getDatabase()->execute(" update meeting set youtubestart = :start where id = :id ",array('id'=>$id,'start'=>$seconds));
+    getDatabase()->execute(" update meeting set youtubestart = :start where meetid = :id ",array('id'=>$id,'start'=>$seconds));
     exit;
   }
   if ($argv[1] == 'getVideos') {
