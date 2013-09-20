@@ -96,6 +96,15 @@ class MeetingController {
     # URL looks like this: http://www.youtube.com/watch?v=zwCZQV-D4J4
     $id = $url;
     $id = preg_replace("/.*\?v=/","",$id);
+
+    # reach back into the database for the youtubestart, if available
+    $row = getDatabase()->one(" select * from meeting where youtube = :url ",array('url'=>$url));
+    if (isset($row['id'])) {
+      if (isset($row['youtubestart'])) {
+        return '<iframe width="640" height="480" src="http://www.youtube.com/embed/'.$id.'?rel=0&start='.$row['youtubestart'].'" frameborder="0" allowfullscreen></iframe>';
+      }
+    }
+
     return '<iframe width="640" height="480" src="http://www.youtube.com/embed/'.$id.'?rel=0" frameborder="0" allowfullscreen></iframe>';
   }
 

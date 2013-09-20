@@ -9,6 +9,24 @@ require_once('include.php');
 require_once('twitteroauth.php');
 
 if (count($argv) > 1) {
+  if ($argv[1] == 'setVideoStart') {
+    $id = $argv[2];
+    $start = $argv[3];
+    $row = getDatabase()->one(" select * from meeting where id = :id ",array('id'=>$id));
+    if (!isset($row['id'])) {
+      print "ERROR: meeting.id=$id not found\n";
+      exit;
+    }
+    # convert from m:s to s
+    $matches = array();
+    if (!preg_match("/(\d+):(\d+)/",$start,$matches)) {
+      print "ERROR: '$start' is malformed. Should be '<minutes>:<seconds>'\n";
+      exit;
+    }
+    $seconds = $matches[1] * 60 + $matches[2];
+    getDatabase()->execute(" update meeting set youtubestart = :start where id = :id ",array('id'=>$id,'start'=>$seconds));
+    exit;
+  }
   if ($argv[1] == 'getVideos') {
 		# only look back 45 days 
 		$rows = getDatabase()->all(" 

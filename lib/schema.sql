@@ -138,6 +138,7 @@ create table meeting (
 	minutes boolean default false,
 	youtube varchar(100),
   youtubeset datetime,
+  youtubestart smallint unsigned,
   created datetime,
   updated datetime,
   primary key (id)
