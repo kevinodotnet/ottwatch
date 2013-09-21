@@ -160,6 +160,13 @@ class MeetingController {
 		}
 
     $xml = simplexml_load_string($spl);
+    $start = $xml->xpath("//meta[@name='trim']/@start");
+    if (count($start) > 0) {
+      $start = '' . $start[0];
+    } else {
+      $start = 0;
+    }
+
     $ref = $xml->xpath('//ref/@src'); 
     if (count($ref) > 0) {
       $ref = ''.$ref[0]; //$ref = $ref['src']; $ref = $ref[0];
@@ -256,7 +263,7 @@ class MeetingController {
 			# mark as ERROR so we don't keep trying over and over again on this video; something must be wrong.
 			getDatabase()->execute(" update meeting set youtubeset = current_timestamp, youtube = :url where id = :id ",array('id'=>$m['id'],'url'=>'ERROR'));
 		} else {
-  		getDatabase()->execute(" update meeting set youtubeset = current_timestamp, youtube = :url where id = :id ",array('id'=>$m['id'],'url'=>$youtube_url));
+  		getDatabase()->execute(" update meeting set youtubestart = $start, youtubeset = current_timestamp, youtube = :url where id = :id ",array('id'=>$m['id'],'url'=>$youtube_url));
       print "\n";
       print "Uploaded: $youtube_url\n";
       print "\n";
