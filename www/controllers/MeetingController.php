@@ -206,7 +206,7 @@ class MeetingController {
 		print "FOUND video for {$m['category']} on {$m['starttime']} id: {$m['id']} meetid: {$m['meetid']}\n\n";
 
 		# Ensure no other process starts in on this file.
-		getDatabase()->execute(" update meeting set youtube = 'SAVING' where id = :id ",array('id'=>$m['id']));
+		getDatabase()->execute(" update meeting set youtube = 'SAVING', youtubestate = 'SAVING' where id = :id ",array('id'=>$m['id']));
 
 		# This manifest file has all the fragment and timeoffset details. One HTTP request per
 		# Append each chunk to the overall video file
@@ -228,7 +228,7 @@ class MeetingController {
 		print "\n";
 
 		# Mark the video URL as 'uploading' so that we know we've attempted it once
-		getDatabase()->execute(" update meeting set youtube = 'UPLOADING' where id = :id ",array('id'=>$m['id']));
+		getDatabase()->execute(" update meeting set youtube = 'UPLOADING', youtubestate = 'UPLOADING' where id = :id ",array('id'=>$m['id']));
 
 		# Use external Youtube-Upload python to push to Youtube
 		$user_email = OttWatchConfig::YOUTUBE_USER;
@@ -261,9 +261,9 @@ class MeetingController {
 
 		if ($youtube_url == '') {
 			# mark as ERROR so we don't keep trying over and over again on this video; something must be wrong.
-			getDatabase()->execute(" update meeting set youtubeset = current_timestamp, youtube = :url where id = :id ",array('id'=>$m['id'],'url'=>'ERROR'));
+			getDatabase()->execute(" update meeting set youtubeset = current_timestamp, youtube = 'ERROR', youtubestate = 'ERROR' where id = :id ",array('id'=>$m['id']));
 		} else {
-  		getDatabase()->execute(" update meeting set youtubestart = $start, youtubeset = current_timestamp, youtube = :url where id = :id ",array('id'=>$m['id'],'url'=>$youtube_url));
+  		getDatabase()->execute(" update meeting set youtubestart = $start, youtubeset = current_timestamp, youtube = :url, youtubestate = 'UPLOADED' where id = :id ",array('id'=>$m['id'],'url'=>$youtube_url));
       print "\n";
       print "Uploaded: $youtube_url\n";
       print "\n";
