@@ -103,6 +103,9 @@ $data = `wget -qO - http://app05.ottawa.ca/sirepub/rss/rss.aspx | head -1`; # fi
 $xml = simplexml_load_string($data);
 $items = $xml->xpath("//item");
 
+# keep track of all meetids in the RSS (to find deleted meetings)
+$meetids = array();
+
 # iterate through each meeting
 foreach ($items as $i) {
 
@@ -123,6 +126,8 @@ foreach ($items as $i) {
   $meetid = $link;
   $meetid = preg_replace("/.*meetid=/","",$meetid);
   $meetid = preg_replace("/&.*/","",$meetid);
+	$meetids[] = $meetid;
+
   # ARAC - 2012-Jun-25 9:30 am
   $starttime = $title;
   $starttime = preg_replace("/.* - 20/","20",$starttime);
@@ -169,5 +174,16 @@ foreach ($items as $i) {
 	# import the items for the new meeting.
   MeetingController::downloadAndParseMeeting($meetingid);
 }
+
+# Delete meetings that (a) have not started yet and (b) are no longer in the RSS. It means
+# they were cancelled, or were tests in 2050 and beyond.
+$rows = getDatabase()->all(" select * from meeting where starttime > CURRENT_TIMESTAMP and meetid not in (".implode(',',$meetids).") order by starttime ");
+foreach ($rows as $r) {
+	print "\nDELETING LOST FUTURE MEETING:\n";
+	pr($r);
+	getDatabase()->execute(" delete from meeting where id = :id ",array('id'=>$r['id']));
+
+}
+
 
 ?>
