@@ -379,6 +379,8 @@ def run_main(parser, options, args, output=sys.stdout):
     if options.get_categories:
         output.write(" ".join(Youtube.get_categories().keys()) + "\n")
         return
+    elif options.check_status:
+        required_options = ["email"]
     elif (options.create_playlist or options.add_to_playlist or 
          options.delete_from_playlist or options.update_metadata):
         required_options = ["email"]
@@ -400,8 +402,7 @@ def run_main(parser, options, args, output=sys.stdout):
     else:
         password = options.password
     youtube = Youtube(DEVELOPER_KEY)
-    debug("Login to Youtube API: email='%s', password='%s'" %
-          (options.email, "*" * len(password)))
+    # debug("Login to Youtube API: email='%s', password='%s'" % (options.email, "*" * len(password)))
     try:
         youtube.login(options.email, password, captcha_token=options.captcha_token,
                       captcha_response=options.captcha_response)
@@ -414,6 +415,14 @@ def run_main(parser, options, args, output=sys.stdout):
             "Re-run the command with: --captcha-token=%s --captcha-response=CAPTCHA" % token,
         ]
         raise CaptchaRequired("\n".join(message))
+
+    if options.check_status:
+        result = youtube.check_upload_status(options.check_status)
+        if result == None:
+            print "ready"
+        else:
+            print "%s" % result[0]
+        return
 
     if options.create_playlist:
         title, description, private = tosize(options.create_playlist.split("|", 2), 3)
@@ -498,8 +507,9 @@ def main(arguments):
         metavar="URI", help='Delete video(s) from an existing playlist')
     parser.add_option('', '--wait-processing', dest='wait_processing', action="store_true",
         default=False, help='Wait until the video(s) has been processed')
+    parser.add_option('', '--check-status', dest='check_status', type="string",
+        default=False, help='Check the processing status of a video')
 
-    # Captcha options
     parser.add_option('', '--captcha-token', dest='captcha_token', type="string",
       metavar="STRING", help='Captcha token')
     parser.add_option('', '--captcha-response', dest='captcha_response', type="string",
