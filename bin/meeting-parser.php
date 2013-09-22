@@ -28,7 +28,41 @@ if (count($argv) > 1) {
     exit;
   }
   if ($argv[1] == 'getVideos') {
-		# only look back 45 days 
+
+		# look for videos that have been uploaded and are now done processing (ready to tweet!)
+		$rows = getDatabase()->all(" 
+			select * 
+			from meeting 
+			where 
+				youtube like 'http%'
+				and (youtubestate is null or youtubestate != 'ready')
+		");
+		foreach ($rows as $r) {
+	    $id = $r['youtube'];
+	    $id = preg_replace("/.*\?v=/","",$id);
+
+			$user_email = OttWatchConfig::YOUTUBE_USER;
+			$user_passwd = OttWatchConfig::YOUTUBE_PASS;
+			$cmd = " PYTHONPATH=$dirname/../lib/gdata/src python ";
+			$cmd .= " $dirname/../lib/youtube-upload/youtube_upload/youtube_upload.py ";
+			$cmd .= " --email=$user_email --password=$user_passwd ";
+			$cmd .= " --check-status=$id ";
+
+			$state = `$cmd`;
+			$state = trim($state);
+
+			if ($state == 'ready') {
+				print "\n\n---------------------------------------------\n";
+				print "READY TO TWEET\n";
+				print "{$r['youtube']} transitioning from state '{$r['youtubestate']}' to '$state'\n";
+				pr($r);
+				print "---------------------------------------------\n\n\n";
+			}
+
+			getDatabase()->execute(" update meeting set youtubestate = :state where id = :id ",array('id'=>$r['id'],'state'=>$state));
+
+		}
+		# Look for new meeting videos on recent meetings.
 		$rows = getDatabase()->all(" 
 			select * 
 			from meeting 
@@ -38,10 +72,7 @@ if (count($argv) > 1) {
 				and datediff(current_timestamp,starttime) < 60
 			order by starttime desc
 		");
-#				and category = 'City Council'
 		foreach ($rows as $m) {
-#			print "\n---------------------------------------------------\n\n";
-#			print "MEETING: {$m['starttime']} {$m['category']}\n";
 			MeetingController::getVideo($m['id']);
 		}
     return;
