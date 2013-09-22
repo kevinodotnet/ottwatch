@@ -1,3 +1,4 @@
 .DS_Store
-.*swp
 lib/config.php
+*.mp2t
+*.swp
