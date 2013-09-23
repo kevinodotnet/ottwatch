@@ -152,11 +152,12 @@ foreach ($items as $i) {
 	  getDatabase()->execute(' 
       update meeting set 
         rssguid = :rssguid,
+        starttime = :starttime,
+        title = :title,
+        category = :category,
         updated = CURRENT_TIMESTAMP
       where 
-        meetid = :meetid ', array(
-      ':rssguid' => $guid,':meetid' => $meetid
-    ));
+        meetid = :meetid ', array( ':rssguid' => $guid,':meetid' => $meetid, 'starttime' => $starttime, 'title'=>$title, 'category'=>$category ));
   } else {
     # meeting has never been seen before
     print "$category ($meetid) is new\nhttp://ottwatch.ca/meetings/meeting/{$meetid}\n";
