@@ -73,6 +73,9 @@ function tweet_txt_and_url($txt,$url) {
  
 function tweet($tweet) {
 
+	# screw you em-dash and en-dash
+	$tweet = preg_replace('/–/','-',$tweet);
+
 	global $OTTVAR;
 
   # fix HTML escapes
