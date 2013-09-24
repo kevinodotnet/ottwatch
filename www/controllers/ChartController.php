@@ -40,6 +40,7 @@ class ChartController {
     <a href="30">1 month</a>,
     <a href="60">2 months</a>,
     <a href="180">6 months</a>
+    <a href="9999">all time</a>
     </div>
     <div class="span6">
     <b>Intensity</b> is calculated by allocating a number of points for each occurance of a lobbying activity:<br/>
