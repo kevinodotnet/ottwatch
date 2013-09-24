@@ -146,9 +146,16 @@ class ConsultationController {
     foreach ($rows as $row) {
       ?>
 	    <tr>
-	    <!-- <th><a target="_blank" href="<?php print $row['url']; ?>"><?php print $row['title']; ?></a></th> -->
 	    <th><a target="_blank" href="<?php print $row['id']; ?>"><?php print $row['title']; ?></a></th>
-	    <td><?php print $row['delta']; ?></td>
+	    <td><?php 
+				if ($row['delta'] == 0) {
+					?>
+					<span style="color: #ff0000;">today</span>
+					<?php
+				} else {
+					print $row['delta']; 
+				}
+			?></td>
 	    <td><?php print $row['category']; ?></td>
 	    </tr>
       <?php
@@ -157,8 +164,15 @@ class ConsultationController {
         ?>
 		    <tr>
 		    <td style="padding-left: 20px;"><a target="_blank" href="<?php print $doc['url']; ?>"><?php print $doc['title']; ?></a></td>
-		    <td><?php print $doc['delta']; ?></td>
-		    <!-- <td><?php print $doc['created']; ?></td> -->
+		    <td><?php 
+					if ($doc['delta'] == 0) {
+						?>
+						<span style="color: #ff0000;">today</span>
+						<?php
+					} else {
+						print $doc['delta']; 
+					}
+				?></td>
 		    <td></td>
 		    </tr>
         <?php
