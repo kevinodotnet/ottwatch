@@ -79,7 +79,7 @@ class ConsultationController {
     ?>
 
 		<h1><?php print $row['title']; ?></h1>
-		<b>Last updated</b>: <?php print $row['delta']; ?> day(s) ago.<br/>
+		<b>Last updated</b>: <?php print ($row['delta'] == 0 ? '<span style="color: #ff0000;">today</span>' : $row['delta'].' days(s) ago'); ?><br/>
 
 		<h3>Documents at a glance</h3>
     <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
@@ -90,7 +90,7 @@ class ConsultationController {
     foreach ($docs as $doc) {
       ?>
 	    <tr>
-	    <td><?php print $doc['delta']; ?> day(s) ago</td>
+	    <td><?php print ($doc['delta'] == 0 ? '<span style="color: #ff0000;">today</span>' : $doc['delta'].' days(s) ago'); ?></td>
 	    <td><a target="_blank" href="<?php print $doc['url']; ?>"><?php print $doc['title']; ?></a></td>
 	    </tr>
       <?php
