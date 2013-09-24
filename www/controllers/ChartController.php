@@ -39,7 +39,7 @@ class ChartController {
     <a href="14">2 weeks</a>,
     <a href="30">1 month</a>,
     <a href="60">2 months</a>,
-    <a href="180">6 months</a>
+    <a href="180">6 months</a>,
     <a href="9999">all time</a>
     </div>
     <div class="span6">
