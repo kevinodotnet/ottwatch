@@ -54,9 +54,17 @@ class ChartController {
 
     <div>&nbsp;</div>
 
+    <?php
+    $total = 0;
+    foreach ($rows as $r) {
+      $total += $r['weighted'];
+    }
+    ?>
+
     <table class="table table-bordered table-hover table-condensed" style="">
       <tr>
       <th>Intensity</th>
+      <th>% of total (<?php print $total; ?>)</th>
       <th>Client</th>
       <th>Active Files</th>
       <th>Active Lobbyists</th>
@@ -67,6 +75,7 @@ class ChartController {
       ?>
       <tr>
       <td><?php print $r['weighted']; ?></td>
+      <td><?php print number_format($r['weighted']/$total*100,1); ?></td>
       <td><a href="<?php print OttWatchConfig::WWW."/lobbying/clients/{$r['client']}"; ?>"><?php print $r['client']; ?></a></td>
       <td><?php print $r['files']; ?></td>
       <td><?php print $r['lobbyists']; ?></td>
