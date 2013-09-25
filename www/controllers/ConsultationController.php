@@ -11,26 +11,51 @@ class ConsultationController {
     if ($last == '') { $last = time(); }
     setvar('consultationtweet.last',time());
 
-    // distinct set of consultations updated (either main, or sub-doc) since last tweet time
+		// find all consultations that have been updated, or have documents that
+		// have been updated. Tweet "top-level" consultation updates first, then
+		// tweet documents. 
+		//
+		// Done in this order because some consultations have "documents" that
+		// are actually other top-level consultations. Supress those tweets
     $rows = getDatabase()->all(" 
-      select * from consultation c
-        join (
-	        select id from consultation where updated > from_unixtime(:last)
-          union
-	        select consultationid id from consultationdoc where updated > from_unixtime(:last)
-	      ) u on u.id = c.id
+			select 
+				c.id,c.title,c.url,c.created,c.updated,
+				(case when c.updated >= from_unixtime(:last) then 1 else 0 end) cupdated,
+				d.id docid,d.url docurl,d.title doctitle
+			from consultation c
+				left join consultationdoc d on 
+					d.consultationid = c.id 
+					and d.updated >= from_unixtime(:last)
+			where 
+				c.updated >= from_unixtime(:last)
+				or (d.id is not null and d.url not in (select url from consultation)) 
+			order by
+				case when d.id is null then 0 else 1 end,
+				c.id,
+				d.id
     ",array('last'=>$last));
 
-    # tweet each one
+    # tweet each one, only once
+		$tweeted = array();
     foreach ($rows as $row) {
-      $url = OttWatchConfig::WWW."/consultations/{$row['id']}";
       if ($row['created'] == $row['updated']) {
+				// welcome to the world!
         $tweet = "NEW Consultation: {$row['title']}";
-      } else {
+      } elseif ($row['cupdated'] == 1) {
+				// consultation row is updated (as opposed to present because of join to updated document)
         $tweet = "Consultation updated: {$row['title']}";
-      }
+			} else {
+				// one or more documents inside a consultation is updated
+        $tweet = "Consultation sub-page(s) updated: {$row['title']}";
+			}
+			if (isset($tweeted[$row['id']])) {
+	      print "id:{$row['id']} SKIPPING\n";
+				continue;
+			}
+      $url = OttWatchConfig::WWW."/consultations/{$row['id']}";
       $tweet = tweet_txt_and_url($tweet,$url);
-      print "WOULD HAVE tweetd >>> $tweet <<<\n\n";
+			$tweeted[$row['id']] = 1;
+      print "id:{$row['id']} WouldHaveSent: $tweet\n";
       #tweet($tweet);
     }
     
