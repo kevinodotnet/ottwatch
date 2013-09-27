@@ -254,7 +254,13 @@ class ConsultationController {
 
   public static function crawlConsultation ($category, $title, $url) {
 
-    $html = file_get_contents($url);
+    $html = @file_get_contents($url);
+		if ($html === FALSE) { 
+      // this is probably a one-time network error on a link that does actually
+      // exist. Skip. If a consultation does link here and we can never load
+      // the link then no harm, the first insert is not done until below anyway
+      return;
+    }
 		$html = self::getCityContent($html);
 
     $contentMD5 = md5($html);
