@@ -49,7 +49,6 @@ class ConsultationController {
         $tweet = "Consultation sub-page(s) updated: {$row['title']}";
 			}
 			if (isset($tweeted[$row['id']])) {
-	      print "id:{$row['id']} SKIPPING\n";
 				continue;
 			}
       $url = OttWatchConfig::WWW."/consultations/{$row['id']}";
