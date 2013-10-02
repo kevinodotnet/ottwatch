@@ -9,6 +9,11 @@ require_once('include.php');
 require_once('twitteroauth.php');
 
 if (count($argv) > 1) {
+  if ($argv[1] == 'resetVideo') {
+    $id = $argv[2];
+    getDatabase()->execute(" update meeting set youtube = null, youtubestart = null, youtubestate = null, youtubeset = null where meetid = :id ",array('id'=>$id));
+    exit;
+	}
   if ($argv[1] == 'setVideoStart') {
     $id = $argv[2];
     $start = $argv[3];
