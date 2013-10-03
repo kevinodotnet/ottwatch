@@ -60,6 +60,35 @@ class ConsultationController {
     
   }
 
+  public static function showConsultationContentDoc($id) {
+    $row = getDatabase()->one(" select * from consultationdoc where id = :id ",array('id'=>$id));
+    $html = file_get_contents(OttWatchConfig::FILE_DIR."/consultationmd5/".$row['md5']);
+    ?>
+    <html>
+    <head>
+    <base href="http://ottawa.ca" target="_blank">
+    <style>
+    body {
+      font-family: Verdana;
+      font-size: 10pt;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    a {
+      text-decoration: none;
+    }
+    </style>
+    </head>
+    <body>
+    <?php
+    print $html;
+    ?>
+    </body>
+    </html>
+    <?php
+  }
+
   public static function showConsultationContent($id) {
     $row = getDatabase()->one(" select * from consultation where id = :id ",array('id'=>$id));
     $html = file_get_contents(OttWatchConfig::FILE_DIR."/consultationmd5/".$row['md5']);
@@ -87,7 +116,6 @@ class ConsultationController {
     </body>
     </html>
     <?php
-
   }
 
   public static function showConsultation($id) {
