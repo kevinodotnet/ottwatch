@@ -84,7 +84,6 @@ getRoute()->get('/consultations', array('ConsultationController','showMain'));
 getRoute()->get('/consultations/', array('ConsultationController','showMain'));
 getRoute()->get('/consultations/(\d+)', array('ConsultationController','showConsultation'));
 getRoute()->get('/consultations/(\d+)/content', array('ConsultationController','showConsultationContent'));
-getRoute()->get('/consultations/(\d+)/(\d+)/content', array('ConsultationController','showConsultationContentDoc'));
 
 getRoute()->get('.*', 'error404');
 getRoute()->run();
