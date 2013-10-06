@@ -17,6 +17,7 @@ Epi::init('route','session-php');
 
 getApi()->get('/api/about', array('ApiController', 'about'), EpiApi::external);
 getApi()->get('/api/point', array('ApiController', 'point'), EpiApi::external);
+getApi()->get('/api/roads/search/(.*)', array('ApiController', 'roadSearch'), EpiApi::external);
 getApi()->get('/api/roads/(\d+)/([^/]+)', array('ApiController', 'road'), EpiApi::external);
 getApi()->get('/api/roads/(\d+)/([^/]+)/(.*)', array('ApiController', 'road'), EpiApi::external);
 getApi()->get('/api/wards/(\d+)', array('ApiController', 'ward'), EpiApi::external);
