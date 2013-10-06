@@ -79,7 +79,10 @@ getRoute()->get('/meetings/([^\/]*)/(\d+)/item/(\d+)/(files|files.json)', array(
 
 getRoute()->get('/chart/test', array('ChartController','test'));
 getRoute()->get('/chart/lobbying/weighted/(\d+)', array('ChartController','lobbyingWeightedActivity'));
-getRoute()->get('/chart/lobbying/daily', array('ChartController','lobbyingDaily'));
+getRoute()->get('/chart/lobbying/(daily)', array('ChartController','lobbyingDaily'));
+getRoute()->get('/chart/lobbying/(daily)/(\d+)', array('ChartController','lobbyingDaily'));
+getRoute()->get('/chart/lobbying/(monthly)', array('ChartController','lobbyingDaily'));
+getRoute()->get('/chart/lobbying/(monthly)/(\d+)', array('ChartController','lobbyingDaily'));
 
 getRoute()->get('/consultations', array('ConsultationController','showMain'));
 getRoute()->get('/consultations/', array('ConsultationController','showMain'));
