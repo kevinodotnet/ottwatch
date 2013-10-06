@@ -960,13 +960,15 @@ class MeetingController {
     <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
     <?php
     $rows = getDatabase()->all(" 
-      select m.id,m.category,id,meetid,date(starttime) starttime
+      select 
+        m.id,m.category,id,meetid,date(starttime) starttime
       from meeting m 
         left join category c on c.category = m.category 
-      ".
-      ($category == '' ? '' : ' where c.category = :category ')
-      ."
-      order by starttime desc ",
+      where 
+        datediff(starttime,CURRENT_TIMESTAMP) < 120 ".
+        ($category == '' ? '' : ' and c.category = :category ') ."
+      order by 
+        starttime desc ",
       array('category' => $category));
     foreach ($rows as $r) { 
       $mtgurl = htmlspecialchars("http://app05.ottawa.ca/sirepub/mtgviewer.aspx?meetid={$r['meetid']}&doctype");
