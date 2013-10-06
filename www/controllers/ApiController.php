@@ -119,16 +119,14 @@ class ApiController {
     if ($search == '') {
       return array();
     }
-    mysql_real_escape_string($search);
     $sql = "
       select rd_name,rd_suffix,rd_directi
       from roadways
-      where rd_name like '$search%'
+      where rd_name like :search
       group by rd_name,rd_suffix,rd_directi
       order by rd_name,rd_suffix,rd_directi
     ";
-    #print $sql;
-    $rows = getDatabase()->all($sql);
+    $rows = getDatabase()->all($sql,array('search'=>"$search%"));
     return $rows;
   }
 
