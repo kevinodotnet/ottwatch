@@ -963,10 +963,8 @@ class MeetingController {
       select m.id,m.category,id,meetid,date(starttime) starttime
       from meeting m 
         left join category c on c.category = m.category 
-      where
-        datediff(starttime,CURRENT_TIMESTAMP) < 120)
       ".
-      ($category == '' ? '' : ' and c.category = :category ')
+      ($category == '' ? '' : ' where c.category = :category ')
       ."
       order by starttime desc ",
       array('category' => $category));
