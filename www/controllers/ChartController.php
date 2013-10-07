@@ -140,8 +140,13 @@ $(function () {
   }
 
   static public function lobbyingDaily($groupBy,$days,$client) {
-  error_reporting(E_ALL);
     top('',true);
+    self::lobbyingDailyInner($groupBy,$days,$client);
+    bottom(true);
+  }
+
+  static public function lobbyingDailyInner($groupBy,$days,$client) {
+    error_reporting(E_ALL);
     self::highJS();
 
     if (!isset($groupBy) || $groupBy == '') {
@@ -194,7 +199,6 @@ $(function () {
       $maxDate = $rows[count($rows)-1]['date'];
     } else {
       print "No lobbying found in the last $days day(s).";
-      bottom(true);
       return;
     }
     $startDate = $rows[0]['date'];
@@ -235,7 +239,6 @@ $(function () {
     ?>
     <div id="linechart"></div><script><?php echo $linechart->renderChart();?></script>
     <?php
-    bottom(true);
   }
 
   static public function test() {
