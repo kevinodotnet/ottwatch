@@ -139,18 +139,32 @@ $(function () {
     bottom();
   }
 
-  static public function lobbyingDaily($groupBy,$days) {
+  static public function lobbyingDaily($groupBy,$days,$client) {
   error_reporting(E_ALL);
-    top();
+    top('',true);
     self::highJS();
 
     if (!isset($groupBy) || $groupBy == '') {
       $groupBy = 'daily';
     }
 
+    if (!isset($client)) {
+      $client = '';
+    }
+    if (isset($_GET['client'])) {
+      $client = $_GET['client'];
+    }
+    $whereArr = array();
+    $whereClient = '';
+    if ($client != '') {
+      $whereArr['client'] = $client;
+      $whereClient = ' and lower(f.client) = lower(:client) ';
+    }
+
     if (!isset($days) || $days == '') {
       $days = 9999;
     }
+    $whereArr['days'] = $days;
 
     if ($groupBy == 'monthly') {
       $sqlField = " concat(date_format(lobbydate,'%Y-%m'),'-01') ";
@@ -163,22 +177,24 @@ $(function () {
       select 
         $sqlField date, 
         count(1) actions 
-      from lobbying 
+      from lobbying l
+        join lobbyfile f on f.id = l.lobbyfileid
       where 
         datediff(CURRENT_TIMESTAMP,lobbydate) < :days
+        $whereClient
       group by 
         $sqlField
       order by 
         $sqlField ";
 
-    $rows = getDatabase()->all($sql,array('days'=>$days));
+    $rows = getDatabase()->all($sql,$whereArr);
 
     if (count($rows) > 0) {
       $minDate = $rows[0]['date'];
       $maxDate = $rows[count($rows)-1]['date'];
     } else {
       print "No lobbying found in the last $days day(s).";
-      bottom();
+      bottom(true);
       return;
     }
     $startDate = $rows[0]['date'];
@@ -191,7 +207,6 @@ $(function () {
       $stats[$r['date']] = $r['actions']+0;
       $endDate = $r['date'];
     }
-
 
     $checkDate = $startDate;
     $done = FALSE;
@@ -208,7 +223,7 @@ $(function () {
 
     $linechart = new HighRollerSplineChart();
     $linechart->chart->renderTo = 'linechart';
-    $linechart->title->text = "Lobbying Activities from $minDate to $maxDate ($groupBy)";
+    $linechart->title->text = "$client Lobbying Activities from $minDate to $maxDate ($groupBy)";
     $linechart->addSeries($series1);
 
     $linechart->xAxis->type = 'datetime';
@@ -216,12 +231,11 @@ $(function () {
     $linechart->yAxis->min = 0;
     $linechart->yAxis->title->text = 'Number of Lobbying Contacts';
 
-
     print HighRoller::setHighChartsLocation(OttWatchConfig::WWW."/highcharts/js/highcharts.js");
     ?>
     <div id="linechart"></div><script><?php echo $linechart->renderChart();?></script>
     <?php
-    bottom();
+    bottom(true);
   }
 
   static public function test() {
