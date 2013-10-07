@@ -394,7 +394,7 @@ class LobbyistController {
     <?php renderShareLinks("Lobbying Clients: $client","/lobbying/clinets/".$client); ?>
     </div>
     <div class="span7">
-    <?php ChartController::lobbyingDaily('daily',265/2,$client); ?>
+    <?php ChartController::lobbyingDailyInner('daily',265/2,$client); ?>
     </div>
     </div>
 
