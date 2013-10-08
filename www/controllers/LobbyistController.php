@@ -355,6 +355,7 @@ class LobbyistController {
 
   public static function showClient ($client) {
     top("Lobbying Client: $client");
+
     $rows = getDatabase()->all("
       select *
       from lobbyfile f
@@ -365,13 +366,35 @@ class LobbyistController {
       ",array(
       'client' => $client
       ));
+
     ?>
     <div class="row-fluid">
-    <div class="span11">
+    <div class="span4">
     <h1><?php print $client; ?></h1>
+    <?php
+    # count lobbyists
+    $lobbyists = array();
+    $issues = array();
+    foreach ($rows as $r) {
+      $lobbyists[$r['lobbyist']] = 1;
+      $issues[$r['issue']] = 1;
+    }
+    print "Total actitives: ".count($rows)."<br/>";
+    print "Number of lobbyists: ".count($lobbyists)."<br/>";
+    print "Number of issues: ".count($issues)."<br/>";
+    ?>
+    <br/>
+    <b>Full size charts:</b>
+    <ul>
+    <li><a href="<?php print OttWatchConfig::WWW."/chart/lobbying/monthly?client={$client}"; ?>">Monthly</a></li>
+    <li><a href="<?php print OttWatchConfig::WWW."/chart/lobbying/daily?client={$client}"; ?>">Daily</a></li>
+    </ul>
     </div>
     <div class="span1">
     <?php renderShareLinks("Lobbying Clients: $client","/lobbying/clinets/".$client); ?>
+    </div>
+    <div class="span7">
+    <?php ChartController::lobbyingDailyInner('daily',265/2,$client); ?>
     </div>
     </div>
 
@@ -414,6 +437,8 @@ class LobbyistController {
     }
     ?>
     </table>
+
+
     <?php
     bottom();
   }

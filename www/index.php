@@ -17,6 +17,7 @@ Epi::init('route','session-php');
 
 getApi()->get('/api/about', array('ApiController', 'about'), EpiApi::external);
 getApi()->get('/api/point', array('ApiController', 'point'), EpiApi::external);
+getApi()->get('/api/roads/search/(.*)', array('ApiController', 'roadSearch'), EpiApi::external);
 getApi()->get('/api/roads/(\d+)/([^/]+)', array('ApiController', 'road'), EpiApi::external);
 getApi()->get('/api/roads/(\d+)/([^/]+)/(.*)', array('ApiController', 'road'), EpiApi::external);
 getApi()->get('/api/wards/(\d+)', array('ApiController', 'ward'), EpiApi::external);
@@ -78,7 +79,10 @@ getRoute()->get('/meetings/([^\/]*)/(\d+)/item/(\d+)/(files|files.json)', array(
 
 getRoute()->get('/chart/test', array('ChartController','test'));
 getRoute()->get('/chart/lobbying/weighted/(\d+)', array('ChartController','lobbyingWeightedActivity'));
-getRoute()->get('/chart/lobbying/daily', array('ChartController','lobbyingDaily'));
+getRoute()->get('/chart/lobbying/(daily)', array('ChartController','lobbyingDaily'));
+getRoute()->get('/chart/lobbying/(daily)/(\d+)', array('ChartController','lobbyingDaily'));
+getRoute()->get('/chart/lobbying/(monthly)', array('ChartController','lobbyingDaily'));
+getRoute()->get('/chart/lobbying/(monthly)/(\d+)', array('ChartController','lobbyingDaily'));
 
 getRoute()->get('/consultations', array('ConsultationController','showMain'));
 getRoute()->get('/consultations/', array('ConsultationController','showMain'));
@@ -330,7 +334,7 @@ function error404() {
   bottom();
 }
 
-function top($title = '') {
+function top($title = '',$quiet = false) {
   global $OTT_WWW;
 ?>
 <!DOCTYPE html>
@@ -356,6 +360,10 @@ function copyToClipboard (text) {
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=<?php print OttWatchConfig::GOOGLE_API_KEY; ?>&sensor=false"></script>
 </head>
 <body>
+
+<?php
+if ($quiet) { return; }
+?>
 
 <div class="row-fluid">
 <div class="span12">
@@ -406,13 +414,15 @@ if (!LoginController::isLoggedIn()) {
 	}
 }
 
-function bottom() {
+function bottom($quiet = false) {
   global $OTT_WWW;
+
+  if (!$quiet) {
   ?>
+
 <div class="well">
 <a href="<?php print $OTT_WWW; ?>"><img style="float: right; padding-left: 5px; width: 50px; height: 50px;" src="<?php print $OTT_WWW; ?>/img/ottwatch.png"/></a>
-<i>
-Created by <a href="http://kevino.ca"><b>Kevin O'Donnell</b></a> to make it easier to be part of the political conversation in Ottawa.</i><br/>
+<i>Created by <a href="http://kevino.ca"><b>Kevin O'Donnell</b></a> to make it easier to be part of the political conversation in Ottawa.</i><br/>
 On Twitter? Follow <b><a href="http://twitter.com/OttWatch">@OttWatch</a></b> and <b><a href="http://twitter.com/ODonnell_K">@ODonnell_K</a></b><br/>
 
 <div id="clock">
@@ -428,12 +438,13 @@ FinishMessage = "It is finally here!";
 </script>
 <script language="JavaScript" src="http://scripts.hashemian.com/js/countdown.js"></script>
 </div>
-</i>
 
 
 <div class="clearfix"></div>
 </div>
+
   <?php
+  }
   googleAnalytics();
   ?>
 
