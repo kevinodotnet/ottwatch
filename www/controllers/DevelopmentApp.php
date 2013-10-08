@@ -488,10 +488,12 @@ class DevelopmentAppController {
       if (preg_match('/div.*class="label"/',$lines[$x])) {
         $x++;
         $label = self::suckToNextDiv($lines,$x);
+        $label = trim($label);
       }
       if (preg_match('/div.*class="appDetailValue"/',$lines[$x])) {
         $x++;
         $value = self::suckToNextDiv($lines,$x);
+        $value = preg_replace('/\s+/',' ',$value);
         if (array_key_exists($label,$labels)) {
           $labels[$label] = $value;
         }
@@ -520,12 +522,20 @@ class DevelopmentAppController {
 	    getDatabase()->execute(" 
 	      update devapp set 
           address = :address,
+          devid = :devid,
+          ward = :ward,
+          apptype = :apptype,
+          receiveddate = :receiveddate,
           updated = CURRENT_TIMESTAMP,
           description = :description
         where appid = :appid
         ",array(
 	        'address'=> json_encode($addresses),
 	        'description' =>$labels['Description'],
+          'devid' => $labels['Application #'],
+          'ward' => $labels['Ward'],
+          'receiveddate' => $labels['date_received'],
+          'apptype' => $labels['Application'],
 	        'appid'=> $appid,
 	    ));
       try {

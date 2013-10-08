@@ -139,14 +139,70 @@ $(function () {
     bottom();
   }
 
-  static public function lobbyingDaily() {
-  error_reporting(E_ALL);
-    top();
+  static public function lobbyingDaily($groupBy,$days,$client) {
+    top('',true);
+    self::lobbyingDailyInner($groupBy,$days,$client);
+    bottom(true);
+  }
+
+  static public function lobbyingDailyInner($groupBy,$days,$client) {
+    error_reporting(E_ALL);
     self::highJS();
 
+    if (!isset($groupBy) || $groupBy == '') {
+      $groupBy = 'daily';
+    }
+
+    if (!isset($client)) {
+      $client = '';
+    }
+    if (isset($_GET['client'])) {
+      $client = $_GET['client'];
+    }
+    $whereArr = array();
+    $whereClient = '';
+    if ($client != '') {
+      $whereArr['client'] = $client;
+      $whereClient = ' and lower(f.client) = lower(:client) ';
+    }
+
+    if (!isset($days) || $days == '') {
+      $days = 9999;
+    }
+    $whereArr['days'] = $days;
+
+    if ($groupBy == 'monthly') {
+      $sqlField = " concat(date_format(lobbydate,'%Y-%m'),'-01') ";
+    } else {
+      $sqlField = ' date(lobbydate) ';
+    }
+
     #$rows = getDatabase()->all(" select date(lobbydate) date, count(1) actions from lobbying where datediff(NOW(),lobbydate) <= 60 group by date(lobbydate) order by date(lobbydate) ");
-    $rows = getDatabase()->all(" select date(lobbydate) date, count(1) actions from lobbying group by date(lobbydate) order by date(lobbydate) ");
+    $sql = "
+      select 
+        $sqlField date, 
+        count(1) actions 
+      from lobbying l
+        join lobbyfile f on f.id = l.lobbyfileid
+      where 
+        datediff(CURRENT_TIMESTAMP,lobbydate) < :days
+        $whereClient
+      group by 
+        $sqlField
+      order by 
+        $sqlField ";
+
+    $rows = getDatabase()->all($sql,$whereArr);
+
+    if (count($rows) > 0) {
+      $minDate = $rows[0]['date'];
+      $maxDate = $rows[count($rows)-1]['date'];
+    } else {
+      print "No lobbying found in the last $days day(s).";
+      return;
+    }
     $startDate = $rows[0]['date'];
+
 
     $stats = array();
     $data = array();
@@ -160,17 +216,18 @@ $(function () {
     $done = FALSE;
     do {
       if ($checkDate >= $endDate) { $done = TRUE; }
-      $data[] = array($checkDate, isset($stats[$checkDate]) ? $stats[$checkDate] : 0 );
+      if ($groupBy == 'daily' || isset($stats[$checkDate])) {
+        $data[] = array($checkDate, isset($stats[$checkDate]) ? $stats[$checkDate] : 0 );
+      }
       $checkDate = date ("Y-m-d", strtotime ("+1 day", strtotime($checkDate)));
     } while (!$done);
-
 
     $series1 = new HighRollerSeriesData();
     $series1->addName('Activities')->addData($data);
 
     $linechart = new HighRollerSplineChart();
     $linechart->chart->renderTo = 'linechart';
-    $linechart->title->text = 'Lobbying Activities';
+    $linechart->title->text = "$client Lobbying Activities from $minDate to $maxDate ($groupBy)";
     $linechart->addSeries($series1);
 
     $linechart->xAxis->type = 'datetime';
@@ -178,12 +235,10 @@ $(function () {
     $linechart->yAxis->min = 0;
     $linechart->yAxis->title->text = 'Number of Lobbying Contacts';
 
-
     print HighRoller::setHighChartsLocation(OttWatchConfig::WWW."/highcharts/js/highcharts.js");
     ?>
     <div id="linechart"></div><script><?php echo $linechart->renderChart();?></script>
     <?php
-    bottom();
   }
 
   static public function test() {

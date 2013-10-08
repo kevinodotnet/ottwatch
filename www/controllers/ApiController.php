@@ -112,6 +112,24 @@ class ApiController {
     
   }
 
+  /*
+  Given the start of a street name, return all matching streets
+  */
+  public static function roadSearch ($search) {
+    if ($search == '') {
+      return array();
+    }
+    $sql = "
+      select rd_name,rd_suffix,rd_directi
+      from roadways
+      where rd_name like :search
+      group by rd_name,rd_suffix,rd_directi
+      order by rd_name,rd_suffix,rd_directi
+    ";
+    $rows = getDatabase()->all($sql,array('search'=>"$search%"));
+    return $rows;
+  }
+
   public static function road($number,$name,$suff) {
     $result = array();
     $result['number'] = $number;
@@ -342,7 +360,6 @@ google.maps.Polygon.prototype.getBounds = function() {
     $result['pollnum'] = $pollnum;
     $result['polygon'] = self::getPolygonAsArray($row['polygon']);
     $result['center'] = getLatLonFromPoint($row['center']);
-
    
     # Add roads that are in, or close, to the poll.
     # "close" is required because roadway database takes the centerline, but poll boundaries might be on any 'side' of the road, so no overlap
