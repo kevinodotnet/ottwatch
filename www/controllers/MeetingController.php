@@ -1327,9 +1327,10 @@ class MeetingController {
             $tweet = "New mtg item: {$row['title']} - ".meeting_category_to_title($m['category'])." on $meetingDate";
           	$link = OttWatchConfig::WWW."/meetings/meetid/".$m['meetid'];
             $tweet = tweet_txt_and_url($tweet,$link);
-            if (preg_match('/^ADJOURNMENT$/i',$title)) { print "SKIPPING new item tweet: $tweet\n"; continue; }
-            if (preg_match('/^COMMUNICATIONS$/i',$title)) { print "SKIPPING new item tweet: $tweet\n"; continue; }
-            if (preg_match('/^CONFIRMATION OF MINUTES$/i',$title)) { print "SKIPPING new item tweet: $tweet\n"; continue; }
+            if (preg_match('/^ADJOURNMENT$/i',$title)) { continue; }
+            if (preg_match('/^COMMUNICATIONS$/i',$title)) { continue; }
+            if (preg_match('/^CONFIRMATION OF MINUTES$/i',$title)) { continue; }
+            if (preg_match('/DECLARATION OF INTERES/',$title)) { continue; }
             print "SKIPPING (but would have sent) $tweet\n"; 
           }
         }
