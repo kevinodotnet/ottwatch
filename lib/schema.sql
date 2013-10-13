@@ -289,3 +289,14 @@ create table consultationdoc (
   constraint foreign key (consultationid) references consultation (id) on delete cascade on update cascade
 ) engine = innodb;
 
+drop table rssitem;
+create table rssitem (
+  id mediumint not null auto_increment,
+  title varchar(300),
+  link varchar(300),
+  guid varchar(300),
+  created datetime default CURRENT_TIMESTAMP,
+  primary key (id)
+) engine = innodb;
+create unique index rssitem_in1 on rssitem (guid);
+
