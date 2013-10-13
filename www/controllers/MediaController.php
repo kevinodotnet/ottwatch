@@ -46,13 +46,12 @@ class MediaController {
       $row = getDatabase()->all(" select * from rssitem where guid = :guid ",array('guid'=>$r->guid));
       if (count($row) == 0) {
         # does not exist, so insert
-        print "Inserting...\n";
+				pr($r);
+				print "\n\n";
         db_insert('rssitem',array(
           'title'=>$r->title,
           'link'=>$r->link,
           'guid'=>$r->guid));
-      } else {
-        print "Exists...\n";
       }
 		}
   }
