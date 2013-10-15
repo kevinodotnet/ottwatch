@@ -2,6 +2,26 @@
 
 class MediaController {
 
+  public static function getReleaseText($url) {
+		print "Getting $url\n\n";
+		$html = file_get_contents($url);
+#		$html = preg_replace('/<TD/','<td',$html);
+#		$html = preg_replace('/<\/TD/','</td',$html);
+
+		$html = preg_replace('/\r/','',$html);
+		$html = preg_replace('/\n/',' ',$html);
+		# best effort, strip to just after the first <b>Ottawa.....</b>...
+		$html = preg_replace('/.*<b>Ottawa[^<]*<\/b>/','',$html);
+		$html = strip_tags($html);
+		$html = preg_replace('/&#8217;/',"'",$html);
+		$html = preg_replace('/&#8211;/'," ",$html);
+		$html = preg_replace('/^[^a-z0-9]*/i',' ',$html); # skip opening punctuation, etc
+		$html = preg_replace('/  /',' ',$html);
+		$html = trim($html);
+		if (strlen($html) > 200) { $html = substr($html,0,200); }
+		print ">>> $html <<<\n\n";
+	}
+
   /*
   Get the press release RSS and convert it to array of objects.
   */
