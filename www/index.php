@@ -427,7 +427,7 @@ On Twitter? Follow <b><a href="http://twitter.com/OttWatch">@OttWatch</a></b> an
 
 <div id="clock">
 <script language="JavaScript">
-TargetDate = "10/27/2014 6:00 PM";
+TargetDate = "10/27/2014 6:00 AM";
 BackColor = "ffffff";
 ForeColor = "ed1b24";
 CountActive = true;
@@ -436,7 +436,7 @@ LeadingZero = true;
 DisplayFormat = "<span class=\"clockdigit\">%%D%%</span> days until election day!";
 FinishMessage = "It is finally here!";
 </script>
-<script language="JavaScript" src="http://scripts.hashemian.com/js/countdown.js"></script>
+<script language="JavaScript" src="<?php print $OTT_WWW; ?>/countdown.js"></script>
 </div>
 
 
