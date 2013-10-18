@@ -9,6 +9,7 @@ include_once 'controllers/LobbyistController.php';
 include_once 'controllers/LoginController.php';
 include_once 'controllers/UserController.php';
 include_once 'controllers/ChartController.php';
+include_once 'controllers/ElectionController.php';
 
 Epi::setPath('base', 'epiphany/src');
 Epi::init('route');
@@ -88,6 +89,10 @@ getRoute()->get('/consultations', array('ConsultationController','showMain'));
 getRoute()->get('/consultations/', array('ConsultationController','showMain'));
 getRoute()->get('/consultations/(\d+)', array('ConsultationController','showConsultation'));
 getRoute()->get('/consultations/(\d+)/content', array('ConsultationController','showConsultationContent'));
+
+getRoute()->get('/election/', array('ElectionController','showMain'));
+getRoute()->get('/election/(mayor)/', array('ElectionController','showRace'));
+getRoute()->get('/election/ward/(\d+)', array('ElectionController','showRace'));
 
 getRoute()->get('.*', 'error404');
 getRoute()->run();
