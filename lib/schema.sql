@@ -300,3 +300,17 @@ create table rssitem (
 ) engine = innodb;
 create unique index rssitem_in1 on rssitem (guid);
 
+drop table candidate;
+create table candidate (
+  id mediumint not null auto_increment,
+  year smallint,
+  ward tinyint, -- 0 for mayor
+  first varchar(50),
+  middle varchar(50),
+  last varchar(50),
+  email varchar(50),
+  twitter varchar(50),
+  facebook varchar(100),
+  primary key (id)
+) engine = innodb;
+
