@@ -90,7 +90,7 @@ getRoute()->get('/consultations/', array('ConsultationController','showMain'));
 getRoute()->get('/consultations/(\d+)', array('ConsultationController','showConsultation'));
 getRoute()->get('/consultations/(\d+)/content', array('ConsultationController','showConsultationContent'));
 
-getRoute()->get('/election/', array('ElectionController','showMain'));
+getRoute()->get('/election/*', array('ElectionController','showMain'));
 getRoute()->get('/election/(mayor)/', array('ElectionController','showRace'));
 getRoute()->get('/election/ward/(\d+)', array('ElectionController','showRace'));
 
@@ -426,7 +426,7 @@ function bottom($quiet = false) {
   if (!$quiet) {
   ?>
 
-<div class="well">
+<div class="well" style="margin-top: 10px;" >
 <a href="<?php print $OTT_WWW; ?>"><img style="float: right; padding-left: 5px; width: 50px; height: 50px;" src="<?php print $OTT_WWW; ?>/img/ottwatch.png"/></a>
 <i>Created by <a href="http://kevino.ca"><b>Kevin O'Donnell</b></a> to make it easier to be part of the political conversation in Ottawa.</i><br/>
 On Twitter? Follow <b><a href="http://twitter.com/OttWatch">@OttWatch</a></b> and <b><a href="http://twitter.com/ODonnell_K">@ODonnell_K</a></b><br/>
