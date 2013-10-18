@@ -9,6 +9,7 @@ include_once 'controllers/LobbyistController.php';
 include_once 'controllers/LoginController.php';
 include_once 'controllers/UserController.php';
 include_once 'controllers/ChartController.php';
+include_once 'controllers/ElectionController.php';
 
 Epi::setPath('base', 'epiphany/src');
 Epi::init('route');
@@ -88,6 +89,10 @@ getRoute()->get('/consultations', array('ConsultationController','showMain'));
 getRoute()->get('/consultations/', array('ConsultationController','showMain'));
 getRoute()->get('/consultations/(\d+)', array('ConsultationController','showConsultation'));
 getRoute()->get('/consultations/(\d+)/content', array('ConsultationController','showConsultationContent'));
+
+getRoute()->get('/election/', array('ElectionController','showMain'));
+getRoute()->get('/election/(mayor)/', array('ElectionController','showRace'));
+getRoute()->get('/election/ward/(\d+)', array('ElectionController','showRace'));
 
 getRoute()->get('.*', 'error404');
 getRoute()->run();
@@ -350,14 +355,15 @@ function top($title = '',$quiet = false) {
   padding: 20px;
 }
 </style>
-<script src="http://code.jquery.com/jquery.js" type="text/javascript"></script>
 <script src="<?php print $OTT_WWW; ?>/bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=<?php print OttWatchConfig::GOOGLE_API_KEY; ?>&sensor=false"></script>
+<!-- <script src="http://code.jquery.com/jquery.js" type="text/javascript"></script> -->
+<script src="<?php print $OTT_WWW; ?>/jquery.js" type="text/javascript"></script>
 <script>
 function copyToClipboard (text) {
   window.prompt ("Copy to clipboard: Ctrl+C, Enter", text);
 }
 </script>
-<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=<?php print OttWatchConfig::GOOGLE_API_KEY; ?>&sensor=false"></script>
 </head>
 <body>
 
@@ -427,7 +433,7 @@ On Twitter? Follow <b><a href="http://twitter.com/OttWatch">@OttWatch</a></b> an
 
 <div id="clock">
 <script language="JavaScript">
-TargetDate = "10/27/2014 6:00 PM";
+TargetDate = "10/27/2014 6:00 AM";
 BackColor = "ffffff";
 ForeColor = "ed1b24";
 CountActive = true;
@@ -436,7 +442,7 @@ LeadingZero = true;
 DisplayFormat = "<span class=\"clockdigit\">%%D%%</span> days until election day!";
 FinishMessage = "It is finally here!";
 </script>
-<script language="JavaScript" src="http://scripts.hashemian.com/js/countdown.js"></script>
+<script language="JavaScript" src="<?php print $OTT_WWW; ?>/countdown.js"></script>
 </div>
 
 
