@@ -1,5 +1,7 @@
 <?php
 
+require '../vendor/autoload.php';
+
 include_once '../lib/include.php';
 include_once 'epiphany/src/Epi.php';
 include_once 'controllers/ApiController.php';
@@ -50,6 +52,9 @@ getRoute()->post('/user/register', array('LoginController','doRegister'));
 getRoute()->get('/user/login', array('LoginController','display'));
 getRoute()->post('/user/login', array('LoginController','doLogin'));
 getRoute()->get('/user/logout', array('LoginController','logout'));
+
+# OAUTH
+getRoute()->get('/user/login/twitter', array('LoginController','twitter'));
 
 getRoute()->get('/lobbying/latereport', array('LobbyistController','latereport'));
 getRoute()->get('/lobbying/search/(.*)', array('LobbyistController','search'));
@@ -385,18 +390,14 @@ if ($quiet) { return; }
 <li><a href="<?php print $OTT_WWW; ?>/api/about">API</a></li>
 <?php
 if (!LoginController::isLoggedIn()) {
-  /*
   ?>
   <li><a href="<?php print $OTT_WWW; ?>/user/login">Login</a></li>
   <?php
-  */
 } else {
-  /*
   ?>
-  <li><a href="<?php print $OTT_WWW; ?>/user/home"><?php print getSession()->get('user_email'); ?></a></li>
+  <li><a href="<?php print $OTT_WWW; ?>/user/home">You</a></li>
   <li><a href="<?php print $OTT_WWW; ?>/user/logout">Logout</a></li>
   <?php
-  */
 }
 ?>
 </ul>
