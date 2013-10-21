@@ -33,7 +33,7 @@ class UserController {
     if (!LoginController::isLoggedIn()) { print "ERROR: not logged in"; return; }
     top();
     ?>
-    <h1>User Profile</h2>
+    <h1>User Profile</h1>
 
     <div class="row-fluid">
 
