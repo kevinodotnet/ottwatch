@@ -3,6 +3,8 @@
 class UserController {
 
   static public function addPlace () {
+    if (!LoginController::isLoggedIn()) { print "ERROR: not logged in"; return; }
+
     $rd_num = $_POST['rd_num'];
     $rd_name = $_POST['rd_name'];
     $rd_suff = $_POST['rd_suff'];
@@ -28,6 +30,7 @@ class UserController {
   }
 
   static public function home() {
+    if (!LoginController::isLoggedIn()) { print "ERROR: not logged in"; return; }
     top();
     ?>
     <h1>User Profile</h2>
