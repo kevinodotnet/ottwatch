@@ -23,7 +23,9 @@ create table people (
   email varchar(100),
   password varchar(32),
   twitter varchar(32),
+  facebookid bigint unsigned,
   created datetime default CURRENT_TIMESTAMP,
+  lastlogin datetime,
   primary key (id)
 ) engine = innodb;
 
