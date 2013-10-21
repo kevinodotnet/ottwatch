@@ -205,6 +205,11 @@ class LoginController {
     </form>
     </div>
 
+    </div>
+    <?php
+    bottom();
+    return;
+    ?>
 
     <div class="span4">
     <h3>Register</h3>
