@@ -327,10 +327,8 @@ if (!LoginController::isLoggedIn()) {
 }
 ?>
 </ul>
-  <!--
-  <a class="twitter-timeline" data-dnt="true" href="https://twitter.com/ottwatch" data-widget-id="306310112971210752">Tweets by @ottwatch</a>
+  <a class="twitter-timeline" data-dnt="true" href="https://twitter.com/ottwatch" height="200" data-widget-id="306310112971210752">Tweets by @ottwatch</a>
   <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
-  -->
   </div>
 
   </div>
