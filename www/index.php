@@ -408,6 +408,17 @@ if ($quiet) { return; }
 <div class="navbar-inner">
 <ul class="nav">
 <li><a href="<?php print $OTT_WWW; ?>">Home</a></li>
+<?php
+if (!LoginController::isLoggedIn()) {
+  ?>
+  <li><a href="<?php print $OTT_WWW; ?>/user/login">Login</a></li>
+  <?php
+} else {
+  ?>
+  <li><a href="<?php print $OTT_WWW; ?>/user/logout">Logout</a></li>
+  <?php
+}
+?>
 </ul>
 </div>
 </div>
