@@ -1,11 +1,49 @@
 <?php
 
+use OAuth\OAuth2\Service\Facebook;
 use OAuth\OAuth1\Service\Twitter;
 use OAuth\Common\Storage\Session;
 use OAuth\Common\Consumer\Credentials;
 
-
 class LoginController {
+
+  static public function facebook() {
+		$uriFactory = new \OAuth\Common\Http\Uri\UriFactory();
+		$currentUri = $uriFactory->createFromSuperGlobalArray($_SERVER);
+		$currentUri->setQuery('');
+    $storage = new Session();
+    $credentials = new Credentials(
+      OttWatchConfig::FACEBOOK_APP_ID,
+      OttWatchConfig::FACEBOOK_APP_SECRET,
+      $currentUri->getAbsoluteUri()
+    );
+    $serviceFactory = new \OAuth\ServiceFactory();
+    $facebookService = $serviceFactory->createService('facebook', $credentials, $storage, array());
+
+    if (empty($_GET['code'])) {
+      // send to facebook
+      $url = $facebookService->getAuthorizationUri();
+      header('Location: ' . $url);
+      return;
+    }
+
+    // callback from facebook
+
+    $token = $facebookService->requestAccessToken($_GET['code']);
+    $result = json_decode($facebookService->request('/me'), true);
+
+    # auto-create people if needed
+    $row = getDatabase()->one(" select * from people where facebookid = :id ",array('id'=>$result['id']));
+    if (!$row['id']) {
+      # create them, then re-read the row
+      $id = getDatabase()->execute(" insert into people (name,facebookid) values (:name,:id) ",array('name'=>$result['name'],'id'=>$result['id']));
+      $row = getDatabase()->one(" select * from people where facebookid = :id ",array('id'=>$result['id']));
+    }
+
+    # they are now logged in.
+    self::setLoggedIn($row['id']);
+    header("Location: " . OttWatchConfig::WWW . '/user/home');
+  }
 
   static public function twitter() {
 
@@ -67,6 +105,7 @@ class LoginController {
       getSession()->set("is_logged_in",'');
       return;
     }
+    getDatabase()->execute(" update people set lastlogin = CURRENT_TIMESTAMP where id = lower(:id) ",array('id'=>$id));
     getSession()->set("user_id",$user['id']);
     getSession()->set("user_name",$user['name']);
     getSession()->set("user_email",$user['email']);
@@ -167,7 +206,8 @@ class LoginController {
 
     <div class="span4">
     <h3>Sign in with Social Media</h3>
-    <a class="btn btn-primary" href="login/twitter">Sign in with Twitter</a>
+    <a class="btn btn-primary" href="login/twitter">Sign in with Twitter</a><br/><br/>
+    <a class="btn btn-primary" href="login/facebook">Sign in with Facebook</a>
     </div>
 
     <div class="span4">
