@@ -285,4 +285,3 @@ print HighRoller::setHighChartsLocation(OttWatchConfig::WWW."/highcharts/js/high
 }
 
 ?>
-    

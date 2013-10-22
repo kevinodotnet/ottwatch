@@ -51,6 +51,14 @@ function meeting_category_to_title($category) {
   return $category;
 }
 
+function syndicate($message,$path) {
+  $values = array();
+  $values['message'] = $message;
+  $values['path'] = $path;
+  $values['url'] = OttWatchConfig::WWW.$path;
+  db_insert('feed',$values);
+}
+
 function tweet_txt_and_url($txt,$url) {
   # fix HTML escapes
   $txt = html_entity_decode($txt);

@@ -841,23 +841,19 @@ class LobbyistController {
       ",array(
       'last'=>$last
     ));
-    # assemble a new list of tweets, key=url
     $tweets = array();
+    $posts = array();
     foreach ($rows as $r) {
-
-#     [id] => 86
-#     [lobbyfileid] => 86
-#     [lobbydate] => 2013-03-06 00:00:00
-#     [activity] => Meeting
-#     [lobbied] => Smit, John : Mgr, Development Review - Urban
-#     [created] => 2013-03-06 00:00:00
-#     [lobbyist] => Alan Cohen
-#     [client] => Ferguslea Proerties Limited
-#     [issue] => Section 26 Review
-
       $tweet = "Lobbying: {$r['lobbyist']} ({$r['client']}) {$r['issue']}";
+      # new style
+      $path = "/lobbying/files/".$r['lobbyfileid'];
+      $posts[$path] = $tweet;
+      # old style
       $url = OttWatchConfig::WWW."/lobbying/files/".$r['lobbyfileid'];
       $tweets[$url] = $tweet;
+    }
+    foreach ($posts as $path  => $text) {
+      syndicate($text,$path);
     }
     # keying by URL guarantees we don't double-tweet because of multiple new activities 
     # on the same lobbyfile

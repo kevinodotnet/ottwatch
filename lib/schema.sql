@@ -317,3 +317,13 @@ create table candidate (
   primary key (id)
 ) engine = innodb;
 
+drop table feed;
+create table feed (
+  id mediumint not null auto_increment,
+  message varchar(300), -- short message; ie: tweet text excluding URL
+  path varchar(300), -- local '/' path reference to ottwatch.ca. ie: /meeting/City Council/xxxx
+  url varchar(300), -- full url to ottwatch.ca resource, likely as bitly, so that it doesnt need to be computed
+  created datetime default CURRENT_TIMESTAMP,
+  primary key (id)
+) engine = innodb;
+
