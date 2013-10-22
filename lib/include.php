@@ -51,11 +51,13 @@ function meeting_category_to_title($category) {
   return $category;
 }
 
-function syndicate($message,$path) {
+function syndicate($message,$path,$url = null) {
   $values = array();
   $values['message'] = $message;
   $values['path'] = $path;
-  $values['url'] = OttWatchConfig::WWW.$path;
+  if ($url == null) {
+    $values['url'] = OttWatchConfig::WWW.$path;
+  }
   db_insert('feed',$values);
 }
 
