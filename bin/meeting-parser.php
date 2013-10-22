@@ -56,15 +56,19 @@ if (count($argv) > 1) {
 			$state = `$cmd`;
 			$state = trim($state);
 
+			getDatabase()->execute(" update meeting set youtubestate = :state where id = :id ",array('id'=>$r['id'],'state'=>$state));
+
 			if ($state == 'ready') {
 				print "\n\n---------------------------------------------\n";
 				print "READY TO TWEET\n";
 				print "{$r['youtube']} transitioning from state '{$r['youtubestate']}' to '$state'\n";
 				pr($r);
 				print "---------------------------------------------\n\n\n";
-			}
 
-			getDatabase()->execute(" update meeting set youtubestate = :state where id = :id ",array('id'=>$r['id'],'state'=>$state));
+        $title = meeting_category_to_title($r['category']);
+        $path = "/meetings/{$r['category']}/{$r['meetid']}";
+        syndicate("Video: {$title} on {$r['starttime']}",$path,$r['youtube']);
+			}
 
 		}
 		# Look for new meeting videos on recent meetings.
