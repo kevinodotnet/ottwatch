@@ -3,6 +3,8 @@
 class UserController {
 
   static public function addPlace () {
+    if (!LoginController::isLoggedIn()) { print "ERROR: not logged in"; return; }
+
     $rd_num = $_POST['rd_num'];
     $rd_name = $_POST['rd_name'];
     $rd_suff = $_POST['rd_suff'];
@@ -28,11 +30,31 @@ class UserController {
   }
 
   static public function home() {
+    if (!LoginController::isLoggedIn()) { print "ERROR: not logged in"; return; }
     top();
     ?>
-    <h1><?php print getSession()->get('user_email'); ?></h1>
+    <h1>User Profile</h1>
+
     <div class="row-fluid">
 
+    <div class="span6">
+    name: <?php print getSession()->get('user_name'); ?><br/>
+    email: <?php print getSession()->get('user_email'); ?><br/>
+    twitter: <?php print getSession()->get('user_twitter'); ?><br/>
+    </div>
+
+    <div class="span6">
+    This area is pretty empty at the moment. More features coming soon!
+    </div>
+
+    </div>
+
+    <?php
+    bottom();
+    return;
+    ?>
+
+    <div class="row-fluid">
     <div class="span4">
     <h4>Your Places of Interest</h4>
     <?php 

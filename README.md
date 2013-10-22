@@ -71,6 +71,7 @@ License
 * Bootstrap is re-distributed under the Apache Licence, Version 2.0, see http://twitter.github.io/bootstrap/
 * Ephiphany is re-distributed with permission, see https://github.com/jmathai/epiphany
 * HighRoller is re-distributed with permission, see https://github.com/jmaclabs/HighRoller
+* PHPoAuthLib is re-distributed with permission, see https://github.com/Lusitanian/PHPoAuthLib
 * Snapshots of Ottawa Open Data files (lib/opendata_*) re-distributed with permission, see http://ottawa.ca/en/open-data-terms-use
 
 About Me

@@ -19,7 +19,7 @@ class ElectionController {
     ?>
     <h1>Election <?php print self::year; ?></h1>
     <?php
-    $wards = getDatabase()->all(" select distinct(wardnum) wardnum from electedofficials where wardnum is not null and wardnum != '' order by wardnum + 0 ");
+    $wards = getDatabase()->all(" select distinct(wardnum) wardnum from electedofficials where wardnum is not null and wardnum != '' order by ward, wardnum + 0 ");
     $count = 0;
     array_unshift($wards,array('wardnum'=>0));
     foreach ($wards as $ward) {
@@ -38,13 +38,14 @@ class ElectionController {
       }
       $prevWard = $ward['wardnum'];
 
+      $raceLink = OttWatchConfig::WWW . "/election";
       if ($ward['wardnum'] == 0) {
         # special case
         $wardInfo = array('ward'=>'Mayor');
-        $raceLink = "mayor/";
+        $raceLink .= "/mayor/";
       } else {
         $wardInfo = getApi()->invoke('/api/wards/'.$ward['wardnum']);
-        $raceLink = "ward/{$ward['wardnum']}";
+        $raceLink .= "/ward/{$ward['wardnum']}";
       }
       ?>
       <div class="row-fluid">

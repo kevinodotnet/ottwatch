@@ -1,6 +1,101 @@
 <?php
 
+use OAuth\OAuth2\Service\Facebook;
+use OAuth\OAuth1\Service\Twitter;
+use OAuth\Common\Storage\Session;
+use OAuth\Common\Consumer\Credentials;
+
 class LoginController {
+
+  static public function facebook() {
+		$uriFactory = new \OAuth\Common\Http\Uri\UriFactory();
+		$currentUri = $uriFactory->createFromSuperGlobalArray($_SERVER);
+		$currentUri->setQuery('');
+    $storage = new Session();
+    $credentials = new Credentials(
+      OttWatchConfig::FACEBOOK_APP_ID,
+      OttWatchConfig::FACEBOOK_APP_SECRET,
+      $currentUri->getAbsoluteUri()
+    );
+    $serviceFactory = new \OAuth\ServiceFactory();
+    $facebookService = $serviceFactory->createService('facebook', $credentials, $storage, array());
+
+    if (empty($_GET['code'])) {
+      // send to facebook
+      $url = $facebookService->getAuthorizationUri();
+      header('Location: ' . $url);
+      return;
+    }
+
+    // callback from facebook
+
+    $token = $facebookService->requestAccessToken($_GET['code']);
+    $result = json_decode($facebookService->request('/me'), true);
+
+    # auto-create people if needed
+    $row = getDatabase()->one(" select * from people where facebookid = :id ",array('id'=>$result['id']));
+    if (!$row['id']) {
+      # create them, then re-read the row
+      $id = getDatabase()->execute(" insert into people (name,facebookid) values (:name,:id) ",array('name'=>$result['name'],'id'=>$result['id']));
+      $row = getDatabase()->one(" select * from people where facebookid = :id ",array('id'=>$result['id']));
+    }
+
+    # they are now logged in.
+    self::setLoggedIn($row['id']);
+    header("Location: " . OttWatchConfig::WWW . '/user/home');
+  }
+
+  static public function twitter() {
+
+    # setup the 'return' URL to this url
+		$uriFactory = new \OAuth\Common\Http\Uri\UriFactory();
+		$currentUri = $uriFactory->createFromSuperGlobalArray($_SERVER);
+		$currentUri->setQuery('');
+    $storage = new Session();
+    $credentials = new Credentials(
+      OttWatchConfig::TWITTER_CONSUMER_KEY,
+      OttWatchConfig::TWITTER_CONSUMER_SECRET,
+      $currentUri->getAbsoluteUri()
+    );
+    $serviceFactory = new \OAuth\ServiceFactory();
+    $twitterService = $serviceFactory->createService('twitter', $credentials, $storage);
+
+    if (!empty($_GET['denied'])) {
+      # Odd. Why would you want to log in with twitter then stop? People.
+      top();
+      ?>
+      You declined to log-in using Twitter. That's OK.
+      <?php
+      bottom();
+      return;
+    }
+
+    if (empty($_GET['oauth_token'])) {
+      # send to twitter to begin OAUTH
+	    $token = $twitterService->requestRequestToken();
+	    $url = $twitterService->getAuthorizationUri(array('oauth_token' => $token->getRequestToken()));
+	    header('Location: ' . $url);
+	    return;
+    }
+
+    # returning from Twitter. get details about the user
+    $token = $storage->retrieveAccessToken('Twitter');
+    $twitterService->requestAccessToken( $_GET['oauth_token'], $_GET['oauth_verifier'], $token->getRequestTokenSecret());
+    $result = json_decode($twitterService->request('account/verify_credentials.json'));
+
+    # auto-create people if needed
+    $row = getDatabase()->one(" select * from people where lower(twitter) = lower(:screen_name) ",array('screen_name'=>$result->screen_name));
+    if (!$row['id']) {
+      # create them, then re-read the row
+      $id = getDatabase()->execute(" insert into people (name,twitter) values (:name,:twitter) ",array('name'=>$result->name,'twitter'=>$result->screen_name));
+      $row = getDatabase()->one(" select * from people where lower(twitter) = lower(:screen_name) ",array('screen_name'=>$result->screen_name));
+    }
+
+    # they are now logged in.
+    self::setLoggedIn($row['id']);
+    header("Location: " . OttWatchConfig::WWW . '/user/home');
+    # echo 'result: <pre>' . print_r($result, true) . '</pre>';
+  }
 
   static public function setLoggedIn($id) {
     getSession()->set("is_logged_in",$id);
@@ -10,9 +105,11 @@ class LoginController {
       getSession()->set("is_logged_in",'');
       return;
     }
+    getDatabase()->execute(" update people set lastlogin = CURRENT_TIMESTAMP where id = lower(:id) ",array('id'=>$id));
     getSession()->set("user_id",$user['id']);
     getSession()->set("user_name",$user['name']);
     getSession()->set("user_email",$user['email']);
+    getSession()->set("user_twitter",$user['twitter']);
   }
 
   static public function isLoggedIn() {
@@ -107,7 +204,13 @@ class LoginController {
     ?>
     <div class="row-fluid">
 
-    <div class="span6">
+    <div class="span4">
+    <h3>Sign in with Social Media</h3>
+    <a class="btn btn-primary" href="login/twitter">Sign in with Twitter</a><br/><br/>
+    <a class="btn btn-primary" href="login/facebook">Sign in with Facebook</a>
+    </div>
+
+    <div class="span4">
     <h3>Login</h3>
     <form class="form-horizontal" method="post">
 
@@ -142,13 +245,20 @@ class LoginController {
     </form>
     </div>
 
-    <div class="span6">
-    <h3>Register</h3>
-    <p>Need to create an account?</p>
-    <p>
-    <a class="btn btn-primary" href="register">Click here to register</a>.
-    </p>
+    </div>
+    <?php
+    bottom();
+    return;
+    ?>
 
+    <div class="span4">
+    <h3>Register</h3>
+    <p>
+    You can create an account the old-school way by providing a name and email address.
+    But really, using a social media account is way easier.</p>
+    <p>
+    <a class="btn" href="register">Click here to register</a>.
+    </p>
     </div>
 
     </div>
