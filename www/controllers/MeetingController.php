@@ -1331,6 +1331,7 @@ class MeetingController {
             if (preg_match('/^COMMUNICATIONS$/i',$title)) { continue; }
             if (preg_match('/^CONFIRMATION OF MINUTES$/i',$title)) { continue; }
             if (preg_match('/DECLARATION OF INTERES/',$title)) { continue; }
+            if (preg_match('/DECLARATIONS OF INTEREST/',$title)) { continue; }
             print "SKIPPING (but would have sent) $tweet\n"; 
           }
         }
