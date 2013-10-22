@@ -398,6 +398,14 @@ function copyToClipboard (text) {
 </script>
 </head>
 <body>
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+        js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=204783589569220";
+          fjs.parentNode.insertBefore(js, fjs);
+          }(document, 'script', 'facebook-jssdk'));</script>
 
 <?php
 if ($quiet) { return; }
@@ -420,6 +428,7 @@ if (!LoginController::isLoggedIn()) {
   <?php
 }
 ?>
+<li><a href="<?php print $OTT_WWW; ?>/about">About</a></li>
 </ul>
 </div>
 </div>
@@ -449,10 +458,29 @@ function bottom($quiet = false) {
   ?>
 
 <div class="well" style="margin-top: 10px;" >
+
 <a href="<?php print $OTT_WWW; ?>"><img style="float: right; padding-left: 5px; width: 50px; height: 50px;" src="<?php print $OTT_WWW; ?>/img/ottwatch.png"/></a>
 <i>Created by <a href="http://kevino.ca"><b>Kevin O'Donnell</b></a> to make it easier to be part of the political conversation in Ottawa.</i><br/>
-On Twitter? Follow <b><a href="http://twitter.com/OttWatch">@OttWatch</a></b> and <b><a href="http://twitter.com/ODonnell_K">@ODonnell_K</a></b><br/>
+On Twitter? Follow <b><a href="http://twitter.com/OttWatch">@OttWatch</a></b> and <b><a href="http://twitter.com/ODonnell_K">@ODonnell_K</a></b>
 
+<!--
+<div class="row-fluid">
+<div class="span4">
+</div>
+<div class="span2">
+</div>
+<div class="span2" style="text-align: right;">
+<div style="float: right;">
+<div class="fb-like" data-href="https://www.facebook.com/pages/Ottwatch/255793871239922" data-width="The pixel width of the plugin" data-height="50" data-colorscheme="light" data-layout="box_count" data-action="like" data-show-faces="true" data-send="false"></div>
+</div>
+On Facebook?&nbsp;
+</div>
+<div class="span4">
+</div>
+</div>
+-->
+
+<!--
 <div id="clock">
 <script language="JavaScript">
 TargetDate = "10/27/2014 6:00 AM";
@@ -466,6 +494,7 @@ FinishMessage = "It is finally here!";
 </script>
 <script language="JavaScript" src="<?php print $OTT_WWW; ?>/countdown.js"></script>
 </div>
+-->
 
 
 <div class="clearfix"></div>
@@ -487,6 +516,8 @@ FinishMessage = "It is finally here!";
         s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
         (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
     }());
+
+
     </script>
 
   </body>
