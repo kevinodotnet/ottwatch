@@ -55,6 +55,7 @@ getRoute()->get('/user/logout', array('LoginController','logout'));
 # OAUTH
 getRoute()->get('/user/login/twitter', array('LoginController','twitter'));
 getRoute()->get('/user/login/facebook', array('LoginController','facebook'));
+getRoute()->get('/user/login/facebook/managepages', array('LoginController','facebookManagePages'));
 
 getRoute()->get('/lobbying/latereport', array('LobbyistController','latereport'));
 getRoute()->get('/lobbying/search/(.*)', array('LobbyistController','search'));

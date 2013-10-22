@@ -7,6 +7,45 @@ use OAuth\Common\Consumer\Credentials;
 
 class LoginController {
 
+  /**
+    Only for kevin to use; adds the "manage pages" permission to OttWatch application
+    so that later on OttWatch can post to pages offlinee.
+    */
+  static public function facebookManagePages() {
+		$uriFactory = new \OAuth\Common\Http\Uri\UriFactory();
+		$currentUri = $uriFactory->createFromSuperGlobalArray($_SERVER);
+		$currentUri->setQuery('');
+    $storage = new Session();
+    $credentials = new Credentials(
+      OttWatchConfig::FACEBOOK_APP_ID,
+      OttWatchConfig::FACEBOOK_APP_SECRET,
+      $currentUri->getAbsoluteUri()
+    );
+    $serviceFactory = new \OAuth\ServiceFactory();
+    $facebookService = $serviceFactory->createService('facebook', $credentials, $storage, array('manage_pages','publish_stream'));
+
+    if (empty($_GET['code'])) {
+      // send to facebook
+      $url = $facebookService->getAuthorizationUri();
+      header('Location: ' . $url);
+      return;
+    }
+
+    // callback from facebook
+
+    ?>
+    <a href="http://dev.ottwatch.ca/ottwatch/user/login/facebook/managepages">AGAIN</a>
+    <hr/>
+    <?php
+
+    $token = $facebookService->requestAccessToken($_GET['code']);
+    $result = json_decode($facebookService->request(OttWatchConfig::FACEBOOK_PAGE_ID.'/?fields=access_token'), true);
+    pr($result);
+
+    getDatabase()->execute(" delete from variable where name = 'fb_page_access_token' ");
+    getDatabase()->execute(" insert into variable (name,value) values ('fb_page_access_token',:token) ",array('token'=>$result['access_token']));
+  }
+
   static public function facebook() {
 		$uriFactory = new \OAuth\Common\Http\Uri\UriFactory();
 		$currentUri = $uriFactory->createFromSuperGlobalArray($_SERVER);
