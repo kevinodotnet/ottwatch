@@ -624,6 +624,11 @@ class DevelopmentAppController {
 			return;
 		}
 
+    # new style
+    $message = $tweet;
+    $path = "/devapps/{$labels['Application #']}";
+    syndicate($message,$path);
+    # old style
     $newtweet = tweet_txt_and_url($tweet,$url);
 		tweet($newtweet);
   }

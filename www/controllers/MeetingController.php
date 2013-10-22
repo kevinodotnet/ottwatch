@@ -346,6 +346,7 @@ class MeetingController {
 
     # assemble a new list of tweets, key=url
     $tweets = array();
+    $posts = array();
     foreach ($rows as $r) {
 
 			# id] => 370
@@ -369,6 +370,8 @@ class MeetingController {
 
       $meetingDate = explode(" - ",$title);
       $meetingDate = $meetingDate[1];
+
+    	$path = "/meetings/meetid/".$r['meetid'];
     	$link = OttWatchConfig::WWW."/meetings/meetid/".$r['meetid'];
 
       if ($r['created'] == $r['updated']) {
@@ -378,11 +381,14 @@ class MeetingController {
       }
 
       $tweets[$link] = $tweet;
-
+      $posts[$path] = $tweet;
     }
 
     # keying by URL guarantees we don't double-tweet because of multiple new activities 
     # on the same lobbyfile
+    foreach ($posts as $path => $text) {
+      syndicate($text,$path);
+    }
     foreach ($tweets as $url => $text) {
       $tweet = tweet_txt_and_url($text,$url);
       # allow duplicates because subsequent tweets about the same file
@@ -1315,28 +1321,28 @@ class MeetingController {
     $meetingDate = explode(" - ",$title);
     $meetingDate = $meetingDate[1];
 
-    if (count($origitemids) > 0) {
-      # not a "new" meeting
-	    $newitems = array_diff($nowitemids,$origitemids);
-	    if (count($newitems) > 0) {
-        foreach ($newitems as $n) {
-          $row = getDatabase()->one(" select * from item where itemid = $n ");
-          if ($row['id']) {
-            $title = $row['title'];
-            $itemid = $row['itemid'];
-            $tweet = "New mtg item: {$row['title']} - ".meeting_category_to_title($m['category'])." on $meetingDate";
-          	$link = OttWatchConfig::WWW."/meetings/meetid/".$m['meetid'];
-            $tweet = tweet_txt_and_url($tweet,$link);
-            if (preg_match('/^ADJOURNMENT$/i',$title)) { continue; }
-            if (preg_match('/^COMMUNICATIONS$/i',$title)) { continue; }
-            if (preg_match('/^CONFIRMATION OF MINUTES$/i',$title)) { continue; }
-            if (preg_match('/DECLARATION OF INTERES/',$title)) { continue; }
-            if (preg_match('/DECLARATIONS OF INTEREST/',$title)) { continue; }
-            print "SKIPPING (but would have sent) $tweet\n"; 
-          }
-        }
-	    }
-    }
+#    if (count($origitemids) > 0) {
+#      # not a "new" meeting
+#	    $newitems = array_diff($nowitemids,$origitemids);
+#	    if (count($newitems) > 0) {
+#        foreach ($newitems as $n) {
+#          $row = getDatabase()->one(" select * from item where itemid = $n ");
+#          if ($row['id']) {
+#            $title = $row['title'];
+#            $itemid = $row['itemid'];
+#            $tweet = "New mtg item: {$row['title']} - ".meeting_category_to_title($m['category'])." on $meetingDate";
+#          	$link = OttWatchConfig::WWW."/meetings/meetid/".$m['meetid'];
+#            #$tweet = tweet_txt_and_url($tweet,$link);
+#            if (preg_match('/^ADJOURNMENT$/i',$title)) { continue; }
+#            if (preg_match('/^COMMUNICATIONS$/i',$title)) { continue; }
+#            if (preg_match('/^CONFIRMATION OF MINUTES$/i',$title)) { continue; }
+#            if (preg_match('/DECLARATION OF INTERES/',$title)) { continue; }
+#            if (preg_match('/DECLARATIONS OF INTEREST/',$title)) { continue; }
+#            print "SKIPPING (but would have sent) $tweet\n"; 
+#          }
+#        }
+#	    }
+#    }
 
   }
 
