@@ -19,6 +19,7 @@ class OttWatchConfig {
   const YOUTUBE_PASS = 'CHANGEME';
   const FACEBOOK_APP_ID = 'CHANGEME';
   const FACEBOOK_APP_SECRET = 'CHANGEME';
+  const FACEBOOK_PAGE_ID = 'CHANGEME';
 }
 
 ?>
