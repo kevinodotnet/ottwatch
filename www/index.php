@@ -1,5 +1,7 @@
 <?php
 
+require '../vendor/autoload.php';
+
 include_once '../lib/include.php';
 include_once 'epiphany/src/Epi.php';
 include_once 'controllers/ApiController.php';
@@ -40,7 +42,6 @@ getApi()->get('/api/devapps/([D_].*)', array('ApiController', 'devApp'), EpiApi:
 getRoute()->get('/', 'dashboard');
 getRoute()->get('/about', 'about');
 #getRoute()->get('/ideas', 'ideas');
-#getRoute()->get('/dashboard', 'dashboard');
 
 getRoute()->get('/user/home', array('UserController','home'));
 getRoute()->post('/user/add/place', array('UserController','addPlace'));
@@ -50,6 +51,10 @@ getRoute()->post('/user/register', array('LoginController','doRegister'));
 getRoute()->get('/user/login', array('LoginController','display'));
 getRoute()->post('/user/login', array('LoginController','doLogin'));
 getRoute()->get('/user/logout', array('LoginController','logout'));
+
+# OAUTH
+getRoute()->get('/user/login/twitter', array('LoginController','twitter'));
+getRoute()->get('/user/login/facebook', array('LoginController','facebook'));
 
 getRoute()->get('/lobbying/latereport', array('LobbyistController','latereport'));
 getRoute()->get('/lobbying/search/(.*)', array('LobbyistController','search'));
@@ -90,7 +95,7 @@ getRoute()->get('/consultations/', array('ConsultationController','showMain'));
 getRoute()->get('/consultations/(\d+)', array('ConsultationController','showConsultation'));
 getRoute()->get('/consultations/(\d+)/content', array('ConsultationController','showConsultationContent'));
 
-getRoute()->get('/election/', array('ElectionController','showMain'));
+getRoute()->get('/election/*', array('ElectionController','showMain'));
 getRoute()->get('/election/(mayor)/', array('ElectionController','showRace'));
 getRoute()->get('/election/ward/(\d+)', array('ElectionController','showRace'));
 
@@ -297,7 +302,33 @@ function dashboard() {
   </div>
 
   <div class="span4">
-  <a class="twitter-timeline" data-dnt="true" href="https://twitter.com/ottwatch" data-widget-id="306310112971210752">Tweets by @ottwatch</a>
+  <h4>More Reports and Data</h4>
+<ul>
+<li><a href="<?php print $OTT_WWW; ?>/consultations/">Consultations</a>:
+A complete list of public consultations from ottawa.ca
+</li>
+<li><a href="<?php print $OTT_WWW; ?>/meetings/votes">Voting History</a>: See all votes at committee and council.</li>
+<li><a href="<?php print $OTT_WWW; ?>/lobbying/latereport">Late Lobbying Report</a>: Who's been naughty and failed to report lobbying activity within the required deadlines.</li>
+<li><a href="<?php print $OTT_WWW; ?>/chart/lobbying/weighted/30">Lobbying Intensity Report</a>: See what companies are most active pushing their agenda at City Hall.</li>
+<li><a href="<?php print $OTT_WWW; ?>/api/about">API</a>: Documentation on the application programming interface for OttWatch.</li>
+<li><a href="<?php print $OTT_WWW; ?>/about">About</a>: What's this all about?</li>
+</ul>
+  <h4>User</h4>
+<ul>
+<?php
+if (!LoginController::isLoggedIn()) {
+  ?>
+  <li><a href="<?php print $OTT_WWW; ?>/user/login">Login</a>: Log in to OttWatch for user-specifc features</li>
+  <?php
+} else {
+  ?>
+  <li><a href="<?php print $OTT_WWW; ?>/user/home">User Profile</a>: About you.</li>
+  <li><a href="<?php print $OTT_WWW; ?>/user/logout">Logout</a>: Get out of here.</li>
+  <?php
+}
+?>
+</ul>
+  <a class="twitter-timeline" data-dnt="true" href="https://twitter.com/ottwatch" height="200" data-widget-id="306310112971210752">Tweets by @ottwatch</a>
   <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
   </div>
 
@@ -355,10 +386,10 @@ function top($title = '',$quiet = false) {
   padding: 20px;
 }
 </style>
+<script src="<?php print $OTT_WWW; ?>/jquery.js" type="text/javascript"></script>
 <script src="<?php print $OTT_WWW; ?>/bootstrap/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=<?php print OttWatchConfig::GOOGLE_API_KEY; ?>&sensor=false"></script>
 <!-- <script src="http://code.jquery.com/jquery.js" type="text/javascript"></script> -->
-<script src="<?php print $OTT_WWW; ?>/jquery.js" type="text/javascript"></script>
 <script>
 function copyToClipboard (text) {
   window.prompt ("Copy to clipboard: Ctrl+C, Enter", text);
@@ -373,34 +404,24 @@ if ($quiet) { return; }
 
 <div class="row-fluid">
 <div class="span12">
-<div class="navbar"><div class="navbar-inner">
+<div class="navbar">
+<div class="navbar-inner">
 <ul class="nav">
 <li><a href="<?php print $OTT_WWW; ?>">Home</a></li>
-<!--<li><a href="<?php print $OTT_WWW; ?>/dashboard">Dashboard</a></li>-->
-<li><a href="<?php print $OTT_WWW; ?>/consultations/">Consultations</a></li>
-<li><a href="<?php print $OTT_WWW; ?>/meetings/votes">Voting History</a></li>
-<li><a href="<?php print $OTT_WWW; ?>/lobbying/latereport">Late Lobbying Report</a></li>
-<li><a href="<?php print $OTT_WWW; ?>/chart/lobbying/weighted/30">Lobbying Intensity Report</a></li>
-<li><a href="<?php print $OTT_WWW; ?>/about">About</a></li>
-<li><a href="<?php print $OTT_WWW; ?>/api/about">API</a></li>
 <?php
 if (!LoginController::isLoggedIn()) {
-  /*
   ?>
   <li><a href="<?php print $OTT_WWW; ?>/user/login">Login</a></li>
   <?php
-  */
 } else {
-  /*
   ?>
-  <li><a href="<?php print $OTT_WWW; ?>/user/home"><?php print getSession()->get('user_email'); ?></a></li>
   <li><a href="<?php print $OTT_WWW; ?>/user/logout">Logout</a></li>
   <?php
-  */
 }
 ?>
 </ul>
-</div></div>
+</div>
+</div>
 </div>
 </div>
 
@@ -426,7 +447,7 @@ function bottom($quiet = false) {
   if (!$quiet) {
   ?>
 
-<div class="well">
+<div class="well" style="margin-top: 10px;" >
 <a href="<?php print $OTT_WWW; ?>"><img style="float: right; padding-left: 5px; width: 50px; height: 50px;" src="<?php print $OTT_WWW; ?>/img/ottwatch.png"/></a>
 <i>Created by <a href="http://kevino.ca"><b>Kevin O'Donnell</b></a> to make it easier to be part of the political conversation in Ottawa.</i><br/>
 On Twitter? Follow <b><a href="http://twitter.com/OttWatch">@OttWatch</a></b> and <b><a href="http://twitter.com/ODonnell_K">@ODonnell_K</a></b><br/>
