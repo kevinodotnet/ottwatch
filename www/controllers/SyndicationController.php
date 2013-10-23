@@ -9,7 +9,7 @@ class SyndicationController {
 
 		# time of this run
 		$now = time();
-    setvar('syndicate.last',$now());
+    setvar('syndicate.last',$now);
 
 		# whats new doc?
     $rows = getDatabase()->all(" 
