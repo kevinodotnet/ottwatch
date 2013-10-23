@@ -24,7 +24,7 @@ class SyndicationController {
 				and f.created < from_unixtime(:now)
 			order by
 				f.created
-    ",array('last'=>$last));
+    ",array('now'=>$now,'last'=>$last));
 
 		foreach ($rows as $r) {
 			$message = $r['message'];
