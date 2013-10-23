@@ -3,19 +3,25 @@
 class SyndicationController {
 	public static function publish() {
 
+		# time of last run
     $last = getvar('syndicate.last');
     if ($last == '') { $last = time(); }
-    setvar('syndicate.last',time());
+
+		# time of this run
+		$now = time();
+    setvar('syndicate.last',$now());
 
 		# whats new doc?
     $rows = getDatabase()->all(" 
 			select
 				f.*,
-				from_unixtime(:last) last
+				from_unixtime(:last) last,
+				from_unixtime(:now) now
 			from 
 				feed f
 			where 
 				f.created >= from_unixtime(:last)
+				and f.created < from_unixtime(:now)
 			order by
 				f.created
     ",array('last'=>$last));
