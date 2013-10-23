@@ -10,13 +10,14 @@ class SyndicationController {
 		# whats new doc?
     $rows = getDatabase()->all(" 
 			select
-				*
+				f.*,
+				from_unixtime(:last) last
 			from 
-				feed
+				feed f
 			where 
-				created >= from_unixtime(:last)
+				f.created >= from_unixtime(:last)
 			order by
-				created
+				f.created
     ",array('last'=>$last));
 
 		foreach ($rows as $r) {
