@@ -80,6 +80,31 @@ class UserController {
     $md5 = self::getEmailVerification(getSession()->get('user_id'));
     $url = OttWatchConfig::WWW."/user/email/verify/$md5";
 
+    $mail = new PHPMailer;
+    $mail->isSMTP();    
+    $mail->Host = OttWatchConfig::SMTP_HOST;
+    $mail->From = OttWatchConfig::SMTP_FROM_EMAIL;
+    $mail->FromName = OttWatchConfig::SMTP_FROM_NAME;
+    $mail->addAddress(getSession()->get('user_email'));
+    $mail->Subject = 'Email address verification - OttWatch';
+    $mail->Body = "
+    To complete your email address verification with OttWatch click on the link below.<br/><br/>
+    <a href=\"$url\">$url</a><br/><br/>
+    Ignore this email if you did not request an account on OttWatch.ca
+    ";
+    $mail->AltBody = "
+    To complete your email address verification with OttWatch click on the link below.
+
+    $url
+
+    Ignore this email if you did not request an account on OttWatch.ca
+    ";
+    if(!$mail->send()) {
+      echo 'Mailer Error: ' . $mail->ErrorInfo;
+      bottom();
+      return;
+    }
+
     # print "<a href=\"$url\">$url</a>";
 
     ?>
