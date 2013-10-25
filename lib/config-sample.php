@@ -20,6 +20,9 @@ class OttWatchConfig {
   const FACEBOOK_APP_ID = 'CHANGEME';
   const FACEBOOK_APP_SECRET = 'CHANGEME';
   const FACEBOOK_PAGE_ID = 'CHANGEME';
+  const SMTP_HOST = 'CHANGEME';
+  const SMTP_FROM_EMAIL = 'CHANGEME';
+  const SMTP_FROM_NAME = 'CHANGEME';
 }
 
 ?>

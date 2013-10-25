@@ -1,5 +1,6 @@
 {
   "require": {
-    "lusitanian/oauth": "~0.2"
+    "lusitanian/oauth": "~0.2",
+    "phpmailer/phpmailer": "5.2.*"
   }
 }

@@ -26,8 +26,10 @@ create table people (
   facebookid bigint unsigned,
   created datetime default CURRENT_TIMESTAMP,
   lastlogin datetime,
+	emailverified boolean default false,
   primary key (id)
 ) engine = innodb;
+create unique index people_in1 on people (email);
 
 drop table if exists places;
 create table places (
