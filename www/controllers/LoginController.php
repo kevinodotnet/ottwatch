@@ -138,13 +138,17 @@ class LoginController {
 
   static public function setLoggedIn($id) {
     getSession()->set("is_logged_in",$id);
+    getDatabase()->execute(" update people set lastlogin = CURRENT_TIMESTAMP where id = lower(:id) ",array('id'=>$id));
+    self::loadLoggedIn($id);
+  }
+
+  static public function loadLoggedIn($id) {
     $user = getDatabase()->one(" select * from people where id = lower(:id) ",array('id'=>$id));
     if (!$user['id']) {
       # should never happen
       getSession()->set("is_logged_in",'');
       return;
     }
-    getDatabase()->execute(" update people set lastlogin = CURRENT_TIMESTAMP where id = lower(:id) ",array('id'=>$id));
     getSession()->set("user_id",$user['id']);
     getSession()->set("user_name",$user['name']);
     getSession()->set("user_email",$user['email']);

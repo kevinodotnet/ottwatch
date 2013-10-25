@@ -44,6 +44,9 @@ getRoute()->get('/about', 'about');
 #getRoute()->get('/ideas', 'ideas');
 
 getRoute()->get('/user/home', array('UserController','home'));
+getRoute()->post('/user/update', array('UserController','update'));
+getRoute()->get('/user/email/sendVerify', array('UserController','emailSendVerify'));
+getRoute()->get('/user/email/verify/(.*)', array('UserController','emailVerify'));
 getRoute()->post('/user/add/place', array('UserController','addPlace'));
 
 getRoute()->get('/user/register', array('LoginController','displayRegister'));
