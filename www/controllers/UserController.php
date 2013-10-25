@@ -162,7 +162,17 @@ class UserController {
     $activities = 0;
 
     $user = getDatabase()->one(" select * from people where id = :id ",array('id'=>getSession()->get('user_id')));
-    if (($user['email'] != null && $user['email'] != '') && !$user['emailverified']) {
+    if ($user['email'] == null || $user['email'] == '') {
+      $activities ++;
+      ?>
+      <p>
+      <i class="icon-tasks"> </i>
+      Your email address is empty! That's not a big deal, but some OttWatch features
+      are only available if you provide (and verify) an email address. You can use 
+      the 'User Details' section to enter an email address.
+      </p>
+      <?php
+    } elseif (!$user['emailverified']) {
       $activities ++;
       ?>
       <p>
