@@ -33,6 +33,11 @@ getApi()->get('/api/wards', array('ApiController', 'listWards'), EpiApi::externa
 getApi()->get('/api/committees', array('ApiController', 'committees'), EpiApi::external);
 getApi()->get('/api/councillors/(\d+)', array('ApiController', 'councillorById'), EpiApi::external);
 getApi()->get('/api/councillors/([^/]+)/(.*)', array('ApiController', 'councillorByName'), EpiApi::external);
+getApi()->get('/api/feed/', array('ApiController', 'feed'), EpiApi::external);
+getApi()->get('/api/feed/(\d+)', array('ApiController', 'feed'), EpiApi::external);
+getApi()->get('/api/feed/(\d+)/(\d+)', array('ApiController', 'feed'), EpiApi::external);
+
+getRoute()->get('/feed/', 'feed');
 
 getApi()->get('/api/lobbying/all/csv', array('ApiController', 'lobbyingAllCsv'), EpiApi::external);
 
@@ -128,9 +133,43 @@ function ottawaMediaRSS() {
   }
 }
 
+function feed() {
+  top('Activity Feed');
+  $count = $_GET['count']; if ($count == '') { $count = 100; }
+  $before = $_GET['before']; 
+  if ($before == '') {
+    $recent = getApi()->invoke("/api/feed/$count");
+  } else {
+    $recent = getApi()->invoke("/api/feed/$count/$before");
+  }
+  $before = $recent['next']['before'];
+  $count = $recent['next']['count'];
+  $next = OttWatchConfig::WWW."/feed/?count=$count&before=$before";
+  ?>
+  <h1>Activity Feed</h1>
+  <p><a href="<?php print $next; ?>">Next <?php print $count; ?> entries</a></p>
+  <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
+  <?php
+  foreach ($recent['items'] as $r) {
+    ?>
+    <tr>
+    <td><a href="<?php print $r['url']; ?>"><?php print $r['message']; ?></a></td>
+    <td><?php print $r['created']; ?></td>
+    <td><?php print $r['diff']; ?></td>
+    </tr>
+    <?php
+  }
+  ?>
+  </table>
+  <p><a href="<?php print $next; ?>">Next <?php print $count; ?> entries</a></p>
+  <?php
+  bottom();
+}
+
 function dashboard() {
   global $OTT_WWW;
   top();
+
   ?>
   <div class="row-fluid">
   <div class="span4">
@@ -212,12 +251,42 @@ function dashboard() {
   </table>
 
   <?php
-  ottawaMediaRSS();
+  // ottawaMediaRSS();
   ?>
 
   </div>
 
   <div class="span4">
+
+  <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
+  <tr>
+  <td colspan="2">
+  <h4><a href="feed/">Activity Feed</a></h4>
+  </td>
+  </tr>
+
+  <?php
+  $recent = getApi()->invoke("/api/feed/15");
+  foreach ($recent['items'] as $r) {
+    ?>
+    <tr>
+    <?php
+    $url = OttWatchConfig::WWW.$r['path'];
+    $message = $r['message'];
+    ?>
+    <td><nobr><?php print $r['diff']; ?></nobr></td>
+    <td><a href="<?php print $url; ?>"><?php print $message; ?></a></td>
+    </tr>
+    <?php
+  }
+  ?>
+  <tr>
+  <td></td>
+  <td><a href="feed/">See all</a></td>
+  </tr>
+  </table>
+
+
   <script>
   function devapp_search_form_submit() {
     v = document.getElementById('devapp_search_value').value;
@@ -236,6 +305,8 @@ function dashboard() {
     document.location.href = 'lobbying/search/'+encodeURIComponent(v);
   }
   </script>
+
+  <!--
   <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
   <tr><td colspan="2"><h4>Recent Lobbying</h4></td></tr>
   <?php
@@ -261,14 +332,10 @@ function dashboard() {
   }
   ?>
   </table>
+  -->
 
-  <h4>Search Lobbyist Registry</h4>
-  <div class="input-prepend input-append">
-  <input type="text" id="lobbyist_search_value" placeholder="Search...">
-  <button class="btn" onclick="lobbyist_search_form_submit()"><i class="icon-search"></i> Search</button>
-  <button class="btn btn-info" onclick="document.location.href = 'lobbying/search/'">Show All</button>
-  </div>
 
+  <!--
   <h4>Development Applications</h4>
   <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
   <?php
@@ -296,16 +363,27 @@ function dashboard() {
   </td>
   </tr>
   </table>
+  -->
 
-  <div class="input-prepend input-append">
-  <input type="text" id="devapp_search_value" placeholder="Search...">
-  <a class="btn" onclick="devapp_search_form_submit()"><i class="icon-search"></i> Search</button>
-  <a class="btn btn-info" href="devapps?since=999">Show All</a>
-  </div>
 
   </div>
 
   <div class="span4">
+
+  <h4>Search Lobbyist Registry</h4>
+  <div class="input-prepend input-append">
+  <input type="text" id="lobbyist_search_value" placeholder="Search...">
+  <button class="btn" onclick="lobbyist_search_form_submit()"><i class="icon-search"></i> Search</button>
+  <button class="btn btn-info" onclick="document.location.href = 'lobbying/search/'">Show All</button>
+  </div><!-- /search lobbying -->
+
+  <h4>Search Development Applications</h4>
+  <div class="input-prepend input-append">
+  <input type="text" id="devapp_search_value" placeholder="Search...">
+  <a class="btn" onclick="devapp_search_form_submit()"><i class="icon-search"></i> Search</button>
+  <a class="btn btn-info" href="devapps?since=999">Show All</a>
+  </div><!-- /search devapps -->
+
   <h4>More Reports and Data</h4>
 <ul>
 <li><a href="<?php print $OTT_WWW; ?>/consultations/">Consultations</a>:
@@ -332,8 +410,11 @@ if (!LoginController::isLoggedIn()) {
 }
 ?>
 </ul>
+
+  <!--
   <a class="twitter-timeline" data-dnt="true" href="https://twitter.com/ottwatch" height="200" data-widget-id="306310112971210752">Tweets by @ottwatch</a>
   <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+  -->
   </div>
 
   </div>

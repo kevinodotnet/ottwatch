@@ -2,6 +2,36 @@
 
 class ApiController {
 
+  public static function feed($count = 10, $before = 0) {
+    // can't use PDO for count, so make sure intenger on COUNT
+    if (!preg_match('/^\d+$/',$count)) {
+      print "ERROR: $count is not an integer\n";
+      return;
+    }
+    if ($before == 0) {
+      $rows = getDatabase()->all(" select * from feed order by created desc limit $count ");
+    } else {
+      $rows = getDatabase()->all(" select * from feed where id < :before order by created desc limit $count ",array('before'=>$before));
+    }
+    $now = new DateTime;
+    foreach ($rows as &$r) {
+      $min = $r['id']+0;
+      $created = new DateTime($r['created']);
+      $diff = $created->diff($now);
+      $r['diff'] = $diff->format("%dd, %hhr");
+    }
+
+    $nextUrl =  OttWatchConfig::WWW."/api/feed/$count/$min";
+
+    $result = array();
+    $result['items'] = $rows;
+    if (count($rows) > 0) {
+      $result['next'] = array('count'=>$count,'before'=>$min,'url'=>$nextUrl);
+    }
+
+    return $result;
+  }
+
   public static function arrayToCsv($array) {
     if (count($array) == 0) {
       return "";

@@ -27,6 +27,29 @@ up if it ever comes to that.</p>
 </div>
 
 <div class="span6">
+
+<h1>Feed</h1>
+<p>
+As OttWatch publishes content the <i>feed</i> is updated.
+</p>
+<p>
+<a href="feed">/feed/</a> shows the 10 most recent items.<br/>
+<a href="feed/40">/feed/40</a> returns the most recent 40 items instead of the default 10.<br/>
+<a href="feed/40">/feed/12/29</a> returns 12 items that are less than (before) item 29.
+</p>
+<p>
+If after returning <i>count</i> items there are still more available (in reverse
+chronological order) a <i>next</i> section is included. It repeats the <i>count</i>
+value as well as the <i>id</i> that the next item will be <i>less than</i>. For
+convenience, the full API <i>url</i> to use is created for you automatically:
+<pre>"next":{
+  "count":10,
+  "before":29,
+  "url":"http://ottwatch.ca/api/feed/10/29"
+}
+</pre>
+</p>
+
 <h1>Points</h1>
 <p>
 Given any lat/lon pair, returns information about the
