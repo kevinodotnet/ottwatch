@@ -52,7 +52,7 @@ function meeting_category_to_title($category) {
   return $category;
 }
 
-function syndicate($message,$path,$url = null) {
+function syndicate($message,$path,$url) {
   $values = array();
   $values['message'] = $message;
   $values['path'] = $path;
