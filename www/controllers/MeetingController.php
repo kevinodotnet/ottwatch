@@ -155,6 +155,7 @@ class MeetingController {
 
 		if ($debug) {
 		print "\n\n-----------------------------------------\n\n";
+		print "url: $isplUrl\n";
 		print "spl: $spl\n";
 		print "\n\n-----------------------------------------\n\n";
 		}
@@ -167,33 +168,41 @@ class MeetingController {
       $start = 0;
     }
 
-    $ref = $xml->xpath('//ref/@src'); 
-    if (count($ref) > 0) {
+		$totalFrags = array();
+    $refs = $xml->xpath('//ref/@src'); 
+		pr($ref);
+		foreach ($refs as $ref) {
       $ref = ''.$ref[0]; //$ref = $ref['src']; $ref = $ref[0];
-    } else {
-      $ref = '';
-    }
 
-		# Skip to the seemlingly consisten 'bitrate specific' manifest file
-    # Manifest             'http://ca.sirecdn.net/SIRE/Ottawa/City Council/2472/393.ism/manifest'
-    # Example video chunk: 'http://ca.sirecdn.net/SIRE/Ottawa/City Council/2472/393-m3u8-aapl.ism/QualityLevels(464000)/Fragments(Video=39600000000,format=m3u8-aapl)'
-    # ISM2                 'http://ca.sirecdn.net/SIRE/Ottawa/City Council/2472/393-m3u8-aapl.ism/QualityLevels(464000)'
-    $ism2 = $baseUrl . $ref;
-    $ism2 = preg_replace('/\.ism/','-m3u8-aapl.ism',$ism2);
-    $ism2 = preg_replace('/manifest/','',$ism2);
-    $ism2 .= 'QualityLevels(464000)';
-    $manifest = `wget -qO - '$ism2/manifest(format=m3u8-aapl)'`;
-
-		if ($debug) {
-		print "\n\n-----------------------------------------\n\n";
-		print "manifest: $manifest\n";
-		print "\n\n-----------------------------------------\n\n";
+			# Skip to the seemlingly consisten 'bitrate specific' manifest file
+	    # Manifest             'http://ca.sirecdn.net/SIRE/Ottawa/City Council/2472/393.ism/manifest'
+	    # Example video chunk: 'http://ca.sirecdn.net/SIRE/Ottawa/City Council/2472/393-m3u8-aapl.ism/QualityLevels(4	4000)/Fragments(Video=39	00000000,format=m3u8-aapl)'
+	    # ISM2                 'http://ca.sirecdn.net/SIRE/Ottawa/City Council/2472/393-m3u8-aapl.ism/QualityLevels(4	4000)'
+	    $ism2 = $baseUrl . $ref;
+	    $ism2 = preg_replace('/\.ism/','-m3u8-aapl.ism',$ism2);
+	    $ism2 = preg_replace('/manifest/','',$ism2);
+	    $ism2 .= 'QualityLevels(464000)';
+	    $manifest = `wget -qO - '$ism2/manifest(format=m3u8-aapl)'`;
+	
+			if ($debug) {
+			print "\n\n-----------------------------------------\n\n";
+	    print "url: $ism2/manifest(format=m3u8-aapl)\n";
+			print "manifest: $manifest\n";
+			print "\n\n-----------------------------------------\n\n";
+			}
+	
+	    $frags = preg_grep('/^Fragments/',explode("\n",$manifest));
+			if (count($frags) > 0) {
+		    foreach ($frags as $frag) {
+		      $frag = preg_replace("/\n/","",$frag);
+		      $frag = preg_replace("/\r/","",$frag);
+		      $fragUrl = "$ism2/$frag";
+					$totalFrags[] = $fragUrl;
+		    }
+			}
 		}
-
-    $frags = preg_grep('/^Fragments/',explode("\n",$manifest));
-		if (count($frags) == 0) {
-			# looks like this happens when the meeting has started or "is live" ? but not
-			# yet available for post-download
+		if (count($totalFrags) == 0) {
+			if ($debug) { print "No fragments\n"; }
 			return -1;
 		}
 
@@ -214,18 +223,19 @@ class MeetingController {
 		touch($video_file);
 		unlink($video_file);
 
-		print "Saving to $video_file ".count($frags)." chunks\n";
+		print "Saving to $video_file ".count($totalFrags)." chunks\n";
     $chunk = 0;
-    foreach ($frags as $frag) {
-      if ($chunk % 100 == 0) { print "$chunk "; }
-      $chunk ++;
-      $frag = preg_replace("/\n/","",$frag);
-      $frag = preg_replace("/\r/","",$frag);
-      $fragUrl = "$ism2/$frag";
-      $data = `wget -qO - '$fragUrl'`;
-			file_put_contents($video_file,$data,FILE_APPEND);
-    }
 		print "\n";
+		foreach ($totalFrags as $fragUrl) {
+			$chunk++;
+			if ($debug) { 
+				print "[$chunk/".count($totalFrags)."] $fragUrl\n"; 
+			} else {
+				if ($chunk++ % 100 == 0) { print " $chunk"; }
+			}
+	    $data = `wget -qO - '$fragUrl'`;
+			file_put_contents($video_file,$data,FILE_APPEND);
+		}
 
 		# Mark the video URL as 'uploading' so that we know we've attempted it once
 		getDatabase()->execute(" update meeting set youtube = 'UPLOADING', youtubestate = 'UPLOADING' where id = :id ",array('id'=>$m['id']));
