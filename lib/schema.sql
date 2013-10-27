@@ -329,3 +329,16 @@ create table feed (
   primary key (id)
 ) engine = innodb;
 
+drop table story;
+create table story (
+  id mediumint not null auto_increment,
+  personid mediumint not null,
+  title varchar(300),
+  body text,
+  created datetime default CURRENT_TIMESTAMP,
+  updated datetime,
+	published boolean default false,
+  primary key (id),
+  constraint foreign key (personid) references people (id)
+) engine = innodb;
+
