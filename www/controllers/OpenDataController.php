@@ -107,7 +107,7 @@ class OpenDataController {
       }
       ?>
       <tr>
-      <td><?php print $r['updated']; ?></td>
+      <td><nobr><?php print $r['updated']; ?></nobr></td>
       <td><nobr><a href="<?php print $r['fileurl']; ?>"><?php print $r['fname']; ?></a></nobr></td>
       <td><nobr><a href="<?php print $r['url']; ?>"><?php print $r['title']; ?></a></nobr></td>
       <td><?php print $size ?></td>
