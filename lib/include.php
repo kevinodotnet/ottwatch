@@ -57,6 +57,7 @@ function syndicate($message,$path,$url = null) {
   $values = array();
   $values['message'] = $message;
   $values['path'] = $path;
+  $values['url'] = $url;
   if ($url == null) {
     $values['url'] = OttWatchConfig::WWW.$path;
   }
