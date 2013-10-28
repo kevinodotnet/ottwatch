@@ -15,7 +15,6 @@ if (count($argv) > 1) {
       # defaulting now NOW
       $last = time();
     }
-    $last = 0;
     # update the touch time to NOW, even if we fail to tweet.
     setvar('opendatasyndicate.last',time());
 
