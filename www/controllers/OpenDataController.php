@@ -90,7 +90,7 @@ class OpenDataController {
         f.updated desc
     ");
     ?>
-    <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
+    <table class="table table-bordered table-hover table-condensed" style="width: 98%;">
     <tr>
     <th>Updated</th>
     <th>File</th>
