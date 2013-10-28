@@ -83,7 +83,7 @@ class OpenDataController {
     $rows = getDatabase()->all("
       select
         d.title,d.url,
-        f.size,f.description,f.format,f.name as fname,f.url as fileurl, f.updated
+        f.size,f.description,f.format,f.name as fname,f.url as fileurl, left(f.updated,10) updated
       from opendatafile f
         join opendata d on d.id = f.dataid
       order by
@@ -108,8 +108,8 @@ class OpenDataController {
       ?>
       <tr>
       <td><?php print $r['updated']; ?></td>
-      <td><a href="<?php print $r['fileurl']; ?>"><?php print $r['fname']; ?></a></td>
-      <td><a href="<?php print $r['url']; ?>"><?php print $r['title']; ?></a></td>
+      <td><nobr><a href="<?php print $r['fileurl']; ?>"><?php print $r['fname']; ?></a></nobr></td>
+      <td><nobr><a href="<?php print $r['url']; ?>"><?php print $r['title']; ?></a></nobr></td>
       <td><?php print $size ?></td>
       <td><?php print $r['format']; ?></td>
       <td><?php print $r['description']; ?></td>
