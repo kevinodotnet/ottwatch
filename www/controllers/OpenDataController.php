@@ -11,13 +11,11 @@ class OpenDataController {
 
     foreach ($datasets as $d) {
 
-      print "$index / ".count($datasets)." :: $d\n";
       $index++;
 
       $set = self::getDataset($d);
 
       $count = getDatabase()->execute(" delete from opendata where guid = :id ",array('id'=>$set->id));
-      if ($count > 0) { print "deleted existing data\n"; }
 
       $values = array();
       $values['guid'] = $set->id;
