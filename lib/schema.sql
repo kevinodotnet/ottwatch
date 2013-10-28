@@ -329,3 +329,33 @@ create table feed (
   primary key (id)
 ) engine = innodb;
 
+drop table opendata;
+create table opendata (
+  id mediumint not null auto_increment,
+  guid varchar(100) not null,
+  name varchar(300),
+  title varchar(300),
+  url varchar(300),
+  created datetime default CURRENT_TIMESTAMP,
+  updated datetime default CURRENT_TIMESTAMP, -- 'metadata-modified in json'
+  primary key (id)
+) engine = innodb;
+
+drop table opendatafile;
+create table opendatafile (
+  id mediumint not null auto_increment,
+  dataid mediumint not null,
+  guid varchar(100) not null,
+  `size` int unsigned,
+  description varchar(1024),
+  format varchar(10),
+  name varchar(300),
+  url varchar(300),
+  created datetime default CURRENT_TIMESTAMP,
+  updated datetime default CURRENT_TIMESTAMP, -- 'last_modified in json'
+  primary key (id),
+  constraint foreign key (dataid) references opendata (id) on delete cascade on update cascade
+) engine = innodb;
+
+
+
