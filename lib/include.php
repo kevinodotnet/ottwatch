@@ -29,6 +29,7 @@ if (1) {
 	include_once 'controllers/LobbyistController.php';
 	include_once 'controllers/ConsultationController.php';
 	include_once 'controllers/SyndicationController.php';
+	include_once 'controllers/OpenDataController.php';
 
 	#include_once('EpiDatabase.php');
 	#require_once('EpiException.php');
@@ -52,7 +53,7 @@ function meeting_category_to_title($category) {
   return $category;
 }
 
-function syndicate($message,$path,$url) {
+function syndicate($message,$path,$url = null) {
   $values = array();
   $values['message'] = $message;
   $values['path'] = $path;

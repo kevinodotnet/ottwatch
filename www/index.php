@@ -12,6 +12,7 @@ include_once 'controllers/LoginController.php';
 include_once 'controllers/UserController.php';
 include_once 'controllers/ChartController.php';
 include_once 'controllers/ElectionController.php';
+include_once 'controllers/OpenDataController.php';
 
 Epi::setPath('base', 'epiphany/src');
 Epi::init('route');
