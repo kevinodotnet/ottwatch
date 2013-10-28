@@ -40,6 +40,8 @@ getApi()->get('/api/feed/(\d+)/(\d+)', array('ApiController', 'feed'), EpiApi::e
 
 getRoute()->get('/feed/', 'feed');
 
+getRoute()->get('/opendata/', array('OpenDataController','doList'));
+
 getApi()->get('/api/lobbying/all/csv', array('ApiController', 'lobbyingAllCsv'), EpiApi::external);
 
 getApi()->get('/api/devapps/all', array('ApiController', 'devAppAll'), EpiApi::external);
@@ -387,9 +389,8 @@ function dashboard() {
 
   <h4>More Reports and Data</h4>
 <ul>
-<li><a href="<?php print $OTT_WWW; ?>/consultations/">Consultations</a>:
-A complete list of public consultations from ottawa.ca
-</li>
+<li><a href="<?php print $OTT_WWW; ?>/consultations/">Consultations</a>: A complete list of public consultations from ottawa.ca</li>
+<li><a href="<?php print $OTT_WWW; ?>/opendata/">OpenData</a>: Most recently updated data from <i>data.ottawa.ca</i>.</li>
 <li><a href="<?php print $OTT_WWW; ?>/meetings/votes">Voting History</a>: See all votes at committee and council.</li>
 <li><a href="<?php print $OTT_WWW; ?>/lobbying/latereport">Late Lobbying Report</a>: Who's been naughty and failed to report lobbying activity within the required deadlines.</li>
 <li><a href="<?php print $OTT_WWW; ?>/chart/lobbying/weighted/30">Lobbying Intensity Report</a>: See what companies are most active pushing their agenda at City Hall.</li>
