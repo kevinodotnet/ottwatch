@@ -3,8 +3,18 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "de62ae3b8edf43f7453f08afa5f3e028",
+    "hash": "4962288c0461b7942d39cb97f928ba37",
     "packages": [
+        {
+            "name": "ckeditor",
+            "version": "4.2.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ckeditor/ckeditor-releases.git",
+                "reference": "4.2/full"
+            },
+            "type": "library"
+        },
         {
             "name": "lusitanian/oauth",
             "version": "v0.2.3",

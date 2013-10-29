@@ -331,7 +331,7 @@ class LoginController {
   }
 
   static public function logout() {
-    getSession()->set("is_logged_in",'');
+    getSession()->end();
     header("Location: " . OttWatchConfig::WWW);
   }
 
