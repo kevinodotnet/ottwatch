@@ -119,7 +119,7 @@ class StoryController {
     <script>
     $( '#storybody' ).ckeditor({
      toolbar: [ 
-	      ['Source','Maximize'],
+	      ['Source','Maximize','Save'],
 	      ['Bold','Italic','Underline','Strike','Subscript','Superscript','-','RemoveFormat' ],
         [ 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','CreateDiv','-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock'],
         [ 'Image','Link','Unlink','Anchor','HorizontalRule' ],
