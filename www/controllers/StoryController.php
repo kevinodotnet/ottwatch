@@ -15,6 +15,10 @@ class StoryController {
     top();
     $story = getDatabase()->one(" select * from story where id = :id ",array('id'=>$id));
 
+    if ($story['deleted']) {
+      print "<h1>DELETED</h1>\n";
+    }
+
     ?>
 
     <div class="row-fluid">
@@ -26,7 +30,8 @@ class StoryController {
     <input type="hidden" name="id" value="<?php print $id; ?>"/>
     <button type="submit" name="save" class="btn">Save</button>
     <button type="submit" name="publish" value="1" class="btn">Publish</button>
-    <button type="submit" name="unpublish" value="1" class="btn">Unpublish</button><br/><br/>
+    <button type="submit" name="unpublish" value="1" class="btn">Unpublish</button>
+    <button type="submit" name="delete" value="1" class="btn">Delete</button><br/><br/>
     Title<br/>
     <input style="width: 60%;" type="text" name="title" value="<?php print $story['title']; ?>"/>
     <br/>
@@ -57,7 +62,19 @@ class StoryController {
 
     $publish = $_POST['publish'];
     $unpublish = $_POST['unpublish'];
+    $delete = $_POST['delete'];
 
+    if ($delete == '1') {
+	    getDatabase()->execute(" 
+	      update story set 
+          published = 0,
+          deleted = 1,
+	        updated = CURRENT_TIMESTAMP 
+	      where 
+	        id = :id 
+	        and personid = :personid
+	      ",array('id'=>$id,'personid'=>getSession()->get('user_id')));
+    }
     if ($unpublish == '1') {
 	    getDatabase()->execute(" 
 	      update story set 

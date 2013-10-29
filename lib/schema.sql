@@ -338,6 +338,7 @@ create table story (
   created datetime default CURRENT_TIMESTAMP,
   updated datetime,
 	published boolean default false,
+	deleted boolean default false,
   primary key (id),
   constraint foreign key (personid) references people (id)
 ) engine = innodb;
