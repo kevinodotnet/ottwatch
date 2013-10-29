@@ -517,6 +517,7 @@ if (!LoginController::isLoggedIn()) {
   <?php
 } else {
   ?>
+  <li><a href="<?php print $OTT_WWW; ?>/user/home">Profile</a></li>
   <li><a href="<?php print $OTT_WWW; ?>/user/logout">Logout</a></li>
   <?php
 }
