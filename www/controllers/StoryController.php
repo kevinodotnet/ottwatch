@@ -3,6 +3,15 @@
 class StoryController {
 
   public static function add() {
+
+		$row = getDatabase()->one(" select * from people where id = :id ",array('id'=>getSession()->get('user_id')));
+		if (!$row['author']) {
+			top();
+			print "ERROR: you do not have authorship rights\n";
+			bottom();
+			return;
+		}
+
     $story = array();
     $story['personid'] = getSession()->get('user_id');
     $id = db_insert('story',$story);

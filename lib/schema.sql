@@ -27,6 +27,8 @@ create table people (
   created datetime default CURRENT_TIMESTAMP,
   lastlogin datetime,
 	emailverified boolean default false,
+	admin boolean default false,
+	author boolean default false,
   primary key (id)
 ) engine = innodb;
 create unique index people_in1 on people (email);
