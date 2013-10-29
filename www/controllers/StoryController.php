@@ -34,14 +34,15 @@ class StoryController {
     $titleToUrlPart = urlencode($titleToUrlPart);
     $titleToUrlPart = preg_replace('/%../','',$titleToUrlPart);
     $titleToUrlPart = strtolower($titleToUrlPart);
+    $storyUrl = OttWatchConfig::WWW."/story/{$id}/{$titleToUrlPart}";
     if ($titleToUrlPart != $restTitle) {
       # new title, or someone is having fun
-      $url = OttWatchConfig::WWW."/story/{$id}/{$titleToUrlPart}";
-      header("Location: $url");
+      header("Location: $storyUrl");
       return;
     }
 
     top($story['title']);
+
     if ($story['deleted'] == 1) {
       ?>
       <h1>Error: this story has been deleted</h1>
@@ -64,7 +65,21 @@ class StoryController {
     <b><?php print $story['author']; ?></b><br/>
     <?php print $story['updated']; ?>
     </p>
+    <p>
+    <div class="fb-like" 
+      data-href="<?php print $storyUrl; ?>" 
+      data-width="The pixel width of the plugin" 
+      data-height="The pixel height of the plugin" 
+      data-colorscheme="light" 
+      data-layout="button_count" 
+      data-action="like"
+      data-show-faces="false" 
+      data-send="false"></div>
+		<a href="https://twitter.com/share" class="twitter-share-button" data-via="OttWatch" data-related="ottwatch" data-hashtags="ottpoli">Tweet</a>
+		<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+    </p>
     <p style="border-top: 1px solid #f0f0f0; clear: both;"><?php print $story['body']; ?></p>
+    <p style="text-align: right;"><?php renderShareLinks('test','the foo'); ?></p>
     </div>
     </div><!-- /row -->
     <?php
