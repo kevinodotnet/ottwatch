@@ -224,7 +224,7 @@ class UserController {
     <?php
     $rows = getDatabase()->all(" select * from story where deleted = 0 and personid = :id order by id desc ",array('id'=>getSession()->get('user_id')));
     foreach ($rows as $r) {
-      print "{$r['id']}: <a href=\"".OttWatchConfig::WWW."/story/edit/{$r['id']}\">{$r['title']}</a><br/>";
+      print "<a href=\"".OttWatchConfig::WWW."/story/edit/{$r['id']}\">{$r['id']}: {$r['title']}</a><br/>";
     }
     ?>
     </div>
