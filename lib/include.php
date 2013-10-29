@@ -95,10 +95,10 @@ function tweet($tweet) {
   # fix HTML escapes
   $tweet = html_entity_decode($tweet);
 
-  $consumerKey = OttWatchConfig::TWITTER_CONSUMER_KEY;
-  $consumerSecret = OttWatchConfig::TWITTER_CONSUMER_SECRET;
-  $accessToken = OttWatchConfig::TWITTER_ACCESS_TOKEN;
-  $accessTokenSecret = OttWatchConfig::TWITTER_TOKEN_SECRET;
+  $consumerKey = OttWatchConfig::TWITTER_POST_CONSUMER_KEY;
+  $consumerSecret = OttWatchConfig::TWITTER_POST_CONSUMER_SECRET;
+  $accessToken = OttWatchConfig::TWITTER_POST_ACCESS_TOKEN;
+  $accessTokenSecret = OttWatchConfig::TWITTER_POST_TOKEN_SECRET;
 
 	print "Sending... $tweet\n";
 

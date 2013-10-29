@@ -11,10 +11,16 @@ class OttWatchConfig {
   const WWW = "http://localhost/ottwatch";
   const GOOGLE_API_KEY = "GET_FROM https://code.google.com/apis/console";
   const GOOGLE_ANALYTICS = "UA-CHANGE-ME";
+	# used for read-only "sign-in-with-twitter"
   const TWITTER_CONSUMER_KEY = 'change_me';
   const TWITTER_CONSUMER_SECRET = 'change_me';
   const TWITTER_ACCESS_TOKEN = 'change_me';
   const TWITTER_TOKEN_SECRET = 'change_me';
+	# used for read-write, just by @OttWatch to push tweets
+  const TWITTER_POST_CONSUMER_KEY = 'change_me';
+  const TWITTER_POST_CONSUMER_SECRET = 'change_me';
+  const TWITTER_POST_ACCESS_TOKEN = 'change_me';
+  const TWITTER_POST_TOKEN_SECRET = 'change_me';
   const YOUTUBE_USER = 'CHANGEME';
   const YOUTUBE_PASS = 'CHANGEME';
   const FACEBOOK_APP_ID = 'CHANGEME';
