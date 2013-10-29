@@ -219,10 +219,15 @@ class UserController {
     </div>
 
     <div class="span4">
-    <h1>Under Construction</h4>
-    This area is pretty empty at the moment. More features coming soon!
+    <h1>Stories</h4>
+    <p><a class="btn" href="">Create New Story</a></p>
+    <?php
+    $rows = getDatabase()->all(" select * from story where deleted = 0 and personid = :id order by id desc ",array('id'=>getSession()->get('user_id')));
+    foreach ($rows as $r) {
+      print "{$r['id']}: <a href=\"".OttWatchConfig::WWW."/story/edit/{$r['id']}\">{$r['title']}</a><br/>";
+    }
+    ?>
     </div>
-
 
     </div><!-- /row -->
 
