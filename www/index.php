@@ -13,11 +13,17 @@ include_once 'controllers/UserController.php';
 include_once 'controllers/ChartController.php';
 include_once 'controllers/ElectionController.php';
 include_once 'controllers/OpenDataController.php';
+include_once 'controllers/StoryController.php';
 
 Epi::setPath('base', 'epiphany/src');
 Epi::init('route');
 Epi::init('api');
 Epi::init('route','session-php');
+
+getRoute()->get('/story/(\d+)/(.*)', array('StoryController', 'show'));
+getRoute()->get('/story/add', array('StoryController', 'add'));
+getRoute()->get('/story/edit/(\d+)', array('StoryController', 'edit'));
+getRoute()->post('/story/save', array('StoryController', 'save'));
 
 getApi()->get('/api/about', array('ApiController', 'about'), EpiApi::external);
 getApi()->get('/api/point', array('ApiController', 'point'), EpiApi::external);
