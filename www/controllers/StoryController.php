@@ -3,7 +3,6 @@
 class StoryController {
 
   public static function add() {
-
     $story = array();
     $story['personid'] = getSession()->get('user_id');
     $id = db_insert('story',$story);
@@ -88,7 +87,7 @@ class StoryController {
 
   public static function edit($id) {
     top();
-    $story = getDatabase()->one(" select * from story where id = :id ",array('id'=>$id));
+    $story = getDatabase()->one(" select * from story where id = :id and personid = :personid ",array('id'=>$id,'personid'=>getSession()->get('user_id')));
 
     if ($story['deleted']) {
       print "<h1>DELETED</h1>\n";
