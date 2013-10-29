@@ -89,8 +89,16 @@ class StoryController {
     top();
     $story = getDatabase()->one(" select * from story where id = :id and personid = :personid ",array('id'=>$id,'personid'=>getSession()->get('user_id')));
 
+    if (!$story['deleted']) {
+      print "Story not found, or you are not the author\n";
+      bottom();
+      return;
+    }
+
     if ($story['deleted']) {
-      print "<h1>DELETED</h1>\n";
+      print "Story is deleted\n";
+      bottom();
+      return;
     }
 
     ?>
