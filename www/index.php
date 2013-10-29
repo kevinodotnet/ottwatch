@@ -19,6 +19,7 @@ Epi::init('route');
 Epi::init('api');
 Epi::init('route','session-php');
 
+getRoute()->get('/story/(\d+)/(.*)', array('StoryController', 'show'));
 getRoute()->get('/story/add', array('StoryController', 'add'));
 getRoute()->get('/story/edit/(\d+)', array('StoryController', 'edit'));
 getRoute()->post('/story/save', array('StoryController', 'save'));
