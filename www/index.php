@@ -164,8 +164,8 @@ function feed() {
     ?>
     <tr>
     <td><a href="<?php print $r['url']; ?>"><?php print $r['message']; ?></a></td>
-    <td><?php print $r['created']; ?></td>
-    <td><?php print $r['diff']; ?></td>
+    <td><nobr><?php print $r['created']; ?></nobr></td>
+    <td><nobr><?php print $r['diff']; ?></nobr></td>
     </tr>
     <?php
   }
