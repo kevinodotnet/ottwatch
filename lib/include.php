@@ -308,6 +308,38 @@ function setvar ($name,$value) {
   ));
 }
 
+function mercatorToLatLon($mercatorX_lon,$mercatorY_lat) {
+
+	#$mercatorX_lon = -8452764.23;
+	#$mercatorY_lat = 5669659.81;
+	
+	if (abs($mercatorX_lon) < 180 && abs($mercatorY_lat) < 90) {
+  	return array();
+	}
+	
+	# 20037508.3427892 - is the full extent of web mercator
+	if ((abs($mercatorX_lon) > 20037508.3427892) || (abs($mercatorY_lat) > 20037508.3427892)) {
+  	return array();
+	}
+	
+	$x = $mercatorX_lon;
+	$y = $mercatorY_lat;
+	$num3 = $x / 6378137.0;
+	# 57.29 = 180/pi
+	$num4 = $num3 * 57.295779513082323;
+	$num5 = floor((($num4 + 180.0) / 360.0));
+	$num6 = $num4 - ($num5 * 360.0);
+	$num7 = 1.5707963267948966 - (2.0 * atan(exp((-1.0 * $y) / 6378137.0)));
+	$mercatorX_lon = $num6;
+	$mercatorY_lat = $num7 * 57.295779513082323;
+
+  $latlon = array();
+  $latlon['lat'] = $mercatorY_lat;
+  $latlon['lon'] = $mercatorX_lon;
+  return $latlon;
+
+}
+
   function getLatLonFromPoint($text) {
     # POINT(-75.74431034266786 45.38770326435866)
     $matches = array();
