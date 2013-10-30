@@ -140,8 +140,11 @@ class StoryController {
     <p>
     <center>
     <button type="submit" name="save" class="btn">Save</button>
-    <button type="submit" name="publish" value="1" class="btn">Publish</button>
+    <?php if ($story['published']) { ?>
     <button type="submit" name="unpublish" value="1" class="btn">Unpublish</button>
+    <?php } else { ?>
+    <button type="submit" name="publish" value="1" class="btn">Publish</button>
+    <?php } ?>
     <button type="submit" name="delete" value="1" class="btn">Delete</button>
     <button type="submit" onclick="return preview()" name="delete" value="1" class="btn">Preview</button>
     </center>
