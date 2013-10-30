@@ -220,7 +220,7 @@ class UserController {
 
     <div class="span4">
     <h1>Stories</h4>
-    <p><a class="btn" href="">Create New Story</a></p>
+    <p><a class="btn" href="<?php print OttWatchConfig::WWW; ?>/story/add">Create New Story</a></p>
     <?php
     $rows = getDatabase()->all(" select * from story where deleted = 0 and personid = :id order by id desc ",array('id'=>getSession()->get('user_id')));
     foreach ($rows as $r) {
