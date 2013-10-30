@@ -471,7 +471,16 @@ class DevelopmentAppController {
     $value = '';
     for ($x = 0; $x < count($lines); $x++) {
       $matches = array();
-      if (preg_match('/apps104.*LAT=([-\d\.]+).*LON=([-\d\.]+).*>([^<]+)</',$lines[$x],$matches)) {
+      if (preg_match('/maps.ottawa.*_geoottawa">([^<]+)</',$lines[$x],$matches)) {
+				# <li><a href="http://maps.ottawa.ca/geoOttawa/?center=-8452764.23&#44;5669659.81&scale=2000&featname=370%20Huntmar%20Drive&amp;lang=en" target="_geoottawa">370 Huntmar Drive</a></li> 
+				# maps.ottawa.ca doesn't use lat/lon in that "center" argument; it's a differnet projection.
+				# TODO: figure out how to convert from whatever that is, to lat/lon
+        $addr = array();
+        $addr['lat'] = '';
+        $addr['lon'] = '';
+        $addr['addr'] = $matches[1];
+        $addresses[] = $addr;
+			} else if (preg_match('/apps104.*LAT=([-\d\.]+).*LON=([-\d\.]+).*>([^<]+)</',$lines[$x],$matches)) {
         # <li><a href="http://apps104.ottawa.ca/emap?emapver=lite&LAT=45.278462&LON=-75.570191&featname=5640+Bank+Street&amp;lang=en" target="_emap">5640 Bank Street</a></li>
         $addr = array();
         $addr['lat'] = $matches[1];
