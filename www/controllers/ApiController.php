@@ -2,6 +2,51 @@
 
 class ApiController {
 
+  public static function zoning($lat,$lon,$geometry) {
+
+    # include "geometry=1" query parameter to get zoning boundary polygon returned too
+    $geometry = ($_GET['geometry'] == '1');
+
+    $mercator = latLonToMercator($lat,$lon);
+
+    # rest API needs an extent (a "box") so just give a tiny one
+    $x1 = $mercator['x']-1;
+    $y1 = $mercator['y']-1;
+    $x2 = $x1 + 2;
+    $y2 = $y1 + 2;
+
+    # make a REST call to geoOttawa, providing the lat/lon in question
+    $url = "http://maps.ottawa.ca/ArcGIS/rest/services/Zoning/MapServer/identify";
+    $url .= "?sr=3857";
+    $url .= "&imageDisplay=1440,527,96";
+    $url .= "&geometryType=esriGeometryPoint";
+    #$url .= "&layers=visible:0,1,2";
+    $url .= "&tolerance=5";
+    if ($geometry) {
+      $url .= "&returnGeometry=true";
+    } else {
+      $url .= "&returnGeometry=false";
+    }
+    $url .= "&f=json";
+    $url .= "&mapExtent=$x1,$y1,$x2,$y2";
+    $url .= "&geometry={\"x\":{$mercator['x']},\"y\":{$mercator['y']}}";
+
+    $json = file_get_contents($url);
+    $zoning = json_decode($json);
+
+    # dive into the attributes
+    $attr = $zoning->results[0]->attributes;
+
+    # just return a subset of the data
+    $short['ZONE_CODE'] = $attr->ZONE_CODE;
+    $short['URL'] = "http://ottawa.ca".$attr->URL;
+    $short['URL_FR'] = "http://ottawa.ca".$attr->URL_FR;
+    if ($geometry) {
+      $short['GEOMETRY'] = $zoning->results[0]->geometry;
+    }
+    return $short;
+  }
+
   public static function feed($count = 10, $before = 0) {
     // can't use PDO for count, so make sure intenger on COUNT
     if (!preg_match('/^\d+$/',$count)) {

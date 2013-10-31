@@ -388,5 +388,3 @@ function db_generate_insert($table, $values) {
 }
 
 ?>
-
-
