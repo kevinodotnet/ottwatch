@@ -262,9 +262,11 @@ class ApiController {
     foreach ($row as $k => $v) {
       $result[$k] = $v;
     }
+
     $midpoint = getLatLonFromPoint($row['midpoint']);
     $result['midpoint'] = $midpoint;
-    #unset($result['midpoint']); # = $midpoint;
+    # $result['zoning'] = getApi()->invoke("/api/zoning/{$midpoint['lat']}/{$midpoint['lon']}");
+
     $points = self::getLinestringAsArray($row['points']);
     $result['points'] = $points;
     $result['ward'] = $t['ward'];
