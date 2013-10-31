@@ -308,6 +308,24 @@ function setvar ($name,$value) {
   ));
 }
 
+function latLonToMercator($mercatorY_lat, $mercatorX_lon) {
+  if ((abs($mercatorX_lon) > 180 || abs($mercatorY_lat) > 90)) {
+    return;
+  }
+
+	$num = $mercatorX_lon * 0.017453292519943295;
+	$x = 6378137.0 * $num;
+	$a = $mercatorY_lat * 0.017453292519943295;
+	
+	$mercatorX_lon = $x;
+	$mercatorY_lat = 3189068.5 * log((1.0 + sin($a)) / (1.0 - sin($a)));
+
+  $ret = array();
+  $ret['x'] = $mercatorX_lon;
+  $ret['y'] = $mercatorY_lat;
+  return $ret;
+}
+
 function mercatorToLatLon($mercatorX_lon,$mercatorY_lat) {
 
 	#$mercatorX_lon = -8452764.23;
@@ -370,3 +388,5 @@ function db_generate_insert($table, $values) {
 }
 
 ?>
+
+
