@@ -134,7 +134,9 @@ class DevelopmentAppController {
     </div>
 
     <?php
+    $a = $a['address'];
     if ($a && count($a>0)) {
+      $a = $a[0];
     ?>
     <div class="span6">
     <div id="map_canvas" style="width:100%; height:600px;"></div>
