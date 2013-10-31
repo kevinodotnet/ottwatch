@@ -392,7 +392,8 @@ function dashboard() {
   <div class="input-prepend input-append">
   <input type="text" id="devapp_search_value" placeholder="Search...">
   <a class="btn" onclick="devapp_search_form_submit()"><i class="icon-search"></i> Search</button>
-  <a class="btn btn-info" href="devapps?since=999">Show All</a>
+  <a class="btn btn-info" href="devapps?since=7">Recent</a>
+  <a class="btn btn-info" href="devapps?since=999">All</a>
   </div><!-- /search devapps -->
 
   <h4>More Reports and Data</h4>
