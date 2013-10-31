@@ -218,10 +218,10 @@ class ApiController {
       $result[$k] = $v;
     }
     $midpoint = getLatLonFromPoint($row['midpoint']);
-    unset($result['midpoint']); # = $midpoint;
+    $result['midpoint'] = $midpoint;
+    #unset($result['midpoint']); # = $midpoint;
     $points = self::getLinestringAsArray($row['points']);
     $result['points'] = $points;
-    $t = self::point($midpoint['lat'],$midpoint['lon']);
     $result['ward'] = $t['ward'];
     $result['polls'] = $t['polls'];
 
