@@ -42,6 +42,21 @@ class DevelopmentAppController {
     }
     ?>
     </td></tr>
+    <tr><td>Current Zoning</td><td>
+    <?php
+    if ($a['address'] && count($a['address']>0)) {
+      $addr = $a['address'][0];
+      $zoning = getApi()->invoke("/api/zoning/{$addr->lat}/{$addr->lon}");
+      if ($zoning['ZONE_CODE'] != '') {
+        print "<a href=\"{$zoning['URL']}\">{$zoning['ZONE_CODE']}</a>";
+      } else {
+        ?>
+        <i>search failed</i>. You can try <a href="http://maps.ottawa.ca">maps.ottawa.ca</a> yourself though.
+        <?php
+      }
+    }
+    ?>
+    </td></tr>
     <?php 
     $sql = " select * from devapp where id != {$a['id']} and ( ";
     $first = 1;
@@ -92,6 +107,7 @@ class DevelopmentAppController {
       </tr>
       <?php
     }
+
     ?>
     </table>
     </td></tr>
@@ -118,9 +134,7 @@ class DevelopmentAppController {
     </div>
 
     <?php
-    $a = $a['address'];
     if ($a && count($a>0)) {
-      $a = $a[0];
     ?>
     <div class="span6">
     <div id="map_canvas" style="width:100%; height:600px;"></div>
