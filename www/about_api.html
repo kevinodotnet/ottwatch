@@ -50,6 +50,16 @@ convenience, the full API <i>url</i> to use is created for you automatically:
 </pre>
 </p>
 
+<h1>Zoning</h1>
+<p>
+Given any lat/lon pair, returns the zoning in effect. You can also ask for the polygon of the
+zoning boundary the point falls into (much larger datasize) by appending "?geometry=1"
+</p>
+<p>
+<a href="zoning/45.38805220955885/-75.7432700492755">lat: 45.38805220955885 lon: -75.7432700492755</a><br/>
+<a href="zoning/45.38805220955885/-75.7432700492755?geometry=1">lat: 45.38805220955885 lon: -75.7432700492755 with geometry</a>
+</p>
+
 <h1>Points</h1>
 <p>
 Given any lat/lon pair, returns information about the
