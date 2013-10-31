@@ -44,6 +44,7 @@ getApi()->get('/api/councillors/([^/]+)/(.*)', array('ApiController', 'councillo
 getApi()->get('/api/feed/', array('ApiController', 'feed'), EpiApi::external);
 getApi()->get('/api/feed/(\d+)', array('ApiController', 'feed'), EpiApi::external);
 getApi()->get('/api/feed/(\d+)/(\d+)', array('ApiController', 'feed'), EpiApi::external);
+getApi()->get('/api/zoning/(-{0,1}[\d\.]+)/(-{0,1}[\d\.]+)', array('ApiController', 'zoning'), EpiApi::external);
 
 getRoute()->get('/feed/', 'feed');
 
