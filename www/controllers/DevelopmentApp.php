@@ -34,26 +34,18 @@ class DevelopmentAppController {
     <tr><td>Ward</td><td><?php print $a['ward']; ?></td></tr>
     <tr><td>Received</td><td><?php print substr($a['receiveddate'],0,10); ?></td></tr>
     <tr><td>Updated</td><td><?php print substr($a['updated'],0,10); ?></td></tr>
-    <tr><td>Addresses</td><td>
+    <tr><td>Address (Zoning)</td><td>
     <?php 
     foreach ($a['address'] as $addr) {
       print $addr->addr;
-      print "<br/>\n";
-    }
-    ?>
-    </td></tr>
-    <tr><td>Current Zoning</td><td>
-    <?php
-    if ($a['address'] && count($a['address']>0)) {
-      $addr = $a['address'][0];
       $zoning = getApi()->invoke("/api/zoning/{$addr->lat}/{$addr->lon}");
+      print " (";
       if ($zoning['ZONE_CODE'] != '') {
         print "<a href=\"{$zoning['URL']}\">{$zoning['ZONE_CODE']}</a>";
       } else {
-        ?>
-        <i>search failed</i>. You can try <a href="http://maps.ottawa.ca">maps.ottawa.ca</a> yourself though.
-        <?php
+        print "zoning unknown";
       }
+      print ")<br/>\n";
     }
     ?>
     </td></tr>
