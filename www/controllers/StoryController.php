@@ -151,16 +151,17 @@ class StoryController {
     </p>
     <textarea id="storybody" name="body" rows="80" style=""><?php print $story['body']; ?></textarea>
     <script>
-    $( '#storybody' ).ckeditor({
-     toolbar: [ 
-	      ['Source','Maximize','Save'],
-	      ['Bold','Italic','Underline','Strike','Subscript','Superscript','-','RemoveFormat' ],
-        [ 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','CreateDiv','-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock'],
-        [ 'Image','Link','Unlink','Anchor','HorizontalRule' ],
-        [ 'Format','Font','FontSize' ],
-      ],
-      height: '450'
-    });
+	    $( '#storybody' ).ckeditor({
+				extraAllowedContent: 'script',
+				toolbar: [ 
+					['Source','Maximize','Save'],
+					['Bold','Italic','Underline','Strike','Subscript','Superscript','-','RemoveFormat' ],
+					[ 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','CreateDiv','-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock'],
+					[ 'Image','Link','Unlink','Anchor','HorizontalRule' ],
+					[ 'Format','Font','FontSize' ],
+				],
+				height: '450'
+	    });
     </script>
     </form>
 
