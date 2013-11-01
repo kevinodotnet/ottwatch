@@ -147,6 +147,7 @@ class StoryController {
     <?php } ?>
     <button type="submit" name="delete" value="1" class="btn">Delete</button>
     <button type="submit" onclick="return preview()" name="delete" value="1" class="btn">Preview</button>
+    <a class="btn" href="<?php print OttWatchConfig::WWW."/story/{$story['id']}"; ?>">Full Preview</a>
     </center>
     </p>
     <textarea id="storybody" name="body" rows="80" style=""><?php print $story['body']; ?></textarea>
