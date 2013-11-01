@@ -67,7 +67,7 @@ class StoryController {
     }
     ?>
     <div class="row-fluid">
-    <div class="offset4 span4">
+    <div class="offset3 span6">
     <h1 id="previewtitle"><?php print "{$story['title']}\n"; ?></h1>
     <p style="float: right; text-align: right;">
     <b><?php print $story['author']; ?></b><br/>
