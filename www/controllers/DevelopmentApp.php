@@ -125,12 +125,11 @@ class DevelopmentAppController {
     ?>
     </div>
 
+    <div class="span6">
     <?php
     $a = $a['address'];
     if ($a && count($a>0)) {
-      $a = $a[0];
     ?>
-    <div class="span6">
     <div id="map_canvas" style="width:100%; height:600px;"></div>
     <script>
       $(document).ready(function() {
@@ -140,13 +139,23 @@ class DevelopmentAppController {
           mapTypeId: google.maps.MapTypeId.ROADMAP 
         };
         map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
-        var myLatlng = new google.maps.LatLng(<?php print $a->lat; ?>,<?php print $a->lon; ?>);
-        var marker = new google.maps.Marker({ position: myLatlng, map: map, title: '<?php print "FOO"; ?>' }); 
-        map.panTo(myLatlng);
+        <?php
+        foreach ($a as $addr) {
+	        ?>
+	        var myLatlng = new google.maps.LatLng(<?php print $addr->lat; ?>,<?php print $addr->lon; ?>);
+	        var marker = new google.maps.Marker({ position: myLatlng, map: map, title: '<?php print $addr->addr; ?>' }); 
+	        map.panTo(myLatlng);
+	        <?php 
+        }
+        ?>
       });
     </script>
+    <?php 
+    } else {
+      print "<center><i>No map because no addresses were detected in the development application.</i></center>";
+    }
+    ?>
     </div>
-    <?php } ?>
 
     </div><!-- row -->
     <?php
