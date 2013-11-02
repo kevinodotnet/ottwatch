@@ -87,19 +87,28 @@ class MfippaController {
       }
 
       if ($_GET['saveA'] == 1) {
-        print "page: $page x: $x y: $y\n";
+        $values = array();
+        $values['source'] = $mfippa_id;
+        $values['x'] = $x;
+        $values['y'] = $y;
+        $values['page'] = $page;
+        db_insert('mfippa',$values);
+        header("Location: ".OttWatchConfig::WWW."/mfippa/process/$mfippa_id?page=$page");
+        return;
       }
 
       #http://localhost/ottwatch/mfippa/process/A-2013-00594?x=136&y=280
 
       # show the page as an image map; user is expected to click on the top-left corner of the start of
       # an MFIPPA result
-      top();
 
       $imgW = 1000;
       $scale = $imgW/$size[0];
       $imgH = $size[1] * $scale;
 
+      $dots = getDatabase()->all(" select * from mfippa where source = :source and page = :page ",array('source'=>$mfippa_id,'page'=>$page));
+
+      top();
       ?>
       <center>
       <canvas id="canvas" width="<?php print $imgW; ?>" height="<?php print $imgH; ?>" style="border: 1px solid #ff0000;">
@@ -111,10 +120,19 @@ class MfippaController {
 	      var imageObj = new Image();
 	      imageObj.onload = function() {
 	        context.drawImage(imageObj,0,0);
-        context.beginPath();
-        context.arc(<?php print $x; ?>, <?php print $y; ?>, 5, 0, Math.PI*2, true); 
-        context.closePath();
-        context.fill();
+
+          <?php
+          foreach ($dots as $d) {
+            ?>
+		        context.beginPath();
+		        context.arc(<?php print $d['x']; ?>, <?php print $d['y']; ?>, 5, 0, Math.PI*2, true); 
+		        context.closePath();
+		        context.fill();
+            <?php
+          }
+          ?>
+
+
 	      };
 	      imageObj.src = '<?php print "?scale=$scale&png=1&page=$page"; ?>';
 

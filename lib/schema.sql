@@ -296,6 +296,20 @@ create table consultationdoc (
   constraint foreign key (consultationid) references consultation (id) on delete cascade on update cascade
 ) engine = innodb;
 
+drop table mfippa;
+create table mfippa (
+  id mediumint not null auto_increment,
+  tag varchar(12), -- A-2013-000001
+  closed datetime,
+  source varchar(12), -- the ottwatch mfippa req this mfippa was found in
+  page smallint unsigned not null,
+  x smallint unsigned not null,
+  y smallint unsigned not null,
+  created datetime default CURRENT_TIMESTAMP,
+  primary key (id)
+) engine = innodb;
+create unique index mfippa_in1 on mfippa (tag);
+
 drop table rssitem;
 create table rssitem (
   id mediumint not null auto_increment,
