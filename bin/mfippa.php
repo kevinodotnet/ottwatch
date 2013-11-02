@@ -13,3 +13,9 @@ if ($argv[1] == 'pdfToPages') {
   return;
 }
 
+if ($argv[1] == 'createImg') {
+  $id = $argv[2];
+  MfippaController::createImg($id);
+  return;
+}
+
