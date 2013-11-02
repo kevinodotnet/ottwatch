@@ -261,7 +261,7 @@ function disqus() {
 function pr($o) {
   print "<pre>";
   print print_r($o);
-  print "</pre>";
+  print "</pre>\n";
 }
 
 function renderShareLinks($text,$url) {

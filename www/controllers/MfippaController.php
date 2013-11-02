@@ -2,9 +2,109 @@
 
 class MfippaController {
 
+  /* display a single mfippa */
+  public static function show($id) {
+    top();
+    $row = getDatabase()->one(" select * from mfippa where id = :id ",array('id'=>$id));
+
+    if (!$row['id']) { 
+      print "MFIPPA NOT FOUND";
+      bottom();
+      return;
+    }
+    $src = OttWatchConfig::WWW."/mfippa/$id/img";
+    print "<img src=\"$src\"/>";
+    bottom();
+  }
+
+  public static function createImg($id) {
+    $row = getDatabase()->one(" select * from mfippa where id = :id ",array('id'=>$id));
+    if (!$row['id']) {
+      return;
+    }
+
+    # find the 'next' mfippa from the same source
+    $next = getDatabase()->one("
+      select *
+      from mfippa 
+      where
+        (source = :source and page = :page and y > :y)
+        or (source = :source and page > :page)
+      order by page, y
+      ",array('source'=>$row['source'],'page'=>$row['page'],'y'=>$row['y']));
+  
+    # where to save the file
+    $pageFiles = self::getPageFiles($row['source']);
+    $pagefile = $pageFiles[$row['page']];
+    $size = getimagesize($pagefile);
+    $pagesdir = OttWatchConfig::FILE_DIR."/mfippa/{$row['source']}";
+    $thumb = "$pagesdir/mfippa_crop_{$row['id']}.png";
+
+    pr($row);
+    pr($next);
+
+    # calcualte the box/extend for this id, based on its start position and the
+    # start position of the next mfippa. 'SCALE' is used because database x/y
+    # were based on WIDTH=1000
+    $scale = 1000/$size[0];
+    if ($next['id']) {
+      if ($row['page'] == $next['page']) {
+	      # majority case
+		    $y = round(($row['y']-10)/$scale);
+		    $x = 0;
+		    $height = round(($next['y']-$row['y'])/$scale);
+		    $width = $size[0];
+      } else {
+        # TODO: this result might head to the next page
+        # for now just use "to end of page", but it means we might be missing some of the summary
+        # if it spanned across.
+		    $y = round(($row['y']-10)/$scale);
+		    $x = 0;
+		    $height = $size[1]-$y;
+		    $width = $size[0];
+      }
+    } else {
+	    $y = round(($row['y']-10)/$scale);
+	    $x = 0;
+	    $height = $size[1]-$y;
+	    $width = $size[0];
+    }
+
+    $convert = "/opt/local/bin/convert";
+    $cmd = "$convert '{$pagefile}' -crop {$width}x{$height}+{$x}+{$y} {$thumb}";
+    system($cmd);
+  }
+
+  public static function showImg($id) {
+    $row = getDatabase()->one(" select * from mfippa where id = :id ",array('id'=>$id));
+    if (!$row['id']) { 
+      return;
+    }
+    $pagesdir = OttWatchConfig::FILE_DIR."/mfippa/{$row['source']}";
+    $thumb = "$pagesdir/mfippa_crop_{$row['id']}.png";
+    if (!file_exists($thumb)) {
+      self::createImg($id);
+    }
+    header('Content-Type: image/png');
+    print file_get_contents($thumb);
+    return;
+
+
+  }
+
   /* main GUI for web */
   public static function doList() {
     top();
+
+    $rows = getDatabase()->all(" select * from mfippa order by source, page, y ");
+    foreach ($rows as $r) {
+      $src = OttWatchConfig::WWW."/mfippa/{$r['id']}/img";
+      ?>
+      <div style="padding-top: 10px; padding-bottom: 10px; border: solid 1px #ff0000;">
+      <a href="<?php print $r['id']; ?>"><img src="<?php print $src; ?>"/></a>
+      </div>
+      <?php
+    }
 
     if (LoginController::isAdmin()) {
       print "<h1>Process MFIPPA results</h1>\n";
@@ -72,7 +172,8 @@ class MfippaController {
 	        return;
         }
 
-        $scaleout = "$pagesdir/page_scaled_$page_$scale.png";
+        #$scaleout = "$pagesdir/page_scaled_{$page}_{$scale}.png";
+        $scaleout = "$pagesdir/page_scaled_{$page}.png";
 
         if (!file_exists($scaleout)) {
 	        $perc = $scale * 100;
@@ -111,7 +212,8 @@ class MfippaController {
       top();
       ?>
       <center>
-      <canvas id="canvas" width="<?php print $imgW; ?>" height="<?php print $imgH; ?>" style="border: 1px solid #ff0000;">
+      <a class="btn" href="?page=<?php print $page+1; ?>">Next</a><br/>
+      <canvas id="canvas" width="<?php print $imgW; ?>" height="<?php print $imgH; ?>" style="">
       </canvas>
       <script>
 	      var canvas = document.getElementById('canvas');
@@ -174,6 +276,7 @@ class MfippaController {
     $d = opendir($pagesdir);
     while (($file = readdir($d)) !== false) {
       if (preg_match('/^\./',$file)) { continue; }
+      if (!preg_match('/^page-\d+\.png/',$file)) { continue; }
       $pages[] = "$pagesdir/$file";
     }
     closedir($d);
