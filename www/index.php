@@ -14,6 +14,7 @@ include_once 'controllers/ChartController.php';
 include_once 'controllers/ElectionController.php';
 include_once 'controllers/OpenDataController.php';
 include_once 'controllers/StoryController.php';
+include_once 'controllers/MfippaController.php';
 
 Epi::setPath('base', 'epiphany/src');
 Epi::init('route');
@@ -47,6 +48,9 @@ getApi()->get('/api/feed/(\d+)/(\d+)', array('ApiController', 'feed'), EpiApi::e
 getApi()->get('/api/zoning/(-{0,1}[\d\.]+)/(-{0,1}[\d\.]+)', array('ApiController', 'zoning'), EpiApi::external);
 
 getRoute()->get('/feed/', 'feed');
+
+getRoute()->get('/mfippa/', array('MfippaController','doList'));
+getRoute()->get('/mfippa/process/(A-\d+-\d+)', array('MfippaController','process'));
 
 getRoute()->get('/opendata/', array('OpenDataController','doList'));
 
@@ -622,6 +626,3 @@ FinishMessage = "It is finally here!";
 }
 
 ?>
-
-
-

@@ -150,9 +150,15 @@ class LoginController {
       return;
     }
     getSession()->set("user_id",$user['id']);
+    getSession()->set("user_admin",$user['admin']);
     getSession()->set("user_name",$user['name']);
     getSession()->set("user_email",$user['email']);
     getSession()->set("user_twitter",$user['twitter']);
+  }
+
+  static public function isAdmin() {
+    if (! self::isLoggedIn()) { return false; }
+    return getSession()->get('user_admin') == 1;
   }
 
   static public function isLoggedIn() {
