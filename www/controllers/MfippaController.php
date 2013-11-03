@@ -6,14 +6,15 @@ class MfippaController {
 
   /* display a single mfippa */
   public static function showRandom() {
-    $row = getDatabase()->one(" select * from mfippa where tag is null order by id ");
+    $row = getDatabase()->one(" select * from mfippa where tag is not null order by rand() ");
     self::show($row['id']);
   }
 
   public static function show($id) {
 
     top();
-    $row = getDatabase()->one(" select * from mfippa where id = :id ",array('id'=>$id));
+    $row = getDatabase()->one(" select * from mfippa where id = :id or tag = :id ",array('id'=>$id));
+    $id = $row['id']; // if search by tag, fix arg back to id
 
     $row['closed'] = substr($row['closed'],0,10);
 
@@ -62,8 +63,9 @@ class MfippaController {
 
     <center>
     <p>
-	    <a class="btn" href="<?php print $prev['id']; ?>">Prev</a>
-	    <a class="btn" href="<?php print $next['id']; ?>">Next</a>
+	    <a class="btn" href="<?php print $prev['tag']; ?>">Prev</a>
+	    <a class="btn" href="random">Random</a>
+	    <a class="btn" href="<?php print $next['tag']; ?>">Next</a>
     </p>
     <?php
     if (LoginController::isAdmin()) {
@@ -202,8 +204,41 @@ class MfippaController {
   public static function doList() {
     top();
 
-    $rows = getDatabase()->all(" select * from mfippa order by source, page, y ");
+    if (LoginController::isAdmin()) {
+      print "<b>Process MFIPPA results</b>\n";
+      $req = self::getOttWatchMfippa();
+      foreach ($req as $r) {
+        print "<a href=\"process/{$r}\">{$r}</a><br/>";
+      }
+      print "<hr/>";
+    }
+
+    $first = getDatabase()->one(" select * from mfippa order by id ");
+
+    ?>
+    <div class="row-fluid">
+    <div class="span4">
+    <h1>MFIPPA Requests</h1>
+    </div>
+    <div class="span8">
+    <p class="lead">
+    A list of all <i>Municipal Freedom of Information and Protection of Privacy Act</i> requests 
+    to the City of Ottawa for the period 2013-Jan to 2013-Aug.
+    </p>
+    <p>Click on a file number to view the details. To browse them all one at a time,
+    start with <a href="<?php print $first['tag']; ?>"><?php print $first['tag']; ?></a> then click <i>next</i> (a few hundred times -derp).
+    </div>
+    </div>
+    <?php
+
+    $rows = getDatabase()->all(" select * from mfippa where tag is not null order by tag desc ");
+    $index = 0;
     foreach ($rows as $r) {
+      if ($index++ % 10 == 0) { print "<br/>"; }
+      ?>
+      <a href="<?php print $r['tag']; ?>"><?php print $r['tag']; ?></a>
+      <?php
+      continue;
       $src = OttWatchConfig::WWW."/mfippa/{$r['id']}/img";
       ?>
       <div style="padding-top: 10px; padding-bottom: 10px; border: solid 1px #ff0000;">
@@ -212,13 +247,6 @@ class MfippaController {
       <?php
     }
 
-    if (LoginController::isAdmin()) {
-      print "<h1>Process MFIPPA results</h1>\n";
-      $req = self::getOttWatchMfippa();
-      foreach ($req as $r) {
-        print "<a href=\"process/{$r}\">{$r}</a><br/>";
-      }
-    }
 
     bottom();
   }
