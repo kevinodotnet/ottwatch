@@ -7,15 +7,10 @@ class OpenDataController {
   */
   public static function scanOpenData() {
 	  $datasets = self::getDatasets();
-    $index = 0;
 
     foreach ($datasets as $d) {
 
-      $index++;
-
       $set = self::getDataset($d);
-
-      $count = getDatabase()->execute(" delete from opendata where guid = :id ",array('id'=>$set->id));
 
       $values = array();
       $values['guid'] = $set->id;
@@ -23,20 +18,36 @@ class OpenDataController {
       $values['title'] = $set->title;
       $values['url'] = $set->ckan_url;
       $values['updated'] = $set->metadata_modified;
+			$id = db_save('opendata',$values,'guid');
+      $row = getDatabase()->one(" select * from opendata where guid = :id ",array('id'=>$set->id));
 
-      $dataid = db_insert('opendata',$values);
+			$dataid = $row['id'];
 
       foreach ($set->resources as $r) {
+
         $values = array();
         $values['dataid'] = $dataid;
-        $values['guid'] = $r->id;
-        $values['size'] = $r->size;
         $values['description'] = trim($r->description);
         $values['format'] = $r->format;
+        $values['guid'] = $r->id;
+        $values['hash'] = $r->hash;
         $values['name'] = $r->name;
+        $values['size'] = $r->size;
         $values['url'] = $r->url;
-        $values['updated'] = $r->last_modified;
-        db_insert('opendatafile',$values);
+
+	      $row = getDatabase()->one(" select * from opendatafile where guid = :id ",array('id'=>$r->id));
+				if ($row['id']) {
+					# exists
+	        $values['id'] = $row['id'];
+					if ($row['hash'] != $r->hash) {
+						# changed hash means real update
+		        $values['updated'] = $r->last_modified;
+					}
+					# update meta data, if changed, though it probably hasnt
+					db_save('opendatafile',$values,'id');
+				} else {
+	        db_insert('opendatafile',$values);
+				}
       }
 
     }

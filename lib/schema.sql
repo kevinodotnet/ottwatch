@@ -369,6 +369,7 @@ create table opendatafile (
   format varchar(10),
   name varchar(300),
   url varchar(300),
+  hash varchar(100),
   created datetime default CURRENT_TIMESTAMP,
   updated datetime default CURRENT_TIMESTAMP, -- 'last_modified in json'
   primary key (id),
