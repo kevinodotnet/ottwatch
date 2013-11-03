@@ -123,22 +123,33 @@ class MfippaController {
     }
     ?>
 
-    <div class="row-fluid visible-desktop">
+    
+    <h1><?php print $row['tag']; ?></h1>
+    <div class="row-fluid">
+    <div class="offset2 span2">
+    <b><i>OCR Text</i></b><br/>(won't be perfect): 
+    </div>
+    <div class="span5">
+    <?php print $row['summary']; ?>
+    </div>
+    </div>
+
+    <div class="row-fluid visible-desktop" style="padding-top: 20px;">
     <div class="offset8 span1">
-    Received
+    <b>Received</b>
     </div>
     <div class="span1">
-    Due
+    <b>Due</b>
     </div>
     <div class="span1">
-    Closed
+    <b>Closed</b>
     </div>
     </div>
-    <img style="" src="<?php print $src; ?>"/><br/>
+    <img style="border-top: solid 1px #000000; border-bottom: 1px solid #000000;" src="<?php print $src; ?>"/><br/>
 
     </center>
 
-    <div class="row-fluid" style="margin-top: 20px; padding-top: 20px; border-top: solid 1px #000000;">
+    <div class="row-fluid" style="margin-top: 20px; padding-top: 20px;">
 
     <div class="span6">
     <h2>Discussion</h2>
