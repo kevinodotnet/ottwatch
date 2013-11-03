@@ -65,12 +65,16 @@ class StoryController {
       bottom();
       return;
     }
+
+    $author = getDatabase()->one(" select * from people where id = :id ",array('id'=>$story['author']));
+
     ?>
+
     <div class="row-fluid">
-    <div class="offset3 span6">
+    <div class="span6">
     <h1 id="previewtitle"><?php print "{$story['title']}\n"; ?></h1>
     <p style="float: right; text-align: right;">
-    <b><?php print $story['author']; ?></b><br/>
+    <b><?php print $author['name']; ?></b><br/>
     <?php print $story['updated']; ?>
     </p>
     <p>
@@ -86,9 +90,16 @@ class StoryController {
 		<a href="https://twitter.com/share" class="twitter-share-button" data-via="OttWatch" data-related="ottwatch" data-hashtags="ottpoli">Tweet</a>
 		<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
     </p>
-    <p style="border-top: 1px solid #f0f0f0; clear: both;"><?php print $story['body']; ?></p>
-    <p style="text-align: right;"><?php renderShareLinks('test','the foo'); ?></p>
-    </div>
+    </div><!-- /span -->
+    </div><!-- /row -->
+
+    <div class="row-fluid">
+    <div class="span6" style="border-top: 1px solid #f0f0f0;  padding-right: 5px;">
+    <p style=""><?php print $story['body']; ?></p>
+    </div><!-- /span -->
+    <div class="span6" style="padding-left: 0px;">
+    <?php disqus(); ?>
+    </div><!-- /span -->
     </div><!-- /row -->
     <?php
     bottom();
