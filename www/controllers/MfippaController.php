@@ -398,7 +398,12 @@ class MfippaController {
       $pages[] = "$pagesdir/$file";
     }
     closedir($d);
-    return $pages;
+		asort($pages);
+		$sorted = array();
+		foreach ($pages as $p) {
+			$sorted[] = $p;
+		}
+    return $sorted;
   }
 
   public static function pdfToPages($mfippa_id) {

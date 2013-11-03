@@ -19,3 +19,6 @@ if ($argv[1] == 'createImg') {
   return;
 }
 
+$p = MfippaController::getPageFiles('A-2013-00594');
+pr($p);
+
