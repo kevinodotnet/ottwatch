@@ -2,6 +2,42 @@
 
 class StoryController {
 
+  public static function doList() {
+    top('Stories');
+    $rows = getDatabase()->all(" select * from story where deleted = 0 and published = 1 order by updated desc ");
+    foreach ($rows as $r) {
+
+      $preview = strip_tags($r['body'],'<p><div>');
+      $preview = preg_replace('/\n/',' ',$preview);
+      $preview = preg_replace('/\n/',' ',$preview);
+      $preview = preg_replace('/\s+<p/',"\n<p",$preview);
+      $lines = explode("\n",$preview);
+      $preview = $lines[0];
+      $preview = preg_replace('/<\/p>$/','',$preview);
+      $preview .= "&nbsp;&nbsp;<b><a href=\"{$r['id']}/{$r['title']}\">Read More...</a></b><p/>";
+
+      ?>
+      <div class="row-fluid">
+      <div class="span6">
+      <h1><a href="<?php print "{$r['id']}/{$r['title']}"; ?>"><?php print $r['title']; ?></a></h1>
+      </div>
+      </div>
+      <div class="row-fluid">
+      <div class="span5">
+      <?php print $preview; ?>
+      </div>
+      <div class="span2">
+      <center>
+      <b>Updated</b><br/>
+      <?php print $r['updated']; ?>
+      </center>
+      </div>
+      </div>
+      <?php
+    }
+    bottom();
+  }
+
   public static function add() {
 
 		$row = getDatabase()->one(" select * from people where id = :id ",array('id'=>getSession()->get('user_id')));

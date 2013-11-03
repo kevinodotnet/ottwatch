@@ -23,6 +23,7 @@ Epi::init('route','session-php');
 
 getRoute()->get('/story/(\d+)/(.*)', array('StoryController', 'show'));
 getRoute()->get('/story/(\d+)$', array('StoryController', 'show'));
+getRoute()->get('/story/list', array('StoryController', 'doList'));
 getRoute()->get('/story/add', array('StoryController', 'add'));
 getRoute()->get('/story/edit/(\d+)', array('StoryController', 'edit'));
 getRoute()->post('/story/save', array('StoryController', 'save'));
@@ -406,6 +407,7 @@ function dashboard() {
 
   <h4>More Reports and Data</h4>
 <ul>
+<li><a href="<?php print $OTT_WWW; ?>/story/list">Stories</a>: Original articles by OttWatch</li>
 <li><a href="<?php print $OTT_WWW; ?>/consultations/">Consultations</a>: A complete list of public consultations from ottawa.ca</li>
 <li><a href="<?php print $OTT_WWW; ?>/opendata/">OpenData</a>: Most recently updated data from <i>data.ottawa.ca</i>.</li>
 <li><a href="<?php print $OTT_WWW; ?>/meetings/votes">Voting History</a>: See all votes at committee and council.</li>
