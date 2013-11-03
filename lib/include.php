@@ -373,6 +373,18 @@ function mercatorToLatLon($mercatorX_lon,$mercatorY_lat) {
 function db_insert($table, $values) {
     return getDatabase()->execute(db_generate_insert($table, $values), $values);
 }
+
+function db_update($table,$values) {
+  $sql = " update $table set ";
+  foreach ($values as $k => $v) {
+    if ($k == 'id') { continue; }
+    $sql .= " $k = :$k, ";
+  }
+  $sql = preg_replace('/, $/','',$sql);
+  $sql .= " where id = :id ";
+  getDatabase()->execute($sql,$values);
+}
+
 function db_generate_insert($table, $values) {
     $sql = "insert into $table (";
     foreach ( $values as $k => $v ) {
