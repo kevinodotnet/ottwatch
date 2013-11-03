@@ -133,7 +133,7 @@ class MfippaController {
 
     pr($row);
     pr($next);
-    $convert = CONVERT;
+    $convert = self::CONVERT;
 
     # calcualte the box/extend for this id, based on its start position and the
     # start position of the next mfippa. 'SCALE' is used because database x/y
@@ -255,7 +255,7 @@ class MfippaController {
     if (preg_match('/\d+/',$page)) {
 
       if ($png == 1) {
-        $convert = CONVERT;
+        $convert = self::CONVERT;
 	      if (preg_match('/^\d+$/',$x)) {
 		      if (preg_match('/^\d+$/',$y)) {
             # dump a crop of the image
