@@ -103,8 +103,25 @@ class MfippaController {
 
     <div class="row-fluid" style="margin-top: 20px; padding-top: 20px; border-top: solid 1px #000000;">
 
-    <div class="offset3 span6">
+    <div class="span6">
+    <h2>Discussion</h2>
     <?php disqus(); ?>
+    </div>
+    <div class="span6">
+    <h2>Get This Data</h2>
+    <p>
+    OttWatch does not have a copy of this information, but you can ask for a copy of it by <a href="http://ottawa.ca/en/city-hall/your-city-government/policies-and-administrative-structure/how-and-where-submit-request">making
+    your own MFIPPA request</a> to the City of Ottawa, referencing <b><?php print $row['tag']; ?></b>.
+    </p>
+    <p>
+    I haven't tried to do this yet, but something along the lines of "<i>Please provide a copy of the
+    MFIPPA requests for <?php print $row['tag']; ?></i>" should suffice.
+    </p>
+    <p>
+    If you do grab a copy, please let me know (kevino@kevino.net) and I'll upload it here. There's
+    a good chance someone else will want it too. Drop a note in the <b>Disqus</b> comments if you
+    are making the request (to avoid doubling up).
+    </p>
     </div>
 
     </div><!--/row-->
