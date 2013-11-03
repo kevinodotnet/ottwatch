@@ -43,13 +43,22 @@ class MfippaController {
 
   /* display a single mfippa */
   public static function showRandom() {
-    $row = getDatabase()->one(" select * from mfippa where tag is not null order by rand() ");
+    $row = getDatabase()->one(" select * from mfippa where published = 1 and tag is not null order by rand() ");
     self::show($row['id']);
   }
 
   public static function show($id) {
 
     $row = getDatabase()->one(" select * from mfippa where id = :id or tag = :id ",array('id'=>$id));
+    if (!LoginController::isAdmin()) {
+    if (!$row['published']) {
+      top();
+      print "Sorry {$row['tag']} is not yet published.\n";
+      return;
+      bottom();
+    }
+    }
+
     $id = $row['id']; // if search by tag, fix arg back to id
     top($row['tag'].' MFIPPA - City of Ottawa');
 
@@ -275,6 +284,11 @@ class MfippaController {
     $row = getDatabase()->one(" select * from mfippa where id = :id ",array('id'=>$id));
     if (!$row['id']) { 
       return;
+    }
+    if (!LoginController::isAdmin()) {
+    if (!$row['published']) {
+      return;
+    }
     }
     $pagesdir = OttWatchConfig::FILE_DIR."/mfippa/{$row['source']}";
     $thumb = "$pagesdir/mfippa_crop_{$row['id']}.png";
