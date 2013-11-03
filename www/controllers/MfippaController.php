@@ -320,6 +320,7 @@ class MfippaController {
       top();
       ?>
       <center>
+      <div style="font-size: 18pt; padding-right: 330px; float: right;"><?php print $page+1; ?></div>
       <a class="btn" href="?page=<?php print $page+1; ?>">Next</a><br/>
       <canvas id="canvas" width="<?php print $imgW; ?>" height="<?php print $imgH; ?>" style="">
       </canvas><br/>
