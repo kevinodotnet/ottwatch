@@ -231,6 +231,7 @@ class MfippaController {
     </div>
     <?php
 
+		print "<center>\n";
     $rows = getDatabase()->all(" select * from mfippa where tag is not null order by tag desc ");
     $index = 0;
     foreach ($rows as $r) {
@@ -246,6 +247,7 @@ class MfippaController {
       </div>
       <?php
     }
+		print "</center>\n";
 
 
     bottom();
