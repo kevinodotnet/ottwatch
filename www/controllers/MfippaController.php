@@ -87,7 +87,16 @@ class MfippaController {
     <img style="" src="<?php print $src; ?>"/>
     </center>
 
+    <div class="row-fluid" style="margin-top: 20px; padding-top: 20px; border-top: solid 1px #000000;">
+
+    <div class="offset3 span6">
+    <?php disqus(); ?>
+    </div>
+
+    </div><!--/row-->
+
     <?php
+
     bottom();
   }
 
