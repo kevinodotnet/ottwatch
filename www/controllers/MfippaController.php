@@ -325,7 +325,7 @@ class MfippaController {
     <div class="span8">
     <p class="lead">
     A list of all <i>Municipal Freedom of Information and Protection of Privacy Act</i> requests 
-    to the City of Ottawa for the period 2013-Jan to 2013-Aug.
+    to the City of Ottawa for the period 2013-Jan to 2013-Jun.
     </p>
     <p>Click on a file number to view the details. To browse them all one at a time,
     start with <a href="<?php print $first['tag']; ?>"><?php print $first['tag']; ?></a> then click <i>next</i> (a few hundred times -derp).</p>
