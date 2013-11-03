@@ -329,7 +329,7 @@ class MfippaController {
     foreach ($rows as $r) {
       ?>
       <tr>
-      <td><a href="<?php print $r['tag']; ?>"><?php print $r['tag']; ?></a></td>
+      <td><nobr><a href="<?php print $r['tag']; ?>"><?php print $r['tag']; ?></a></nobr></td>
       <td><?php print $r['summary']; ?></td>
       </tr>
       <?php
