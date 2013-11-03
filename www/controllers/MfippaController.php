@@ -22,14 +22,12 @@ class MfippaController {
     $summary = "$pagesdir/mfippa_summary_{$row['id']}.png";
     $ocr = "$pagesdir/mfippa_ocr_{$row['id']}";
 
-    if (!file_exists($summary)) {
-	    $x = round($size[0]*.30);
-	    $y = 110;
-	    $width = $size[0]-$x;
-	    $height = $size[1]-$y;
-	    $cmd = self::CONVERT . " '{$thumb}' +repage -crop {$width}x{$height}+{$x}+{$y} {$summary}";
-	    system($cmd);
-    }
+    $x = round($size[0]*.30);
+    $y = 110;
+    $width = $size[0]-$x;
+    $height = $size[1]-$y;
+    $cmd = self::CONVERT . " '{$thumb}' +repage -crop {$width}x{$height}+{$x}+{$y} {$summary}";
+    system($cmd);
 
     system(" tesseract '{$summary}' '{$ocr}' 2>/dev/null");
     $text = `cat {$ocr}* `;
@@ -39,6 +37,8 @@ class MfippaController {
     $text = trim($text);
 
     db_update('mfippa',array('id'=>$id,'summary'=>$text));
+
+		print "{$row['tag']} >>> $text\n";
   }
 
   /* display a single mfippa */
@@ -202,7 +202,7 @@ class MfippaController {
 
     # find the 'next' mfippa from the same source
     $next = self::getNext($row['id']);
-  
+
     # where to save the file
     $pageFiles = self::getPageFiles($row['source']);
     $pagefile = $pageFiles[$row['page']];
