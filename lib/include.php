@@ -370,34 +370,47 @@ function mercatorToLatLon($mercatorX_lon,$mercatorY_lat) {
     return $result;
   }
 
+function db_save($table, $values, $key) {
+	$count = getDatabase()->one(" select count(1) c from $table where $key = :key ",array('key'=>$values[$key]));
+	if ($count['c'] == 0) {
+		return db_insert($table,$values);
+	} else {
+		db_update($table,$values, $key);
+		return $values['id'];
+	}
+}
+
 function db_insert($table, $values) {
     return getDatabase()->execute(db_generate_insert($table, $values), $values);
 }
 
-function db_update($table,$values) {
+function db_update($table,$values,$key) {
+	if ($key == null) {
+		$key = 'id';
+	}
   $sql = " update $table set ";
   foreach ($values as $k => $v) {
-    if ($k == 'id') { continue; }
+    #if ($k == $key) { continue; }
     $sql .= " $k = :$k, ";
   }
   $sql = preg_replace('/, $/','',$sql);
-  $sql .= " where id = :id ";
-  getDatabase()->execute($sql,$values);
+  $sql .= " where $key = :$key ";
+	getDatabase()->execute($sql,$values);
 }
 
 function db_generate_insert($table, $values) {
-    $sql = "insert into $table (";
-    foreach ( $values as $k => $v ) {
-        $sql .= "{$k},";
-    }
-    $sql = rtrim($sql, ',');
-    $sql .= ") values (";
-    foreach ( $values as $k => $v ) {
-        $sql .= ":{$k},";
-    }
-    $sql = rtrim($sql, ',');
-    $sql .= ")";
-    return $sql;
+  $sql = "insert into $table (";
+  foreach ( $values as $k => $v ) {
+    $sql .= "{$k},";
+  }
+  $sql = rtrim($sql, ',');
+  $sql .= ") values (";
+  foreach ( $values as $k => $v ) {
+    $sql .= ":{$k},";
+  }
+  $sql = rtrim($sql, ',');
+  $sql .= ")";
+  return $sql;
 }
 
 ?>
