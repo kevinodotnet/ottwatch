@@ -3,9 +3,17 @@
 class MfippaController {
 
   /* display a single mfippa */
+  public static function showRandom() {
+    $row = getDatabase()->one(" select * from mfippa where tag is null order by id ");
+    self::show($row['id']);
+  }
+
   public static function show($id) {
+
     top();
     $row = getDatabase()->one(" select * from mfippa where id = :id ",array('id'=>$id));
+
+    $row['closed'] = substr($row['closed'],0,10);
 
     if (!$row['id']) { 
       print "MFIPPA NOT FOUND";
@@ -13,8 +21,96 @@ class MfippaController {
       return;
     }
     $src = OttWatchConfig::WWW."/mfippa/$id/img";
-    print "<img src=\"$src\"/>";
+    $next = self::getNext($row['id']);
+    $prev = self::getPrev($row['id']);
+
+    if ($row['tag'] == '') {
+      $matches = array();
+      if (preg_match('/A-(\d+)-(\d+)/',$prev['tag'],$matches)) {
+        $row['tag'] = 'A-'.$matches[1].'-'.sprintf('%05d',$matches[2]+1);
+      }
+    }
+
+    $submit = $_GET['submit'];
+    $tag = $_GET['tag'];
+    $from = $_GET['from'];
+    $closed = $_GET['closed'];
+    if ($submit == 'Save') {
+
+      $values = array();
+      $values['id'] = $id;
+      $values['tag'] = $tag;
+      
+      # convert 'closed' from 'd-m-y' to 'yyyy-mm-dd'
+      $matches = array();
+      if ($closed != '') {
+	      if (preg_match('/(\d+)-(\d+)-(\d+)/',$closed,$matches)) {
+          $closed = $matches[3].'-'.$matches[1].'-'.$matches[2];
+          $values['closed'] = $matches[3].'-'.$matches[2].'-'.$matches[1];
+	      }
+      }
+      db_update('mfippa',$values);
+      header("Location: {$next['id']}");
+      return;
+    }
+
+    # http://localhost/ottwatch/mfippa/58?tag=A-2013-00001&from=public&closed=3-1-2013&submit=Save
+
+    ?>
+
+    <center>
+    <p>
+	    <a class="btn" href="<?php print $prev['id']; ?>">Prev</a>
+	    <a class="btn" href="<?php print $next['id']; ?>">Next</a>
+    </p>
+    <?php
+    if (LoginController::isAdmin()) {
+    ?>
+    <form>
+    <div style="float: left; text-align: left; padding-top: 25px; ">
+    <span style="padding-left: 130px;">
+    <input style="font-size: 14pt;" type="text" name="tag" value="<?php print $row['tag']; ?>"/>
+    </span>
+    </div>
+    <div style="text-align: right; padding-right: 120px;">
+    <input type="text" name="closed" value="<?php print $row['closed']; ?>" style="width: 100px;"/><br/>
+    <input class="btn" type="submit" name="submit" value="Save"/>
+    </div>
+    </form>
+    <?php
+    }
+    ?>
+    <img style="" src="<?php print $src; ?>"/>
+    </center>
+
+    <?php
     bottom();
+  }
+
+  public static function getPrev($id) {
+    $row = getDatabase()->one(" select * from mfippa where id = :id ",array('id'=>$id));
+    $next = getDatabase()->one("
+      select *
+      from mfippa 
+      where
+        (source = :source and page = :page and y < :y)
+        or (source = :source and page < :page)
+      order by page desc, y desc
+      ",array('source'=>$row['source'],'page'=>$row['page'],'y'=>$row['y']));
+    return $next;
+  }
+
+  public static function getNext($id) {
+    $row = getDatabase()->one(" select * from mfippa where id = :id ",array('id'=>$id));
+    $next = getDatabase()->one("
+      select *
+      from mfippa 
+      where
+        (source = :source and page = :page and y > :y)
+        or (source = :source and page > :page)
+      order by page, y
+      ",array('source'=>$row['source'],'page'=>$row['page'],'y'=>$row['y']));
+    return $next;
   }
 
   public static function createImg($id) {
@@ -24,14 +120,7 @@ class MfippaController {
     }
 
     # find the 'next' mfippa from the same source
-    $next = getDatabase()->one("
-      select *
-      from mfippa 
-      where
-        (source = :source and page = :page and y > :y)
-        or (source = :source and page > :page)
-      order by page, y
-      ",array('source'=>$row['source'],'page'=>$row['page'],'y'=>$row['y']));
+    $next = self::getNext($row['id']);
   
     # where to save the file
     $pageFiles = self::getPageFiles($row['source']);
@@ -42,6 +131,7 @@ class MfippaController {
 
     pr($row);
     pr($next);
+    $convert = "/opt/local/bin/convert";
 
     # calcualte the box/extend for this id, based on its start position and the
     # start position of the next mfippa. 'SCALE' is used because database x/y
@@ -55,13 +145,30 @@ class MfippaController {
 		    $height = round(($next['y']-$row['y'])/$scale);
 		    $width = $size[0];
       } else {
-        # TODO: this result might head to the next page
-        # for now just use "to end of page", but it means we might be missing some of the summary
-        # if it spanned across.
-		    $y = round(($row['y']-10)/$scale);
+        # join end of this page with start of next page
+        $thumba = "$pagesdir/mfippa_crop_{$row['id']}-a.png";
+        $thumbb = "$pagesdir/mfippa_crop_{$row['id']}-b.png";
+
 		    $x = 0;
-		    $height = $size[1]-$y;
+		    $y = round(($row['y']-10)/$scale);
 		    $width = $size[0];
+		    $height = $size[1]-$y;
+		    $cmd = "$convert '{$pagefile}' -crop {$width}x{$height}+{$x}+{$y} {$thumba}";
+		    system($cmd);
+
+        # next page
+		    $x = 0;
+        $y = 0;
+		    $width = $size[0];
+		    $height = round(($next['y']-10)/$scale);
+        $pagefile = $pageFiles[$next['page']];
+		    $cmd = "$convert '{$pagefile}' -crop {$width}x{$height}+{$x}+{$y} {$thumbb}";
+		    system($cmd);
+
+        # combine
+        $cmd = " $convert '{$thumba}' '{$thumbb}' -append {$thumb} ";
+        system($cmd);
+        return;
       }
     } else {
 	    $y = round(($row['y']-10)/$scale);
@@ -70,7 +177,6 @@ class MfippaController {
 	    $width = $size[0];
     }
 
-    $convert = "/opt/local/bin/convert";
     $cmd = "$convert '{$pagefile}' -crop {$width}x{$height}+{$x}+{$y} {$thumb}";
     system($cmd);
   }
@@ -194,7 +300,7 @@ class MfippaController {
         $values['y'] = $y;
         $values['page'] = $page;
         db_insert('mfippa',$values);
-        header("Location: ".OttWatchConfig::WWW."/mfippa/process/$mfippa_id?page=$page");
+        #header("Location: ".OttWatchConfig::WWW."/mfippa/process/$mfippa_id?page=$page");
         return;
       }
 
@@ -214,7 +320,8 @@ class MfippaController {
       <center>
       <a class="btn" href="?page=<?php print $page+1; ?>">Next</a><br/>
       <canvas id="canvas" width="<?php print $imgW; ?>" height="<?php print $imgH; ?>" style="">
-      </canvas>
+      </canvas><br/>
+      <a class="btn" href="?page=<?php print $page+1; ?>">Next</a><br/>
       <script>
 	      var canvas = document.getElementById('canvas');
 	      var context = canvas.getContext('2d');
@@ -242,7 +349,16 @@ class MfippaController {
           c = document.getElementById('canvas');
           x = event.pageX - c.offsetLeft;
           y = event.pageY - c.offsetTop;
-          document.location.href = '?saveA=1&x=' + x + '&y=' + y + '&page=<?php print $page; ?>';
+
+		        context.beginPath();
+            context.fillStyle = '#f00';
+            context.strokeStyle = '#f00';
+		        context.arc(x, y, 5, 0, Math.PI*2, true); 
+		        context.closePath();
+		        context.fill();
+
+          url = '?saveA=1&x=' + x + '&y=' + y + '&page=<?php print $page; ?>';
+          $.get( url );
         }, false);
 
       </script>
