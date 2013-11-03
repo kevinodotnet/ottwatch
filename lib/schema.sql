@@ -305,6 +305,7 @@ create table mfippa (
   page smallint unsigned not null,
   x smallint unsigned not null,
   y smallint unsigned not null,
+  summary varchar(2000),
   created datetime default CURRENT_TIMESTAMP,
   primary key (id)
 ) engine = innodb;

@@ -19,6 +19,12 @@ if ($argv[1] == 'createImg') {
   return;
 }
 
+if ($argv[1] == 'summaryOCR') {
+  $id = $argv[2];
+  MfippaController::summaryOCR($id);
+  return;
+}
+
 $p = MfippaController::getPageFiles('A-2013-00594');
 pr($p);
 
