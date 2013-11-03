@@ -64,6 +64,7 @@ class MfippaController {
     <center>
     <p>
 	    <a class="btn" href="<?php print $prev['tag']; ?>">Prev</a>
+	    <a class="btn" href=".">Mfippa Home</a>
 	    <a class="btn" href="random">Random</a>
 	    <a class="btn" href="<?php print $next['tag']; ?>">Next</a>
     </p>
@@ -84,7 +85,20 @@ class MfippaController {
     <?php
     }
     ?>
-    <img style="" src="<?php print $src; ?>"/>
+
+    <div class="row-fluid visible-desktop">
+    <div class="offset8 span1">
+    Received
+    </div>
+    <div class="span1">
+    Due
+    </div>
+    <div class="span1">
+    Closed
+    </div>
+    </div>
+    <img style="" src="<?php print $src; ?>"/><br/>
+
     </center>
 
     <div class="row-fluid" style="margin-top: 20px; padding-top: 20px; border-top: solid 1px #000000;">
