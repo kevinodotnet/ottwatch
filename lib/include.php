@@ -374,10 +374,8 @@ function db_save($table, $values, $key) {
 	$count = getDatabase()->one(" select count(1) c from $table where $key = :key ",array('key'=>$values[$key]));
 	if ($count['c'] == 0) {
 		return db_insert($table,$values);
-	} else {
-		db_update($table,$values, $key);
-		return $values['id'];
 	}
+	db_update($table,$values, $key);
 }
 
 function db_insert($table, $values) {
