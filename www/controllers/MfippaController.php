@@ -4,6 +4,43 @@ class MfippaController {
 
 	const CONVERT = "/usr/bin/convert";
 
+  public static function summaryOCR($id) {
+    $row = getDatabase()->one(" select * from mfippa where id = :id or tag = :id ",array('id'=>$id));
+    if (!$row['id']) { 
+      print "Not found\n";
+      return; 
+    }
+    $id = $row['id'];
+
+    # crop the thumbnail again, so we only have the summary
+
+    $pagesdir = OttWatchConfig::FILE_DIR."/mfippa/{$row['source']}";
+    $thumb = "$pagesdir/mfippa_crop_{$row['id']}.png";
+    $size = getimagesize($thumb);
+
+    # crop the summary to a new file
+    $summary = "$pagesdir/mfippa_summary_{$row['id']}.png";
+    $ocr = "$pagesdir/mfippa_ocr_{$row['id']}";
+
+    if (!file_exists($summary)) {
+	    $x = round($size[0]*.30);
+	    $y = 110;
+	    $width = $size[0]-$x;
+	    $height = $size[1]-$y;
+	    $cmd = self::CONVERT . " '{$thumb}' +repage -crop {$width}x{$height}+{$x}+{$y} {$summary}";
+	    system($cmd);
+    }
+
+    system(" tesseract '{$summary}' '{$ocr}' 2>/dev/null");
+    $text = `cat {$ocr}* `;
+    $text = preg_replace('/\r/',' ',$text);
+    $text = preg_replace('/\n/',' ',$text);
+    $text = preg_replace('/  /',' ',$text);
+    $text = trim($text);
+
+    db_update('mfippa',array('id'=>$id,'summary'=>$text));
+  }
+
   /* display a single mfippa */
   public static function showRandom() {
     $row = getDatabase()->one(" select * from mfippa where tag is not null order by rand() ");
