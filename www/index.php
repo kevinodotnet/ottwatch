@@ -51,6 +51,7 @@ getRoute()->get('/feed/', 'feed');
 
 getRoute()->get('/mfippa/', array('MfippaController','doList'));
 getRoute()->get('/mfippa/random', array('MfippaController','showRandom'));
+getRoute()->get('/mfippa/(A-.*)', array('MfippaController','show'));
 getRoute()->get('/mfippa/(\d+)', array('MfippaController','show'));
 getRoute()->get('/mfippa/(\d+)/img', array('MfippaController','showImg'));
 getRoute()->get('/mfippa/process/(A-\d+-\d+)', array('MfippaController','process'));
