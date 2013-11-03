@@ -131,8 +131,6 @@ class MfippaController {
     $pagesdir = OttWatchConfig::FILE_DIR."/mfippa/{$row['source']}";
     $thumb = "$pagesdir/mfippa_crop_{$row['id']}.png";
 
-    pr($row);
-    pr($next);
     $convert = self::CONVERT;
 
     # calcualte the box/extend for this id, based on its start position and the
@@ -301,7 +299,12 @@ class MfippaController {
         $values['x'] = $x;
         $values['y'] = $y;
         $values['page'] = $page;
-        db_insert('mfippa',$values);
+        $id = db_insert('mfippa',$values);
+        $prev = self::getPrev($id);
+        if ($prev['id'] != $id) {
+          # don't do on first
+          self::createImg($prev['id']);
+        }
         #header("Location: ".OttWatchConfig::WWW."/mfippa/process/$mfippa_id?page=$page");
         return;
       }
