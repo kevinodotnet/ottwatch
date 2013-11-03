@@ -12,9 +12,9 @@ class MfippaController {
 
   public static function show($id) {
 
-    top();
     $row = getDatabase()->one(" select * from mfippa where id = :id or tag = :id ",array('id'=>$id));
     $id = $row['id']; // if search by tag, fix arg back to id
+    top($row['tag'].' MFIPPA - City of Ottawa');
 
     $row['closed'] = substr($row['closed'],0,10);
 
@@ -64,6 +64,7 @@ class MfippaController {
     <center>
     <p>
 	    <a class="btn" href="<?php print $prev['tag']; ?>">Prev</a>
+	    <a class="btn" href=".">Mfippa Home</a>
 	    <a class="btn" href="random">Random</a>
 	    <a class="btn" href="<?php print $next['tag']; ?>">Next</a>
     </p>
@@ -84,10 +85,32 @@ class MfippaController {
     <?php
     }
     ?>
-    <img style="" src="<?php print $src; ?>"/>
+
+    <div class="row-fluid visible-desktop">
+    <div class="offset8 span1">
+    Received
+    </div>
+    <div class="span1">
+    Due
+    </div>
+    <div class="span1">
+    Closed
+    </div>
+    </div>
+    <img style="" src="<?php print $src; ?>"/><br/>
+
     </center>
 
+    <div class="row-fluid" style="margin-top: 20px; padding-top: 20px; border-top: solid 1px #000000;">
+
+    <div class="offset3 span6">
+    <?php disqus(); ?>
+    </div>
+
+    </div><!--/row-->
+
     <?php
+
     bottom();
   }
 
@@ -202,7 +225,7 @@ class MfippaController {
 
   /* main GUI for web */
   public static function doList() {
-    top();
+    top('MFIPPA Requests');
 
     if (LoginController::isAdmin()) {
       print "<b>Process MFIPPA results</b>\n";
