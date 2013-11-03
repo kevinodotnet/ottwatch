@@ -12,9 +12,9 @@ class MfippaController {
 
   public static function show($id) {
 
-    top();
     $row = getDatabase()->one(" select * from mfippa where id = :id or tag = :id ",array('id'=>$id));
     $id = $row['id']; // if search by tag, fix arg back to id
+    top($row['tag'].' MFIPPA - City of Ottawa');
 
     $row['closed'] = substr($row['closed'],0,10);
 
@@ -225,7 +225,7 @@ class MfippaController {
 
   /* main GUI for web */
   public static function doList() {
-    top();
+    top('MFIPPA Requests');
 
     if (LoginController::isAdmin()) {
       print "<b>Process MFIPPA results</b>\n";
