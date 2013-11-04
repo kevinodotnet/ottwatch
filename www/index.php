@@ -493,6 +493,8 @@ function top($title = '',$quiet = false) {
   padding: 20px;
 }
 </style>
+<script src="<?php print $OTT_WWW; ?>/jquery.js" type="text/javascript"></script>
+<script src="<?php print $OTT_WWW; ?>/bootstrap/js/bootstrap.min.js"></script>
 <script>
 function copyToClipboard (text) {
   window.prompt ("Copy to clipboard: Ctrl+C, Enter", text);
@@ -623,8 +625,6 @@ FinishMessage = "It is finally here!";
 
     </script>
 
-  <script src="<?php print $OTT_WWW; ?>/jquery.js" type="text/javascript"></script>
-  <script src="<?php print $OTT_WWW; ?>/bootstrap/js/bootstrap.min.js"></script>
   <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=<?php print OttWatchConfig::GOOGLE_API_KEY; ?>&sensor=false"></script>
   </body>
   </html>
