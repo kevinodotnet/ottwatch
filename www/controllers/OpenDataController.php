@@ -2,6 +2,115 @@
 
 class OpenDataController {
 
+	/*
+	Import JSON obtained from maps.ottawa.ca service, discarding any existing data in the destination table.
+	*/
+	public static function geoOttawaImport($table,$files) {
+
+		if (count($files) == 0) {
+			print "ERROR: no files specified\n";
+			return;
+		}
+		foreach ($files as $f) {
+			if (!file_exists($f)) {
+				print "ERROR: file not found: $f\n";
+				return;
+			}
+		}
+
+		# use field metadata to construct a 'create table' stament.
+		$data = json_decode(file_get_contents($files[0]));
+
+		$sql = "  create table $table (\n ";
+
+		#pr($data->fields);
+
+		foreach ($data->fields as $f) {	
+			$my_type = "";
+			switch ($f->type) {
+				case "esriFieldTypeOID":
+					$my_type = "mediumint unsigned";
+					break;
+				case "esriFieldTypeSmallInteger":
+				case "esriFieldTypeInteger":
+					$my_type = "int";
+					break;
+				case "esriFieldTypeDouble":
+					$my_type = "float";
+					break;
+				case "esriFieldTypeString":
+					$my_type = "varchar({$f->length})";
+					break;
+				default:
+					print "ERROR: unknown gis type {$f->type}\n";
+					exit;
+			}
+			$sql .= "  `{$f->name}` $my_type, \n";
+		}
+		switch ($data->geometryType) {
+			case "esriGeometryPoint":
+			case "esriGeometryPolygon":
+				# ok
+				break;
+			default:
+				print "ERROR: unknown esriGeometryPoint: {$data->geometryType}\n";
+				exit;
+		}
+
+		$sql .= "  `shape` geometry \n";
+		$sql .= " ) engine = innodb \n";
+
+		# drop current data
+		try {
+			getDatabase()->execute(" drop table $table ");
+		} catch (Exception $e) {
+			if (!preg_match('/Unknown table/',$e)) {
+				throw($e);
+			}
+		}
+
+		#print "\n\n$sql\n\n";
+		getDatabase()->execute($sql);
+
+		foreach ($files as $f) {
+			print "Importing $f: \n";
+			$data = json_decode(file_get_contents($f));
+			foreach ($data->features as $f) {
+				print ".";
+				switch ($data->geometryType) {
+					case "esriGeometryPoint":
+						$p = mercatorToLatLon($f->geometry->x,$f->geometry->y);
+						$shapeValue = " PointFromText(' POINT( {$p['lon']} {$p['lat']} ) ') ";
+						break;
+					case "esriGeometryPolygon":
+						$rings = $f->geometry->rings;
+						if (count($rings) != 1) {
+							print "ERROR: not build to handle multiple-ring-polygons yet\n";
+							exit;
+						}
+						$ring = $rings[0];
+						$points = array();
+						foreach ($ring as $point) {
+							$p = mercatorToLatLon($point[0],$point[1]);
+							$points[] = $p;
+						}
+						$shapeValues = " PolygonFromText( ";
+						pr($points);
+						exit;
+						break;
+					default:
+						pr($f);
+						print "ERROR: unknown esriGeometryPoint: {$data->geometryType}\n";
+						exit;
+				}
+				$id = db_insert($table,get_object_vars($f->attributes));
+				getDatabase()->execute(" update $table set shape = $shapeValue where id = $id ");
+			}
+			print "\n";
+		}
+
+	}
+
   /*
   Scan the data.ottawa.ca website and injest all datasets and the files within the sets.
   */
