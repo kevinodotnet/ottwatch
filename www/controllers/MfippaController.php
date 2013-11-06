@@ -167,10 +167,6 @@ class MfippaController {
     <div class="row-fluid" style="margin-top: 20px; padding-top: 20px;">
 
     <div class="span6">
-    <h2>Discussion</h2>
-    <?php disqus(); ?>
-    </div>
-    <div class="span6">
     <h2>Get This Data</h2>
     <p>
     OttWatch does not have a copy of this information, but you can ask for a copy of it by <a href="http://ottawa.ca/en/city-hall/your-city-government/policies-and-administrative-structure/how-and-where-submit-request">making
@@ -185,6 +181,10 @@ class MfippaController {
     a good chance someone else will want it too. Drop a note in the <b>Disqus</b> comments if you
     are making the request (to avoid doubling up).
     </p>
+    </div>
+    <div class="span6">
+    <h2>Discussion</h2>
+    <?php disqus(); ?>
     </div>
 
     </div><!--/row-->
