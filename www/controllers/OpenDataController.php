@@ -22,10 +22,12 @@ class OpenDataController {
 		$data = json_decode(file_get_contents($files[0]));
 
 		$sql = "  create table $table (\n ";
+		$sql .= "   ottwatchid mediumint not null auto_increment, ";
 
-		#pr($data->fields);
-
-		foreach ($data->fields as $f) {	
+		foreach ($data->fields as &$f) {
+			# '.' in name screws up SQL later.
+			$f->name = preg_replace('/\./','_',$f->name);
+			$f->name = preg_replace('/SAM_teranet_parcels_addresses_/','',$f->name);
 			$my_type = "";
 			switch ($f->type) {
 				case "esriFieldTypeOID":
@@ -57,7 +59,8 @@ class OpenDataController {
 				exit;
 		}
 
-		$sql .= "  `shape` geometry \n";
+		$sql .= "  `shape` geometry, \n";
+  	$sql .= "  primary key (ottwatchid) \n";
 		$sql .= " ) engine = innodb \n";
 
 		# drop current data
@@ -72,39 +75,45 @@ class OpenDataController {
 		#print "\n\n$sql\n\n";
 		getDatabase()->execute($sql);
 
+		$fileIndex = 1;
+
 		foreach ($files as $f) {
-			print "Importing $f: \n";
+			$index = 1;
+			print "Importing $f (".($fileIndex++)."/".count($files).") \n";
 			$data = json_decode(file_get_contents($f));
 			foreach ($data->features as $f) {
-				print ".";
+				if (++$index % 80 == 0) { print " $index/".count($data->features)."\n"; }
 				switch ($data->geometryType) {
 					case "esriGeometryPoint":
-						$p = mercatorToLatLon($f->geometry->x,$f->geometry->y);
-						$shapeValue = " PointFromText(' POINT( {$p['lon']} {$p['lat']} ) ') ";
+						$shapeValue = " PointFromText(' POINT( {$f->geometry->x} {$f->geometry->y} ) ') ";
 						break;
 					case "esriGeometryPolygon":
+						$shapeValue = "  PolygonFromText(' POLYGON(\n ";
 						$rings = $f->geometry->rings;
-						if (count($rings) != 1) {
-							print "ERROR: not build to handle multiple-ring-polygons yet\n";
-							exit;
+						foreach ($rings as $ring) {
+							$shapeValue .= self::pointListToString($ring);
+							$shapeValue .= "\n ,\n";
 						}
-						$ring = $rings[0];
-						$points = array();
-						foreach ($ring as $point) {
-							$p = mercatorToLatLon($point[0],$point[1]);
-							$points[] = $p;
-						}
-						$shapeValues = " PolygonFromText( ";
-						pr($points);
-						exit;
+						$shapeValue = chop($shapeValue,",\n");
+						$shapeValue .= " ) ') ";
 						break;
 					default:
 						pr($f);
 						print "ERROR: unknown esriGeometryPoint: {$data->geometryType}\n";
 						exit;
 				}
-				$id = db_insert($table,get_object_vars($f->attributes));
-				getDatabase()->execute(" update $table set shape = $shapeValue where id = $id ");
+				# '.' to '_'
+				$values = get_object_vars($f->attributes);
+				foreach ($values as $k => $v) {
+					unset($values[$k]);
+					$k = preg_replace('/\./','_',$k);
+					$k = preg_replace('/SAM_teranet_parcels_addresses_/','',$k); # applies only to properties
+					$values[$k] = $v;
+				}
+				print ".";
+				$id = db_insert($table,$values);
+				$sql = " update $table set shape = $shapeValue where ottwatchid = $id ";
+				getDatabase()->execute($sql);
 			}
 			print "\n";
 		}
@@ -241,6 +250,15 @@ class OpenDataController {
     <?php
     bottom();
   }
+
+	public static function pointListToString ($list) {
+		$str = "";
+		foreach ($list as $point) {
+			$str .= "{$point[0]} {$point[1]},";
+		}
+		$str = chop($str,',');
+		return "({$str})";
+	}
 	
 }
 
