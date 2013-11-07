@@ -4,6 +4,12 @@ class MfippaController {
 
 	const CONVERT = "/usr/bin/convert";
 
+  public static function cleanSummary($summary) {
+    $summary = preg_replace('/[éééé]/','e',$summary);
+    $summary = preg_replace('/[^a-zA-Z0-9,\. ]/',' ',$summary);
+    return $summary;
+  }
+
   public static function summaryOCR($id) {
     $row = getDatabase()->one(" select * from mfippa where id = :id or tag = :id ",array('id'=>$id));
     if (!$row['id']) { 
@@ -139,7 +145,7 @@ class MfippaController {
     <b><i>OCR Text</i></b><br/>(won't be perfect): 
     </div>
     <div class="span5">
-    <?php print $row['summary']; ?>
+    <?php print self::cleanSummary($row['summary']); ?>
     </div>
     </div>
 
@@ -161,10 +167,6 @@ class MfippaController {
     <div class="row-fluid" style="margin-top: 20px; padding-top: 20px;">
 
     <div class="span6">
-    <h2>Discussion</h2>
-    <?php disqus(); ?>
-    </div>
-    <div class="span6">
     <h2>Get This Data</h2>
     <p>
     OttWatch does not have a copy of this information, but you can ask for a copy of it by <a href="http://ottawa.ca/en/city-hall/your-city-government/policies-and-administrative-structure/how-and-where-submit-request">making
@@ -179,6 +181,10 @@ class MfippaController {
     a good chance someone else will want it too. Drop a note in the <b>Disqus</b> comments if you
     are making the request (to avoid doubling up).
     </p>
+    </div>
+    <div class="span6">
+    <h2>Discussion</h2>
+    <?php disqus(); ?>
     </div>
 
     </div><!--/row-->
@@ -337,23 +343,12 @@ class MfippaController {
     <?php
     $rows = getDatabase()->all(" select * from mfippa where published = 1 and tag is not null order by tag desc ");
     foreach ($rows as $r) {
+      $summary = self::cleanSummary($r['summary']);
       ?>
       <tr>
       <td><nobr><a href="<?php print $r['tag']; ?>"><?php print $r['tag']; ?></a></nobr></td>
-      <td><?php print $r['summary']; ?></td>
+      <td><?php print $summary; ?></td>
       </tr>
-      <?php
-      continue;
-
-
-      ?>
-      <?php
-      continue;
-      $src = OttWatchConfig::WWW."/mfippa/{$r['id']}/img";
-      ?>
-      <div style="padding-top: 10px; padding-bottom: 10px; border: solid 1px #ff0000;">
-      <a href="<?php print $r['id']; ?>"><img src="<?php print $src; ?>"/></a>
-      </div>
       <?php
     }
     ?>
