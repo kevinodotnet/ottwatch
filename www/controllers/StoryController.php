@@ -107,7 +107,7 @@ class StoryController {
     ?>
 
     <div class="row-fluid">
-    <div class="span6">
+    <div class="offset3 span6">
     <center><h1 id="previewtitle"><?php print "{$story['title']}\n"; ?></h1></center>
     <p style="float: right; text-align: right;">
     <b><?php print $author['name']; ?></b><br/>
@@ -130,11 +130,9 @@ class StoryController {
     </div><!-- /row -->
 
     <div class="row-fluid">
-    <div class="span6" style="border-top: 1px solid #f0f0f0;  padding-right: 5px;">
+    <div class="offset3 span6" style="border-top: 1px solid #f0f0f0;  padding-right: 5px;">
     <p style=""><?php print $story['body']; ?></p>
     <?php disqus(); ?>
-    </div><!-- /span -->
-    <div class="span6" style="padding-left: 0px;">
     </div><!-- /span -->
     </div><!-- /row -->
     <?php
