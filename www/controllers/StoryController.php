@@ -108,7 +108,7 @@ class StoryController {
 
     <div class="row-fluid">
     <div class="span6">
-    <h1 id="previewtitle"><?php print "{$story['title']}\n"; ?></h1>
+    <center><h1 id="previewtitle"><?php print "{$story['title']}\n"; ?></h1></center>
     <p style="float: right; text-align: right;">
     <b><?php print $author['name']; ?></b><br/>
     <?php print $story['updated']; ?>
@@ -217,7 +217,7 @@ class StoryController {
     </div>
 
     <div class="span6">
-    <h1 id="previewtitle"><?php print "{$story['title']}\n"; ?></h1>
+    <center><h1 id="previewtitle"><?php print "{$story['title']}\n"; ?></h1></center>
     <div id="previewbody"><?php print $story['body']; ?></div>
     </div>
     </div><!-- /row -->
