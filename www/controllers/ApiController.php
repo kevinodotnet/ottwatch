@@ -6,8 +6,18 @@ class ApiController {
 
     # include "geometry=1" query parameter to get zoning boundary polygon returned too
     $geometry = ($_GET['geometry'] == '1');
+    $geometry = 1;
 
-    $mercator = latLonToMercator($lat,$lon);
+		# allow lat/lon to be x/y instead; Ottawa specific coords here
+		$mercator = array();
+		if ($lon < 90) {
+			# lat/lon is actually lat/lon
+	    $mercator = latLonToMercator($lat,$lon);
+		} else {
+			# lat/lon are actually already x/y mercator
+			$mercator['x'] = $lat;
+			$mercator['y'] = $lon;
+		}
 
     # rest API needs an extent (a "box") so just give a tiny one
     $x1 = $mercator['x']-1;
