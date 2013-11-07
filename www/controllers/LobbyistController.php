@@ -447,6 +447,12 @@ class LobbyistController {
     top();
 
     $clause = mysql_escape_string($query);
+    $since = $_GET['since'];
+    if (preg_match('/^\d\d\d\d-\d\d-\d\d$/',$since)) {
+      $since = " and l.created >= '$since' ";
+    } else {
+      $since = '';
+    }
 
     $rows = getDatabase()->all("
       select 
@@ -461,10 +467,11 @@ class LobbyistController {
       from lobbyfile f
         join lobbying l on l.lobbyfileid = f.id
       where
-        client like '%$clause%'
-        or lobbyist like '%$clause%'
-        or issue like '%$clause%'
-        or lobbied like '%$clause%'
+        (client like '%$clause%'
+	        or lobbyist like '%$clause%'
+	        or issue like '%$clause%'
+	        or lobbied like '%$clause%') 
+        $since
       group by
         f.id,
         f.lobbyist,
