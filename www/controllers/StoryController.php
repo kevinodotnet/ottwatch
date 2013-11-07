@@ -132,9 +132,9 @@ class StoryController {
     <div class="row-fluid">
     <div class="span6" style="border-top: 1px solid #f0f0f0;  padding-right: 5px;">
     <p style=""><?php print $story['body']; ?></p>
+    <?php disqus(); ?>
     </div><!-- /span -->
     <div class="span6" style="padding-left: 0px;">
-    <?php disqus(); ?>
     </div><!-- /span -->
     </div><!-- /row -->
     <?php
