@@ -2,6 +2,124 @@
 
 class OpenDataController {
 
+	/*
+	Import JSON obtained from maps.ottawa.ca service, discarding any existing data in the destination table.
+	*/
+	public static function geoOttawaImport($table,$files) {
+
+		if (count($files) == 0) {
+			print "ERROR: no files specified\n";
+			return;
+		}
+		foreach ($files as $f) {
+			if (!file_exists($f)) {
+				print "ERROR: file not found: $f\n";
+				return;
+			}
+		}
+
+		# use field metadata to construct a 'create table' stament.
+		$data = json_decode(file_get_contents($files[0]));
+
+		$sql = "  create table $table (\n ";
+		$sql .= "   ottwatchid mediumint not null auto_increment, ";
+
+		foreach ($data->fields as &$f) {
+			# '.' in name screws up SQL later.
+			$f->name = preg_replace('/\./','_',$f->name);
+			$f->name = preg_replace('/SAM_teranet_parcels_addresses_/','',$f->name);
+			$my_type = "";
+			switch ($f->type) {
+				case "esriFieldTypeOID":
+					$my_type = "mediumint unsigned";
+					break;
+				case "esriFieldTypeSmallInteger":
+				case "esriFieldTypeInteger":
+					$my_type = "int";
+					break;
+				case "esriFieldTypeDouble":
+					$my_type = "float";
+					break;
+				case "esriFieldTypeString":
+					$my_type = "varchar({$f->length})";
+					break;
+				default:
+					print "ERROR: unknown gis type {$f->type}\n";
+					exit;
+			}
+			$sql .= "  `{$f->name}` $my_type, \n";
+		}
+		switch ($data->geometryType) {
+			case "esriGeometryPoint":
+			case "esriGeometryPolygon":
+				# ok
+				break;
+			default:
+				print "ERROR: unknown esriGeometryPoint: {$data->geometryType}\n";
+				exit;
+		}
+
+		$sql .= "  `shape` geometry, \n";
+  	$sql .= "  primary key (ottwatchid) \n";
+		$sql .= " ) engine = innodb \n";
+
+		# drop current data
+		try {
+			getDatabase()->execute(" drop table $table ");
+		} catch (Exception $e) {
+			if (!preg_match('/Unknown table/',$e)) {
+				throw($e);
+			}
+		}
+
+		#print "\n\n$sql\n\n";
+		getDatabase()->execute($sql);
+
+		$fileIndex = 1;
+
+		foreach ($files as $f) {
+			$index = 1;
+			print "Importing $f (".($fileIndex++)."/".count($files).") \n";
+			$data = json_decode(file_get_contents($f));
+			foreach ($data->features as $f) {
+				if (++$index % 80 == 0) { print " $index/".count($data->features)."\n"; }
+				switch ($data->geometryType) {
+					case "esriGeometryPoint":
+						$shapeValue = " PointFromText(' POINT( {$f->geometry->x} {$f->geometry->y} ) ') ";
+						break;
+					case "esriGeometryPolygon":
+						$shapeValue = "  PolygonFromText(' POLYGON(\n ";
+						$rings = $f->geometry->rings;
+						foreach ($rings as $ring) {
+							$shapeValue .= self::pointListToString($ring);
+							$shapeValue .= "\n ,\n";
+						}
+						$shapeValue = chop($shapeValue,",\n");
+						$shapeValue .= " ) ') ";
+						break;
+					default:
+						pr($f);
+						print "ERROR: unknown esriGeometryPoint: {$data->geometryType}\n";
+						exit;
+				}
+				# '.' to '_'
+				$values = get_object_vars($f->attributes);
+				foreach ($values as $k => $v) {
+					unset($values[$k]);
+					$k = preg_replace('/\./','_',$k);
+					$k = preg_replace('/SAM_teranet_parcels_addresses_/','',$k); # applies only to properties
+					$values[$k] = $v;
+				}
+				print ".";
+				$id = db_insert($table,$values);
+				$sql = " update $table set shape = $shapeValue where ottwatchid = $id ";
+				getDatabase()->execute($sql);
+			}
+			print "\n";
+		}
+
+	}
+
   /*
   Scan the data.ottawa.ca website and injest all datasets and the files within the sets.
   */
@@ -132,6 +250,15 @@ class OpenDataController {
     <?php
     bottom();
   }
+
+	public static function pointListToString ($list) {
+		$str = "";
+		foreach ($list as $point) {
+			$str .= "{$point[0]} {$point[1]},";
+		}
+		$str = chop($str,',');
+		return "({$str})";
+	}
 	
 }
 

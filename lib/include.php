@@ -379,7 +379,8 @@ function db_save($table, $values, $key) {
 }
 
 function db_insert($table, $values) {
-    return getDatabase()->execute(db_generate_insert($table, $values), $values);
+	$sql = db_generate_insert($table, $values);
+	return getDatabase()->execute($sql, $values);
 }
 
 function db_update($table,$values,$key) {
@@ -389,7 +390,7 @@ function db_update($table,$values,$key) {
   $sql = " update $table set ";
   foreach ($values as $k => $v) {
     #if ($k == $key) { continue; }
-    $sql .= " $k = :$k, ";
+    $sql .= " `$k` = :$k, ";
   }
   $sql = preg_replace('/, $/','',$sql);
   $sql .= " where $key = :$key ";
@@ -399,7 +400,7 @@ function db_update($table,$values,$key) {
 function db_generate_insert($table, $values) {
   $sql = "insert into $table (";
   foreach ( $values as $k => $v ) {
-    $sql .= "{$k},";
+    $sql .= "`{$k}`,";
   }
   $sql = rtrim($sql, ',');
   $sql .= ") values (";
