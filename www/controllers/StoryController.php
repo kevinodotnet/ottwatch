@@ -107,8 +107,8 @@ class StoryController {
     ?>
 
     <div class="row-fluid">
-    <div class="span6">
-    <h1 id="previewtitle"><?php print "{$story['title']}\n"; ?></h1>
+    <div class="offset3 span6">
+    <center><h1 id="previewtitle"><?php print "{$story['title']}\n"; ?></h1></center>
     <p style="float: right; text-align: right;">
     <b><?php print $author['name']; ?></b><br/>
     <?php print $story['updated']; ?>
@@ -130,10 +130,8 @@ class StoryController {
     </div><!-- /row -->
 
     <div class="row-fluid">
-    <div class="span6" style="border-top: 1px solid #f0f0f0;  padding-right: 5px;">
+    <div class="offset3 span6" style="border-top: 1px solid #f0f0f0;  padding-right: 5px;">
     <p style=""><?php print $story['body']; ?></p>
-    </div><!-- /span -->
-    <div class="span6" style="padding-left: 0px;">
     <?php disqus(); ?>
     </div><!-- /span -->
     </div><!-- /row -->
@@ -200,7 +198,7 @@ class StoryController {
     <textarea id="storybody" name="body" rows="80" style=""><?php print $story['body']; ?></textarea>
     <script>
 	    $( '#storybody' ).ckeditor({
-        extraAllowedContent: 'script; div p blockquote (*)',
+        extraAllowedContent: 'script; pre div p blockquote {*}[*](*)',
 				// allowedContent: 'script b i div p blockquote a img [class][*](*){*};',
 				toolbar: [ 
 					['Source','Maximize','Save'],
@@ -217,7 +215,7 @@ class StoryController {
     </div>
 
     <div class="span6">
-    <h1 id="previewtitle"><?php print "{$story['title']}\n"; ?></h1>
+    <center><h1 id="previewtitle"><?php print "{$story['title']}\n"; ?></h1></center>
     <div id="previewbody"><?php print $story['body']; ?></div>
     </div>
     </div><!-- /row -->
