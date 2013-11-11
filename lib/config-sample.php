@@ -29,6 +29,7 @@ class OttWatchConfig {
   const SMTP_HOST = 'CHANGEME';
   const SMTP_FROM_EMAIL = 'CHANGEME';
   const SMTP_FROM_NAME = 'CHANGEME';
+	const TMP = '/mnt/tmp/ottwatch_tmp';
 }
 
 ?>
