@@ -7,7 +7,7 @@ set_include_path(get_include_path() . PATH_SEPARATOR . "$dirname/../lib");
 set_include_path(get_include_path() . PATH_SEPARATOR . "$dirname/../www");
 require_once('include.php');
 
-if ($argv[1] == 'geoOttawaImport') {
+if (@$argv[1] == 'geoOttawaImport') {
 	array_shift($argv);
 	array_shift($argv);
 	$table = array_shift($argv);
