@@ -170,7 +170,7 @@ class MeetingController {
 
 		$totalFrags = array();
     $refs = $xml->xpath('//ref/@src'); 
-		pr($ref);
+		# pr($refs);
 		foreach ($refs as $ref) {
       $ref = ''.$ref[0]; //$ref = $ref['src']; $ref = $ref[0];
 
@@ -219,7 +219,7 @@ class MeetingController {
 
 		# This manifest file has all the fragment and timeoffset details. One HTTP request per
 		# Append each chunk to the overall video file
-    $video_file = "video_{$meetid}.mp2t";
+    $video_file = OttWatchConfig::TMP."/video_{$meetid}.mp2t";
 		touch($video_file);
 		unlink($video_file);
 
@@ -231,7 +231,7 @@ class MeetingController {
 			if ($debug) { 
 				print "[$chunk/".count($totalFrags)."] $fragUrl\n"; 
 			} else {
-				if ($chunk++ % 100 == 0) { print " $chunk"; }
+				if ($chunk % 100 == 0) { print " $chunk"; }
 			}
 	    $data = `wget -qO - '$fragUrl'`;
 			file_put_contents($video_file,$data,FILE_APPEND);
