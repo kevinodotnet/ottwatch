@@ -86,6 +86,31 @@ if (count($argv) > 1) {
 		}
     return;
 	}
+  if ($argv[1] == 'getVideoStart') {
+		$sql = " 
+			select id,meetid,youtubeset
+			from 
+				meeting 
+			where 
+				datediff(now(),youtubeset) < 30 
+				and youtubestate = 'ready' 
+				and (youtubestart is null or youtubestart = 0) 
+			order by id desc
+		 ";
+				// datediff(now(),youtubeset) < 30 
+		$rows = getDatabase()->all("$sql");
+		foreach ($rows as $r) {
+			$id = $r['id'];
+	    $start = MeetingController::getVideoStart($id);
+			if ($start > 0) {
+				db_update('meeting',array('id'=>$id,'youtubestart'=>$start),'id');
+				$r['new_start_value'] = $start;
+				$r['UPDATED'] = 1;
+			}
+			pr($r);
+		}
+    return;
+	}
   if ($argv[1] == 'getVideo') {
     $id = $argv[2];
     MeetingController::getVideo($id);
