@@ -108,6 +108,68 @@ class MeetingController {
     return '<iframe width="640" height="480" src="http://www.youtube.com/embed/'.$id.'?rel=0" frameborder="0" allowfullscreen></iframe>';
   }
 
+  static public function getVideoStart($id) {
+		global $dirname; # set by bin/XXXX.php scripts, UGLY, should probably be passed in as FAR or a DEFINE
+
+		$debug = 0;
+
+		$m = getDatabase()->one(" select * from meeting where id = :id ",array('id'=>$id));
+		if (!$m['id']) {
+			# can't get video for a meeting we don't know about
+			return -1;
+		}
+
+		$meetid = $m['meetid'];
+
+		# Get the full HTML for the meeting (all frames and details)
+    $url = "http://app05.ottawa.ca/sirepub/mtgviewer.aspx?meetid={$meetid}&doctype=AGENDA";
+    $html = `wget -qO - '$url'`; // file_get_contents($url);
+
+		if (false && $debug) {
+		print "\n\n-----------------------------------------\n\n";
+		print "$html\n";
+		print "\n\n-----------------------------------------\n\n";
+		}
+
+    $tmp = preg_grep('/g_locationPrimary/',explode("\n",$html));
+    if (count($tmp) == 0) {
+			# print "NO video details found (g_locationPrimary)\n";
+      // no video
+			return -1;
+    }
+
+		# Extract just the URL from the HTML line that matched
+    foreach ($tmp as $k => $v) { $tmp = $v; }
+    $tmp = preg_replace('/.*http/','http',$tmp);
+    $tmp = preg_replace('/".*/','',$tmp);
+    $isplUrl = $tmp;
+    $baseUrl = preg_replace('/\/[^\/]+$/','/',$isplUrl);
+
+		# Extract the first REF from ISPL xml document
+		# print "Loading video ISPL file: $isplUrl\n";
+    $spl = `wget -qO - '$isplUrl'`;
+		if ($spl == '') {
+			# print "ISPL file not found or is not XML\n";
+			return -1;
+		}
+
+		if ($debug) {
+		print "\n\n-----------------------------------------\n\n";
+		print "url: $isplUrl\n";
+		print "spl: $spl\n";
+		print "\n\n-----------------------------------------\n\n";
+		}
+
+    $xml = simplexml_load_string($spl);
+    $start = $xml->xpath("//meta[@name='trim']/@start");
+    if (count($start) > 0) {
+      $start = '' . $start[0];
+    } else {
+      $start = 0;
+    }
+		return $start;
+	}
+
   static public function getVideo($id) {
 		global $dirname; # set by bin/XXXX.php scripts, UGLY, should probably be passed in as FAR or a DEFINE
 
