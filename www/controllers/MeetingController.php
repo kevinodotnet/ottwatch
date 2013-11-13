@@ -1173,10 +1173,43 @@ class MeetingController {
       'id' => $id
     ));
 
-    # rebuild item rows
+		#
+		# ITEM parsing
+		#
+
     getDatabase()->execute(" delete from item where meetingid = :id ",array('id'=>$id));
 
+		$tmp = strip_tags($agenda,'<a>');
+		$tmp = preg_replace("/name=Item\d+/"," ",$tmp);
+		$tmp = preg_replace("/\n/"," ",$tmp);
+		$tmp = preg_replace("/\r/"," ",$tmp);
+		$tmp = preg_replace("/<a/","\n<a",$tmp);
+		$tmp = preg_replace("/a>/","a>\n",$tmp);
+		$tmp = preg_replace("/\t/"," ",$tmp);
+		$tmp = preg_replace("/  /"," ",$tmp);
+		$tmp = preg_replace("/  /"," ",$tmp);
+		$tmp = preg_replace("/  /"," ",$tmp);
+		$tmp = preg_replace("/  /"," ",$tmp);
+    $tmp = preg_replace("/target=pubright/",'',$tmp);
+		#print $tmp; print "\n\n";
+		$xml = simplexml_load_string("<foo>{$tmp}</foo>");
+		$anchors = $xml->xpath("//a"); 
+		foreach ($anchors as $a) {
+			$title = $a[0].'';
+			$href = $a['href'];
+			if (isset($href)) {
+				$itemid = preg_replace('/.*itemid=/','',$href);
+	  	  $dbitemid = getDatabase()->execute('insert into item (meetingid,itemid,title) values (:meetingid,:itemid,:title) ', array(
+	  	    'meetingid' => $id,
+	  	    'itemid' => $itemid,
+	  	    'title' => $title,
+	  	  ));
+			}
+		}
+
     # scrape out item IDs, and titles.
+		if (false) {
+			# OLD ITEM CODE that is oh-so-embarrasing to look at now. Replaced with new block above.
     $add = 0;
     $spool = array();
 	  foreach ($lines as $line) {
@@ -1285,6 +1318,7 @@ class MeetingController {
         array_push($spool,$line);
       }
 	  }
+		}
     
     # purge existing files; not needed as delete ITEM cascades
     # getDatabase()->execute(" delete from ifile where itemid in (select id from item where meetingid = :id) ",array('id'=>$id));
