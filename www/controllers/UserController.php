@@ -293,6 +293,7 @@ class UserController {
 
     <div class="span8">
     <div id="map_canvas" style="width:100%; height:600px;"></div>
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=<?php print OttWatchConfig::GOOGLE_API_KEY; ?>&sensor=false"></script>
     <script>
         var mapOptions = { 
           center: new google.maps.LatLng(45.420833,-75.69), 

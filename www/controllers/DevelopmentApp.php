@@ -131,6 +131,7 @@ class DevelopmentAppController {
     if ($a && count($a>0)) {
     ?>
     <div id="map_canvas" style="width:100%; height:600px;"></div>
+		<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=<?php print OttWatchConfig::GOOGLE_API_KEY; ?>&sensor=false"></script>
     <script>
       $(document).ready(function() {
         var mapOptions = { 
@@ -290,6 +291,7 @@ class DevelopmentAppController {
 
     <div class="span7">
     <div id="map_canvas" style="width:100%; height:600px;"></div>
+		<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=<?php print OttWatchConfig::GOOGLE_API_KEY; ?>&sensor=false"></script>
     <script>
 
       $(document).ready(function() {
