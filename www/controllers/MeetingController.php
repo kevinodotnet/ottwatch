@@ -803,6 +803,7 @@ class MeetingController {
 
     <div class="tab-pane" id="tabmap">
     <div id="map_canvas" style="width:100%; height:590px;">
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=<?php print OttWatchConfig::GOOGLE_API_KEY; ?>&sensor=false"></script>
       <script>
 
       var firstResize = 1;

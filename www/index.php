@@ -625,7 +625,6 @@ FinishMessage = "It is finally here!";
 
     </script>
 
-  <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=<?php print OttWatchConfig::GOOGLE_API_KEY; ?>&sensor=false"></script>
   </body>
   </html>
   <?php
