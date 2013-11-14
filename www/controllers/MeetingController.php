@@ -1197,6 +1197,8 @@ class MeetingController {
 		$anchors = $xml->xpath("//a"); 
 		foreach ($anchors as $a) {
 			$title = $a[0].'';
+      $title = preg_replace("/ \? /"," - ",$title);
+      $title = preg_replace("/\?/","'",$title);
 			$href = $a['href'];
 			if (isset($href)) {
 				$itemid = preg_replace('/.*itemid=/','',$href);
