@@ -10,6 +10,60 @@ MeetingController::formatMotion("foo");
 
 class MeetingController {
 
+  static public function dump() {
+    top();
+    $rows = getDatabase()->all(" 
+      select *
+      from meeting 
+      where datediff(now(),starttime) > -100
+      order by starttime desc 
+    ");
+    foreach ($rows as $m) {
+      $category = meeting_category_to_title($m['category']);
+
+      print "<h3>$category : {$m['starttime']}</h3>\n";
+
+      print "Agenda\n";
+      $url_en = "http://app05.ottawa.ca/sirepub/mtgviewer.aspx?meetid={$m['meetid']}&doctype=AGENDA";
+      $url_fr = "http://app05.ottawa.ca/sirepub/mtgviewer.aspx?meetid={$m['meetid']}&doctype=AGENDA2";
+      print "<a href=\"$url_en\">English</a>\n";
+      print "<a href=\"$url_fr\">French</a>\n";
+      print "<br/>\n";
+
+      print "Minutes\n";
+      $url_en = "http://app05.ottawa.ca/sirepub/mtgviewer.aspx?meetid={$m['meetid']}&doctype=MINUTES";
+      $url_fr = "http://app05.ottawa.ca/sirepub/mtgviewer.aspx?meetid={$m['meetid']}&doctype=MINUTES2";
+      print "<a href=\"$url_en\">English</a>\n";
+      print "<a href=\"$url_fr\">French</a>\n";
+      print "<br/>\n";
+      print "<br/>\n";
+
+      $items = getDatabase()->all(" select * from item where meetingid = :meetingid ",array('meetingid'=>$m['id']));
+      print "<b>Items (".count($items).")</b>";
+      print "<ul>\n";
+      foreach ($items as $i) {
+        $item_url = "http://app05.ottawa.ca/sirepub/item.aspx?itemid={$i['itemid']}";
+        print "<li>";
+        print "<a href=\"$item_url\">{$i['title']}</a>\n";
+        $files = getDatabase()->all(" select * from ifile where itemid = :itemid ",array('itemid'=>$i['id']));
+        if (count($files) > 0) {
+          print "<ul>\n";
+          foreach ($files as $f) {
+            $file_url = "http://app05.ottawa.ca/sirepub/view.aspx?cabinet=published_meetings&fileid={$f['fileid']}";
+            print "<li>\n";
+            print "<a href=\"$file_url\">{$f['title']}</a>\n";
+            print "</li>\n";
+          }
+          print "</ul>\n";
+        }
+
+        print "</li>\n";
+      }
+      print "</ul>\n";
+    }
+    bottom();
+  }
+
   static public function votesIndex() {
     top();
     ?>
