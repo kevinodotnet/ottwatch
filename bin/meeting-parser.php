@@ -106,8 +106,8 @@ if (count($argv) > 1) {
 				db_update('meeting',array('id'=>$id,'youtubestart'=>$start),'id');
 				$r['new_start_value'] = $start;
 				$r['UPDATED'] = 1;
+  			pr($r);
 			}
-			pr($r);
 		}
     return;
 	}
