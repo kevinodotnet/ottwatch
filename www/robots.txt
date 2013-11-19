@@ -1,9 +1,4 @@
 User-agent: *
 
-# PDF files are accessed through this URL, but each hit
-# is a 'read' from ottawa.ca and an echo-back to the
-# caller. 2x data hit, and some files are big, so 
-# disallow
-Disallow: /meetings/file/
 Disallow: /api/
 
