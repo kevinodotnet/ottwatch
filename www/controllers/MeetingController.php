@@ -568,15 +568,28 @@ class MeetingController {
       <?php
       return;
     }
-    # <script>document.location = 'cache/2/lkwtpr5l2u0ppewlizialyuu/4692203012013020316562.PDF';</script>
     $data = preg_replace("/';.*/","",$odata);
     $data = preg_replace("/.*'/","",$data);
     $url = "http://app05.ottawa.ca/sirepub/$data";
-    header("Location: $url");
+
+    # redirect
+    # <script>document.location = 'cache/2/lkwtpr5l2u0ppewlizialyuu/4692203012013020316562.PDF';</script>
+    # header("Location: $url");
+    # return;
+
+    # pass it through
+		$opts = array(
+		  'http'=>array(
+		    'method'=>"GET",
+		  )
+		);
+		$context = stream_context_create($opts);
+		$fp = fopen($url, 'r', false, $context);
+    header("Content-Type: application/pdf");
+		fpassthru($fp);
+		fclose($fp);
     return;
     ## get the real PDF and echo it back.
-    #header("Content-Type: application/pdf");
-    #print file_get_contents($url);
   }
 
   static public function getDocumentUrl ($meetid,$doctype) {
