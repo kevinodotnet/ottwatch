@@ -558,14 +558,23 @@ class MeetingController {
     $curl = 'http://app05.ottawa.ca/sirepub/view.aspx?cabinet=published_meetings&fileid=' . $fileid;
     $odata = file_get_contents($curl);
     if (!preg_match('/script/',$odata)) {
+			top();
       ?>
-      <center>
       <h1>Error</h1>
+			<p>
       The file is not currently accessible due to an error on ottawa.ca
-      <p/>
-      Please try again later
-      </center>
+			</p>
+			<p>
+			This usually happens when a meeting is updated and the "file id numbers" change.
+			</p>
+			<p>
+			You can try again later, or go back to the meeting list and see if OttWatch has
+			updated the file numbers after re-scanning ottawa.ca.
+			</p>
+			<p>
+			If the problem persists, please email or tweet me.
       <?php
+			bottom();
       return;
     }
     $data = preg_replace("/';.*/","",$odata);
