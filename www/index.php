@@ -157,7 +157,9 @@ function ottawaMediaRSS() {
 
 function traffic_incident() {
 	$dump = print_r($_POST,TRUE);
-	error_log("traffic post data\n$dump\n");
+	error_log("traffic POST data: $dump ");
+	$dump = print_r($_GET,TRUE);
+	error_log("traffic GET data: $dump ");
 }
 
 function feed() {
