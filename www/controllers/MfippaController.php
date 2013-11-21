@@ -341,12 +341,20 @@ class MfippaController {
     <th>Summary*</th>
     </tr>
     <?php
-    $rows = getDatabase()->all(" select * from mfippa where published = 1 and tag is not null order by tag desc ");
+    if (LoginController::isAdmin()) {
+    	$rows = getDatabase()->all(" select * from mfippa order by id desc ");
+		} else {
+    	$rows = getDatabase()->all(" select * from mfippa where published = 1 and tag is not null order by tag desc ");
+		}
     foreach ($rows as $r) {
       $summary = self::cleanSummary($r['summary']);
+			$href = $r['tag'];
+			if ($href == '') {
+			}
+				$href = $r['id'];
       ?>
       <tr>
-      <td><nobr><a href="<?php print $r['tag']; ?>"><?php print $r['tag']; ?></a></nobr></td>
+      <td><nobr><a href="<?php print $href; ?>"><?php print $href; ?></a></nobr></td>
       <td><?php print $summary; ?></td>
       </tr>
       <?php
@@ -372,12 +380,6 @@ class MfippaController {
     $pageFiles = self::getPageFiles($mfippa_id);
     $size = getimagesize($pageFiles[$page]);
 
-    if (! file_exists($pdffile)) {
-      top();
-      print "PDF file not found.\n";
-      bottom();
-      return;
-    }
     if (! file_exists($pagesdir)) {
       top();
       print "PDF to PAGES directory not found\n";
@@ -510,6 +512,7 @@ class MfippaController {
     }
 
     top();
+		pr($size);
     print "<h1>$mfippa_id</h1>\n";
     print "Choose a page to process: ";
     foreach (array_keys($pageFiles) as $page) {
@@ -523,7 +526,7 @@ class MfippaController {
     # TODO: use opendir() to read PDF files, or move to database.
     # low volume function though so for now lazy and just changing
     # this code as MFIPPA-on-MFIPPA are processed added manually.
-    return array('A-2013-00594');
+    return array('A-2013-00594','A-2013-00687');
   }
 
 
