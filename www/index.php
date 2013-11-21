@@ -47,6 +47,7 @@ getApi()->get('/api/feed/', array('ApiController', 'feed'), EpiApi::external);
 getApi()->get('/api/feed/(\d+)', array('ApiController', 'feed'), EpiApi::external);
 getApi()->get('/api/feed/(\d+)/(\d+)', array('ApiController', 'feed'), EpiApi::external);
 getApi()->get('/api/zoning/(-{0,1}[\d\.]+)/(-{0,1}[\d\.]+)', array('ApiController', 'zoning'), EpiApi::external);
+getApi()->post('/api/inbound/traffic-incident', 'traffic_incident', EpiApi::external);
 
 getRoute()->get('/feed/', 'feed');
 
@@ -152,6 +153,11 @@ function ottawaMediaRSS() {
     print "<small><a href=\"$link\" target=\"_blank\">$title</a></small><br/>\n";
     }
   }
+}
+
+function traffic_incident() {
+	$dump = print_r($_POST,TRUE);
+	error_log("traffic post data\n$dump\n");
 }
 
 function feed() {
