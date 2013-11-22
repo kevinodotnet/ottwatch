@@ -161,6 +161,8 @@ function traffic_incident() {
 	error_log("traffic POST data: $dump ");
 	$dump = print_r($_GET,TRUE);
 	error_log("traffic GET data: $dump ");
+	$postdata = file_get_contents("php://input");
+	error_log("traffic raw: $postdata ");
 }
 
 function feed() {
