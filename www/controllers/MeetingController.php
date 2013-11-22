@@ -160,6 +160,7 @@ class MeetingController {
     $votes = getDatabase()->all(" 
       select 
         ivc.vote,
+        iv.id voteid,
         iv.motion,
         i.title,
         m.title as meetingtitle,
@@ -201,7 +202,10 @@ class MeetingController {
       ?>
       <tr>
       <td style="width: 10%;"><?php print $v['vote']; ?></td>
-      <td style="width: 45%;"><?php print $v['motion']; ?></td>
+      <td style="width: 45%;">
+			<?php print $v['motion']; ?>
+			<a href="<?php print OttWatchConfig::WWW."/meetings/votes/{$v['voteid']}"; ?>"><i class="icon-share"></i> details</a>
+			</td>
       <td style="width: 45%;"><?php print $v['title']; ?></td>
       </tr>
       <?php
