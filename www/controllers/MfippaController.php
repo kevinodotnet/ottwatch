@@ -28,8 +28,8 @@ class MfippaController {
     $summary = "$pagesdir/mfippa_summary_{$row['id']}.png";
     $ocr = "$pagesdir/mfippa_ocr_{$row['id']}";
 
-    $x = round($size[0]*.30);
-    $y = 110;
+    $x = round($size[0]*.20);
+    $y = 20;
     $width = $size[0]-$x;
     $height = $size[1]-$y;
     $cmd = self::CONVERT . " '{$thumb}' +repage -crop {$width}x{$height}+{$x}+{$y} {$summary}";
@@ -42,7 +42,7 @@ class MfippaController {
     $text = preg_replace('/  /',' ',$text);
     $text = trim($text);
 
-    db_update('mfippa',array('id'=>$id,'summary'=>$text));
+    db_update('mfippa',array('id'=>$id,'summary'=>$text),'id');
 
 		print "{$row['tag']} >>> $text\n";
   }
@@ -342,7 +342,7 @@ class MfippaController {
     </tr>
     <?php
     if (LoginController::isAdmin()) {
-    	$rows = getDatabase()->all(" select * from mfippa order by id desc ");
+    	$rows = getDatabase()->all(" select * from mfippa order by source desc, tag desc, id desc ");
 		} else {
     	$rows = getDatabase()->all(" select * from mfippa where published = 1 and tag is not null order by tag desc ");
 		}
