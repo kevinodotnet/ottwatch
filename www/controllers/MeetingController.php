@@ -10,6 +10,75 @@ MeetingController::formatMotion("foo");
 
 class MeetingController {
 
+  static public function voteDisplay ($id) {
+
+		$vote = getDatabase()->one(" select * from itemvote where id = :id ",array('id'=>$id));
+		$i = getDatabase()->one(" select * from item where id = :id ",array('id'=>$vote['itemid']));
+		$m = getDatabase()->one(" select * from meeting where id = :id ",array('id'=>$i['meetingid']));
+		$text = self::formatMotion($vote['motion']);
+    $category = meeting_category_to_title($m['category']);
+    $casts = getDatabase()->all(" select * from itemvotecast where itemvoteid = :id order by itemvoteid,vote,id ",array('id'=>$vote['id']));
+
+		top(substr($text,0,50));
+
+    ?>
+
+		<div class="row-fluid">
+		<div class="span6">
+		<p class="lead"><?php print $text; ?></p>
+    <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
+		<tr>
+		<td>
+		<h5>Yes</h5>
+    <?php
+    foreach ($casts as $c) {
+      if ($c['vote'] != 'y') { continue; }
+      print "<a href=\"".OttWatchConfig::WWW."/meetings/votes/member/".urlencode($c['name'])."\">".$c['name']."</a><br/>";
+    }
+    ?>
+		</td>
+		<td>
+		<h5>No</h5>
+    <?php
+    foreach ($casts as $c) {
+      if ($c['vote'] != 'n') { continue; }
+      print "<a href=\"".OttWatchConfig::WWW."/meetings/votes/member/".urlencode($c['name'])."\">".$c['name']."</a><br/>";
+    }
+    ?>
+		</td>
+		<td>
+		<h5>Absent/Recused/Other</h5>
+    <?php
+    foreach ($casts as $c) {
+      if ($c['vote'] == 'y' || $c['vote'] == 'n') { continue; }
+      print "<a href=\"".OttWatchConfig::WWW."/meetings/votes/member/".urlencode($c['name'])."\">".$c['name']."</a><br/>";
+    }
+    ?>
+		</td>
+		</tr>
+		</table>
+		</div>
+		<div class="span6">
+		<p>Vote recorded from <b><?php print $category; ?></b> on <?php print substr($m['starttime'],0,10); ?> regarding 
+		agenda item <b><?php print $i['title']; ?></b>.</p>
+		<p><a href="<?php print OttWatchConfig::WWW."/meetings/{$m['category']}/{$m['meetid']}"; ?>">Full meeting details</a>.</p>
+		<?php
+		if ($m['youtubestate'] == 'ready') {
+			print "<center>\n";
+	    print self::getYoutubeEmbedCode($m['youtube']);
+			print "</center>\n";
+		}
+		?>
+		</div>
+		</div><!-- //row -->
+
+		</div>
+		</div><!-- /row -->
+
+		<?php
+		bottom();
+	}
+
   static public function dump() {
     top();
     $rows = getDatabase()->all(" 
@@ -843,7 +912,10 @@ class MeetingController {
       $casts = getDatabase()->all(" select * from itemvotecast where itemvoteid = :id order by itemvoteid,vote,id ",array('id'=>$vote['id']));
       ?>
       <tr>
-      <td style="vertical-align: top;"><?php print self::formatMotion($vote['motion']); ?></td>
+      <td style="vertical-align: top;">
+			<?php print self::formatMotion($vote['motion']); ?><br/>
+			<a href="<?php print OttWatchConfig::WWW."/meetings/votes/{$vote['id']}"; ?>"><i class="icon-share"></i> pop-out</a>
+			</td>
       <td style="vertical-align: top;">
       <?php
       foreach ($casts as $c) {
