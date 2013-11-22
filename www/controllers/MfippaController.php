@@ -81,8 +81,8 @@ class MfippaController {
 
     if ($row['tag'] == '') {
       $matches = array();
-      if (preg_match('/A-(\d+)-(\d+)/',$prev['tag'],$matches)) {
-        $row['tag'] = 'A-'.$matches[1].'-'.sprintf('%05d',$matches[2]+1);
+      if (preg_match('/([AP])-(\d+)-(\d+)/',$prev['tag'],$matches)) {
+        $row['tag'] = $matches[1].'-'.$matches[2].'-'.sprintf('%05d',$matches[3]+1);
       }
     }
 
@@ -350,8 +350,8 @@ class MfippaController {
       $summary = self::cleanSummary($r['summary']);
 			$href = $r['tag'];
 			if ($href == '') {
-			}
 				$href = $r['id'];
+			}
       ?>
       <tr>
       <td><nobr><a href="<?php print $href; ?>"><?php print $href; ?></a></nobr></td>
