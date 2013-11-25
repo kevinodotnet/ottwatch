@@ -1,5 +1,8 @@
 <?php
 
+session_start();
+date_default_timezone_set("Canada/Eastern");
+
 require '../vendor/autoload.php';
 
 include_once '../lib/include.php';
