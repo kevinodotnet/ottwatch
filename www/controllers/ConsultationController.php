@@ -56,11 +56,11 @@ class ConsultationController {
       $path = "/consultations/{$row['id']}";
       syndicate($message,$path);
       # old style, still in play for now
-      $url = OttWatchConfig::WWW."/consultations/{$row['id']}";
-      $tweet = tweet_txt_and_url($tweet,$url);
-			$tweeted[$row['id']] = 1;
+      # $url = OttWatchConfig::WWW."/consultations/{$row['id']}";
+      # $tweet = tweet_txt_and_url($tweet,$url);
+			# $tweeted[$row['id']] = 1;
       # print "id:{$row['id']} WouldHaveSent: $tweet\n";
-      tweet($tweet);
+      # tweet($tweet);
     }
     
   }

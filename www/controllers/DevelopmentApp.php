@@ -654,8 +654,8 @@ class DevelopmentAppController {
     $path = "/devapps/{$labels['Application #']}";
     syndicate($message,$path);
     # old style
-    $newtweet = tweet_txt_and_url($tweet,$url);
-		tweet($newtweet);
+    # $newtweet = tweet_txt_and_url($tweet,$url);
+		# tweet($newtweet);
   }
 
   static function suckToNextDiv ($lines,$x) {

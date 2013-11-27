@@ -515,13 +515,13 @@ class MeetingController {
     foreach ($posts as $path => $text) {
       syndicate($text,$path);
     }
-    foreach ($tweets as $url => $text) {
-      $tweet = tweet_txt_and_url($text,$url);
-      # allow duplicates because subsequent tweets about the same file
-      # will be the same, but spaced in time according to the lobbyist
-      # activity dates
-      tweet($tweet);
-    }
+    #foreach ($tweets as $url => $text) {
+    #  $tweet = tweet_txt_and_url($text,$url);
+    #  # allow duplicates because subsequent tweets about the same file
+    #  # will be the same, but spaced in time according to the lobbyist
+    #  # activity dates
+    #  tweet($tweet);
+    #}
     
   }
 

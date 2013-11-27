@@ -34,11 +34,28 @@ class SyndicationController {
 			#print "\n-----------------------------------------------\n";
 			#pr($r);
 			#print "\n-----------------------------------------------\n";
-			self::facebook($r);
-
+      try {
+  			self::twitter($r);
+      } catch (Exception $e) {
+        print $e;
+      }
+      try {
+  			self::facebook($r);
+      } catch (Exception $e) {
+        print $e;
+      }
 		}
-
 	}
+
+	public static function tweet($r) {
+		$message = $r['message'];
+		$url = $r['url'];
+		if ($url == null) {
+			$url = OttWatchConfig::WWW.$r['path'];
+		}
+    $tweet = tweet_txt_and_url($message,$url);
+    tweet($tweet);
+  }
 
 	public static function facebook($r) {
 		# POST variables to FB
