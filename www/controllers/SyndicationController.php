@@ -47,7 +47,7 @@ class SyndicationController {
 		}
 	}
 
-	public static function tweet($r) {
+	public static function twitter($r) {
 		$message = $r['message'];
 		$url = $r['url'];
 		if ($url == null) {
