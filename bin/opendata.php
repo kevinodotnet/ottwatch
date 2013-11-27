@@ -1,10 +1,7 @@
 <?php
 
-$dirname = `dirname $argv[0]`;
-$dirname = preg_replace("/\n/","",$dirname);
-
-set_include_path(get_include_path() . PATH_SEPARATOR . "$dirname/../lib");
-set_include_path(get_include_path() . PATH_SEPARATOR . "$dirname/../www");
+set_include_path(get_include_path() . PATH_SEPARATOR . realpath(dirname(__FILE__)."/../lib"));
+set_include_path(get_include_path() . PATH_SEPARATOR . realpath(dirname(__FILE__)."/../www"));
 require_once('include.php');
 
 if (@$argv[1] == 'geoOttawaImport') {
@@ -30,7 +27,8 @@ OpenDataController::scanOpenData();
 
   $rows = getDatabase()->all(" 
     select 
-      f.*
+      d.title,
+      f.name, f.format, f.url
     from 
       opendatafile f
       join opendata d on d.id = f.dataid
@@ -39,11 +37,15 @@ OpenDataController::scanOpenData();
     order by f.updated desc
     ",array('last'=>$last));
 
+  if (count($rows) > 20) {
+    print "WHOAH: skipping syndication - lots of files\n";
+    return;
+  }
   if (count($rows) > 10) {
     # syndicate a round-up
     $message = count($rows) . " opendata files are updated: ";
     foreach ($rows as $r) {
-      $message .= "{$r['name']} ({$r['format']}), ";
+      $message .= "{$r['title']} / {$r['name']}, ";
     }
     $message = preg_replace("/, $/","",$message);
     syndicate($message,'/opendata/');
@@ -52,7 +54,10 @@ OpenDataController::scanOpenData();
 
   # syndicate each file since it's not too many
   foreach ($rows as $r) {
-    $message = "#Opendata: {$r['name']} ({$r['format']}) updated";
+    $message = "#Opendata: {$r['title']} - {$r['name']} ({$r['format']}) updated";
+    if ($r['title'] == $r['name']) {
+      $message = "#Opendata: {$r['name']} ({$r['format']}) updated";
+    }
     $url = $r['url'];
     syndicate($message,'/opendata/',$url);
   }
