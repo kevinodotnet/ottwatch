@@ -864,14 +864,14 @@ class LobbyistController {
     }
     # keying by URL guarantees we don't double-tweet because of multiple new activities 
     # on the same lobbyfile
-    foreach ($tweets as $url => $text) {
-      $tweet = tweet_txt_and_url($text,$url);
-      # allow duplicates because subsequent tweets about the same file
-      # will be the same, but spaced in time according to the lobbyist
-      # activity dates
-      tweet($tweet);
-      sleep(5);
-    }
+    #foreach ($tweets as $url => $text) {
+    #  $tweet = tweet_txt_and_url($text,$url);
+    #  # allow duplicates because subsequent tweets about the same file
+    #  # will be the same, but spaced in time according to the lobbyist
+    #  # activity dates
+    #  tweet($tweet);
+    #  sleep(5);
+    #}
     
   }
 
