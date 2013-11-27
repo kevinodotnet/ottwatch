@@ -11,6 +11,6 @@ require_once('twitteroauth.php');
 # crawl for updates
 ConsultationController::crawlConsultations();
 # tweet any changes
-# ConsultationController::tweetUpdatedConsultations();
+ConsultationController::tweetUpdatedConsultations();
 
 ?>
