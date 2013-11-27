@@ -50,6 +50,7 @@ getApi()->get('/api/feed/', array('ApiController', 'feed'), EpiApi::external);
 getApi()->get('/api/feed/(\d+)', array('ApiController', 'feed'), EpiApi::external);
 getApi()->get('/api/feed/(\d+)/(\d+)', array('ApiController', 'feed'), EpiApi::external);
 getApi()->get('/api/zoning/(-{0,1}[\d\.]+)/(-{0,1}[\d\.]+)', array('ApiController', 'zoning'), EpiApi::external);
+getApi()->post('/api/inbound/traffic-incident', 'traffic_incident', EpiApi::external);
 
 getRoute()->get('/feed/', 'feed');
 
@@ -104,6 +105,7 @@ getRoute()->get('/devapps/([^\/]+)', array('DevelopmentAppController','viewDevAp
 
 getRoute()->get('/meetings/votes', array('MeetingController','votesIndex'));
 getRoute()->get('/meetings/votes/member/([^\/]*)', array('MeetingController','votesMember'));
+getRoute()->get('/meetings/votes/(\d+)', array('MeetingController','voteDisplay'));
 
 getRoute()->get('/meetings/dump/all', array('MeetingController','dump'));
 getRoute()->get('/meetings/calendar', array('MeetingController','calendarView'));
@@ -155,6 +157,15 @@ function ottawaMediaRSS() {
     print "<small><a href=\"$link\" target=\"_blank\">$title</a></small><br/>\n";
     }
   }
+}
+
+function traffic_incident() {
+	$dump = print_r($_POST,TRUE);
+	error_log("traffic POST data: $dump ");
+	$dump = print_r($_GET,TRUE);
+	error_log("traffic GET data: $dump ");
+	$postdata = file_get_contents("php://input");
+	error_log("traffic raw: $postdata ");
 }
 
 function feed() {

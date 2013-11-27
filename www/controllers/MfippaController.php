@@ -28,8 +28,8 @@ class MfippaController {
     $summary = "$pagesdir/mfippa_summary_{$row['id']}.png";
     $ocr = "$pagesdir/mfippa_ocr_{$row['id']}";
 
-    $x = round($size[0]*.30);
-    $y = 110;
+    $x = round($size[0]*.20);
+    $y = 20;
     $width = $size[0]-$x;
     $height = $size[1]-$y;
     $cmd = self::CONVERT . " '{$thumb}' +repage -crop {$width}x{$height}+{$x}+{$y} {$summary}";
@@ -42,7 +42,7 @@ class MfippaController {
     $text = preg_replace('/  /',' ',$text);
     $text = trim($text);
 
-    db_update('mfippa',array('id'=>$id,'summary'=>$text));
+    db_update('mfippa',array('id'=>$id,'summary'=>$text),'id');
 
 		print "{$row['tag']} >>> $text\n";
   }
@@ -81,8 +81,8 @@ class MfippaController {
 
     if ($row['tag'] == '') {
       $matches = array();
-      if (preg_match('/A-(\d+)-(\d+)/',$prev['tag'],$matches)) {
-        $row['tag'] = 'A-'.$matches[1].'-'.sprintf('%05d',$matches[2]+1);
+      if (preg_match('/([AP])-(\d+)-(\d+)/',$prev['tag'],$matches)) {
+        $row['tag'] = $matches[1].'-'.$matches[2].'-'.sprintf('%05d',$matches[3]+1);
       }
     }
 
@@ -341,12 +341,20 @@ class MfippaController {
     <th>Summary*</th>
     </tr>
     <?php
-    $rows = getDatabase()->all(" select * from mfippa where published = 1 and tag is not null order by tag desc ");
+    if (LoginController::isAdmin()) {
+    	$rows = getDatabase()->all(" select * from mfippa order by source desc, tag desc, id desc ");
+		} else {
+    	$rows = getDatabase()->all(" select * from mfippa where published = 1 and tag is not null order by tag desc ");
+		}
     foreach ($rows as $r) {
       $summary = self::cleanSummary($r['summary']);
+			$href = $r['tag'];
+			if ($href == '') {
+				$href = $r['id'];
+			}
       ?>
       <tr>
-      <td><nobr><a href="<?php print $r['tag']; ?>"><?php print $r['tag']; ?></a></nobr></td>
+      <td><nobr><a href="<?php print $href; ?>"><?php print $href; ?></a></nobr></td>
       <td><?php print $summary; ?></td>
       </tr>
       <?php
@@ -372,12 +380,6 @@ class MfippaController {
     $pageFiles = self::getPageFiles($mfippa_id);
     $size = getimagesize($pageFiles[$page]);
 
-    if (! file_exists($pdffile)) {
-      top();
-      print "PDF file not found.\n";
-      bottom();
-      return;
-    }
     if (! file_exists($pagesdir)) {
       top();
       print "PDF to PAGES directory not found\n";
@@ -510,6 +512,7 @@ class MfippaController {
     }
 
     top();
+		pr($size);
     print "<h1>$mfippa_id</h1>\n";
     print "Choose a page to process: ";
     foreach (array_keys($pageFiles) as $page) {
@@ -523,7 +526,7 @@ class MfippaController {
     # TODO: use opendir() to read PDF files, or move to database.
     # low volume function though so for now lazy and just changing
     # this code as MFIPPA-on-MFIPPA are processed added manually.
-    return array('A-2013-00594');
+    return array('A-2013-00594','A-2013-00687');
   }
 
 
