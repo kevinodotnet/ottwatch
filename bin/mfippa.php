@@ -25,6 +25,6 @@ if ($argv[1] == 'summaryOCR') {
   return;
 }
 
-$p = MfippaController::getPageFiles('A-2013-00594');
-pr($p);
+# $p = MfippaController::getPageFiles('A-2013-00594');
+# pr($p);
 
