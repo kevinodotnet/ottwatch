@@ -26,6 +26,12 @@ class SyndicationController {
 				f.created
     ",array('now'=>$now,'last'=>$last));
 
+    if (count($rows) > 10) {
+      print "\n\nTOO MANY UPDATES TO SYNDICATE!\n\n";
+      pr($rows);
+      return;
+    }
+
 		foreach ($rows as $r) {
 			$message = $r['message'];
 			$path = $r['path'];
