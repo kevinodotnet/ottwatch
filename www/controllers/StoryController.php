@@ -130,8 +130,8 @@ class StoryController {
     </div><!-- /row -->
 
     <div class="row-fluid">
-    <div class="offset3 span6" style="border-top: 1px solid #f0f0f0;  padding-right: 5px;">
-    <p style=""><?php print $story['body']; ?></p>
+    <div class="offset3 span6" style="border-top: 1px solid #f0f0f0; padding-right: 5px; padding-top: 20px;">
+    <div class="ottwatchstorybody" ><?php print $story['body']; ?></div>
     <?php disqus(); ?>
     </div><!-- /span -->
     </div><!-- /row -->
