@@ -85,11 +85,15 @@ class MfippaController {
         $row['tag'] = $matches[1].'-'.$matches[2].'-'.sprintf('%05d',$matches[3]+1);
       }
     }
+    if ($row['created'] == '') {
+			$row['created'] = substr($prev['created'],0,10);
+		}
 
     $submit = $_GET['submit'];
     $tag = $_GET['tag'];
     $from = $_GET['from'];
     $closed = $_GET['closed'];
+    $created = $_GET['created'];
     if ($submit == 'Save') {
 
       $values = array();
@@ -98,6 +102,9 @@ class MfippaController {
       
       # convert 'closed' from 'd-m-y' to 'yyyy-mm-dd'
       $matches = array();
+      if ($created != '') {
+				$values['created'] = $created;
+      }
       if ($closed != '') {
 	      if (preg_match('/(\d+)-(\d+)-(\d+)/',$closed,$matches)) {
           $closed = $matches[3].'-'.$matches[1].'-'.$matches[2];
@@ -130,6 +137,7 @@ class MfippaController {
     </span>
     </div>
     <div style="text-align: right; padding-right: 120px;">
+    <input type="text" name="created" value="<?php print $row['created']; ?>" style="width: 100px;"/>
     <input type="text" name="closed" value="<?php print $row['closed']; ?>" style="width: 100px;"/><br/>
     <input class="btn" type="submit" name="submit" value="Save"/>
     </div>
