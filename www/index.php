@@ -505,8 +505,13 @@ function top($title = '',$quiet = false) {
 <link href="<?php print $OTT_WWW; ?>/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
 <style type="text/css">
   body {
-  padding: 20px;
-}
+	  padding: 20px;
+	}
+	.ottwatchstorybody {
+		font-size: 110%;
+		line-height: 140%;
+		color: #565656;
+	}
 </style>
 <script src="<?php print $OTT_WWW; ?>/jquery.js" type="text/javascript"></script>
 <script src="<?php print $OTT_WWW; ?>/bootstrap/js/bootstrap.min.js"></script>
