@@ -331,9 +331,12 @@ create table candidate (
   first varchar(50),
   middle varchar(50),
   last varchar(50),
+  url varchar(300),
   email varchar(50),
   twitter varchar(50),
   facebook varchar(100),
+  nominated datetime,
+	incumbent boolean default false,
   primary key (id)
 ) engine = innodb;
 
