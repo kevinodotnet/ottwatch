@@ -422,6 +422,7 @@ function dashboard() {
 
   <h4>More Reports and Data</h4>
 <ul>
+<li><a href="<?php print $OTT_WWW; ?>/election/">Election 2014</a>: Everything election related!</li>
 <li><a href="<?php print $OTT_WWW; ?>/story/list">Stories</a>: Original articles by OttWatch</li>
 <li><a href="<?php print $OTT_WWW; ?>/consultations/">Consultations</a>: A complete list of public consultations from ottawa.ca</li>
 <li><a href="<?php print $OTT_WWW; ?>/opendata/">OpenData</a>: Most recently updated data from <i>data.ottawa.ca</i>.</li>
