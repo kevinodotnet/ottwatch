@@ -31,12 +31,14 @@ class ElectionController {
     $wardname = getDatabase()->one(" select ward from electedofficials where wardnum = $race ");
     $wardname = $wardname['ward'];
 
-
     if ($race == 0) {
-      top("Mayoral Race - Ottawa - " . self::year);
+      $title = "Mayoral Race - Ottawa - " . self::year;
     } else {
-      top("$wardname - Ward Race - Ottawa - " . self::year);
+      $title = "$wardname - Ward Race - Ottawa - " . self::year;
     }
+
+		top($title);
+		print "<h1>$title</h1>\n";
 
     $rows = getDatabase()->all("
       select * 
@@ -46,7 +48,7 @@ class ElectionController {
     ?>
     <div class="row-fluid">
     <div class="span8">
-    <h1>Candidates</h1>
+    <h2>Candidates</h2>
     <?php
     if (count($rows) == 0) {
       ?>
@@ -104,7 +106,7 @@ class ElectionController {
     ?>
 
     <div class="span4">
-    <h1>Incumbent</h1>
+    <h2>Incumbent</h2>
     <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
     <tr>
       <th>Name</th>
@@ -150,7 +152,7 @@ class ElectionController {
 
     <div class="row-fluid">
     <div class="span8">
-    <h1>Discussion</h1>
+    <h2>Discussion</h2>
     <p>
     The discusson thread below will remain open for the entire 2014 year.
     </p>
