@@ -40,7 +40,7 @@ while (true) {
 	}
 
 	print "s";
-	usleep(500000);
+	usleep(300000);
 	print " ";
 }
 
