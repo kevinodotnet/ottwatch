@@ -32,9 +32,9 @@ class ElectionController {
     $wardname = $wardname['ward'];
 
     if ($race == 0) {
-      $title = "Mayoral Race - Ottawa - " . self::year;
+      $title = "Mayoral Race";
     } else {
-      $title = "$wardname - Ward Race - Ottawa - " . self::year;
+      $title = "$wardname Ward Race";
     }
 
 		top($title);
