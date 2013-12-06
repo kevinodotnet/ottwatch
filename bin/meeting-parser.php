@@ -181,7 +181,7 @@ foreach ($items as $i) {
   $mdb = getDatabase()->one('select * from meeting where meetid = :meetid ', array(':meetid' => $meetid));
   $meetingid = $mdb['id'];
   if ($mdb['id']) {
-    print "$category ($meetid) has changed guid\nhttp://ottwatch.ca/meetings/meeting/{$meetid}\n";
+    # print "$category ($meetid) has changed guid\nhttp://ottwatch.ca/meetings/meeting/{$meetid}\n";
     # meeting has changed guid, so needs rescraping.
 	  getDatabase()->execute(' 
       update meeting set 
@@ -193,10 +193,7 @@ foreach ($items as $i) {
       where 
         meetid = :meetid ', array( ':rssguid' => $guid,':meetid' => $meetid, 'starttime' => $starttime, 'title'=>$title, 'category'=>$category ));
     $new = getDatabase()->one('select * from meeting where meetid = :meetid ', array(':meetid' => $meetid));
-    print "\nWAS:\n";
-    pr($mdb);
-    print "\nNEW:\n";
-    pr($new);
+    #print "\nWAS:\n"; pr($mdb); print "\nNEW:\n"; pr($new);
   } else {
     # meeting has never been seen before
     print "$category ($meetid) is new\nhttp://ottwatch.ca/meetings/meeting/{$meetid}\n";
