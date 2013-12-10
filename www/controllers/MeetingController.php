@@ -830,7 +830,9 @@ class MeetingController {
         continue;
       }
       #print "<pre>"; print print_r($i); print "</pre>";
-      print "<b><a href=\"javascript:focusOn('item',{$i['itemid']})\">{$i['title']}</a></b><br/>\n";
+      print "<b><a href=\"javascript:focusOn('item',{$i['itemid']})\">{$i['title']}</a></b> ";
+      print "<a href=\"http://app05.ottawa.ca/sirepub/item.aspx?itemid={$i['itemid']}\"><i class=\"icon-share-alt\"></i></a>";
+      print "<br/>\n";
       $files = getDatabase()->all(" select * from ifile where itemid = :itemid order by id ",array("itemid"=>$i['id']));
       if (count($files) > 0) {
         foreach ($files as $f) {
