@@ -428,7 +428,7 @@ class MfippaController {
 
         if (!file_exists($scaleout)) {
 	        $perc = $scale * 100;
-	        $cmd = "$convert '{$pageFiles[$page]}' -scale $perc% {$scaleout}";
+	        $cmd = "$convert '{$pageFiles[$page]}' -scale '$perc%' {$scaleout}";
 	        system($cmd);
         }
 
@@ -534,7 +534,7 @@ class MfippaController {
     # TODO: use opendir() to read PDF files, or move to database.
     # low volume function though so for now lazy and just changing
     # this code as MFIPPA-on-MFIPPA are processed added manually.
-    return array('A-2013-00594','A-2013-00687');
+    return array('A-2013-00196','A-2013-00594','A-2013-00687');
   }
 
 
