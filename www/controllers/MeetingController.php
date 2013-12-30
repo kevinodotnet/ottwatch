@@ -79,7 +79,7 @@ class MeetingController {
       print "<td>"; printf("%.2f%%", $r['y'] * 100); print "</td>"; 
       print "<td>"; printf("%.2f%%", $r['n'] * 100); print "</td>"; 
       print "<td>"; 
-      print "<b><a href=\"http://app05.ottawa.ca/sirepub/item.aspx?itemid={$item['itemid']}\">".$item['title']."</a></b>";
+      print "<b><a href=\"/meetings/votes/{$itemvote['id']}\">".$item['title']."</a></b>";
       print "<br/>";
       print $itemvote['motion'];
       print "</td>";
@@ -146,6 +146,7 @@ class MeetingController {
 		</td>
 		</tr>
 		</table>
+		<?php disqus(); ?>
 		</div>
 		<div class="span6">
 		<p>Vote recorded from <b><?php print $category; ?></b> on <?php print substr($m['starttime'],0,10); ?> regarding 
