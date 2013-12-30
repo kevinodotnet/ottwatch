@@ -206,7 +206,7 @@ class ElectionController {
     </div>
     <div class="span4">
     <center>
-    <form class="form-inline" method="post" action="update">
+    <form class="form-inline" method="post" action="should_never_happen" onsubmit="return false;">
     <p class="lead">
     Find your ward: 
     </p>
@@ -218,6 +218,10 @@ class ElectionController {
     <script>
     function findward() {
       postal = $('#postal').val();
+			if (postal == '') {
+	      $('#wardmsg').html('... enter a postal code first ...');
+				return;
+			}
       $('#wardmsg').html('... googling for lat/lon ...');
       var geocoder = new google.maps.Geocoder();
       geocoder.geocode({address: postal},
