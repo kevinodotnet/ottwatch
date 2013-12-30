@@ -206,7 +206,7 @@ class ElectionController {
     </div>
     <div class="span4">
     <center>
-    <form class="form-inline" method="post" action="should_never_happen" onsubmit="return false;">
+    <form class="form-inline" method="post" action="should_never_happen" onsubmit="findward(); return false;">
     <p class="lead">
     Find your ward: 
     </p>
