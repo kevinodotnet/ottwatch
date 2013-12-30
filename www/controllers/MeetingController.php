@@ -20,7 +20,7 @@ class MeetingController {
     </div>
     <div class="span8">
     <p class="lead">
-    This report shows votes cast at council or at a committee meeting. It is ordered from "closest vote" first to "uncontrovertial" last.
+    This report shows votes cast at council or at a committee meeting. It is ordered from "closest vote" first to "uncontroversial" last.
     Only votes cast since mid-2012 are included.
     </p>
     </div>
