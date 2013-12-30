@@ -239,9 +239,15 @@ class ElectionController {
           url = '<?php print OttWatchConfig::WWW ; ?>/api/point?lat=' + lat + '&lon=' + lon;
           $.getJSON(url,function(data){
             console.log(data);
-            $('#wardmsg').html(
-              postal + ' is in <b><a href="<?php print OttWatchConfig::WWW; ?>/election/ward/'+data.ward.wardnum+'">' + data.ward.ward + ' <i class="icon-share"></i></a></b>'
-            );
+            if (data.ward.ward == undefined) {
+	            $('#wardmsg').html(
+	              postal + ' seems to be outside of Ottawa'
+	            );
+            } else {
+	            $('#wardmsg').html(
+	              postal + ' is in <b><a href="<?php print OttWatchConfig::WWW; ?>/election/ward/'+data.ward.wardnum+'">' + data.ward.ward + ' <i class="icon-share"></i></a></b>'
+	            );
+            }
           });
         }
       );
