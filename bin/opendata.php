@@ -37,17 +37,9 @@ OpenDataController::scanOpenData();
     order by f.updated desc
     ",array('last'=>$last));
 
-  if (count($rows) > 20) {
-    print "WHOAH: skipping syndication - lots of files\n";
-    return;
-  }
-  if (count($rows) > 10) {
+  if (count($rows) > 5) {
     # syndicate a round-up
-    $message = count($rows) . " opendata files are updated: ";
-    foreach ($rows as $r) {
-      $message .= "{$r['title']} / {$r['name']}, ";
-    }
-    $message = preg_replace("/, $/","",$message);
+    $message = count($rows) . " #opendata files have been updated: ";
     syndicate($message,'/opendata/');
     return;
   } 
