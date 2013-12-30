@@ -192,41 +192,88 @@ class ElectionController {
 
     bottom();
   }
+
   public static function showMain() {
     top();
     ?>
+    <div class="row-fluid">
+    <div class="span4">
     <h1>Election <?php print self::year; ?></h1>
+    <p class="lead">
+    <b>October 27</b> is the day you vote.<br/>
+    <b>Everyday</b> is a good day to be involved.
+    </p>
+    </div>
+    <div class="span4">
+    <center>
+    <form class="form-inline" method="post" action="update">
+    <p class="lead">
+    Find your ward: 
+    </p>
+    <input id="postal" type="text" name="postal" placeholder="Postal Code"/>
+    <button type="button" class="btn" onclick="findward(); return false;">Search</button>
+    </form>
+    <div id="wardmsg"></div>
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=<?php print OttWatchConfig::GOOGLE_API_KEY; ?>&sensor=false"></script>
+    <script>
+    function findward() {
+      postal = $('#postal').val();
+      postal = 'K1Z 7G3';
+      $('#wardmsg').html('... googling for lat/lon ...');
+      var geocoder = new google.maps.Geocoder();
+      geocoder.geocode({address: postal},
+        function(results, status) { 
+          if (status != 'OK') {
+            $('#wardmsg').html('Error mapping postal code <b>"' + postal + '"</b>');
+            return;
+          } else {
+            $('#wardmsg').html('OK!');
+          }
+          lat = results[0].geometry.location.lat();
+          lon = results[0].geometry.location.lng();
+          // http://ottwatch.ca/api/point?lat=45.265309&lon=-75.777104
+          $('#wardmsg').html('... loading ward information ...');
+          url = '<?php print OttWatchConfig::WWW ; ?>/api/point?lat=' + lat + '&lon=' + lon;
+          $.getJSON(url,function(data){
+            console.log(data);
+            $('#wardmsg').html(
+              postal + ' is in <b><a href="<?php print OttWatchConfig::WWW; ?>/election/ward/'+data.ward.wardnum+'">' + data.ward.ward + ' <i class="icon-share"></i></a></b>'
+            );
+          });
+        }
+      );
+    }
+    </script>
+    </div><!-- findward -->
+    <div class="span4">
+    </div>
+    </div>
+
     <?php
     $wards = getDatabase()->all(" select distinct(wardnum) wardnum from electedofficials where wardnum is not null and wardnum != '' order by ward, wardnum + 0 ");
     $count = 0;
     array_unshift($wards,array('wardnum'=>0));
+    $count = 0;
     foreach ($wards as $ward) {
-      if ($prevWard != $ward['wardnum']) {
-        if ($count == 0) {
-          ?>
-          <div class="row-fluid">
-          <?php
-        }
-        if (++$count % 3 == 0) {
-          ?>
-          </div><!-- row -->
-          <div class="row-fluid">
-          <?php
-        }
-      }
-      $prevWard = $ward['wardnum'];
 
-      $raceLink = OttWatchConfig::WWW . "/election";
+      $mod = $count++ % 3;
+      if ($mod == 0) {
+        ?>
+        <div class="row-fluid">
+        <?php
+      }
+
       if ($ward['wardnum'] == 0) {
         # special case
         $wardInfo = array('ward'=>'Mayor');
         $raceLink .= "/mayor/";
+        $raceLink = OttWatchConfig::WWW . "/election/mayor/";
       } else {
         $wardInfo = getApi()->invoke('/api/wards/'.$ward['wardnum']);
-        $raceLink .= "/ward/{$ward['wardnum']}";
+        $raceLink = OttWatchConfig::WWW . "/election/ward/{$ward['wardnum']}";
       }
+
       ?>
-      <div class="row-fluid">
       <div class="span4">
       <h2><a href="<?php print $raceLink; ?>"><?php print "{$wardInfo['ward']}"; ?></a></h2>
       <?php
@@ -240,17 +287,15 @@ class ElectionController {
         print "<br/>\n";
       }
       ?>
-      </div><!-- /ward -->
+      </div>
       <?php
-
-      continue;
-      
+      if ($mod == 2) {
+        ?>
+        </div>
+        <?php
+      }
     }
-    ?>
-    </div><!-- /lastward -->
-    </div><!-- /lastrow -->
 
-    <?php
     bottom();
   }
 
