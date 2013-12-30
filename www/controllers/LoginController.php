@@ -81,6 +81,11 @@ class LoginController {
 
     # they are now logged in.
     self::setLoggedIn($row['id']);
+    $next = getSession()->get("login.next");
+    if ($next != '') {
+      header("Location: $next");
+      return;
+    }
     header("Location: " . OttWatchConfig::WWW . '/user/home');
   }
 
@@ -132,6 +137,13 @@ class LoginController {
 
     # they are now logged in.
     self::setLoggedIn($row['id']);
+    #header("Location: " . OttWatchConfig::WWW . '/user/home');
+
+    $next = getSession()->get("login.next");
+    if ($next != '') {
+      header("Location: $next");
+      return;
+    }
     header("Location: " . OttWatchConfig::WWW . '/user/home');
     # echo 'result: <pre>' . print_r($result, true) . '</pre>';
   }
@@ -250,6 +262,8 @@ class LoginController {
   static public function display() {
     top();
     $err = $_GET['err'];
+    $next = $_GET['next'];
+    getSession()->set("login.next",$_GET['next']);
     ?>
     <div class="row-fluid">
 
@@ -333,7 +347,14 @@ class LoginController {
     }
 
     self::setLoggedIn($row['id']);
+
+    $next = getSession()->get("login.next");
+    if ($next != '') {
+      header("Location: $next");
+      return;
+    }
     header("Location: home");
+
   }
 
   static public function logout() {
