@@ -560,7 +560,7 @@ if ($quiet) { return; }
 <?php
 if (!LoginController::isLoggedIn()) {
   ?>
-  <li><a href="<?php print $OTT_WWW; ?>/user/login">Login</a></li>
+  <li><a href="<?php print $OTT_WWW; ?>/user/login?next=<?php print urlencode($_SERVER['REQUEST_URI']); ?>">Login</a></li>
   <?php
 } else {
   ?>
