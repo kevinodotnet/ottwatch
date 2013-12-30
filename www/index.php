@@ -135,6 +135,7 @@ getRoute()->get('/consultations/(\d+)/content', array('ConsultationController','
 getRoute()->get('/election/*', array('ElectionController','showMain'));
 getRoute()->get('/election/(mayor)/', array('ElectionController','showRace'));
 getRoute()->get('/election/ward/(\d+)', array('ElectionController','showRace'));
+getRoute()->get('/election/ward/(\d+)/map', array('ElectionController','showWardMap'));
 
 getRoute()->get('.*', 'error404');
 getRoute()->run();

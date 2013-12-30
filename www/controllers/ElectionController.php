@@ -40,6 +40,60 @@ class ElectionController {
 
   const year = 2014;
 
+  public static function showWardMap($ward) {
+
+    $json = file_get_contents(OttWatchConfig::WWW."/api/wards/$ward?polygon=1");
+    $data = json_decode($json);
+    $poly = $data->polygon;
+
+    top();
+
+    ?>
+    <div id="map_canvas" style="width:100%; height:590px;"></div>
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=<?php print OttWatchConfig::GOOGLE_API_KEY; ?>&sensor=false"></script>
+    <script>
+    var mapOptions = { center: new google.maps.LatLng(45.420833,-75.59), zoom: 10, mapTypeId: google.maps.MapTypeId.ROADMAP };
+    infowindow = new google.maps.InfoWindow({ content: '' });
+    map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
+    var coords = [
+	    <?php
+	    foreach ($poly as $latlon) {
+	      print "new google.maps.LatLng({$latlon->lat}, {$latlon->lon}), \n"; # 25.774252, -80.190262),
+	    }
+	    ?>
+    ];
+    polygon = new google.maps.Polygon({
+      paths: coords,
+      strokeColor: '#ff0000',
+      fillColor: '#ff0000',
+      fillOpacity: 0.35,
+    });
+    polygon.setMap(map);
+
+    // from http://stackoverflow.com/questions/2177055/how-do-i-get-google-maps-to-show-a-whole-polygon
+    // TODO: move this to an include, perhaps the one that can also import the script tag for google maps
+		google.maps.Polygon.prototype.getBounds = function() {
+		    var bounds = new google.maps.LatLngBounds();
+		    var paths = this.getPaths();
+		    var path;        
+		    for (var i = 0; i < paths.getLength(); i++) {
+		        path = paths.getAt(i);
+		        for (var ii = 0; ii < path.getLength(); ii++) {
+		            bounds.extend(path.getAt(ii));
+		        }
+		    }
+		    return bounds;
+		}
+
+    map.fitBounds(polygon.getBounds());
+    </script>
+    <?php
+
+    bottom();
+
+
+  }
+
   public static function isRaceOn() {
     $now = date('Y-m-d');
     $raceon = strtotime('2014-01-02');
@@ -187,6 +241,16 @@ class ElectionController {
     </p>
     <?php disqus(); ?>
     </div>
+    <?php 
+    if ($race > 0) { 
+      ?>
+	    <div class="span4">
+	    <h2>Map</h2>
+	    <a href="<?php print $race; ?>/map">Get a map for this ward</a>
+	    </div>
+	    <?php
+    }
+    ?>
     </div>
     <?php
 
@@ -311,3 +375,5 @@ class ElectionController {
 }
 
 ?>
+
+
