@@ -28,13 +28,13 @@ class MfippaController {
     $summary = "$pagesdir/mfippa_summary_{$row['id']}.png";
     $ocr = "$pagesdir/mfippa_ocr_{$row['id']}";
 
-    $x = round($size[0]*.20);
-    $y = 20;
-    $width = $size[0]-$x;
+    $x = round($size[0]*.375);
+    $x1 = round($size[0]*.468);
+    $y = 0;
+    $width = $size[0]-$x-$x1;
     $height = $size[1]-$y;
     $cmd = self::CONVERT . " '{$thumb}' +repage -crop {$width}x{$height}+{$x}+{$y} {$summary}";
     system($cmd);
-
     system(" tesseract '{$summary}' '{$ocr}' 2>/dev/null");
     $text = `cat {$ocr}* `;
     $text = preg_replace('/\r/',' ',$text);
@@ -44,7 +44,7 @@ class MfippaController {
 
     db_update('mfippa',array('id'=>$id,'summary'=>$text),'id');
 
-		print "{$row['tag']} >>> $text\n";
+		print "{$row['tag']} >>> $text >>> $summary\n";
   }
 
   /* display a single mfippa */
