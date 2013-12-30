@@ -17,16 +17,16 @@
         },
         {
             "name": "lusitanian/oauth",
-            "version": "v0.2.3",
+            "version": "v0.2.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Lusitanian/PHPoAuthLib.git",
-                "reference": "75074f198e8c7697ff72c1d2a7d8fc8a5ef80fec"
+                "reference": "27e375e13e1badcd6dca7fb47b154b3c48fdec0c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Lusitanian/PHPoAuthLib/zipball/75074f198e8c7697ff72c1d2a7d8fc8a5ef80fec",
-                "reference": "75074f198e8c7697ff72c1d2a7d8fc8a5ef80fec",
+                "url": "https://api.github.com/repos/Lusitanian/PHPoAuthLib/zipball/27e375e13e1badcd6dca7fb47b154b3c48fdec0c",
+                "reference": "27e375e13e1badcd6dca7fb47b154b3c48fdec0c",
                 "shasum": ""
             },
             "require": {
@@ -76,7 +76,7 @@
                 "oauth",
                 "security"
             ],
-            "time": "2013-09-23 17:22:53"
+            "time": "2013-12-25 20:05:42"
         },
         {
             "name": "phpmailer/phpmailer",

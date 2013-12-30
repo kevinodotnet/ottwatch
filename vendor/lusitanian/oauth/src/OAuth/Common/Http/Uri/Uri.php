@@ -99,7 +99,7 @@ class Uri implements UriInterface
 
         if (isset($uriParts['path'])) {
             $this->path = $uriParts['path'];
-            if ('/' == $uriParts['path']) {
+            if ('/' === $uriParts['path']) {
                 $this->explicitTrailingHostSlash = true;
             }
         } else {
@@ -245,7 +245,7 @@ class Uri implements UriInterface
     {
         $uri = $this->scheme . '://' . $this->getRawAuthority();
 
-        if ('/' == $this->path) {
+        if ('/' === $this->path) {
             $uri .= $this->explicitTrailingHostSlash ? '/' : '';
         } else {
             $uri .= $this->path;
@@ -269,7 +269,7 @@ class Uri implements UriInterface
     {
         $uri = '';
 
-        if ('/' == $this->path) {
+        if ('/' === $this->path) {
             $uri .= $this->explicitTrailingHostSlash ? '/' : '';
         } else {
             $uri .= $this->path;
@@ -288,7 +288,7 @@ class Uri implements UriInterface
     {
         $uri = $this->scheme . '://' . $this->getAuthority();
 
-        if ('/' == $this->path) {
+        if ('/' === $this->path) {
             $uri .= $this->explicitTrailingHostSlash ? '/' : '';
         } else {
             $uri .= $this->path;
@@ -338,7 +338,7 @@ class Uri implements UriInterface
         if (strlen($this->query) > 0) {
             $this->query .= '&';
         }
-        $this->query .= http_build_query(array($var => $val));
+        $this->query .= http_build_query(array($var => $val), '', '&');
     }
 
     /**
@@ -396,5 +396,13 @@ class Uri implements UriInterface
     public function hasExplicitTrailingHostSlash()
     {
         return $this->explicitTrailingHostSlash;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasExplicitPortSpecified()
+    {
+        return $this->explicitPortSpecified;
     }
 }
