@@ -534,6 +534,4 @@ google.maps.Polygon.prototype.getBounds = function() {
   }
 
 }
-
-
-
+?>
