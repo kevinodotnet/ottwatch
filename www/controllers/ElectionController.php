@@ -218,7 +218,6 @@ class ElectionController {
     <script>
     function findward() {
       postal = $('#postal').val();
-      postal = 'K1Z 7G3';
       $('#wardmsg').html('... googling for lat/lon ...');
       var geocoder = new google.maps.Geocoder();
       geocoder.geocode({address: postal},
