@@ -1,5 +1,7 @@
 <?php
 
+date_default_timezone_set("Canada/Eastern");
+
 if (!@include_once('config.php')) {
   print "FATAL ERROR: config.php not found. Did you forget to take config-sample.php and make your own config.php?\n";
   exit(1);

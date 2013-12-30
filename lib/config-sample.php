@@ -30,6 +30,11 @@ class OttWatchConfig {
   const SMTP_FROM_EMAIL = 'CHANGEME';
   const SMTP_FROM_NAME = 'CHANGEME';
 	const TMP = '/mnt/tmp/ottwatch_tmp';
+
+  const DISQUS_KEY = 'CHANGEME';
+  const DISQUS_SECRET = 'CHANGEME';
+  const DISQUS_TOKEN = 'CHANGEME';
+
 }
 
 ?>
