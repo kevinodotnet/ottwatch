@@ -14,80 +14,100 @@
 /**
  * @var array A list of all the credentials to be used by the different services in the examples
  */
-$servicesCredentials = [
-    'bitly' => [
+$servicesCredentials = array(
+    'bitbucket' => array(
         'key'       => '',
         'secret'    => '',
-    ],
-    'facebook' => [
+    ),    
+    'bitly' => array(
         'key'       => '',
         'secret'    => '',
-    ],
-    'github' => [
+    ),
+    'facebook' => array(
         'key'       => '',
         'secret'    => '',
-    ],
-    'google' => [
+    ),
+    'github' => array(
         'key'       => '',
         'secret'    => '',
-    ],
-    'microsoft' => [
+    ),
+    'google' => array(
         'key'       => '',
         'secret'    => '',
-    ],
-    'yammer' => [
+    ),
+    'microsoft' => array(
+        'key'       => '',
+        'secret'    => '',
+    ),
+    'runkeeper' => array(
+        'key'       => '',
+        'secret'    => '',
+    ),
+    'yammer' => array(
         'key'       => '',
         'secret'    => ''
-    ],
-    'soundcloud' => [
+    ),
+    'soundcloud' => array(
         'key'       => '',
         'secret'    => '',
-    ],
-    'foursquare' => [
+    ),
+    'foursquare' => array(
         'key'       => '',
         'secret'    => '',
-    ],
-    'twitter' => [
+    ),
+    'twitter' => array(
         'key'       => '',
         'secret'    => '',
-    ],
-    'fitbit' => [
+    ),
+    'fitbit' => array(
         'key'       => '',
         'secret'    => '',
-    ],
-    'instagram' => [
+    ),
+    'instagram' => array(
         'key'       => '',
         'secret'    => '',
-    ],
-    'linkedin' => [
+    ),
+    'linkedin' => array(
         'key'       => '',
         'secret'    => '',
-    ],
-    'box' => [
+    ),
+    'box' => array(
         'key'       => '',
         'secret'    => '',
-    ],
-    'tumblr' => [
+    ),
+    'tumblr' => array(
         'key'       => '',
         'secret'    => '',
-    ],
-    'etsy' => [
+    ),
+    'etsy' => array(
         'key'       => '',
         'secret'    => '',
-    ],
-    'amazon' => [
-        'key'		=> '',
-        'secret'	=> '',
-    ],
-    'paypal' => [
-        'key'		=> '',
-        'secret'	=> '',
-    ],
-    'dropbox' => [
-        'key'		=> '',
-        'secret'	=> '',
-    ],
-];
+    ),
+    'amazon' => array(
+        'key'       => '',
+        'secret'    => '',
+    ),
+    'paypal' => array(
+        'key'       => '',
+        'secret'    => '',
+    ),
+    'dropbox' => array(
+        'key'       => '',
+        'secret'    => '',
+    ),
+    'dailymotion' => array(
+        'key'       => '',
+        'secret'    => '',
+    ),
+    'flickr' => array(
+        'key'       => '',
+        'secret'    => '',
+    ),
+    'reddit' => array(
+        'key'       => '',
+        'secret'    => '',
+    ),
+);
 
 /** @var $serviceFactory \OAuth\ServiceFactory An OAuth service factory. */
 $serviceFactory = new \OAuth\ServiceFactory();

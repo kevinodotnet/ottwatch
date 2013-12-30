@@ -85,7 +85,7 @@ class CurlClientTest extends \PHPUnit_Framework_TestCase
 
         $response = json_decode($response, true);
 
-        $this->assertSame('Lusitanian OAuth Client', $response['headers']['User-Agent']);
+        $this->assertSame('PHPoAuthLib', $response['headers']['User-Agent']);
     }
 
     /**
@@ -339,5 +339,34 @@ class CurlClientTest extends \PHPUnit_Framework_TestCase
         $response = json_decode($response, true);
 
         $this->assertSame('foo/bar', $response['headers']['Content-Type']);
+    }
+
+    public function testAdditionalParameters()
+    {
+        $endPoint = $this->getMock('\\OAuth\\Common\\Http\\Uri\\UriInterface');
+        $endPoint->expects($this->any())
+            ->method('getHost')
+            ->will($this->returnValue('httpbin.org'));
+        $endPoint->expects($this->any())
+            ->method('getAbsoluteUri')
+            ->will($this->returnValue('http://httpbin.org/gzip'));
+
+        $client = new CurlClient();
+        $client->setCurlParameters(array(
+            CURLOPT_ENCODING => 'gzip',
+        ));
+
+        $response = $client->retrieveResponse(
+            $endPoint,
+            '',
+            array(),
+            'get'
+        );
+
+        $response = json_decode($response, true);
+
+        $this->assertNotNull($response);
+        $this->assertSame('gzip', $response['headers']['Accept-Encoding']);
+        $this->assertTrue($response['gzipped']);
     }
 }
