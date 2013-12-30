@@ -108,6 +108,7 @@ getRoute()->get('/devapps/([^\/]+)', array('DevelopmentAppController','viewDevAp
 getRoute()->get('/meetings/votes', array('MeetingController','votesIndex'));
 getRoute()->get('/meetings/votes/member/([^\/]*)', array('MeetingController','votesMember'));
 getRoute()->get('/meetings/votes/(\d+)', array('MeetingController','voteDisplay'));
+getRoute()->get('/meetings/votes/report/closeVotes', array('MeetingController','reportCloseVotes'));
 
 getRoute()->get('/meetings/dump/all', array('MeetingController','dump'));
 getRoute()->get('/meetings/calendar', array('MeetingController','calendarView'));

@@ -10,6 +10,95 @@ MeetingController::formatMotion("foo");
 
 class MeetingController {
 
+  static public function reportCloseVotes() {
+    top();
+
+    ?>
+    <div class="row-fluid">
+    <div class="span4">
+    <h1>Close Votes Report</h1>
+    </div>
+    <div class="span8">
+    <p class="lead">
+    This report shows votes cast at council or at a committee meeting. It is ordered from "closest vote" first to "uncontrovertial" last.
+    Only votes cast since mid-2012 are included.
+    </p>
+    </div>
+    </div>
+    <?php
+
+    $sql = " select itemvoteid, ";
+
+    $rows = getDatabase()->all(" select distinct(vote) v from itemvotecast ");
+    foreach ($rows as $r) {
+      $sql .= " sum(case when vote = '{$r['v']}' then 1 else 0 end)/count(1) {$r['v']}, ";
+    }
+
+    $sql .= "
+        ((sum(case when vote = 'y' then 1 else 0 end)/count(1))
+        - (sum(case when vote = 'n' then 1 else 0 end)/count(1))) abs,
+    ";
+
+    $sql .= " count(1) as count ";
+    $sql .= " from itemvotecast ";
+    $sql .= " group by itemvoteid ";
+    # order by smallest difference between y/n
+    $sql .= " order by 
+      abs(
+        (sum(case when vote = 'y' then 1 else 0 end)/count(1))
+        - (sum(case when vote = 'n' then 1 else 0 end)/count(1))
+      )
+    ";
+
+    $rows = getDatabase()->all($sql);
+    ?>
+    <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
+    <tr>
+    <th>Closeness</th>
+    <th>Yes%</th>
+    <th>No%</th>
+    <th>Motion</th>
+    <th>Meeting</th>
+    </tr>
+    <?php
+    foreach ($rows as $r) {
+      $itemvote = getDatabase()->one(" select * from itemvote where id = {$r['itemvoteid']}");
+      $item = getDatabase()->one(" select * from item where id = {$itemvote['itemid']}");
+      $meeting = getDatabase()->one(" select * from meeting where id = {$item['meetingid']}");
+      // if ($meeting['category'] != 'City Council') { continue; }
+
+      if ($r['abs'] > 0) {
+        print "<tr class=\"success\">";
+      } else {
+        print "<tr class=\"error\">";
+      }
+      ?>
+
+      <?php
+      print "<td>"; print abs($r['abs']); print "</td>";
+      print "<td>"; printf("%.2f%%", $r['y'] * 100); print "</td>"; 
+      print "<td>"; printf("%.2f%%", $r['n'] * 100); print "</td>"; 
+      print "<td>"; 
+      print "<b><a href=\"http://app05.ottawa.ca/sirepub/item.aspx?itemid={$item['itemid']}\">".$item['title']."</a></b>";
+      print "<br/>";
+      print $itemvote['motion'];
+      print "</td>";
+      print "<td><nobr>"; 
+      print meeting_category_to_title($meeting['category']);
+      print "</nobr><br/>";
+      print "<nobr>".substr($meeting['starttime'],0,10)."</nobr>";
+      print "</td>";
+      ?>
+      </tr>
+      <?php
+    }
+    ?>
+    </table>
+    <?php
+
+    bottom();
+  }
+
   static public function voteDisplay ($id) {
 
 		$vote = getDatabase()->one(" select * from itemvote where id = :id ",array('id'=>$id));
@@ -136,6 +225,9 @@ class MeetingController {
   static public function votesIndex() {
     top();
     ?>
+
+    <div class="row-fluid">
+    <div class="span6">
     Choose the name of a council or committee member to see their entire voting history.
     <p/>
     <ul>
@@ -146,6 +238,11 @@ class MeetingController {
     }
     ?>
     </ul>
+    </div>
+    <div class="span6">
+    <a href="/meetings/votes/report/closeVotes">Close Votes Report</a>
+    </div>
+    </div><!-- row -->
     <?php
     bottom();
   }
