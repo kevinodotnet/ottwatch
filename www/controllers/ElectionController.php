@@ -329,7 +329,7 @@ class ElectionController {
     $count = 0;
     foreach ($wards as $ward) {
 
-      $mod = $count++ % 3;
+      $mod = $count++ % 4;
       if ($mod == 0) {
         ?>
         <div class="row-fluid">
@@ -347,8 +347,8 @@ class ElectionController {
       }
 
       ?>
-      <div class="span4">
-      <h2><a href="<?php print $raceLink; ?>"><?php print "{$wardInfo['ward']}"; ?></a></h2>
+      <div class="span3">
+      <h3><a href="<?php print $raceLink; ?>"><?php print "{$wardInfo['ward']}"; ?></a></h3>
       <?php
       $rows = getDatabase()->all("select * from candidate where ward = :ward and year = :year and nominated is not null order by ward,last,first,middle ",array('ward'=>$ward['wardnum'],'year'=>self::year));
       if (count($rows) == 0) {
@@ -362,7 +362,7 @@ class ElectionController {
       ?>
       </div>
       <?php
-      if ($mod == 2) {
+      if ($mod == 3) {
         ?>
         </div>
         <?php
