@@ -478,7 +478,23 @@ google.maps.Polygon.prototype.getBounds = function() {
     if (!$row['id']) {
       return self::errResult("Ward not found");
     }
-    return getApi()->invoke('/api/councillors/'.$row['id']);
+
+    $c = getApi()->invoke('/api/councillors/'.$row['id']);
+
+    $result = array();
+    $result['ward'] = $c['ward'];
+    $result['wardnum'] = $c['wardnum'];
+    $result['councillor'] = $c; 
+
+    if ($_GET['polygon'] == 1) {
+	    $r = getDatabase()->one(" select astext(shape) p from wards_2010 where ward_num = :ward_num ",array('ward_num'=>$wardnum));
+	    $points = getLatLonFromPolygonAsText($r['p']);
+	    $result['polygon'] = $points;
+    } else {
+	    $result['polygon'] = 'Add polygon=1 to the GET request to have the ward polygon returned';
+    }
+
+    return $result;
   }
 
   public static function committees() {

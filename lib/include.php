@@ -359,6 +359,18 @@ function mercatorToLatLon($mercatorX_lon,$mercatorY_lat) {
 
 }
 
+  function getLatLonFromPolygonAsText($text) {
+    $points = array();
+    $text = preg_replace('/^POLYGON\(\(/','',$text);
+    $text = preg_replace('/\)\)$/','',$text);
+    $pairs = explode(',',$text);
+    foreach ($pairs as $p) {
+      $pp = explode(' ',$p);
+      $points[] = array('lat'=>$pp[1],'lon'=>$pp[0]);
+    }
+    return $points;
+  }
+
   function getLatLonFromPoint($text) {
     # POINT(-75.74431034266786 45.38770326435866)
     $matches = array();
