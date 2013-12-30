@@ -211,6 +211,12 @@ function dashboard() {
   ?>
   <div class="row-fluid">
   <div class="span4">
+
+  <p class="lead">
+  <b>OttWatch</b> is dedicated to making it easier to be 
+  part of the political conversation in Ottawa. 
+  <a href="about">Read about all the features</a>.
+
   <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
   <?php 
   $meetings = getDatabase()->all(" select id,meetid,category,date(starttime) starttime from meeting where date(starttime) = date(CURRENT_TIMESTAMP) order by starttime ");
