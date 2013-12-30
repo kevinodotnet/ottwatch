@@ -61,7 +61,7 @@ getRoute()->get('/mfippa/(\d+)', array('MfippaController','show'));
 getRoute()->get('/mfippa/(\d+)/img', array('MfippaController','showImg'));
 getRoute()->get('/mfippa/process/(A-\d+-\d+)', array('MfippaController','process'));
 
-getRoute()->get('/opendata/', array('OpenDataController','doList'));
+getRoute()->get('/opendata/*', array('OpenDataController','doList'));
 
 getApi()->get('/api/lobbying/all/csv', array('ApiController', 'lobbyingAllCsv'), EpiApi::external);
 
