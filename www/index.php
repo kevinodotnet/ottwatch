@@ -189,11 +189,16 @@ function feed() {
   <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
   <?php
   foreach ($recent['items'] as $r) {
+    $type = '';
+    $matches = array();
+    $type = explode('/',$r['path']);
+    $type = $type[1];
     ?>
     <tr>
+    <td><?php print $type; ?></td>
+    <td><nobr><?php print $r['diff']; ?></nobr></td>
     <td><a href="<?php print $r['url']; ?>"><?php print $r['message']; ?></a></td>
     <td><nobr><?php print $r['created']; ?></nobr></td>
-    <td><nobr><?php print $r['diff']; ?></nobr></td>
     </tr>
     <?php
   }
