@@ -382,15 +382,12 @@ function dashboard() {
   </div>
 
 
+  <h4>Activity Feed</h4>
+
   <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
-  <tr>
-  <td colspan="2">
-  <h4><a href="feed/">Activity Feed</a></h4>
-  </td>
-  </tr>
 
   <?php
-  $recent = getApi()->invoke("/api/feed/15");
+  $recent = getApi()->invoke("/api/feed/30");
   foreach ($recent['items'] as $r) {
     ?>
     <tr>
