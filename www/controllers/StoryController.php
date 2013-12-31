@@ -95,11 +95,19 @@ class StoryController {
       return;
     }
     if ($story['published'] == 0) {
-      ?>
-      <h1>Error: this story is not yet published</h1>
-      <?php
-      bottom();
-      return;
+			$ok = 0;
+			if (LoginController::isLoggedIn()) {
+		    if ($story['author'] == getSession()->get("user_id")) {
+					$ok = 1;
+				}
+			}
+			if (!$ok) {
+	      ?>
+	      <h1>Error: this story is not yet published</h1>
+	      <?php
+	      bottom();
+	      return;
+			}
     }
 
     $author = getDatabase()->one(" select * from people where id = :id ",array('id'=>$story['author']));
