@@ -182,6 +182,16 @@ create table itemvotecast (
   constraint foreign key (itemvoteid) references itemvote (id) on delete cascade on update cascade
 ) engine = innodb;
 
+-- vote passed and count of Y/N votes
+create view itemvotetab as 
+select 
+  itemvoteid,
+  case when sum(case when vote = 'y' then 1 else 0 end) > sum(case when vote = 'n' then 1 else 0 end) then 1 else 0 end passed,
+  sum(case when vote = 'y' then 1 else 0 end) y,
+  sum(case when vote = 'n' then 1 else 0 end) n 
+from itemvotecast 
+group by itemvoteid;
+
 -- "ifile" means "item file" but 'file' is a keyword
 create table ifile (
   id mediumint not null auto_increment,
