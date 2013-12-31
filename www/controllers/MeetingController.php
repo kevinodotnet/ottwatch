@@ -235,7 +235,7 @@ class MeetingController {
     <?php
     $rows = getDatabase()->all(" select distinct(name) from itemvotecast order by name ");
     foreach ($rows as $c) {
-      print "<li><a href=\"".OttWatchConfig::WWW."/meetings/votes/member/".urlencode($c['name'])."\">".$c['name']."</a></li>";
+      print "<li><a href=\"".OttWatchConfig::WWW."/meetings/votes/member/".urlencode($c['name'])."\">".$c['name']."</a></li>\n";
     }
     ?>
     </ul>
@@ -251,8 +251,6 @@ class MeetingController {
   static public function votesMember($name) {
     top($name . " Voting History");
     ?>
-    <h1><?php print $name; ?>: Voting History</h1>
-    <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
     <?php
 
     $votes = getDatabase()->all(" 
@@ -264,9 +262,11 @@ class MeetingController {
         m.title as meetingtitle,
         m.category,
         left(m.starttime,10) starttime,
-        m.meetid
+        m.meetid,
+        ivt.*
       from itemvotecast ivc 
         join itemvote iv on iv.id = ivc.itemvoteid
+        join itemvotetab ivt on ivt.itemvoteid = ivc.itemvoteid
         join item i on i.id = iv.itemid
         join meeting m on m.id = i.meetingid
       where 
@@ -276,35 +276,83 @@ class MeetingController {
         ivc.id
       ",array('name'=>$name));
 
+    $againstMajorityTotal = 0;
+    $totalYesNo = 0;
+    foreach ($votes as $v) {
+      if ($v['vote'] == 'y' && $v['passed'] == 0) { $againstMajorityTotal ++; continue; }
+      if ($v['vote'] == 'n' && $v['passed'] == 1) { $againstMajorityTotal ++; continue; }
+      if ($v['vote'] == 'a') { continue; } // does not count against
+      $totalYesNo++;
+    }
+
+    ?>
+    <div class="row-fluid">
+    <div class="span4">
+    <h1><?php print $name; ?>: Voting History</h1>
+    </div>
+    <div class="span8">
+    <p class="lead">
+    <?php
+    print "Since mid-2012, out of ".$totalYesNo." votes of 'Yes' or 'No', $name voted against the majority $againstMajorityTotal times (".sprintf("%.2f",100*$againstMajorityTotal/$totalYesNo)."%)<br/>";
+    print "</p>";
+    print "<!-- \n AGAINST_REPORT,$name,$totalYesNo,$againstMajorityTotal,".sprintf("%.2f",100*$againstMajorityTotal/$totalYesNo)."% \n --> \n";
+    if ($againstMajorityTotal > 0) {
+      print "Jump to those votes with these links: ";
+	    $index = 0;
+	    foreach ($votes as $v) {
+	      $keep = 0;
+	      if ($v['vote'] == 'y' && $v['passed'] == 0) { $keep = 1; }
+	      if ($v['vote'] == 'n' && $v['passed'] == 1) { $keep = 1; }
+	      if ($keep == 0) { continue; }
+	      print "<a href=\"#voteid{$v['voteid']}\">here</a> ";
+	    }
+    }
+    ?>
+    </div>
+    </div>
+    <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
+    <?php
     $prevmeetid = '';
     foreach ($votes as $v) {
       if ($prevmeetid != $v['meetid']) {
         ?>
         <tr>
-        <td colspan="3" style="background: #f0f0f0;">
+        <td colspan="4" style="background: #f0f0f0;">
         <h5><?php print meeting_category_to_title($v['category']); ?></h5>
         <a href="<?php print OttWatchConfig::WWW."/meetings/{$v['category']}/{$v['meetid']}"; ?>"><?php print $v['starttime']; ?></a>
         </td>
         </tr>
 	      <tr>
 	      <th style="width: 10%;">Yes/No/Absent</th>
+	      <th style="width: 10%;">Motion Passed</th>
 	      <th style="width: 45%;">Motion</th>
 	      <th style="width: 45%;">Meeting Item</th>
 	      </tr>
         <?php
       }
       $prevmeetid = $v['meetid'];
+      $againstMajority = 0;
+      if ($v['vote'] == 'y' && $v['passed'] == 0) { $againstMajority = 1; }
+      if ($v['vote'] == 'n' && $v['passed'] == 1) { $againstMajority = 1; }
       if ($v['vote'] == 'y') { $v['vote'] = 'Yes'; }
       if ($v['vote'] == 'n') { $v['vote'] = 'No'; }
       if ($v['vote'] == 'a') { $v['vote'] = 'Absent'; }
+      if ($v['passed'] == '0') { $v['passed'] = 'No'; }
+      if ($v['passed'] == '1') { $v['passed'] = 'Yes'; }
+
+      if ($againstMajority) {
+        print "<tr class=\"error\">";
+      } else {
+        print "<tr>";
+      }
       ?>
-      <tr>
-      <td style="width: 10%;"><?php print $v['vote']; ?></td>
+      <td style="width: 10%;"><a name="voteid<?php print $v['voteid']; ?>"></a><?php print $v['vote']; ?></td>
+      <td style="width: 10%;"><?php print $v['passed']; ?></td>
       <td style="width: 45%;">
 			<?php print $v['motion']; ?>
 			<a href="<?php print OttWatchConfig::WWW."/meetings/votes/{$v['voteid']}"; ?>"><i class="icon-share"></i> details</a>
 			</td>
-      <td style="width: 45%;"><?php print $v['title']; ?></td>
+      <td style="width: 35%;"><?php print $v['title']; ?></td>
       </tr>
       <?php
     }
