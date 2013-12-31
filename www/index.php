@@ -306,7 +306,81 @@ function dashboard() {
 
   </div>
 
+
+
   <div class="span4">
+
+  <script>
+  function devapp_search_form_submit() {
+    v = document.getElementById('devapp_search_value').value;
+    if (v == '') {
+      alert('Cannot perform an empty search');
+      return;
+    }
+    document.location.href = 'devapps?since=999&match=' + encodeURIComponent(v);
+  }
+  function lobbyist_search_form_submit() {
+    v = document.getElementById('lobbyist_search_value').value;
+    if (v == '') {
+      alert('Cannot perform an empty search');
+      return;
+    }
+    document.location.href = 'lobbying/search/'+encodeURIComponent(v);
+  }
+  </script>
+  <h4>Search Lobbyist Registry</h4>
+  <div class="input-prepend input-append">
+  <input type="text" id="lobbyist_search_value" placeholder="Search...">
+  <button class="btn" onclick="lobbyist_search_form_submit()"><i class="icon-search"></i> Search</button>
+  <button class="btn btn-info" onclick="document.location.href = 'lobbying/search/'">Show All</button>
+  </div><!-- /search lobbying -->
+
+  <h4>Search Development Applications</h4>
+  <div class="input-prepend input-append">
+  <input type="text" id="devapp_search_value" placeholder="Search...">
+  <a class="btn" onclick="devapp_search_form_submit()"><i class="icon-search"></i> Search</button>
+  <a class="btn btn-info" href="devapps?since=7">Recent</a>
+  <a class="btn btn-info" href="devapps?since=999">All</a>
+  </div><!-- /search devapps -->
+
+
+  <h4>More Reports and Data</h4>
+	<ul>
+	<li><a href="<?php print $OTT_WWW; ?>/election/">Election 2014</a>: Everything election related!</li>
+	<li><a href="<?php print $OTT_WWW; ?>/story/list">Stories</a>: Original articles by OttWatch</li>
+	<li><a href="<?php print $OTT_WWW; ?>/consultations/">Consultations</a>: A complete list of public consultations from ottawa.ca</li>
+	<li><a href="<?php print $OTT_WWW; ?>/opendata/">OpenData</a>: Most recently updated data from <i>data.ottawa.ca</i>.</li>
+	<li><a href="<?php print $OTT_WWW; ?>/meetings/votes">Voting History</a>: See all votes at committee and council.</li>
+	<li><a href="<?php print $OTT_WWW; ?>/mfippa/">MFIPPA</a>: Freedom of Information requests processed by the City.</li>
+	<li><a href="<?php print $OTT_WWW; ?>/lobbying/latereport">Late Lobbying Report</a>: Who's been naughty and failed to report lobbying activity within the required deadlines.</li>
+	<li><a href="<?php print $OTT_WWW; ?>/chart/lobbying/weighted/30">Lobbying Intensity Report</a>: See what companies are most active pushing their agenda at City Hall.</li>
+	<li><a href="<?php print $OTT_WWW; ?>/api/about">API</a>: Documentation on the application programming interface for OttWatch.</li>
+	<li><a href="<?php print $OTT_WWW; ?>/about">About</a>: What's this all about?</li>
+	</ul>
+
+  <h4>User</h4>
+	<ul>
+	<?php
+	if (!LoginController::isLoggedIn()) {
+	  ?>
+	  <li><a href="<?php print $OTT_WWW; ?>/user/login">Login</a>: Log in to OttWatch for user-specifc features</li>
+	  <?php
+	} else {
+	  ?>
+	  <li><a href="<?php print $OTT_WWW; ?>/user/home">User Profile</a>: About you.</li>
+	  <li><a href="<?php print $OTT_WWW; ?>/user/logout">Logout</a>: Get out of here.</li>
+	  <?php
+	}
+	?>
+	</ul>
+
+  </div>
+  <div class="span4">
+  <h4>Recent Comments</h4>
+  <?php disqusRecent(8); ?>
+  </div>
+  </div>
+
 
   <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
   <tr>
@@ -336,141 +410,6 @@ function dashboard() {
   </tr>
   </table>
 
-
-  <script>
-  function devapp_search_form_submit() {
-    v = document.getElementById('devapp_search_value').value;
-    if (v == '') {
-      alert('Cannot perform an empty search');
-      return;
-    }
-    document.location.href = 'devapps?since=999&match=' + encodeURIComponent(v);
-  }
-  function lobbyist_search_form_submit() {
-    v = document.getElementById('lobbyist_search_value').value;
-    if (v == '') {
-      alert('Cannot perform an empty search');
-      return;
-    }
-    document.location.href = 'lobbying/search/'+encodeURIComponent(v);
-  }
-  </script>
-
-  <!--
-  <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
-  <tr><td colspan="2"><h4>Recent Lobbying</h4></td></tr>
-  <?php
-  $rows = getDatabase()->all(" 
-    select
-      f.id,f.lobbyist,f.issue
-    from lobbyfile f
-      join lobbying l on l.lobbyfileid = f.id
-    group by f.id,f.lobbyist,f.issue
-    order by
-      max(l.created) desc
-    limit 5
-  ");
-  ?>
-  <?php 
-  foreach ($rows as $r) {
-    ?>
-    <tr>
-    <td><nobr><?php print $r['lobbyist']; ?></nobr></td>
-    <td><a href="<?php print "lobbying/files/".$r['id']; ?>"><?php print $r['issue']; ?></a></td>
-    </tr>
-    <?php
-  }
-  ?>
-  </table>
-  -->
-
-
-  <!--
-  <h4>Development Applications</h4>
-  <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
-  <?php
-  $count = getDatabase()->one(" select count(1) c from devapp ");
-  $count = $count['c'];
-  $apps = getDatabase()->all(" select * from devapp order by updated desc limit 5 ");
-  foreach ($apps as $a) {
-    # $url = DevelopmentAppController::getLinkToApp($a['appid']);
-    $url = OttWatchConfig::WWW."/devapps/{$a['devid']}"; # DevelopmentAppController::getLinkToApp($a['appid']);
-    $addr = json_decode($a['address']);
-    $addrcount = count($addr);
-    $addr = $addr[0];
-    $addr = $addr->addr;
-    ?>
-    <tr>
-    <td><small><a href="<?php print $url; ?>"><?php print $a['devid']; ?></a></small></td>
-    <td><small><?php print $a['apptype']; ?></small></td>
-    <td><small><?php print $addr; ?></small></td>
-    </tr>
-    <?php
-    #print "<a href=\"$url\">{$a['devid']}</a> {$a['apptype']}: {$addr}<br/>";
-    #pr($a);
-  }
-  ?>
-  </td>
-  </tr>
-  </table>
-  -->
-
-
-  </div>
-
-  <div class="span4">
-
-  <h4>Search Lobbyist Registry</h4>
-  <div class="input-prepend input-append">
-  <input type="text" id="lobbyist_search_value" placeholder="Search...">
-  <button class="btn" onclick="lobbyist_search_form_submit()"><i class="icon-search"></i> Search</button>
-  <button class="btn btn-info" onclick="document.location.href = 'lobbying/search/'">Show All</button>
-  </div><!-- /search lobbying -->
-
-  <h4>Search Development Applications</h4>
-  <div class="input-prepend input-append">
-  <input type="text" id="devapp_search_value" placeholder="Search...">
-  <a class="btn" onclick="devapp_search_form_submit()"><i class="icon-search"></i> Search</button>
-  <a class="btn btn-info" href="devapps?since=7">Recent</a>
-  <a class="btn btn-info" href="devapps?since=999">All</a>
-  </div><!-- /search devapps -->
-
-  <h4>More Reports and Data</h4>
-<ul>
-<li><a href="<?php print $OTT_WWW; ?>/election/">Election 2014</a>: Everything election related!</li>
-<li><a href="<?php print $OTT_WWW; ?>/story/list">Stories</a>: Original articles by OttWatch</li>
-<li><a href="<?php print $OTT_WWW; ?>/consultations/">Consultations</a>: A complete list of public consultations from ottawa.ca</li>
-<li><a href="<?php print $OTT_WWW; ?>/opendata/">OpenData</a>: Most recently updated data from <i>data.ottawa.ca</i>.</li>
-<li><a href="<?php print $OTT_WWW; ?>/meetings/votes">Voting History</a>: See all votes at committee and council.</li>
-<li><a href="<?php print $OTT_WWW; ?>/mfippa/">MFIPPA</a>: Freedom of Information requests processed by the City.</li>
-<li><a href="<?php print $OTT_WWW; ?>/lobbying/latereport">Late Lobbying Report</a>: Who's been naughty and failed to report lobbying activity within the required deadlines.</li>
-<li><a href="<?php print $OTT_WWW; ?>/chart/lobbying/weighted/30">Lobbying Intensity Report</a>: See what companies are most active pushing their agenda at City Hall.</li>
-<li><a href="<?php print $OTT_WWW; ?>/api/about">API</a>: Documentation on the application programming interface for OttWatch.</li>
-<li><a href="<?php print $OTT_WWW; ?>/about">About</a>: What's this all about?</li>
-</ul>
-  <h4>User</h4>
-<ul>
-<?php
-if (!LoginController::isLoggedIn()) {
-  ?>
-  <li><a href="<?php print $OTT_WWW; ?>/user/login">Login</a>: Log in to OttWatch for user-specifc features</li>
-  <?php
-} else {
-  ?>
-  <li><a href="<?php print $OTT_WWW; ?>/user/home">User Profile</a>: About you.</li>
-  <li><a href="<?php print $OTT_WWW; ?>/user/logout">Logout</a>: Get out of here.</li>
-  <?php
-}
-?>
-</ul>
-
-  <!--
-  <a class="twitter-timeline" data-dnt="true" href="https://twitter.com/ottwatch" height="200" data-widget-id="306310112971210752">Tweets by @ottwatch</a>
-  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
-  -->
-  </div>
-
-  </div>
   <?php
   bottom();
 }
@@ -663,6 +602,48 @@ FinishMessage = "It is finally here!";
 
   </body>
   </html>
+  <?php
+}
+
+function disqusRecent ($count) {
+  $json = file_get_contents(OttWatchConfig::FILE_DIR.'/disqus/posts.json');
+  $data = json_decode($json);
+  $x = 0;
+
+  foreach ($data->response as $r) {
+
+    if ($x++ == $count) {
+      return;
+    }
+    
+    $name = $r->author->name;
+    $message = substr($r->raw_message,0,100);
+    $message .= "...";
+    $message = preg_replace('/\+/','+ ',$message);
+    $createdAt = date('M d',strtotime($r->createdAt));
+    $thread = $r->thread;
+    $thread = json_decode(file_get_contents(OttWatchConfig::FILE_DIR."/disqus/$thread.json"));
+    $link = $thread->response->link;
+    $title = $thread->response->title;
+
+    ?>
+    <p>
+    <b><?php print $name; ?></b> (<?php print $createdAt; ?>) <?php print $message; ?>
+    <i>Read More: <a href="<?php print $link; ?>"><?php print $title; ?></a></i>
+    </p>
+    <?php
+
+    #print "link: $link <br/>\n";;
+    #print "title: $title <br/>\n";;
+    #print "name: $name <br/>\n";;
+    #print "message: $message <br/>\n";;
+    #print "createdAt: $createdAt <br/>\n";;
+
+  }
+
+#  pr($posts);
+#  if (file_exists(OttWatchConfig::FILE_DIR."/disqus/{$thread}.json")) {
+  ?>
   <?php
 }
 
