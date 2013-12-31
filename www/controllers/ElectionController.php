@@ -224,6 +224,11 @@ class ElectionController {
 		    ?>
       </td>
       </tr>
+    <tr>
+      <th>Record</th>
+      <td>
+      <a href="/meetings/votes/member/<?php print substr($incumbent['first'],0,1).'. '.$incumbent['last'] ?>">All votes by <?php print $incumbent['first'] ?></a> (since mid-2012)
+      </td>
     </table>
 
     </div>
