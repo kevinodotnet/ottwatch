@@ -605,6 +605,10 @@ FinishMessage = "It is finally here!";
   <?php
 }
 
+/*
+ * Show $count latest Disqus comments from the comment cache
+ */
+
 function disqusRecent ($count) {
   $json = file_get_contents(OttWatchConfig::FILE_DIR.'/disqus/posts.json');
   $data = json_decode($json);
@@ -628,23 +632,16 @@ function disqusRecent ($count) {
 
     ?>
     <p>
-    <b><?php print $name; ?></b> (<?php print $createdAt; ?>) <?php print $message; ?>
-    <i>Read More: <a href="<?php print $link; ?>"><?php print $title; ?></a></i>
+    <b><?php print $name; ?></b> 
+    commented on 
+    <i><a href="<?php print $link; ?>"><?php print $title; ?></a></i>
+    (<?php print $createdAt; ?>):
+    "<?php print $message; ?>"
+    <a href="<?php print $link; ?>"><i class="icon-share"></i></a>
     </p>
     <?php
 
-    #print "link: $link <br/>\n";;
-    #print "title: $title <br/>\n";;
-    #print "name: $name <br/>\n";;
-    #print "message: $message <br/>\n";;
-    #print "createdAt: $createdAt <br/>\n";;
-
   }
-
-#  pr($posts);
-#  if (file_exists(OttWatchConfig::FILE_DIR."/disqus/{$thread}.json")) {
-  ?>
-  <?php
 }
 
 ?>
