@@ -266,54 +266,12 @@ class ElectionController {
     </p>
     </div>
     <div class="span4">
-    <center>
-    <form class="form-inline" method="post" action="should_never_happen" onsubmit="findward(); return false;">
-    <p class="lead">
+    <p class="lead" style="text-align: center;">
     Find your ward: 
     </p>
-    <input id="postal" type="text" name="postal" placeholder="Postal Code"/>
-    <button type="button" class="btn" onclick="findward(); return false;">Search</button>
-    </form>
-    <div id="wardmsg"></div>
-    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=<?php print OttWatchConfig::GOOGLE_API_KEY; ?>&sensor=false"></script>
-    <script>
-    function findward() {
-      postal = $('#postal').val();
-			if (postal == '') {
-	      $('#wardmsg').html('... enter a postal code first ...');
-				return;
-			}
-      $('#wardmsg').html('... googling for lat/lon ...');
-      var geocoder = new google.maps.Geocoder();
-      geocoder.geocode({address: postal},
-        function(results, status) { 
-          if (status != 'OK') {
-            $('#wardmsg').html('Error mapping postal code <b>"' + postal + '"</b>');
-            return;
-          } else {
-            $('#wardmsg').html('OK!');
-          }
-          lat = results[0].geometry.location.lat();
-          lon = results[0].geometry.location.lng();
-          // http://ottwatch.ca/api/point?lat=45.265309&lon=-75.777104
-          $('#wardmsg').html('... loading ward information ...');
-          url = '<?php print OttWatchConfig::WWW ; ?>/api/point?lat=' + lat + '&lon=' + lon;
-          $.getJSON(url,function(data){
-            console.log(data);
-            if (data.ward.ward == undefined) {
-	            $('#wardmsg').html(
-	              postal + ' seems to be outside of Ottawa'
-	            );
-            } else {
-	            $('#wardmsg').html(
-	              postal + ' is in <b><a href="<?php print OttWatchConfig::WWW; ?>/election/ward/'+data.ward.wardnum+'">' + data.ward.ward + ' <i class="icon-share"></i></a></b>'
-	            );
-            }
-          });
-        }
-      );
-    }
-    </script>
+		<?php 
+		ApiController::widgetFindWardInner();
+		?>
     </div><!-- findward -->
     <div class="span4">
     </div>

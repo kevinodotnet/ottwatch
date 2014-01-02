@@ -2,6 +2,69 @@
 
 class ApiController {
 
+	public static function widgetFindWard() {
+		top('',true);
+		self::widgetFindWardInner();
+		bottom(true);
+	}
+
+	public static function widgetFindWardInner() {
+		?>
+		<div id="findwardwidget" style="text-align: center;">
+    <form id="findwardform" class="form-inline" method="post" action="should_never_happen" onsubmit="findward(); return false;">
+		<nobr>
+    <input id="postal" type="text" name="postal" placeholder="Postal Code"/>
+    <button type="button" class="btn" onclick="findward(); return false;">Search</button>
+		</nobr>
+    </form>
+    <div style="display: none;" id="wardmsg"></div>
+		</div><!-- /findwardwidget -->
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=<?php print OttWatchConfig::GOOGLE_API_KEY; ?>&sensor=false"></script>
+    <script>
+    function findwardagain() {
+      $('#postal').val('');
+      $('#findwardform').css("display", "block");
+      $('#wardmsg').css("display", "none");
+		}
+    function findward() {
+      $('#findwardform').css("display", "none");
+      $('#wardmsg').css("display", "block");
+      postal = $('#postal').val();
+			if (postal == '') {
+	      $('#wardmsg').html('Enter a postal code first.' + ' (<a href="javascript:findwardagain(); return false;">again</a>)');
+				return;
+			}
+      $('#wardmsg').html('... googling for lat/lon ...');
+      var geocoder = new google.maps.Geocoder();
+      geocoder.geocode({address: postal},
+        function(results, status) { 
+          if (status != 'OK') {
+            $('#wardmsg').html('Error mapping postal code <b>"' + postal + '"</b> (<a href="javascript:findwardagain(); return false;">again</a>)');
+            return;
+          }
+          lat = results[0].geometry.location.lat();
+          lon = results[0].geometry.location.lng();
+          // http://ottwatch.ca/api/point?lat=45.265309&lon=-75.777104
+          $('#wardmsg').html('... loading ward information ...');
+          url = '<?php print OttWatchConfig::WWW ; ?>/api/point?lat=' + lat + '&lon=' + lon;
+          $.getJSON(url,function(data){
+            console.log(data);
+            if (data.ward.ward == undefined) {
+	            $('#wardmsg').html( postal + ' seems to be outside of Ottawa (<a href="javascript:findwardagain(); return false;">again</a>)');
+            } else {
+	            $('#wardmsg').html(
+	              postal + ' is in <b><a href="<?php print OttWatchConfig::WWW; ?>/election/ward/'+data.ward.wardnum+'">' + data.ward.ward + '</a></b>' + 
+								' (<a href="javascript:findwardagain(); return false;">again</a>)'
+	            );
+            }
+          });
+        }
+      );
+    }
+    </script>
+		<?php
+	}
+
   public static function zoning($lat,$lon,$geometry) {
 
     # include "geometry=1" query parameter to get zoning boundary polygon returned too

@@ -53,6 +53,7 @@ getApi()->get('/api/feed/(\d+)', array('ApiController', 'feed'), EpiApi::externa
 getApi()->get('/api/feed/(\d+)/(\d+)', array('ApiController', 'feed'), EpiApi::external);
 getApi()->get('/api/zoning/(-{0,1}[\d\.]+)/(-{0,1}[\d\.]+)', array('ApiController', 'zoning'), EpiApi::external);
 getApi()->post('/api/inbound/traffic-incident', 'traffic_incident', EpiApi::external);
+getRoute()->get('/api/widget/findward', array('ApiController', 'widgetFindWard'));
 
 getRoute()->get('/feed/', 'feed');
 
