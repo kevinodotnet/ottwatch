@@ -56,7 +56,9 @@ class ElectionController {
 
 
     ?>
-    <div id="map_canvas" style="width:100%; height:<?php print $height; ?>px;"></div>
+		<center>
+    <div id="map_canvas" style="width:90%; height:<?php print $height; ?>px;"></div>
+		</center>
     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=<?php print OttWatchConfig::GOOGLE_API_KEY; ?>&sensor=false"></script>
     <script>
     var mapOptions = { center: new google.maps.LatLng(45.420833,-75.59), zoom: 10, mapTypeId: google.maps.MapTypeId.ROADMAP };
