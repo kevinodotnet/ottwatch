@@ -223,6 +223,19 @@ function dashboard() {
   part of the political conversation in Ottawa. 
   <a href="about">Read about all the features</a>.
 
+  <div style="background: #08c; color: #ffffff; padding: 20px; font-size: 200%; border-radius: 4px;">
+  <center>
+  <a href="/election" style="color: #ffffff;">
+  <i class="fa fa-check-square-o fa-4" style="font-size: 125%;"></i>
+  Election Coverage 
+  <i style="font-size: 75%"><b>#ottvote</b></i>
+  </center>
+  </a>
+  </div>
+
+  <p>&nbsp;</p>
+
+
   <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
   <?php 
   $meetings = getDatabase()->all(" select id,meetid,category,date(starttime) starttime from meeting where date(starttime) = date(CURRENT_TIMESTAMP) order by starttime ");
@@ -455,6 +468,7 @@ function top($title = '',$quiet = false) {
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href="<?php print $OTT_WWW; ?>/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen" type="text/css">
 <link href="<?php print $OTT_WWW; ?>/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
 <style type="text/css">
   body {
 	  padding: 20px;
