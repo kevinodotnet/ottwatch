@@ -42,11 +42,13 @@ class ElectionController {
 
   public static function showWardMap($ward) {
     top();
-		self::showWardMapPriv($ward);
+		self::showWardMapPriv($ward,-1);
 		bottom();
 	}
 
-  public static function showWardMapPriv($ward) {
+  public static function showWardMapPriv($ward,$height) {
+
+		if ($height <= 0) { $height = 590; }
 
     $json = file_get_contents(OttWatchConfig::WWW."/api/wards/$ward?polygon=1");
     $data = json_decode($json);
@@ -54,7 +56,7 @@ class ElectionController {
 
 
     ?>
-    <div id="map_canvas" style="width:100%; height:590px;"></div>
+    <div id="map_canvas" style="width:100%; height:<?php print $height; ?>px;"></div>
     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=<?php print OttWatchConfig::GOOGLE_API_KEY; ?>&sensor=false"></script>
     <script>
     var mapOptions = { center: new google.maps.LatLng(45.420833,-75.59), zoom: 10, mapTypeId: google.maps.MapTypeId.ROADMAP };
@@ -235,7 +237,7 @@ class ElectionController {
       ?>
 	    <h2>Map</h2>
 	    <?php
-			self::showWardMapPriv($race);
+			self::showWardMapPriv($race,200);
     }
     ?>
 
