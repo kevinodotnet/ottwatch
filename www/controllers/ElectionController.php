@@ -41,12 +41,17 @@ class ElectionController {
   const year = 2014;
 
   public static function showWardMap($ward) {
+    top();
+		self::showWardMapPriv($ward);
+		bottom();
+	}
+
+  public static function showWardMapPriv($ward) {
 
     $json = file_get_contents(OttWatchConfig::WWW."/api/wards/$ward?polygon=1");
     $data = json_decode($json);
     $poly = $data->polygon;
 
-    top();
 
     ?>
     <div id="map_canvas" style="width:100%; height:590px;"></div>
@@ -88,9 +93,6 @@ class ElectionController {
     map.fitBounds(polygon.getBounds());
     </script>
     <?php
-
-    bottom();
-
 
   }
 
@@ -232,8 +234,8 @@ class ElectionController {
     if ($race > 0) { 
       ?>
 	    <h2>Map</h2>
-	    <a href="<?php print $race; ?>/map">Get a map for this ward</a>
 	    <?php
+			self::showWardMapPriv($race);
     }
     ?>
 
