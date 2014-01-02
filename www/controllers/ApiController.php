@@ -11,7 +11,7 @@ class ApiController {
 	public static function widgetFindWardInner($branded) {
 		?>
 		<div id="findwardwidget" style="text-align: center;">
-    <form id="findwardform" class="form-inline" method="post" action="should_never_happen" onsubmit="findward(); return false;">
+    <form id="findwardform" class="form-inline" method="post" action="should_never_happen" onsubmit="findward(); return false;" style="margin: 0px;">
 		<nobr>
     <input id="postal" type="text" name="postal" placeholder="Postal Code"/>
     <button type="button" class="btn" onclick="findward(); return false;">Search</button>
