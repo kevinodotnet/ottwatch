@@ -244,14 +244,7 @@ class ElectionController {
     </div>
 
     <div class="span6">
-    <h2>Discussion</h2>
-    <p>
-    The discusson thread below will remain open for the entire 2014 year.
-    </p>
-    <p>
-    Comments are not moderated in advance, but @odonnell_k reads them all eventually. Be civil or find another website to exercise your free speech.
-    <b>In particular:</b> any hint of misogyny towards women (candidates, or other commenters), will not be tolerated. 
-    </p>
+    <p style="text-align: center;">The discussion thread will remain open for the entire 2014 year. Be civil.</p>
     <?php disqus(); ?>
     </div>
     </div><!-- / row -->
@@ -350,13 +343,13 @@ class ElectionController {
         $raceLink = OttWatchConfig::WWW . "/election/ward/{$ward['wardnum']}";
       }
 
+      $rows = getDatabase()->all("select * from candidate where ward = :ward and year = :year and nominated is not null order by ward,last,first,middle ",array('ward'=>$ward['wardnum'],'year'=>self::year));
       ?>
       <div class="span3">
-      <h3><a href="<?php print $raceLink; ?>"><?php print "{$wardInfo['ward']}"; ?></a></h3>
+      <h3><a href="<?php print $raceLink; ?>"><?php print "{$wardInfo['ward']}"; if (count($rows) > 0) { print ' ('.count($rows).')'; } ?></a></h3>
       <?php
-      $rows = getDatabase()->all("select * from candidate where ward = :ward and year = :year and nominated is not null order by ward,last,first,middle ",array('ward'=>$ward['wardnum'],'year'=>self::year));
       if (count($rows) == 0) {
-        print "<i>No Candidates Registered Yet</i>\n";
+        print "<i style=\"color: #c0c0c0;\">No Candidates Registered Yet</i>\n";
       }
       foreach ($rows as $row) {
         print "{$row['last']}, {$row['first']}";
