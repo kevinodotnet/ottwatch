@@ -4,11 +4,11 @@ class ApiController {
 
 	public static function widgetFindWard() {
 		top('',true);
-		self::widgetFindWardInner();
+		self::widgetFindWardInner(true);
 		bottom(true);
 	}
 
-	public static function widgetFindWardInner() {
+	public static function widgetFindWardInner($branded) {
 		?>
 		<div id="findwardwidget" style="text-align: center;">
     <form id="findwardform" class="form-inline" method="post" action="should_never_happen" onsubmit="findward(); return false;">
@@ -18,6 +18,9 @@ class ApiController {
 		</nobr>
     </form>
     <div style="display: none;" id="wardmsg"></div>
+		<?php if ($branded) { ?>
+		<i style="color: #c0c0c0;">powered by <a href="http://ottwatch.ca/election">ottwatch.ca</i>
+		<?php } ?>
 		</div><!-- /findwardwidget -->
     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=<?php print OttWatchConfig::GOOGLE_API_KEY; ?>&sensor=false"></script>
     <script>
