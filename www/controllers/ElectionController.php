@@ -235,7 +235,7 @@ class ElectionController {
     <?php 
     if ($race > 0) { 
       ?>
-	    <h2>Map</h2>
+	    <h2>Map (<a href="/election/ward/<?php print $race; ?>/map">fullsize</a>)</h2>
 	    <?php
 			self::showWardMapPriv($race,200);
     }
