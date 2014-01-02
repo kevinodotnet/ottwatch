@@ -18,7 +18,7 @@ require_once('twitteroauth.php');
 
 $url = "http://ottawa.ca/en/city-hall/accountability-and-transparency/public-meetings-and-notices/notices";
 $html = file_get_contents($url);
-$html = ConsultationController::getCityContent($html);
+$html = ConsultationController::getCityContent($html,'');
 $md5 = md5($html);
 
 $prevMD5 = getvar('public-meetings-and-notices.md5');

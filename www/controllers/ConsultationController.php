@@ -234,7 +234,7 @@ class ConsultationController {
     #print "CATEGORY: $category\n";
     $html = file_get_contents($url);
 
-		$html = self::getCityContent($html);
+		$html = self::getCityContent($html,'');
 
     $xml = simplexml_load_string($html);
     $div = $xml->xpath('//div[@id="cityott-content"]');
@@ -264,7 +264,7 @@ class ConsultationController {
       // the link then no harm, the first insert is not done until below anyway
       return;
     }
-		$html = self::getCityContent($html);
+		$html = self::getCityContent($html,'');
 
     $contentMD5 = md5($html);
     file_put_contents(OttWatchConfig::FILE_DIR."/consultationmd5/".$contentMD5,$html);
@@ -319,7 +319,7 @@ class ConsultationController {
 
     $md5 = md5($data);
     if (preg_match('/<html/',$data)) {
-      $data = self::getCityContent($data);
+      $data = self::getCityContent($data,'');
       $md5 = md5($data);
     }
 

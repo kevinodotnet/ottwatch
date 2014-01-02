@@ -14,7 +14,7 @@ require_once('include.php');
 require_once('twitteroauth.php');
 
 $html = file_get_contents($url);
-$html = ConsultationController::getCityContent($html);
+$html = ConsultationController::getCityContent($html,'');
 $md5 = md5($html);
 
 $prevMD5 = getvar($var);
