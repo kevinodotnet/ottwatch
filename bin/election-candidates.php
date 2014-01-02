@@ -74,12 +74,16 @@ foreach ($sql as $key) {
   $row = getDatabase()->one($c);
 
   if ($row['c'] == 0) {
-    print "Adding $key\n";
+    print "$key added\n";
     getDatabase()->execute($i);
+		getDatabase()->execute($u);
+		continue;
   }
 
   $c = getDatabase()->execute($u);
-  print "Updating $key (rows changed; $c)\n";
+	if ($c > 0) {
+		print "$key updated\n";
+	}
 }
 
 
