@@ -46,9 +46,9 @@ foreach ($lines as $l) {
   $candidate['ward'] = $ward;
   $candidate['first'] = $names[0];
   $candidate['last'] = $names[count($names)-1];
-  $candidate['phone'] = $row[1];
-  $candidate['fax'] = $row[2];
-  $candidate['email'] = $row[3];
+  $candidate['phone'] = @$row[1];
+  $candidate['fax'] = @$row[2];
+  $candidate['email'] = @$row[3];
   foreach ($candidate as $k => $v) {
     $v = preg_replace('/ /','',$v);
     $candidate[$k] = $v;
