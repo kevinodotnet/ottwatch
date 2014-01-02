@@ -126,7 +126,7 @@ class ElectionController {
       order by ward,last,first,middle ",array('ward'=>$race,'year'=>self::year));
     ?>
     <div class="row-fluid">
-    <div class="span8">
+    <div class="span6">
     <h2>Candidates</h2>
     <?php
     if (count($rows) == 0) {
@@ -178,13 +178,11 @@ class ElectionController {
     }
     ?>
     </table>
-    </div>
 
     <?php
     $incumbent = getDatabase()->one("select * from candidate where ward = :ward and year = :year and incumbent = 1 ",array('ward'=>$race,'year'=>self::year));
     ?>
 
-    <div class="span4">
     <h2>Incumbent</h2>
     <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
     <tr>
@@ -230,12 +228,18 @@ class ElectionController {
       <a href="/meetings/votes/member/<?php print substr($incumbent['first'],0,1).'. '.$incumbent['last'] ?>">All votes by <?php print $incumbent['first'] ?></a> (since mid-2012)
       </td>
     </table>
+    <?php 
+    if ($race > 0) { 
+      ?>
+	    <h2>Map</h2>
+	    <a href="<?php print $race; ?>/map">Get a map for this ward</a>
+	    <?php
+    }
+    ?>
 
     </div>
-    </div><!-- /row -->
 
-    <div class="row-fluid">
-    <div class="span8">
+    <div class="span6">
     <h2>Discussion</h2>
     <p>
     The discusson thread below will remain open for the entire 2014 year.
@@ -246,17 +250,8 @@ class ElectionController {
     </p>
     <?php disqus(); ?>
     </div>
-    <?php 
-    if ($race > 0) { 
-      ?>
-	    <div class="span4">
-	    <h2>Map</h2>
-	    <a href="<?php print $race; ?>/map">Get a map for this ward</a>
-	    </div>
-	    <?php
-    }
-    ?>
-    </div>
+    </div><!-- / row -->
+
     <?php
 
     bottom();
