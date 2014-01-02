@@ -233,10 +233,20 @@ function dashboard() {
   </a>
   </div>
 
-  <p>&nbsp;</p>
+  <div style="margin-top: 10px; background: #08c; color: #ffffff; padding: 20px; font-size: 125%; border-radius: 4px;">
+  <center>
+	<?php
+  $row = getDatabase()->one(" select * from story where deleted = 0 and published = 1 order by updated desc limit 1 ");
+	$row['body'] = '';
+	print "<a style=\"color: #ffffff;\" href=\"/story/{$row['id']}\">";
+	print "<b>Latest Story</b>: {$row['title']}";
+	print "</a>";
+	?>
+  </center>
+  </a>
+  </div>
 
-
-  <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
+  <table class="table table-bordered table-hover table-condensed" style="width: 100%; margin-top: 20px;">
   <?php 
   $meetings = getDatabase()->all(" select id,meetid,category,date(starttime) starttime from meeting where date(starttime) = date(CURRENT_TIMESTAMP) order by starttime ");
   if (count($meetings) > 0) {
@@ -293,7 +303,7 @@ function dashboard() {
   </td>
   </tr>
   <?php
-  $meetings = getDatabase()->all(" select id,meetid,category,date(starttime) starttime from meeting where date(starttime) < date(CURRENT_TIMESTAMP) order by starttime desc limit 5 ");
+  $meetings = getDatabase()->all(" select id,meetid,category,date(starttime) starttime from meeting where date(starttime) < date(CURRENT_TIMESTAMP) order by starttime desc limit 3 ");
   foreach ($meetings as $m) {
     $mtgurl = htmlspecialchars("http://app05.ottawa.ca/sirepub/mtgviewer.aspx?meetid={$m['meetid']}&doctype");
     ?>
