@@ -206,7 +206,7 @@ class StoryController {
     <textarea id="storybody" name="body" rows="80" style=""><?php print $story['body']; ?></textarea>
     <script>
 	    $( '#storybody' ).ckeditor({
-        extraAllowedContent: 'script; pre div p blockquote {*}[*](*)',
+        extraAllowedContent: 'script; iframe pre div p blockquote {*}[*](*)',
 				// allowedContent: 'script b i div p blockquote a img [class][*](*){*};',
 				toolbar: [ 
 					['Source','Maximize','Save'],
