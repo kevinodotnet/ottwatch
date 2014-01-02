@@ -340,7 +340,7 @@ class ConsultationController {
   // given an HTML page served up by ottawa.ca drupal, return just the HTML that is the content region,
   // and discard menues and navigation, etc
 
-  public static function getCityContent ($html) {
+  public static function getCityContent ($html,$tags) {
 
 		if (!preg_match('/cityott-content/',$html)) {
 			# not a drupal node
@@ -358,7 +358,7 @@ class ConsultationController {
     $html = preg_replace("/ & /"," and ",$html);
     $html = preg_replace("/<p[^>]+>/","",$html);
     $html = preg_replace("/<\/p>/","__BR__",$html);
-    $html = strip_tags($html,"<div><br><a><h1><h2><h3><h4><h5>");
+    $html = strip_tags($html,"<div><br><a><h1><h2><h3><h4><h5>$tags");
     $html = preg_replace("/__BR__/","<br/><br/>",$html);
 
     # the view-dom-id CLASS changes randomly, so remove it
