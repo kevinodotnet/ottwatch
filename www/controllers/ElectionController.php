@@ -101,13 +101,7 @@ class ElectionController {
   }
 
   public static function isRaceOn() {
-    $now = date('Y-m-d');
-    $raceon = strtotime('2014-01-02');
-    $now = time();
-    if ($raceon > time()) {
-      return false;
-    }
-    return true;
+		return true;
   }
 
   public static function showRace($race) {
@@ -129,7 +123,7 @@ class ElectionController {
       select * 
       from candidate 
       where ward = :ward and year = :year and nominated is not null 
-      order by ward,last,first,middle ",array('ward'=>$race,'year'=>self::year));
+      order by ward,nominated desc,last,first,middle ",array('ward'=>$race,'year'=>self::year));
     ?>
     <div class="row-fluid">
     <div class="span6">
@@ -146,6 +140,7 @@ class ElectionController {
 	      <th>Name</th>
 	      <th>Web</th>
 	      <th>Email</th>
+	      <th>Phone</th>
 	      <th>Twitter</th>
 	      <th>Facebook</th>
 	      <th>Registered</th>
@@ -164,6 +159,9 @@ class ElectionController {
 	        <td>
 	        <a target="_blank" href="mailto:<?php print $r['email']; ?>?Subject=Election 2014"><?php print $r['email']; ?></a>
 	        </td>
+					<td>
+					<?php print $r['phone']; ?>
+					</td>
 	        <td>
           <?php if ($r['twitter'] != '') { ?>
           <a href="https://twitter.com/<?php print $r['twitter']; ?>" class="twitter-follow-button" data-show-count="false" data-lang="en"><?php print $r['twitter']; ?></a>
