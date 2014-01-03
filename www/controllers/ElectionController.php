@@ -161,11 +161,11 @@ class ElectionController {
 					<?php print $r['phone']; ?><br/>
 					<?php } ?>
           <?php if ($r['twitter'] != '') { ?>
-          <a href="https://twitter.com/<?php print $r['twitter']; ?>" class="twitter-follow-button" data-show-count="false" data-lang="en"><?php print $r['twitter']; ?></a><br/>
+          <a href="https://twitter.com/<?php print $r['twitter']; ?>" class="twitter-follow-button" data-show-count="false" data-lang="en"><?php print $r['twitter']; ?></a>
           <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
           <?php } ?>
           <?php if ($r['facebook'] != '') { ?>
-	        <a target="_blank" href="<?php print $r['facebook']; ?>"><i class="icon-share"></i> facebook</a>
+					<div class="fb-like" data-href="<?php print $r['facebook']; ?>" data-layout="button_count" data-action="like" data-show-faces="false" data-share="false"></div>
           <?php } ?>
 	        </td>
 	        <td>
@@ -196,10 +196,10 @@ class ElectionController {
           print "Registered as candidate on ". substr($incumbent['nominated'],0,10);
 		    } else {
           if (self::isRaceOn()) {
-	          print "<p>Has not (yet) registered as a candidate.</p>";
+	          print "Has not (yet) registered as a candidate.";
 	          if ($incumbent['twitter'] != '') {
 	            ?>
-	            <p>The incumbent is on Twitter. Hit the tweet button to ask them if they are running again, and when they plan to register as a candidate:<br/>
+	            Is the incumbent running again? Ask them with this tweet button:
 	            <a href="https://twitter.com/share" class="twitter-share-button" 
 	              data-via="ottwatch"
 	              data-text=".@<?php print $incumbent['twitter']; ?> are you running again? When will you be officially registered?"
@@ -207,7 +207,6 @@ class ElectionController {
 	              data-lang="en"
 	              >.@<?php print $incumbent['twitter']; ?> are you running again? When will you be officially registered?</a>
 	            <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
-	            </p>
 	            <?php
 	          }
           } else {
