@@ -2,9 +2,13 @@
 
 class StoryController {
 
+  public static function getPublished() {
+		return getDatabase()->all(" select * from story where deleted = 0 and published = 1 order by created desc ");
+	}
+
   public static function doList() {
     top('Stories');
-    $rows = getDatabase()->all(" select * from story where deleted = 0 and published = 1 order by updated desc ");
+    $rows = self::getPublished();
     foreach ($rows as $r) {
 
       $preview = strip_tags($r['body'],'<p><div>');
@@ -58,6 +62,7 @@ class StoryController {
   public static function show($id,$restTitle) {
     $story = getDatabase()->one(" 
       select 
+				s.id as storyid,
         s.title,s.body,
         p.name as author,
         left(s.updated,16) updated,
@@ -140,8 +145,28 @@ class StoryController {
     <div class="row-fluid">
     <div class="offset3 span6" style="border-top: 1px solid #f0f0f0; padding-right: 5px; padding-top: 20px;">
     <div class="ottwatchstorybody" ><?php print $story['body']; ?></div>
-    <?php disqus(); ?>
     </div><!-- /span -->
+    <div class="span3" style="background: #f0f0f0; padding: 0px 5px; border-radius: 4px;">
+		<center><h3>More stories...</h3></center>
+		<?php
+		$rows = self::getPublished();
+		foreach ($rows as $r) {
+			if ($r['id'] == $story['storyid']) { continue; }
+			?>
+			<div style="padding-bottom: 5px;">
+			<h5 style="padding: 0px; margin: 0px;"><a href="/story/<?php print $r['id']; ?>"><?php print $r['title']; ?></a></h5>
+			<span style="color: #808080;"><?php print $r['created']; ?></span>
+			</div>
+			<?php
+		}
+		?>
+		</div>
+    </div><!-- /row -->
+
+    <div class="row-fluid">
+    <div class="offset3 span6" style="border-top: 1px solid #f0f0f0; padding-right: 5px; padding-top: 20px;">
+    <?php disqus(); ?>
+		</div>
     </div><!-- /row -->
     <?php
     bottom();
