@@ -352,20 +352,18 @@ function dashboard() {
     document.location.href = 'lobbying/search/'+encodeURIComponent(v);
   }
   </script>
-  <h4>Search Lobbyist Registry</h4>
+  <h4>Lobbyist Registry <small>(<a  onclick="javascript:document.location.href = 'lobbying/search/'">all</a>)</small></h4>
   <div class="input-prepend input-append">
-  <input type="text" id="lobbyist_search_value" placeholder="Search...">
+  <input type="text" id="lobbyist_search_value" placeholder="Search Lobbyist Registry...">
   <button class="btn" onclick="lobbyist_search_form_submit()"><i class="icon-search"></i> Search</button>
-  <button class="btn btn-info" onclick="document.location.href = 'lobbying/search/'">Show All</button>
   </div><!-- /search lobbying -->
 
-  <h4>Search Development Applications</h4>
+  <h4>Development Applications <small>(<a href="devapps?since=7">recent</a>,<a href="devapps?since=999">all</a>)</small></h4>
   <div class="input-prepend input-append">
-  <input type="text" id="devapp_search_value" placeholder="Search...">
-  <a class="btn" onclick="devapp_search_form_submit()"><i class="icon-search"></i> Search</button>
-  <a class="btn btn-info" href="devapps?since=7">Recent</a>
-  <a class="btn btn-info" href="devapps?since=999">All</a>
+  <input type="text" id="devapp_search_value" placeholder="Search Dev Apps..."/>
+  <button class="btn" onclick="devapp_search_form_submit()"><i class="icon-search"></i> Search</button>
   </div><!-- /search devapps -->
+	<br/>
 
 
   <h4>More Reports and Data</h4>
