@@ -368,14 +368,14 @@ function dashboard() {
 
   <h4>More Reports and Data</h4>
 	<ul>
-	<li><a href="<?php print $OTT_WWW; ?>/election/">Election 2014</a>: Everything election related!</li>
-	<li><a href="<?php print $OTT_WWW; ?>/story/list">Stories</a>: Original articles by OttWatch</li>
 	<li><a href="<?php print $OTT_WWW; ?>/consultations/">Consultations</a>: A complete list of public consultations from ottawa.ca</li>
-	<li><a href="<?php print $OTT_WWW; ?>/opendata/">OpenData</a>: Most recently updated data from <i>data.ottawa.ca</i>.</li>
-	<li><a href="<?php print $OTT_WWW; ?>/meetings/votes">Voting History</a>: See all votes at committee and council.</li>
-	<li><a href="<?php print $OTT_WWW; ?>/mfippa/">MFIPPA</a>: Freedom of Information requests processed by the City.</li>
+	<li><a href="<?php print $OTT_WWW; ?>/election/">Election 2014</a>: Everything election related!</li>
 	<li><a href="<?php print $OTT_WWW; ?>/lobbying/latereport">Late Lobbying Report</a>: Who's been naughty and failed to report lobbying activity within the required deadlines.</li>
 	<li><a href="<?php print $OTT_WWW; ?>/chart/lobbying/weighted/30">Lobbying Intensity Report</a>: See what companies are most active pushing their agenda at City Hall.</li>
+	<li><a href="<?php print $OTT_WWW; ?>/mfippa/">MFIPPA</a>: Freedom of Information requests processed by the City.</li>
+	<li><a href="<?php print $OTT_WWW; ?>/opendata/">OpenData</a>: Most recently updated data from <i>data.ottawa.ca</i>.</li>
+	<li><a href="<?php print $OTT_WWW; ?>/story/list">Stories</a>: Original articles by OttWatch</li>
+	<li><a href="<?php print $OTT_WWW; ?>/meetings/votes">Voting History</a>: See all votes at committee and council.</li>
 	<li><a href="<?php print $OTT_WWW; ?>/api/about">API</a>: Documentation on the application programming interface for OttWatch.</li>
 	<li><a href="<?php print $OTT_WWW; ?>/about">About</a>: What's this all about?</li>
 	</ul>
