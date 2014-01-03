@@ -5,7 +5,7 @@ $dirname = preg_replace("/\n/","",$dirname);
 
 set_include_path(get_include_path() . PATH_SEPARATOR . "$dirname/../lib");
 set_include_path(get_include_path() . PATH_SEPARATOR . "$dirname/../www");
-set_include_path(get_include_path() . PATH_SEPARATOR . "$dirname");
+set_include_path(get_include_path() . PATH_SEPARATOR . "$dirname/..");
 require_once('include.php');
 require_once('vendor/autoload.php');
 
