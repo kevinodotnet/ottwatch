@@ -154,7 +154,7 @@ class ElectionController {
 	          <?php if ($r['incumbent'] == TRUE) { print "*"; } ?>
 	        </td>
 	        <td>
-	        <a target="_blank" href="<?php print $r['url']; ?>"><?php print $r['url']; ?></a>
+	        <a target="_blank" href="http://<?php print $r['url']; ?>"><?php print $r['url']; ?></a>
 	        </td>
 	        <td>
 	        <a target="_blank" href="mailto:<?php print $r['email']; ?>?Subject=Election 2014"><?php print $r['email']; ?></a>
