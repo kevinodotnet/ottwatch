@@ -139,10 +139,7 @@ class ElectionController {
 	    <tr>
 	      <th>Name</th>
 	      <th>Web</th>
-	      <th>Email</th>
-	      <th>Phone</th>
-	      <th>Twitter</th>
-	      <th>Facebook</th>
+	      <th>Email/Phone/Etc</th>
 	      <th>Registered</th>
 	    </tr>
 	    <?php
@@ -157,18 +154,16 @@ class ElectionController {
 	        <a target="_blank" href="http://<?php print $r['url']; ?>"><?php print $r['url']; ?></a>
 	        </td>
 	        <td>
-	        <a target="_blank" href="mailto:<?php print $r['email']; ?>?Subject=Election 2014"><?php print $r['email']; ?></a>
-	        </td>
-					<td>
-					<?php print $r['phone']; ?>
-					</td>
-	        <td>
+					<?php if ($r['email'] != '') { ?>
+	        <a target="_blank" href="mailto:<?php print $r['email']; ?>?Subject=Election 2014"><?php print $r['email']; ?></a><br/>
+					<?php } ?>
+					<?php if ($r['phone'] != '') { ?>
+					<?php print $r['phone']; ?><br/>
+					<?php } ?>
           <?php if ($r['twitter'] != '') { ?>
-          <a href="https://twitter.com/<?php print $r['twitter']; ?>" class="twitter-follow-button" data-show-count="false" data-lang="en"><?php print $r['twitter']; ?></a>
+          <a href="https://twitter.com/<?php print $r['twitter']; ?>" class="twitter-follow-button" data-show-count="false" data-lang="en"><?php print $r['twitter']; ?></a><br/>
           <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
           <?php } ?>
-	        </td>
-	        <td>
           <?php if ($r['facebook'] != '') { ?>
 	        <a target="_blank" href="<?php print $r['facebook']; ?>"><i class="icon-share"></i> facebook</a>
           <?php } ?>
