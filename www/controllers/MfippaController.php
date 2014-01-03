@@ -344,17 +344,23 @@ class MfippaController {
     </div>
 
     <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
-    <tr>
-    <th>File#</th>
-    <th>Summary*</th>
-    </tr>
     <?php
     if (LoginController::isAdmin()) {
     	$rows = getDatabase()->all(" select * from mfippa order by source desc, tag desc, id desc ");
 		} else {
     	$rows = getDatabase()->all(" select * from mfippa where published = 1 and tag is not null order by tag desc ");
 		}
+    $prevmonthyear = '';
     foreach ($rows as $r) {
+      $monthyear = date('F, Y',strtotime($r['created']));
+			if ($prevmonthyear != $monthyear) {
+				?>
+    <tr>
+    <th colspan="2"><h2><?php print $monthyear; ?></h2></th>
+    </tr>
+				<?php
+			}
+			$prevmonthyear = $monthyear;
       $summary = self::cleanSummary($r['summary']);
 			$href = $r['tag'];
 			if ($href == '') {
