@@ -56,8 +56,9 @@ class ApiController {
 	            $('#wardmsg').html( postal + ' seems to be outside of Ottawa (<a href="javascript:findwardagain(); return false;">again</a>)');
             } else {
 	            $('#wardmsg').html(
-	              postal + ' is in <b><a href="<?php print OttWatchConfig::WWW; ?>/election/ward/'+data.ward.wardnum+'">' + data.ward.ward + '</a></b>' + 
-								' (<a href="javascript:findwardagain(); return false;">again</a>)'
+	              postal + 
+									' is in <b><a target="_blank" href="javascript:window.top.location.href = \'<?php print OttWatchConfig::WWW; ?>/election/ward/'+data.ward.wardnum+'\'; return false;">' + data.ward.ward + '</a></b>' + 
+									' (<a href="javascript:findwardagain(); return false;">again</a>)'
 	            );
             }
           });
