@@ -385,7 +385,7 @@ function dashboard() {
 	<?php
 	if (!LoginController::isLoggedIn()) {
 	  ?>
-	  <li><a href="<?php print $OTT_WWW; ?>/user/login">Login</a>: Log in to OttWatch for user-specifc features</li>
+	  <li><a href="<?php print $OTT_WWW; ?>/user/login">Login</a>: Log in to OttWatch for user-specific features</li>
 	  <?php
 	} else {
 	  ?>
