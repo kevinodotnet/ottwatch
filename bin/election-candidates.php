@@ -108,5 +108,21 @@ foreach ($sql as $key) {
 	}
 }
 
+$no = array('sympatico.ca','gmail.com','hotmail.com','yahoo.com','gmail.com');
+$rows = getDatabase()->all(" select id,email from candidate where (url is null or url = '') and (email is not null and email != '') ");
+foreach ($rows as $r) {
+	$url = $r['email'];
+	$url = preg_replace('/.*@/','',$url);
+	$yes = 1;
+	foreach ($no as $n) {
+		if (preg_match("/$n/",$url)) {
+			$yes = 0;
+		}
+	}
+	if ($yes) {
+		$sql = " update candidate set url = '$url' where id = {$r['id']}; ";
+		print "$sql\n";
+	}
+}
 
 ?>
