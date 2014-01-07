@@ -157,9 +157,31 @@ class OpenDataController {
 				if ($row['id']) {
 					# exists
 	        $values['id'] = $row['id'];
+					if ($r->hash == '') {
+						# opendata portal does not have a hash, so do the actual download and calculate our own for 'change detection' purposes
+						$data = `wget -qO - "{$r->url}"`;
+						if ($r->url == 'http://octranspo1.com/developers/register' || $r->url == 'http://biblioottawalibrary.ca/branches.xml') {
+							# these two URLs have random values inside the actual content. Supress so the random
+							# numbers don't mutate the hash calculation.
+							$lines = explode("\n",$data);
+							for ($x = 0; $x < count($lines); $x++) {
+								# back-to-back WGET calls show these lines have random nonce; kill them.
+								$lines[$x] = preg_replace('/jQuery.extend.*/','',$lines[$x]);
+								$lines[$x] = preg_replace('/styles_common_c.*/','',$lines[$x]);
+								$lines[$x] = preg_replace('/input.*hidden.*meta/','',$lines[$x]);
+							}
+							# put HumptyDumpty back together
+							$data = implode("\n",$lines);
+						}
+						$hash = md5($data);
+						$r->hash = $hash;
+		        $values['hash'] = $r->hash;
+					}
 					if ($row['hash'] != $r->hash) {
-						# changed hash means real update
-		        $values['updated'] = $r->last_modified;
+						# changed hash means real update,
+		        # $values['updated'] = $r->last_modified;
+						# underlying data sometimes changed but data.ottawa last-modified doesn't? Override.
+		        $values['updated'] = date('Y-m-d H:i:s');
 					}
 					# update meta data, if changed, though it probably hasnt
 					db_save('opendatafile',$values,'id');
