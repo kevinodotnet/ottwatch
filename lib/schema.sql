@@ -7,6 +7,9 @@
 -- 
 -- Then edit config-sample.php with appropriate values, and save it as config.php
 
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+
+
 drop table if exists variable;
 create table variable (
   name varchar(64) not null,
@@ -44,13 +47,31 @@ create table places (
   /* if place is associated with a person, link here */
   personid mediumint,
   /* if place is associated with a meeting.ITEM, link here */
-  itemid mediumint(9),
+  itemid mediumint(11),
   primary key (id),
-  constraint foreign key (personid) references people (id) on delete cascade on update cascade,
-  constraint foreign key (roadid) references roadways (OGR_FID) on delete cascade on update cascade
-  constraint foreign key (itemid) references item (id) on delete cascade on update cascade
+  constraint `places_ibfk_1` foreign key (personid) references people (id) on delete cascade on update cascade,
+  constraint `places_ibfk_2` foreign key (roadid) references roadways (OGR_FID) on delete cascade on update cascade,
+  constraint `places_ibfk_3` foreign key (`itemid`) references `item` (`id`) on delete cascade on update cascade
 ) engine = innodb;
 create unique index places_in1 on places (roadid,rd_num,personid);
+
+DROP TABLE IF EXISTS `roadways`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `roadways` (
+  `OGR_FID` int(11) NOT NULL AUTO_INCREMENT,
+  `SHAPE` geometry NOT NULL,
+  `rd_name` varchar(25) DEFAULT NULL,
+  `rd_suffix` varchar(5) DEFAULT NULL,
+  `rd_directi` varchar(2) DEFAULT NULL,
+  `left_from` varchar(5) DEFAULT NULL,
+  `left_to` varchar(5) DEFAULT NULL,
+  `right_from` varchar(5) DEFAULT NULL,
+  `right_to` varchar(5) DEFAULT NULL,
+  UNIQUE KEY `OGR_FID` (`OGR_FID`)
+) ENGINE=InnoDB AUTO_INCREMENT=24726 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
 
 drop table if exists lobbying;
 drop table if exists lobbyfile;
@@ -71,7 +92,7 @@ create table lobbying (
   lobbied varchar(200),
   created datetime,
   primary key (id),
-  constraint foreign key (lobbyfileid) references lobbyfile (id) on delete cascade on update cascade
+  constraint foreign key (lobbyfileid) references lobbyfile (id) on delete cascade on update cascade,
   constraint foreign key (electedofficialid) references electedofficials (id) on delete cascade on update cascade
 ) engine = innodb;
 
@@ -164,6 +185,7 @@ create table item (
 ) engine = innodb;
 
 -- voting on items, one item may have many related motions
+drop table if exists itemvote;
 create table itemvote (
   id mediumint not null auto_increment,
   itemid mediumint not null,
@@ -173,6 +195,7 @@ create table itemvote (
 ) engine = innodb;
 
 -- voting on items, one item may have many related motions
+drop table if exists itemvotecast;
 create table itemvotecast (
   id mediumint not null auto_increment,
   itemvoteid mediumint not null,
@@ -206,6 +229,7 @@ create table ifile (
   constraint foreign key (itemid) references item (id) on delete cascade on update cascade
 ) engine = innodb;
 
+drop table if exists ifileword;
 create table ifileword (
   id mediumint not null auto_increment,
   fileid mediumint not null,
@@ -217,6 +241,7 @@ create table ifileword (
   constraint foreign key (fileid) references ifile (id) on delete cascade on update cascade
 ) engine = innodb;
 
+drop table if exists category;
 create table category (
   category varchar(100) not null,
   title varchar(100),
@@ -243,6 +268,7 @@ insert into category values ('ACHRAC','Arts, Culture, Heritage and Recreation Ad
 insert into category values ('AAC','Accessibility Advisory Committee');
 insert into category values ('COR','Committee of Revision');
 
+drop table if exists electedofficials;
 create table electedofficials (
   id mediumint not null auto_increment,
   ward varchar(100),
@@ -257,7 +283,7 @@ create table electedofficials (
   primary key (id)
 ) engine = innodb;
 
-drop table permit;
+drop table if exists permit;
 create table permit (
   id mediumint not null auto_increment,
   st_num varchar(20),
@@ -281,7 +307,7 @@ create table permit (
 
 create unique index permit_in1 on permit (permit_number,st_num,st_name,contractor);
 
-drop table consultation;
+drop table if exists consultation;
 create table consultation (
   id mediumint not null auto_increment,
   category varchar(300),
@@ -293,7 +319,7 @@ create table consultation (
   primary key (id)
 ) engine = innodb;
 
-drop table consultationdoc;
+drop table if exists consultationdoc;
 create table consultationdoc (
   id mediumint not null auto_increment,
   consultationid mediumint not null,
@@ -306,7 +332,7 @@ create table consultationdoc (
   constraint foreign key (consultationid) references consultation (id) on delete cascade on update cascade
 ) engine = innodb;
 
-drop table mfippa;
+drop table if exists mfippa;
 create table mfippa (
   id mediumint not null auto_increment,
   tag varchar(12), -- A-2013-000001
@@ -322,7 +348,7 @@ create table mfippa (
 ) engine = innodb;
 create unique index mfippa_in1 on mfippa (tag);
 
-drop table rssitem;
+drop table if exists rssitem;
 create table rssitem (
   id mediumint not null auto_increment,
   title varchar(300),
@@ -333,7 +359,7 @@ create table rssitem (
 ) engine = innodb;
 create unique index rssitem_in1 on rssitem (guid);
 
-drop table candidate;
+drop table if exists candidate;
 create table candidate (
   id mediumint not null auto_increment,
   year smallint,
@@ -350,7 +376,7 @@ create table candidate (
   primary key (id)
 ) engine = innodb;
 
-drop table feed;
+drop table if exists feed;
 create table feed (
   id mediumint not null auto_increment,
   message varchar(300), -- short message; ie: tweet text excluding URL
@@ -360,7 +386,7 @@ create table feed (
   primary key (id)
 ) engine = innodb;
 
-drop table opendata;
+drop table if exists opendata;
 create table opendata (
   id mediumint not null auto_increment,
   guid varchar(100) not null,
@@ -372,7 +398,7 @@ create table opendata (
   primary key (id)
 ) engine = innodb;
 
-drop table opendatafile;
+drop table if exists opendatafile;
 create table opendatafile (
   id mediumint not null auto_increment,
   dataid mediumint not null,
@@ -389,7 +415,7 @@ create table opendatafile (
   constraint foreign key (dataid) references opendata (id) on delete cascade on update cascade
 ) engine = innodb;
 
-drop table story;
+drop table if exists story;
 create table story (
   id mediumint not null auto_increment,
   personid mediumint not null,
