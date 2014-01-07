@@ -117,13 +117,13 @@ class ElectionController {
     }
 
 		top($title);
-		print "<h1>$title</h1>\n";
+		print "<h1>$title <small>(<a href=\"/election\">main election page</a>)</small></h1>\n";
 
     $rows = getDatabase()->all("
       select * 
       from candidate 
       where ward = :ward and year = :year and nominated is not null 
-      order by ward,nominated desc,last,first,middle ",array('ward'=>$race,'year'=>self::year));
+      order by rand() ",array('ward'=>$race,'year'=>self::year));
     ?>
     <div class="row-fluid">
     <div class="span6">
@@ -296,7 +296,7 @@ class ElectionController {
         $raceLink = OttWatchConfig::WWW . "/election/ward/{$ward['wardnum']}";
       }
 
-      $rows = getDatabase()->all("select * from candidate where ward = :ward and year = :year and nominated is not null order by ward,last,first,middle ",array('ward'=>$ward['wardnum'],'year'=>self::year));
+      $rows = getDatabase()->all("select * from candidate where ward = :ward and year = :year and nominated is not null order by ward,rand()",array('ward'=>$ward['wardnum'],'year'=>self::year));
       ?>
       <div class="span3">
       <h3><a href="<?php print $raceLink; ?>"><?php print "{$wardInfo['ward']}"; if (count($rows) > 0) { print ' ('.count($rows).')'; } ?></a></h3>
