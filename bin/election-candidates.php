@@ -20,6 +20,7 @@ $html = preg_replace("/<\/h3>/","<\/h3>\n",$html);
 $lines = explode("\n",$html);
 
 $ward = -1;
+$wardname = '';
 
 foreach ($lines as $l) {
   if (!(preg_match('/<h3>/',$l) || preg_match('/^<tr/',$l))) { continue; }
@@ -27,11 +28,23 @@ foreach ($lines as $l) {
   if (preg_match('/No Candidate/',$l)) { continue; }
 
   $matches = array();
-  if (preg_match('/^<h3.*Ward (\d+)/',$l,$matches)) {
-    #print "$l\n";
-    $ward = $matches[1];
+  if (preg_match('/^<h3/',$l)) {
+		$l = preg_replace('/-/',' - ',$l);
+		$l = preg_replace('/–/',' - ',$l);
+		$l = preg_replace('/  /',' ',$l);
+		$l = preg_replace('/  /',' ',$l);
+		$l = preg_replace('/  /',' ',$l);
+		$l = preg_replace('/  /',' ',$l);
+	  if (preg_match('/Ward (\d+) - ([^<]+)/',$l,$matches)) {
+	    #print "$l\n";
+	    $ward = $matches[1];
+	    $wardname = $matches[2];
+			#print "$l\n";
+	  } else {
+			print "FAIL: $l\n";
+		}
     continue;
-  }
+	}
 
   $l = preg_replace('/<td>/',"\t",$l);
   $l = preg_replace('/not provided/',"",$l);
@@ -44,6 +57,7 @@ foreach ($lines as $l) {
   $names = explode(" ",$row[0]);
 
   $candidate['ward'] = $ward;
+  $candidate['wardname'] = $wardname;
   $candidate['first'] = $names[0];
   $candidate['last'] = $names[count($names)-1];
   $candidate['phone'] = @$row[1];
@@ -59,13 +73,20 @@ foreach ($lines as $l) {
   $i = "insert into candidate (ward,year,first,last) values ($ward,2014,'{$candidate['first']}','{$candidate['last']}'); ";
   $u = "update candidate set nominated = (case when nominated is null then now() else nominated end) , phone = '{$candidate['phone']}', email = '{$candidate['email']}'  where ward = $ward and first = '{$candidate['first']}' and last = '{$candidate['last']}'; ";
   $key = "$ward {$candidate['first']} {$candidate['last']}";
-  $sql[] = array('name'=>$key,'insert'=>$i,'update'=>$u,'count'=>$c);
+  $sql[] = array('ward'=>$ward,'name'=>$key,'insert'=>$i,'update'=>$u,'count'=>$c,'details'=>$candidate);
 
   #pr($candidate);
 
 }
 
 foreach ($sql as $key) {
+
+	$c = $key['details'];
+
+	$tweet = "NEW candidate: {$c['first']} {$c['last']} ({$c['wardname']}) http://ottwatch.ca/election/ward/{$key['ward']} #ottvote";
+
+	#pr($key['details']);
+
   $u = $key['update'];
   $i = $key['insert'];
   $c = $key['count'];
@@ -74,7 +95,8 @@ foreach ($sql as $key) {
   $row = getDatabase()->one($c);
 
   if ($row['c'] == 0) {
-    print "$key added\n";
+    print "$key added: NEW candidate\n";
+		print "$tweet\n";
     getDatabase()->execute($i);
 		getDatabase()->execute($u);
 		continue;
