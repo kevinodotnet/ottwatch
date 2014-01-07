@@ -148,7 +148,7 @@ class ElectionController {
 	      <tr>
 	        <td>
 	          <?php print "{$r['last']}, {$r['first']} {$r['middle']}"; ?>
-	          <?php if ($r['incumbent'] == TRUE) { print "*"; } ?>
+	          <?php if ($r['incumbent'] == TRUE) { /*print "*";*/ } ?>
 	        </td>
 	        <td>
 	        <a target="_blank" href="http://<?php print $r['url']; ?>"><?php print $r['url']; ?></a>
@@ -299,14 +299,14 @@ class ElectionController {
       $rows = getDatabase()->all("select * from candidate where ward = :ward and year = :year and nominated is not null order by ward,rand()",array('ward'=>$ward['wardnum'],'year'=>self::year));
       ?>
       <div class="span3">
-      <h3><a href="<?php print $raceLink; ?>"><?php print "{$wardInfo['ward']}"; if (count($rows) > 0) { print ' ('.count($rows).')'; } ?></a></h3>
+      <h4><a href="<?php print $raceLink; ?>"><?php print "{$wardInfo['ward']}"; if (count($rows) > 0) { print ' ('.count($rows).')'; } ?></a></h4>
       <?php
       if (count($rows) == 0) {
         print "<i style=\"color: #c0c0c0;\">No Candidates Registered Yet</i>\n";
       }
       foreach ($rows as $row) {
         print "{$row['last']}, {$row['first']}";
-        if ($row['incumbent']) { print " *"; }
+        #if ($row['incumbent']) { print " *"; }
         print "<br/>\n";
       }
       ?>
