@@ -7,6 +7,47 @@ set_include_path(get_include_path() . PATH_SEPARATOR . "$dirname/../lib");
 set_include_path(get_include_path() . PATH_SEPARATOR . "$dirname/../www");
 require_once('include.php');
 
+$url = "http://ottawa.ca/en/city-hall/your-city-government/elections/mayor";
+$html = file_get_contents($url);
+$html = ConsultationController::getCityContent($html,"<h3><table><tr><td><th>");
+
+$html = preg_replace("/\n/",'',$html);
+$html = preg_replace("/<tr/","\n<tr",$html);
+$html = preg_replace("/<\/tr>/","<\/tr>\n",$html);
+$html = preg_replace("/<h3/","\n<h3",$html);
+$html = preg_replace("/<\/h3>/","<\/h3>\n",$html);
+$lines = explode("\n",$html);
+
+$ward = 0;
+$wardname = 'Mayor';
+
+foreach ($lines as $l) {
+	if (!preg_match('/^<tr/',$l)) { continue; }
+	if (preg_match('/Email Address/',$l)) { continue; }
+  $l = preg_replace('/<td>/',"\t",$l);
+  $l = preg_replace('/not provided/',"",$l);
+  $l = preg_replace('/not provided/',"",$l);
+  $l = strip_tags($l);
+  $l = trim($l);
+  $row = explode("\t",$l);
+
+
+  $names = explode(" ",$row[0]);
+
+  $candidate['ward'] = $ward;
+  $candidate['wardname'] = $wardname;
+  $candidate['first'] = $names[0];
+  $candidate['last'] = $names[count($names)-1];
+  $candidate['phone'] = @$row[1];
+  $candidate['fax'] = @$row[2];
+  $candidate['email'] = @$row[3];
+
+  $c = " select count(1) c from candidate where ward = $ward and first = '{$candidate['first']}' and last = '{$candidate['last']}'; ";
+  $i = "insert into candidate (ward,year,first,last) values ($ward,2014,'{$candidate['first']}','{$candidate['last']}'); ";
+  $u = "update candidate set nominated = (case when nominated is null then now() else nominated end) , phone = '{$candidate['phone']}', email = '{$candidate['email']}'  where ward = $ward and first = '{$candidate['first']}' and last = '{$candidate['last']}'; ";
+  $key = "$ward {$candidate['first']} {$candidate['last']}";
+  $sql[] = array('ward'=>$ward,'name'=>$key,'insert'=>$i,'update'=>$u,'count'=>$c,'details'=>$candidate);
+}
 
 $url = "http://ottawa.ca/en/city-hall/your-city-government/elections/councillor";
 $html = file_get_contents($url);
