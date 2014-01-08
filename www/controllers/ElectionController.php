@@ -324,8 +324,9 @@ class ElectionController {
 
 	public static function showTools() {
 		top();
-
 		?>
+		<h4>Corrections or requests for some other tool?</h4>
+		email 'em to ottwatch@ottwatch.ca
 		<h4>Email addresses: mayor and councillor candidates</h4>
 		<?php
 		$values = array();
@@ -385,10 +386,6 @@ class ElectionController {
 			<div class="fb-like" data-href="<?php print $r['facebook']; ?>" data-layout="button_count" data-action="like" data-show-faces="false" data-share="false"></div><br/>
 			<?php
 		}
-
-
-
-
 		?>
     <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
 		<?php
