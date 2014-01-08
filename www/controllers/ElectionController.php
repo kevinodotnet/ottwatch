@@ -322,6 +322,76 @@ class ElectionController {
     bottom();
   }
 
+	public static function showTools() {
+		top();
+
+		?>
+		<h4>Email addresses: mayor and councillor candidates</h4>
+		<?php
+		$values = array();
+		$rows = getDatabase()->all(" select email from candidate where year = " . year . " and nominated is not null and (email is not null and email != '') order by lower(email) ");
+		foreach ($rows as $r) { $values[] = $r['email']; }
+		print implode(", ",$values);
+		?>
+		<h4>Email addresses: by race</h4>
+    <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
+		<?php
+		$races = getDatabase()->all(" select distinct(ward) race from candidate where year = ".year." order by ward");
+		foreach ($races as $race) {
+			$ward = $race['race'];
+			if ($race['race'] == 0) {
+				$wardname = "Mayor";
+			} else {
+		    $wardname = getDatabase()->one(" select ward from electedofficials where wardnum = {$race['race']} ");
+		    $wardname = $wardname['ward'];
+			}
+			print "<tr>";
+			print "<td>$ward</td><td>$wardname</td>";
+			$values = array();
+			$rows = getDatabase()->all(" select email from candidate where ward = $ward and year = " . year . " and nominated is not null and (email is not null and email != '') order by lower(email) ");
+			foreach ($rows as $r) { $values[] = $r['email']; }
+			print "<td>".implode(", ",$values)."</td>";
+			print "</tr>";
+			
+		}
+		?>
+		</table>
+		<h4>Got Web?</h4>
+		<?php
+		$rows = getDatabase()->all(" select first,last,url from candidate where year = " . year . " and nominated is not null and (url is not null and url != '') order by lower(url) ");
+		foreach ($rows as $r) { 
+			print "<a href=\"{$r['url']}\">{$r['first']} {$r['last']} --- {$r['url']}</a><br/>";
+		}
+		?>
+		<h4>Got Follow? One set of twitter follow buttons to rule them all</h4>
+		<?php
+		$rows = getDatabase()->all(" select first,last,twitter from candidate where year = " . year . " and nominated is not null and (twitter is not null and twitter != '') order by lower(twitter) ");
+		foreach ($rows as $r) { 
+			print "<a href=\"{$r['twitter']}\">{$r['first']} {$r['last']}</a>: ";
+			?>
+      <a href="https://twitter.com/<?php print $r['twitter']; ?>" class="twitter-follow-button" data-show-count="false" data-lang="en"><?php print $r['twitter']; ?></a><br/>
+			<?php
+		}
+		?>
+		<h4>Got Facebook? One set of like buttons to rule them all</h4>
+		<?php
+		$rows = getDatabase()->all(" select first,last,facebook from candidate where year = " . year . " and nominated is not null and (facebook is not null and facebook != '') order by lower(facebook) ");
+		foreach ($rows as $r) { 
+			print "<a href=\"{$r['facebook']}\">{$r['first']} {$r['last']}</a>: ";
+			?>
+			<div class="fb-like" data-href="<?php print $r['facebook']; ?>" data-layout="button_count" data-action="like" data-show-faces="false" data-share="false"></div><br/>
+			<?php
+		}
+
+
+
+
+		?>
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+		<?php
+		bottom();
+	}
+
 }
 
 ?>
