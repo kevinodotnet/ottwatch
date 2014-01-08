@@ -10,6 +10,7 @@ require_once('include.php');
 ##########################################################################################
 # TRUSTEE
 ##########################################################################################
+/*
 
 $url = "http://ottawa.ca/en/city-hall/your-city-government/elections/school-board-trustee";
 
@@ -71,6 +72,7 @@ foreach ($lines as $l) {
 pr($sql);
 
 return;
+*/
 
 ##########################################################################################
 # MAYOR
@@ -113,7 +115,7 @@ foreach ($lines as $l) {
 
   $c = " select count(1) c from candidate where ward = $ward and first = '{$candidate['first']}' and last = '{$candidate['last']}'; ";
   $i = "insert into candidate (ward,year,first,last) values ($ward,2014,'{$candidate['first']}','{$candidate['last']}'); ";
-  $u = "update candidate set nominated = (case when nominated is null then now() else nominated end) , phone = '{$candidate['phone']}', email = '{$candidate['email']}'  where ward = $ward and first = '{$candidate['first']}' and last = '{$candidate['last']}'; ";
+  $u = "update candidate set nominated = (case when nominated is null then now() else nominated end) , phone = '{$candidate['phone']}', email = '{$candidate['email']}'  where year = 2014 and ward = $ward and first = '{$candidate['first']}' and last = '{$candidate['last']}'; ";
   $key = "$ward {$candidate['first']} {$candidate['last']}";
   $sql[] = array('ward'=>$ward,'name'=>$key,'insert'=>$i,'update'=>$u,'count'=>$c,'details'=>$candidate);
 }
@@ -185,7 +187,7 @@ foreach ($lines as $l) {
 
   $c = " select count(1) c from candidate where ward = $ward and first = '{$candidate['first']}' and last = '{$candidate['last']}'; ";
   $i = "insert into candidate (ward,year,first,last) values ($ward,2014,'{$candidate['first']}','{$candidate['last']}'); ";
-  $u = "update candidate set nominated = (case when nominated is null then now() else nominated end) , phone = '{$candidate['phone']}', email = '{$candidate['email']}'  where ward = $ward and first = '{$candidate['first']}' and last = '{$candidate['last']}'; ";
+  $u = "update candidate set nominated = (case when nominated is null then now() else nominated end) , phone = '{$candidate['phone']}', email = '{$candidate['email']}'  where year = 2014 and ward = $ward and first = '{$candidate['first']}' and last = '{$candidate['last']}'; ";
   $key = "$ward {$candidate['first']} {$candidate['last']}";
   $sql[] = array('ward'=>$ward,'name'=>$key,'insert'=>$i,'update'=>$u,'count'=>$c,'details'=>$candidate);
 
@@ -223,7 +225,7 @@ foreach ($sql as $key) {
 }
 
 $no = array('sympatico.ca','gmail.com','hotmail.com','yahoo.com','gmail.com');
-$rows = getDatabase()->all(" select id,email from candidate where (url is null or url = '') and (email is not null and email != '') ");
+$rows = getDatabase()->all(" select id,email from candidate where year = 2014 and (url is null or url = '') and (email is not null and email != '') ");
 foreach ($rows as $r) {
 	$url = $r['email'];
 	$url = preg_replace('/.*@/','',$url);
