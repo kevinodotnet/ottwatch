@@ -203,7 +203,7 @@ class LobbyistController {
       select *
       from lobbyfile f
         join lobbying l on l.lobbyfileid = f.id
-      where l.lobbied like '".mysql_escape_string($lobbied)."%';
+      where l.lobbied like '%".mysql_escape_string($lobbied)."%';
       order by
         l.created desc
       ",array(
@@ -220,6 +220,7 @@ class LobbyistController {
     </div>
     <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
       <tr>
+      <th>Lobbied</th>
       <th>Lobbyist</th>
       <th>Client</th>
       <th>Issue</th>
@@ -239,9 +240,11 @@ class LobbyistController {
         <td>&nbsp;</td>
         <td>&nbsp;</td>
         <td>&nbsp;</td>
+        <td>&nbsp;</td>
         <?php
       } else {
         ?>
+        <td><nobr><a href="<?php print OttWatchConfig::WWW."/lobbying/thelobbied/{$r['lobbied']}"; ?>"><?php print $r['lobbied']; ?></a></nobr></td>
         <td><nobr><a href="<?php print OttWatchConfig::WWW."/lobbying/lobbyists/{$r['lobbyist']}"; ?>"><?php print $r['lobbyist']; ?></a></nobr></td>
         <td><nobr><a href="<?php print OttWatchConfig::WWW."/lobbying/clients/{$r['client']}"; ?>"><?php print $r['client']; ?></a></nobr></td>
         <td><?php print self::getUrlForIssue($r['lobbyfileid'],$r['issue']); ?></td>
