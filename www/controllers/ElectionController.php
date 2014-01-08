@@ -335,7 +335,7 @@ class ElectionController {
 		print '<a target="_blank" href="mailto:'.implode(",",$values).'?Subject=Campaign%20question">mailto</a>: ';
 		print implode(", ",$values);
 		?>
-		<h4>Email addresses: by race</h4>
+		<h4>Email/Twitter: by race</h4>
     <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
 		<?php
 		$races = getDatabase()->all(" select distinct(ward) race from candidate where year = ".year." order by ward");
@@ -353,8 +353,19 @@ class ElectionController {
 			$rows = getDatabase()->all(" select email from candidate where ward = $ward and year = " . year . " and nominated is not null and (email is not null and email != '') order by lower(email) ");
 			foreach ($rows as $r) { $values[] = $r['email']; }
 			print "<td>";
-			print '<a target="_blank" href="mailto:'.implode(",",$values).'?Subject='.$wardname.'%20campaign%20question">mailto</a>: ';
-			print implode(", ",$values)."</td>";
+			if (count($values) > 0) {
+				print '<a target="_blank" href="mailto:'.implode(",",$values).'?Subject='.$wardname.'%20campaign%20question">mailto</a>: ';
+				print implode(", ",$values);
+			}
+			print "</td>";
+			$twitters = array();
+			$rows = getDatabase()->all(" select twitter from candidate where ward = $ward and year = " . year . " and nominated is not null and (twitter is not null and twitter != '') order by lower(twitter) ");
+			foreach ($rows as $r) { $twitters[] = $r['twitter']; }
+			print "<td>";
+			if (count($twitters) > 0) {
+				print "@".implode(" @",$twitters);
+			}
+			print "</td>";
 			print "</tr>";
 			
 		}
