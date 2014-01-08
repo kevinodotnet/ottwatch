@@ -200,15 +200,14 @@ class LobbyistController {
   public static function showLobbied ($lobbied) {
     top("Lobbied: $lobbied");
     $rows = getDatabase()->all("
-      select *
+      select *, l.created ccreated
       from lobbyfile f
         join lobbying l on l.lobbyfileid = f.id
-      where l.lobbied like '%".mysql_escape_string($lobbied)."%';
+      where 
+				l.lobbied like '%".mysql_escape_string($lobbied)."%'
       order by
         l.created desc
-      ",array(
-        'lobbied' => $lobbied
-      ));
+      ");
     ?>
     <div class="row-fluid">
     <div class="span11">
@@ -255,7 +254,7 @@ class LobbyistController {
       ?>
       <td><nobr><?php print substr($r['lobbydate'],0,10); ?></nobr></td>
       <td><nobr><?php print $r['activity']; ?></nobr></td>
-      <td><nobr><?php print substr($r['created'],0,10); ?></nobr></td>
+      <td><nobr><?php print substr($r['ccreated'],0,10); ?></nobr></td>
       </tr>
       <?php
     }
