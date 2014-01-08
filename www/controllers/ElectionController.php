@@ -331,6 +331,7 @@ class ElectionController {
 		$values = array();
 		$rows = getDatabase()->all(" select email from candidate where year = " . year . " and nominated is not null and (email is not null and email != '') order by lower(email) ");
 		foreach ($rows as $r) { $values[] = $r['email']; }
+		print '<a target="_blank" href="mailto:'.implode(",",$values).'?Subject=Campaign%20question">mailto</a>: ';
 		print implode(", ",$values);
 		?>
 		<h4>Email addresses: by race</h4>
@@ -350,7 +351,9 @@ class ElectionController {
 			$values = array();
 			$rows = getDatabase()->all(" select email from candidate where ward = $ward and year = " . year . " and nominated is not null and (email is not null and email != '') order by lower(email) ");
 			foreach ($rows as $r) { $values[] = $r['email']; }
-			print "<td>".implode(", ",$values)."</td>";
+			print "<td>";
+			print '<a target="_blank" href="mailto:'.implode(",",$values).'?Subject='.$wardname.'%20campaign%20question">mailto</a>: ';
+			print implode(", ",$values)."</td>";
 			print "</tr>";
 			
 		}
