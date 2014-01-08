@@ -39,6 +39,7 @@ update candidate set twitter = 'rainerbloess' where incumbent = 1 and ward = 2;
 class ElectionController {
 
   const year = 2014;
+  const prevyear = 2010;
 
   public static function showWardMap($ward) {
     top();
@@ -180,6 +181,19 @@ class ElectionController {
 
     <?php
     $incumbent = getDatabase()->one("select * from candidate where ward = :ward and year = :year and incumbent = 1 ",array('ward'=>$race,'year'=>self::year));
+    $prev = getDatabase()->all("
+			select * 
+			from candidate c
+				left join candidate_return r on r.candidateid = c.id
+			where 
+				ward = :ward 
+				and year = :prevyear 
+				and first = :first 
+				and last = :last
+			",array('ward'=>$race,'prevyear'=>self::prevyear,
+			'first'=>$incumbent['first'],
+			'last'=>$incumbent['last']
+			));
     ?>
 
     <h2>Incumbent</h2>
@@ -220,12 +234,31 @@ class ElectionController {
 		    }
 		    ?>
       </td>
-      </tr>
+    </tr>
     <tr>
       <th>Record</th>
       <td>
       <a href="/meetings/votes/member/<?php print substr($incumbent['first'],0,1).'. '.$incumbent['last'] ?>">All votes by <?php print $incumbent['first'] ?></a> (since mid-2012)
       </td>
+    </tr>
+    <tr>
+      <th><nobr>Financial Return(s)</nobr></th>
+      <td>
+			<?php 
+			if (count($prev) == 0) {
+				?>
+				Not available?
+				<?php 
+			} else { 
+				foreach ($prev as $p) {
+				?>
+				<a target="_blank" href="http://documents.ottawa.ca/sites/documents.ottawa.ca/files/documents/<?php print $p['filename']; ?>"><?php print $p['year']; ?> - <?php print $p['filename']; ?></a><br/>
+				<?php 
+				}
+			} 
+			?>
+      </td>
+    </tr>
     </table>
     <?php 
     if ($race > 0) { 

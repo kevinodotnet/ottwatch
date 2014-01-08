@@ -376,6 +376,16 @@ create table candidate (
   primary key (id)
 ) engine = innodb;
 
+-- note, a candidate can have multiple returns (main, plus supplementary) or no return (left join only)
+drop table if exists candidate_return;
+create table candidate_return (
+  id mediumint not null auto_increment,
+  candidateid mediumint not null,
+	filename varchar(50), -- ie: con057869.pdf from ottawa.ca
+  primary key (id),
+  constraint foreign key (candidateid) references candidate (id) on delete cascade on update cascade
+) engine = innodb;
+
 drop table if exists feed;
 create table feed (
   id mediumint not null auto_increment,
