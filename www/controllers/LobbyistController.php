@@ -888,7 +888,6 @@ class LobbyistController {
 		$rows = getDatabase()->all(" select id,lobbied from lobbying where electedofficialid is null ");
 		$count = 0;
 		foreach ($rows as $r) {
-			if ($count++ % 100 == 0) { print "$count\n"; }
 			$keep = 0;
 			if (preg_match('/mayor/i',$r['lobbied'])) { $keep = 1; }
 			if (preg_match('/councillor/i',$r['lobbied'])) { $keep = 1; }
