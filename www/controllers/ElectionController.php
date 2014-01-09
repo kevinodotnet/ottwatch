@@ -242,6 +242,17 @@ class ElectionController {
       </td>
     </tr>
     <tr>
+      <th><nobr>Lobbying</nobr></th>
+			<td>
+			<?php
+			$lastfirst = "{$incumbent['last']}, {$incumbent['first']}";
+			$thelobbiedurl = "/lobbying/thelobbied/$lastfirst";
+			$lobbycount = getDatabase()->one(" select count(1) c from lobbying where lobbiednorm = '$lastfirst' ");
+			?>
+			<a href="<?php print $thelobbiedurl; ?>"><?php print $incumbent['first']; ?> has been lobbied <?php print $lobbycount['c']; ?> times</a>
+			</td>
+		</tr>
+    <tr>
       <th><nobr>Financial Return(s)</nobr></th>
       <td>
 			<?php 

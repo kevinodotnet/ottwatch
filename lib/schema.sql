@@ -90,6 +90,7 @@ create table lobbying (
   lobbydate datetime,
   activity varchar(100),
   lobbied varchar(200),
+  lobbiednorm varchar(200),
   created datetime,
   primary key (id),
   constraint foreign key (lobbyfileid) references lobbyfile (id) on delete cascade on update cascade,

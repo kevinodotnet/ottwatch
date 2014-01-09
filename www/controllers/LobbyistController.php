@@ -205,6 +205,7 @@ class LobbyistController {
         join lobbying l on l.lobbyfileid = f.id
       where 
 				l.lobbied like '%".mysql_escape_string($lobbied)."%'
+				or l.lobbiednorm = '".mysql_escape_string($lobbied)."'
       order by
         l.created desc
       ");
@@ -879,8 +880,15 @@ class LobbyistController {
 
 	public function fixLobbyingNames() {
 
+#		$rows = getDatabase()->all(" select l.id,l.lobbied,l.lobbiednorm,e.first,e.last from lobbying l join electedofficials e on e.id = l.electedofficialid ");
+#		foreach ($rows as $r) {
+#      getDatabase()->execute(" update lobbying set lobbiednorm = :lobbiednorm where id = :id ",array('id'=>$r['id'],'lobbiednorm' => "{$r['last']}, {$r['first']}"));
+#		}
+
 		$rows = getDatabase()->all(" select id,lobbied from lobbying where electedofficialid is null ");
+		$count = 0;
 		foreach ($rows as $r) {
+			if ($count++ % 100 == 0) { print "$count\n"; }
 			$keep = 0;
 			if (preg_match('/mayor/i',$r['lobbied'])) { $keep = 1; }
 			if (preg_match('/councillor/i',$r['lobbied'])) { $keep = 1; }
@@ -911,9 +919,18 @@ class LobbyistController {
         continue;
 			}
 
-      getDatabase()->execute(" update lobbying set electedofficialid = :eid where id = :id ",array('id'=>$r['id'],'eid'=>$e['id']));
+      getDatabase()->execute(" 
+				update lobbying set 
+					electedofficialid = :eid, 
+					lobbiednorm = :lobbiednorm 
+				where id = :id ",array(
+					'id'=>$r['id'],
+					'eid'=>$e['id'],
+					'lobbiednorm'=>"{$e['last']}, {$e['first']}"
+			));
 
 		}
+
 
 	}
 
