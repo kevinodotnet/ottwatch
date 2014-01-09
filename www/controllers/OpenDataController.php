@@ -157,22 +157,31 @@ class OpenDataController {
 				if ($row['id']) {
 					# exists
 	        $values['id'] = $row['id'];
+					if ($r->url == 'http://opl-bpo.ca/en/rss-feeds'
+						|| $r->url == 'http://octranspo1.com/developers/register'
+						|| $r->url == 'http://biblioottawalibrary.ca/branches.xml'
+						) {
+						# these pages are always updated on every scan, for some reason, and are spammy on the update channel.
+						# save them, but without 'updated' timestamp changes, so they are in the catelog but dont make tweets.
+						db_save('opendatafile',$values,'id');
+						continue;
+					}
 					if ($r->hash == '') {
 						# opendata portal does not have a hash, so do the actual download and calculate our own for 'change detection' purposes
 						$data = `wget -qO - "{$r->url}"`;
-						if ($r->url == 'http://octranspo1.com/developers/register' || $r->url == 'http://biblioottawalibrary.ca/branches.xml') {
-							# these two URLs have random values inside the actual content. Supress so the random
-							# numbers don't mutate the hash calculation.
-							$lines = explode("\n",$data);
-							for ($x = 0; $x < count($lines); $x++) {
-								# back-to-back WGET calls show these lines have random nonce; kill them.
-								$lines[$x] = preg_replace('/jQuery.extend.*/','',$lines[$x]);
-								$lines[$x] = preg_replace('/styles_common_c.*/','',$lines[$x]);
-								$lines[$x] = preg_replace('/input.*hidden.*meta/','',$lines[$x]);
-							}
-							# put HumptyDumpty back together
-							$data = implode("\n",$lines);
-						}
+#						if ($r->url == 'http://octranspo1.com/developers/register' || $r->url == 'http://biblioottawalibrary.ca/branches.xml') {
+#							# these two URLs have random values inside the actual content. Supress so the random
+#							# numbers don't mutate the hash calculation.
+#							$lines = explode("\n",$data);
+#							for ($x = 0; $x < count($lines); $x++) {
+#								# back-to-back WGET calls show these lines have random nonce; kill them.
+#								$lines[$x] = preg_replace('/jQuery.extend.*/','',$lines[$x]);
+#								$lines[$x] = preg_replace('/styles_common_c.*/','',$lines[$x]);
+#								$lines[$x] = preg_replace('/input.*hidden.*meta/','',$lines[$x]);
+#							}
+#							# put HumptyDumpty back together
+#							$data = implode("\n",$lines);
+#						}
 						$hash = md5($data);
 						$r->hash = $hash;
 		        $values['hash'] = $r->hash;
