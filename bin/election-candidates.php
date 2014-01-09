@@ -110,8 +110,7 @@ foreach ($lines as $l) {
   $candidate['first'] = $names[0];
   $candidate['last'] = $names[count($names)-1];
   $candidate['phone'] = @$row[1];
-  $candidate['fax'] = @$row[2];
-  $candidate['email'] = @$row[3];
+  $candidate['email'] = @$row[2];
 
   $c = " select count(1) c from candidate where ward = $ward and first = '{$candidate['first']}' and last = '{$candidate['last']}'; ";
   $i = "insert into candidate (ward,year,first,last) values ($ward,2014,'{$candidate['first']}','{$candidate['last']}'); ";
@@ -177,8 +176,7 @@ foreach ($lines as $l) {
   $candidate['first'] = $names[0];
   $candidate['last'] = $names[count($names)-1];
   $candidate['phone'] = @$row[1];
-  $candidate['fax'] = @$row[2];
-  $candidate['email'] = @$row[3];
+  $candidate['email'] = @$row[2];
   foreach ($candidate as $k => $v) {
     $v = preg_replace('/ /','',$v);
     $candidate[$k] = $v;
@@ -223,6 +221,8 @@ foreach ($sql as $key) {
 		print "$key updated\n";
 	}
 }
+
+return;
 
 $no = array('sympatico.ca','gmail.com','hotmail.com','yahoo.com','gmail.com');
 $rows = getDatabase()->all(" select id,email from candidate where year = 2014 and (url is null or url = '') and (email is not null and email != '') ");
