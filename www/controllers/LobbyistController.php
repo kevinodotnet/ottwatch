@@ -12,6 +12,46 @@ class LobbyistController {
   public static function latereport() {
     top("Late Lobbying Report");
 
+		?>
+		<div class="row-fluid">
+			<div class="span6 offset3">
+
+	    <h1>Late Lobbying Report</h1>
+
+			<h5>This report is no longer available.</h5>
+
+			<p>Ottawa's Integrity Commissioner has confirmed for Ottwatch that at least two "reported on"
+			dates for lobbying activities were wrong in the Ottwatch data. This puts the entire "late lobbying
+			report" on thin ice since I can't know what other records could be wrong.</p>
+
+			<p>I would like to believe the overwhelming majority of the activities were correct (<a href="/story/7/inside-the-lobbyist-registry">my own was</a>).</p>
+			
+			<p>But since I can't double-check the data, and now I've been told at least some of it
+			was wrong, it all has to go.</p>
+
+			<p>Hopefully in future the official Lobbyist Registry will expose the "reported on" date 
+			to the public. I think it's valuable information to know which lobbyists fail to be compliant
+			from day one - or which veteran lobbyists skip a prompt filing.</p>
+			
+			<p>I've previously suggested making the "reported on" date available to the Integry Comissioner.</p>
+
+			<p>Kevin<br/>January, 2014</p>
+
+			</div>
+		</div>
+		<?php
+
+		bottom();
+		return;
+
+		/**
+		 * Seems OttWatch date detection isn't working right. Information commissioner confirms this
+		 * in an email. So, this feature is dead. Would be nice if the city registry would simply
+		 * publish the reported-on-date, no?
+		 *
+		 * Baby steps...
+		 */
+
     $rows = getDatabase()->all("
       select 
         ll.diff,
@@ -53,7 +93,6 @@ class LobbyistController {
     <tr>
     <th>Calendar Days*</th>
     <th>Lobbying On</th>
-    <th>Reported On</th>
     <th>Lobbyist</th>
     <th>Client</th>
     <th>Activity</th>
@@ -67,7 +106,6 @@ class LobbyistController {
       <tr>
       <td><?php print $r['diff']; ?></td>
       <td><nobr><?php print $r['lobbydate']; ?></nobr></td>
-      <td><nobr><?php print $r['created']; ?></nobr></td>
       <td><a href="<?php print OttWatchConfig::WWW."/lobbying/lobbyists/{$r['lobbyist']}"; ?>"><nobr><?php print $r['lobbyist']; ?></nobr></a></td>
       <td><a href="<?php print OttWatchConfig::WWW."/lobbying/clients/{$r['client']}"; ?>"><?php print $r['client']; ?></a></td>
       <td><?php print $r['activity']; ?></td>
@@ -153,7 +191,6 @@ class LobbyistController {
       <th>Date</th>
       <th>Activity</th>
       <th>Lobbied</th>
-      <th>Reported On</th>
       </tr>
     <?php
     $lastdate= '';
@@ -226,7 +263,6 @@ class LobbyistController {
       <th>Issue</th>
       <th>Date</th>
       <th>Activity</th>
-      <th>Reported On</th>
       </tr>
     <?php
     $lastclient = '';
@@ -255,7 +291,6 @@ class LobbyistController {
       ?>
       <td><nobr><?php print substr($r['lobbydate'],0,10); ?></nobr></td>
       <td><nobr><?php print $r['activity']; ?></nobr></td>
-      <td><nobr><?php print substr($r['ccreated'],0,10); ?></nobr></td>
       </tr>
       <?php
     }
@@ -319,7 +354,6 @@ class LobbyistController {
       <th>Date</th>
       <th>Activity</th>
       <th>Lobbied</th>
-      <th>Reported On</th>
       </tr>
     <?php
     $lastclient = '';
@@ -345,7 +379,6 @@ class LobbyistController {
       <td><nobr><?php print substr($r['lobbydate'],0,10); ?></nobr></td>
       <td><nobr><?php print $r['activity']; ?></nobr></td>
       <td><nobr><a href="<?php print OttWatchConfig::WWW."/lobbying/thelobbied/".urlencode($r['lobbied']); ?>"><?php print $r['lobbied']; ?></a></nobr></td>
-      <td><nobr><?php print substr($r['created'],0,10); ?></nobr></td>
       </tr>
       <?php
     }
@@ -408,7 +441,6 @@ class LobbyistController {
       <th>Date</th>
       <th>Activity</th>
       <th>Lobbied</th>
-      <th>Reported On</th>
       </tr>
     <?php
     $lastlobbyist = '';
@@ -434,7 +466,6 @@ class LobbyistController {
       <td><nobr><?php print substr($r['lobbydate'],0,10); ?></nobr></td>
       <td><nobr><?php print $r['activity']; ?></nobr></td>
       <td><nobr><a href="<?php print OttWatchConfig::WWW."/lobbying/thelobbied/".urlencode($r['lobbied']); ?>"><?php print $r['lobbied']; ?></a></nobr></td>
-      <td><nobr><?php print substr($r['created'],0,10); ?></nobr></td>
       </tr>
       <?php
     }
@@ -497,7 +528,6 @@ class LobbyistController {
       <th>Activities</th>
       <th>From</th>
       <th>To</th>
-      <th>Reported On</th>
       </tr>
     <?php
     foreach ($rows as $r) {
@@ -509,7 +539,6 @@ class LobbyistController {
       <td><nobr><a href="../files/<?php print $r['id']; ?>" class="btn"><?php print $r['count']; ?> activities</a></nobr></td>
       <td><nobr><?php print $r['fdate']; ?></nobr></td>
       <td><nobr><?php print $r['tdate']; ?></nobr></td>
-      <td><nobr><?php print $r['created']; ?></nobr></td>
       </tr>
       <?php
     }

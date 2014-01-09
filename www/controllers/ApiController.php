@@ -179,13 +179,13 @@ class ApiController {
         l.lobbydate,
         l.activity,
         l.lobbied,
-        l.created reportedon
       from lobbying l
         join lobbyfile f on f.id = l.lobbyfileid
       order by
         l.created desc
     ");
     print self::arrayToCsv($rows);
+/* removed because seemingly unreliable, sadness        l.created reportedon */
     return;
   }
 
