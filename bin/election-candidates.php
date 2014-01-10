@@ -105,6 +105,7 @@ foreach ($lines as $l) {
 
   $names = explode(" ",$row[0]);
 
+	$candidate = array();
   $candidate['ward'] = $ward;
   $candidate['wardname'] = $wardname;
   $candidate['first'] = $names[0];
@@ -142,6 +143,11 @@ foreach ($lines as $l) {
   if (preg_match('/<th/',$l)) { continue; }
   if (preg_match('/No Candidate/',$l)) { continue; }
 
+	$candidate = array();
+	$candidate['twitter'] = '';
+	$candidate['facebook'] = '';
+	$candidate['web'] = '';
+
   $matches = array();
   if (preg_match('/^<h3/',$l)) {
 		$l = preg_replace('/-/',' - ',$l);
@@ -168,8 +174,44 @@ foreach ($lines as $l) {
   $l = trim($l);
   $row = explode("\t",$l);
 
-
   $names = explode(" ",$row[0]);
+
+	if (isset($row[3])) {
+		$other = $row[3];
+		$other = preg_replace('/website/i',' web ',$other);
+		$other = preg_replace('/twitter/i',' twitter ',$other);
+		$other = preg_replace('/facebook/i',' facebook ',$other);
+		$other = preg_replace('/linkedin/i',' linkedin ',$other);
+		$other = preg_replace('/fax number/i',' fax ',$other);
+		$other = preg_replace('/http:\/\//i','',$other);
+		$other = preg_replace('/https:\/\//i','',$other);
+		$other = preg_replace('/:/','',$other);
+		$other = preg_replace('/^ */','',$other);
+		$other = preg_replace('/ /',' ',$other);
+		$other = preg_replace('/  /',' ',$other);
+		$other = preg_replace('/  /',' ',$other);
+		$other = preg_replace('/  /',' ',$other);
+		$other = preg_replace('/  /',' ',$other);
+		$other = preg_replace('/  /',' ',$other);
+		$prev = '';
+		foreach (explode(" ",$other) as $o) {
+			if ($prev == 'web' || $prev == 'twitter' || $prev == 'facebook') {
+				$candidate[$prev] = trim($o);
+				if ($prev == 'facebook' && preg_match('/^\//',$candidate['facebook'])) {
+					$candidate['facebook'] = "http://facebook.com{$candidate['facebook']}";
+				}
+				if ($prev == 'twitter') {
+					$candidate['twitter'] = preg_replace('/^@/','',$candidate['twitter']);
+				}
+			}
+			$prev = $o;
+		}
+
+		#print "-------------------\n";
+		#print "$other\n";
+		#pr($parts);
+	}
+
 
   $candidate['ward'] = $ward;
   $candidate['wardname'] = $wardname;
@@ -185,7 +227,17 @@ foreach ($lines as $l) {
 
   $c = " select count(1) c from candidate where ward = $ward and first = '{$candidate['first']}' and last = '{$candidate['last']}'; ";
   $i = "insert into candidate (ward,year,first,last) values ($ward,2014,'{$candidate['first']}','{$candidate['last']}'); ";
-  $u = "update candidate set nominated = (case when nominated is null then now() else nominated end) , phone = '{$candidate['phone']}', email = '{$candidate['email']}'  where year = 2014 and ward = $ward and first = '{$candidate['first']}' and last = '{$candidate['last']}'; ";
+  $u = "update candidate set 
+		nominated = (case when nominated is null then now() else nominated end) , 
+		phone = '{$candidate['phone']}', 
+		twitter = '{$candidate['twitter']}', 
+		facebook = '{$candidate['facebook']}', 
+		url = '{$candidate['web']}', 
+		email = '{$candidate['email']}'  
+		where year = 2014 and ward = $ward and first = '{$candidate['first']}' and last = '{$candidate['last']}'; ";
+  $u = "update candidate set 
+		nominated = (case when nominated is null then now() else nominated end) , phone = '{$candidate['phone']}', email = '{$candidate['email']}'  
+		where year = 2014 and ward = $ward and first = '{$candidate['first']}' and last = '{$candidate['last']}'; ";
   $key = "$ward {$candidate['first']} {$candidate['last']}";
   $sql[] = array('ward'=>$ward,'name'=>$key,'insert'=>$i,'update'=>$u,'count'=>$c,'details'=>$candidate);
 
