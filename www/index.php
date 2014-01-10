@@ -139,6 +139,8 @@ getRoute()->get('/election/tools', array('ElectionController','showTools'));
 getRoute()->get('/election/(mayor)/', array('ElectionController','showRace'));
 getRoute()->get('/election/ward/(\d+)', array('ElectionController','showRace'));
 getRoute()->get('/election/ward/(\d+)/map', array('ElectionController','showWardMap'));
+getRoute()->get('/election/processReturn/*', array('ElectionController','processReturn'));
+getRoute()->get('/election/processReturn/(\d+)', array('ElectionController','processReturn'));
 
 getRoute()->get('.*', 'error404');
 getRoute()->run();

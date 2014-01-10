@@ -41,6 +41,29 @@ class ElectionController {
   const year = 2014;
   const prevyear = 2010;
 
+	public static function getReturnPagesDir($year,$filename) {
+		$filename = preg_replace('/\.pdf/','',$filename);
+		return OttWatchConfig::FILE_DIR."/election/$year/financial_returns/$filename";
+	}
+
+	public static function getReturnPages($year,$filename) {
+		$dir = self::getReturnPagesDir($year,$filename);
+    $d = opendir($dir);
+		$pages = array();
+    while (($file = readdir($d)) !== false) {
+      if (preg_match('/^\./',$file)) { continue; }
+      if (!preg_match('/^page-\d+\.png/',$file)) { continue; }
+      $pages[] = "$dir/$file";
+    }
+    closedir($d);
+		asort($pages);
+		$t = array();
+		foreach ($pages as $p) {
+			$t[] = $p;
+		}
+		return $t;
+	}
+
   public static function showWardMap($ward) {
     top();
 		self::showWardMapPriv($ward,-1);
@@ -446,6 +469,150 @@ class ElectionController {
 		<?php
 		bottom();
 	}
+
+	public static function processReturn ($id) {
+		if ($id == '') {
+			top();
+			#
+			# Display list of returns...
+			#
+			$rows = getDatabase()->all(" select r.id retid,c.year,r.filename,c.* from candidate_return r join candidate c on c.id = r.candidateid order by c.year,c.last,c.first ");
+			$returns = array();
+			foreach ($rows as $r) {
+				$dir = self::getReturnPagesDir($r['year'],$r['filename']);
+				if (!file_exists($dir)) { continue; }
+				$returns[] = $r;
+			}
+			?>
+			<h1>Returns to process: <?php print count($returns); ?></h1>
+	    <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
+			<?php
+			foreach ($returns as $r) {
+				?>
+				<tr>
+				<td><?php print $r['year']; ?></td>
+				<td><?php print $r['last']; ?></td>
+				<td><?php print $r['first']; ?></td>
+				<td><a href="/election/processReturn/<?php print $r['retid']; ?>"><?php print $r['filename']; ?></a></td>
+				</tr>
+				<?php
+			}
+			?>
+			</table>
+			<?php
+			bottom();
+			return;
+		}
+
+		# load data about the return
+		$ret = getDatabase()->one(" select c.*,r.filename from candidate_return r join candidate c on c.id = r.candidateid where r.id = $id ");
+		$pages = self::getReturnPages($ret['year'],$ret['filename']);
+
+		$page = $_GET['page'];
+		$png = $_GET['png'];
+    if ($_GET['saveA'] == 1) {	
+			# click in a <canvass> denoting location of a campaign donation
+      $values = array();
+			$values['returnid'] = $id;
+      $values['x'] = $_GET['x'];
+      $values['y'] = $_GET['y'];
+      $values['page'] = $page;
+      $id = db_insert('candidate_donation',$values);
+			return;
+		}
+
+		if ($page == '' || !preg_match('/^\d+$/',$page)) {
+			top();
+			#
+			# List pages in this return.
+			#
+			print "<h1>Select a page</h1>";
+			foreach ($pages as $k => $v) {
+				print "<a href=\"?page=$k\">page-$k</a> ";
+			}
+			bottom();
+			return;
+		}
+
+    $dots = getDatabase()->all(" select * from candidate_donation where returnid = $id and page = $page ");
+		$pagefile = $pages[$page];
+    $size = getimagesize($pagefile);
+
+		if ($png != '') {
+			#
+			# return PNG data for page
+			#
+      $data = file_get_contents($pagefile);
+      header('Content-Type: image/png');
+			$expires = 60*60*24*14;
+			header("Pragma: public");
+			header("Cache-Control: maxage=".$expires);
+			header('Expires: ' . gmdate('D, d M Y H:i:s', time()+$expires) . ' GMT');
+      print $data;
+      return;
+		}
+
+		#
+		# Show page on the canvass, and accept "clicks" of individual lines
+		#
+
+		top();
+		print "<center>";
+		print "<a href=\"?page=".($page-1)."\">PREV</a>";
+		if (isset($pages[($page+1)])) {
+		print " | <a href=\"?page=".($page+1)."\">NEXT</a> ";
+		}
+		print "<br/>";
+    $imgW = $size[0];
+    $imgH = $size[1];
+		?>
+    <canvas id="canvas" width="<?php print $imgW; ?>" height="<?php print $imgH; ?>" style="border: solid 1px #ff0000;">
+    </canvas><br/>
+      <script>
+	      var canvas = document.getElementById('canvas');
+	      var context = canvas.getContext('2d');
+
+	      var imageObj = new Image();
+	      imageObj.onload = function() {
+	        context.drawImage(imageObj,0,-10);
+          <?php
+          foreach ($dots as $d) {
+            ?>
+		        context.beginPath();
+		        context.arc(<?php print $d['x']; ?>, <?php print $d['y']; ?>, 5, 0, Math.PI*2, true); 
+		        context.closePath();
+		        context.fill();
+            <?php
+          }
+          ?>
+	      };
+	      imageObj.src = '<?php print "?png=1&page=$page"; ?>';
+        canvas.addEventListener('click', function(event) { 
+          c = document.getElementById('canvas');
+          x = event.pageX - c.offsetLeft;
+          y = event.pageY - c.offsetTop;
+
+		        context.beginPath();
+            context.fillStyle = '#f00';
+            context.strokeStyle = '#f00';
+		        context.arc(x, y, 5, 0, Math.PI*2, true); 
+		        context.closePath();
+		        context.fill();
+
+          url = '?saveA=1&x=' + x + '&y=' + y + '&page=<?php print $page; ?>';
+          $.get( url );
+        }, false);
+
+      </script>
+		<?php
+		print "<a href=\"?page=".($page-1)."\">PREV</a>";
+		if (isset($pages[($page+1)])) {
+		print " | <a href=\"?page=".($page+1)."\">NEXT</a> ";
+		}
+		print "</center>";
+		bottom();
+	}
+
 
 }
 

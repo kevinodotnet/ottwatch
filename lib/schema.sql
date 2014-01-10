@@ -387,6 +387,24 @@ create table candidate_return (
   constraint foreign key (candidateid) references candidate (id) on delete cascade on update cascade
 ) engine = innodb;
 
+drop table if exists candidate_donation;
+create table candidate_donation (
+  id mediumint not null auto_increment,
+  returnid mediumint not null,
+	`type` tinyint, -- 0=individual, 1=corp_or_union
+	name varchar(100), 
+	address varchar(100),
+	city varchar(100),
+	prov varchar(100),
+	postal varchar(15),
+	amount decimal(10,2),
+  page smallint unsigned, -- page in candidate_return.filename
+  x smallint unsigned, -- top-left corner on page
+  y smallint unsigned,
+  primary key (id),
+  constraint foreign key (returnid) references candidate_return (id) on delete cascade on update cascade
+) engine = innodb;
+
 drop table if exists feed;
 create table feed (
   id mediumint not null auto_increment,
