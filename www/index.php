@@ -143,6 +143,7 @@ getRoute()->get('/election/processReturn/*', array('ElectionController','process
 getRoute()->get('/election/processReturn/(\d+)', array('ElectionController','processReturn'));
 getRoute()->get('/election/processDonation/*', array('ElectionController','processDonation'));
 getRoute()->post('/election/processDonation/*', array('ElectionController','processDonationSave'));
+getRoute()->get('/election/listDonations', array('ElectionController','listDonations'));
 
 getRoute()->get('.*', 'error404');
 getRoute()->run();

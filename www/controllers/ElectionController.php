@@ -616,7 +616,9 @@ class ElectionController {
 	public static function processDonation() {
 		top();
 
-		$remaining = getDatabase()->one(" select count(1) c from candidate_donation where amount is null ");
+		$done = getDatabase()->one(" select count(1) c from candidate_donation where amount is not null and amount != '' ");
+		$done = $done['c'];
+		$remaining = getDatabase()->one(" select count(1) c from candidate_donation where amount is null or amount = '' ");
 		if ($remaining['c'] == 0) {
 			?>
 			<center>
@@ -636,7 +638,8 @@ class ElectionController {
 			<h1>Campaign Donation Data-Entry</h1>
 			<p class="lead">
 			<b>Take 10 seconds ... bring more transparency to Ottawa's election.</b><br/>
-			Below is one donation image from the 2010 election. Please type in the details.
+			Below is one donation image from the 2010 election. Please type in the details.<br/>
+			<b><a href="/election/listDonations/"><span style="color: #f00;"><?php print $done; ?></span></b> done</a>!
 			Only <b><span style="color: #f00;"><?php print $remaining['c']; ?></span></b> more to go!<br/>
 			<small>(until I scan more candidate returns in)</small>
 			</p>
@@ -734,6 +737,60 @@ class ElectionController {
 		// straight to DB, back to GET
  		db_update('candidate_donation',$_POST,'id');
 		header("Location: /election/processDonation/");
+	}
+
+	public static function listDonations() {
+		top();
+		$rows = getDatabase()->all("
+			select 
+				d.type,
+				d.name donor,
+				d.address,
+				d.city,
+				d.postal,
+				d.amount,
+				c.year,
+				c.ward,
+				c.first,
+				c.last
+			from
+				candidate_donation d
+				join candidate_return r on d.returnid = r.id
+				join candidate c on r.candidateid = c.id
+			where d.amount is not null and d.amount != ''
+			order by c.year desc, c.ward, c.last, c.first, d.type, d.name
+		");
+		?>
+	  <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
+		<tr>
+				<th>year</th>
+				<th>ward</th>
+				<th>candidate</th>
+				<th>donor</th>
+				<th>amount</th>
+				<th>address</th>
+				<th>city</th>
+				<th>postal</th>
+				<th>type</th>
+		</tr>
+		<?php
+		foreach ($rows as $r) {
+			print "<tr>";
+			print "<td>{$r['year']}</td>";
+			print "<td>{$r['ward']}</td>";
+			print "<td>{$r['last']}, {$r['first']}</td>";
+			print "<td>{$r['donor']}</td>";
+			print "<td>{$r['amount']}</td>";
+			print "<td>{$r['address']}</td>";
+			print "<td>{$r['city']}</td>";
+			print "<td>{$r['postal']}</td>";
+			print "<td>{$r['type']}</td>";
+			print "</tr>";
+		}
+		?>
+		</table>
+		<?php
+		bottom();
 	}
 
 }
