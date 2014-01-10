@@ -675,7 +675,7 @@ class ElectionController {
 			<b>Take 10 seconds ... bring more transparency to Ottawa's election.</b><br/>
 			Below is one donation image from the 2010 election. Please type in the details.<br/>
 			<b><a href="/election/listDonations"><span style="color: #f00;"><?php print $done; ?></span></b> done - thats <?php print $donePerc; ?>%</a>!
-			Only <b><span style="color: #f00;"><?php print $remaining['c']; ?></span></b> more to go!<br/>
+			Only <b><span style="color: #f00;"><?php print ($remaining['c']-$done); ?></span></b> more to go!<br/>
 			<small>(until I scan more candidate returns in)</small>
 			</p>
 			</center>
