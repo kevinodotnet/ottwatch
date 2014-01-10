@@ -810,17 +810,7 @@ class ElectionController {
 	}
 
 	public static function listDonations() {
-		top();
-		?>
-		<div class="row-fluid">
-		<div class="span6">
-		<h1>Campaign Donations Report</h1>
-		</div>
-		<div class="span6">
-		<p class="lead">Like this data? <a href="/election/processDonation/">Help create more of it</a> - 10 seconds at a time.</p>
-		</div>
-		</div>
-		<?php
+
 		$rows = getDatabase()->all("
 			select 
 				d.id,
@@ -840,8 +830,40 @@ class ElectionController {
 				join candidate c on r.candidateid = c.id
 			where d.amount is not null and d.amount != ''
 			order by c.year desc, c.ward, c.last, c.first, d.type, d.name
+			limit 20;
 		");
+
+		if ($_GET['json'] == 1) {
+			print json_encode($rows);
+			return;
+		}
+		if ($_GET['csv'] == 1) {
+			$cols = array( 'id', 'type', 'donor', 'address', 'city', 'postal', 'amount', 'year', 'ward', 'first', 'last');
+			foreach ($cols as $c) {
+				print "{$c}\t";
+			}
+			print "\n";
+			foreach ($rows as $r) {
+				foreach ($cols as $c) {
+					print "{$r[$c]}\t";
+				}
+				print "\n";
+			}
+			return;
+		}
+
+		top();
 		?>
+		<?php
+		?>
+		<div class="row-fluid">
+		<div class="span6">
+		<h1>Campaign Donations Report</h1>
+		</div>
+		<div class="span6">
+		<p class="lead">Like this data? <a href="/election/processDonation/">Help create more of it</a> - 10 seconds at a time.</p>
+		</div>
+		</div>
 	  <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
 		<tr>
 				<th>year</th>
