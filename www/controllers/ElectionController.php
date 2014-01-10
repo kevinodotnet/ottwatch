@@ -633,7 +633,7 @@ class ElectionController {
 			?>
 			<center>
 			<div style="float: right;">
-			<?php renderShareLinks("Help me do some data-entry to improve transparancy. {$remaining['c']} donation records to go...",'/election/processDonation/'); ?>
+			<?php renderShareLinks("Help me do some data-entry to improve transparency. {$remaining['c']} donation records to go...",'/election/processDonation/'); ?>
 			</div>
 			<h1>Campaign Donation Data-Entry</h1>
 			<p class="lead">
