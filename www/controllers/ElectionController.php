@@ -616,6 +616,29 @@ class ElectionController {
 	public static function processDonation() {
 		top();
 
+		$remaining = getDatabase()->one(" select count(1) c from candidate_donation where amount is null ");
+		if ($remaining['c'] == 0) {
+			?>
+			<center>
+			<h1>All Done!</h1>
+			<p class="lead">All donation records have been processed! More might get scanned in though - so check back again!</p>
+			</center>
+			<?php
+			return;
+			bottom();
+		}
+
+			?>
+			<center>
+			<h1>Campaign Donation Data-Entry</h1>
+			<p class="lead">
+			<b>Take 10 seconds ... bring more transparency to Ottawa's election.</b><br/>
+			Below is one donation image from the 2010 election. Please type in the details.
+			Only <b><span style="color: #f00;"><?php print $remaining['c']; ?></span></b> more to go!
+			</p>
+			</center>
+			<?php
+
 		# select a random unprocessed donation, along with the X/Y of the next donation on the same
 		# page, if any, for bounding box purposes.
 		$row = getDatabase()->one(" 
@@ -668,10 +691,12 @@ class ElectionController {
 		If a corporation or union is shown, put that in the <b>NAME</b> field and ignore any personal names shown.
 		</td>
 		<td style="vertical-align: top; width: 350px;"><input  style="width: 90%;" type="text" placeholder="address" name="address" />
-		Just street address (and unit/apt).
+		Just street address (and unit/apt).<br/><br/>
+		example: 2140 Oakmount St.<br/>
 		</td>
 		<td style="vertical-align: top; width: 100px;"><input  style="width: 90%;" type="text" value="Ottawa" placeholder="city" name="city" />
-		Leave as Ottawa for pre-almalgamation names.
+		Leave as Ottawa if it's "Kanata", "Orleans", etc. Only change if it's outside the amalgamated city.
+		When in doubt, just make sure postal code is right.
 		</td>
 		<td style="vertical-align: top; width: 50px;"><input  style="width: 90%;" type="text" value="ON" placeholder="prov" name="prov" />
 		Nothing should come in from out-of-province
@@ -685,10 +710,6 @@ class ElectionController {
 		</table>
 		<input class="btn btn-large btn-success" type="submit" value="save"/>
 		</form>
-		<h3>Instructions</h4>
-		<p>
-		You are looking at a single donation record from a 2010 campaign return! This is your chance to digitize it for better transparency and accountability.
-		</p>
 		</center>
 		<?php
 		bottom();
