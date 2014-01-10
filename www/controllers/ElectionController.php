@@ -745,9 +745,11 @@ class ElectionController {
 		Leave as Ottawa if it's "Kanata", "Orleans", etc. Only change if it's outside the amalgamated city.
 		When in doubt, just make sure postal code is right.
 		</td>
+		<!--
 		<td style="vertical-align: top; width: 50px;"><input  style="width: 90%;" type="text" value="ON" placeholder="prov" name="prov" />
 		Nothing should come in from out-of-province
 		</td>
+		-->
 		<td style="vertical-align: top; width: 100px;"><input  style="width: 90%;" type="text" placeholder="postal" name="postal" />
 		Postal code is really important for later geo-location reports!
 		</td>
