@@ -647,7 +647,7 @@ class ElectionController {
 			from 
 				candidate_donation d
 			where 
-				d.amount is null 
+				d.amount is null
 			order by rand()
 			limit 1
 		");
@@ -660,8 +660,9 @@ class ElectionController {
 		$pagefile = $pages[$page];
     $size = getimagesize($pagefile);
     $imgW = $size[0];
+		$padding = 16;
 		if (isset($next['y'])) {
-			$imgH = $next['y']-$row['y']+5;
+			$imgH = $next['y']-$row['y']+$padding;
 		} else {
 	    $imgH = 200;
 		}
@@ -679,7 +680,7 @@ class ElectionController {
 		context.font = "bold 16px Verdana";
 	  context.fillText("... loading donation image ... could take a few seconds ... chill!", 20,<?php print $imgH/2; ?>);
 		imageObj.onload = function() {
-			context.drawImage(imageObj,0,-<?php print $row['y']; ?>);
+			context.drawImage(imageObj,0,-<?php print $row['y']-($padding/2); ?>);
 		};
 		imageObj.src = '/election/processReturn/<?php print "{$row['returnid']}?png=1&page=$page"; ?>';
 		</script>
@@ -713,7 +714,8 @@ class ElectionController {
 		</td>
 		</tr>
 		</table>
-		<input class="btn btn-large btn-success" type="submit" value="save"/>
+		<input name="report" class="btn btn-large btn-failure" type="submit" value="Report Broken or Unreadable"/>
+		<input class="btn btn-large btn-success" type="submit" value="Save"/>
 		</form>
 		</center>
 		<?php
@@ -721,8 +723,12 @@ class ElectionController {
 	}
 
 	public static function processDonationSave() {
+		if (isset($_POST['report'])) {
+			unset($_POST['report']);
+			$_POST['prov'] = 'BROKEN';
+		}
 		// straight to DB, back to GET
-		db_update('candidate_donation',$_POST,'id');
+ 		db_update('candidate_donation',$_POST,'id');
 		header("Location: /election/processDonation/");
 	}
 
