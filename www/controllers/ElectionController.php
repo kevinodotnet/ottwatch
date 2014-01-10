@@ -478,7 +478,11 @@ class ElectionController {
 			#
 			# Display list of returns...
 			#
-			$rows = getDatabase()->all(" select r.id retid,c.year,r.filename,c.* from candidate_return r join candidate c on c.id = r.candidateid order by c.year,c.last,c.first ");
+			$rows = getDatabase()->all(" 
+			select r.id retid,c.year,r.filename,c.* 
+			from candidate_return r 
+			join candidate c on c.id = r.candidateid 
+			order by c.year,c.ward,c.last,c.first ");
 			$returns = array();
 			foreach ($rows as $r) {
 				$dir = self::getReturnPagesDir($r['year'],$r['filename']);
@@ -493,9 +497,20 @@ class ElectionController {
 				?>
 				<tr>
 				<td><?php print $r['year']; ?></td>
+				<td><?php print $r['ward']; ?></td>
 				<td><?php print $r['last']; ?></td>
 				<td><?php print $r['first']; ?></td>
 				<td><a href="/election/processReturn/<?php print $r['retid']; ?>"><?php print $r['filename']; ?></a></td>
+				<td><?
+					$sql = " select count(1) c ,sum(case when amount is not null and amount != '' then 1 else 0 end ) filled from candidate_donation d where returnid = {$r['retid']} group by returnid ";
+					$c = getDatabase()->one($sql);
+					if (isset($c['c'])) {
+						print "<a href=\"/election/processDonation/?returnid={$r['retid']}\">{$c['filled']} of {$c['c']}</a>";
+					} else {
+						print "-";
+					}
+				?>
+				</td>
 				</tr>
 				<?php
 			}
@@ -648,6 +663,8 @@ class ElectionController {
 			return;
 		}
 
+		$donePerc = round($done/$remaining['c']*100);
+
 			?>
 			<center>
 			<div style="float: right;">
@@ -657,7 +674,7 @@ class ElectionController {
 			<p class="lead">
 			<b>Take 10 seconds ... bring more transparency to Ottawa's election.</b><br/>
 			Below is one donation image from the 2010 election. Please type in the details.<br/>
-			<b><a href="/election/listDonations"><span style="color: #f00;"><?php print $done; ?></span></b> done</a>!
+			<b><a href="/election/listDonations"><span style="color: #f00;"><?php print $done; ?></span></b> done - thats <?php print $donePerc; ?>%</a>!
 			Only <b><span style="color: #f00;"><?php print $remaining['c']; ?></span></b> more to go!<br/>
 			<small>(until I scan more candidate returns in)</small>
 			</p>
@@ -698,7 +715,7 @@ class ElectionController {
 		$pagefile = $pages[$page];
     $size = getimagesize($pagefile);
     $imgW = $size[0];
-		$padding = 16;
+		$padding = 20;
 		if (isset($next['y'])) {
 			$imgH = $next['y']-$row['y']+$padding;
 		} else {
@@ -720,7 +737,7 @@ class ElectionController {
 		imageObj.onload = function() {
 			context.drawImage(imageObj,0,-<?php print $row['y']-($padding/2); ?>);
 		        context.beginPath();
-		        context.arc(<?php print $row['x']-5; ?>,<?php print ($padding); ?>, 5, 0, Math.PI*2, true); 
+		        context.arc(<?php print $row['x']; ?>-5,<?php print ($padding/2)+5; ?>, 5, 0, Math.PI*2, true); 
 		        context.closePath();
 		        context.fill();
 		};
