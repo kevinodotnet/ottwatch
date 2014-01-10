@@ -630,11 +630,15 @@ class ElectionController {
 
 			?>
 			<center>
+			<div style="float: right;">
+			<?php renderShareLinks("Help me do some data-entry to improve transparancy. {$remaining['c']} donation records to go...",'/election/processDonation/'); ?>
+			</div>
 			<h1>Campaign Donation Data-Entry</h1>
 			<p class="lead">
 			<b>Take 10 seconds ... bring more transparency to Ottawa's election.</b><br/>
 			Below is one donation image from the 2010 election. Please type in the details.
-			Only <b><span style="color: #f00;"><?php print $remaining['c']; ?></span></b> more to go!
+			Only <b><span style="color: #f00;"><?php print $remaining['c']; ?></span></b> more to go!<br/>
+			<small>(until I scan more candidate returns in)</small>
 			</p>
 			</center>
 			<?php
@@ -690,7 +694,7 @@ class ElectionController {
 		<tr>
 		<td style="vertical-align: top; width: 400px;">
 		<input  style="width: 90%;" type="text" placeholder="name" name="name" /><br/>
-		<select size="2" name="type" style="width: 90%;">
+		choose: <select size="2" name="type">
 		<option value="0">Individual</option>
 		<option value="1">Business/Union</option>
 		</select><br/>
