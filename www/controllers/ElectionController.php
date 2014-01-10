@@ -97,8 +97,8 @@ class ElectionController {
     ];
     polygon = new google.maps.Polygon({
       paths: coords,
-      strokeColor: '#ff0000',
-      fillColor: '#ff0000',
+      strokeColor: '#c0c0c0',
+      fillColor: '#c0c0c0',
       fillOpacity: 0.35,
     });
     polygon.setMap(map);
@@ -566,7 +566,7 @@ class ElectionController {
     $imgW = $size[0];
     $imgH = $size[1];
 		?>
-    <canvas id="canvas" width="<?php print $imgW; ?>" height="<?php print $imgH; ?>" style="border: solid 1px #ff0000;">
+    <canvas id="canvas" width="<?php print $imgW; ?>" height="<?php print $imgH; ?>" style="border: solid 1px #c0c0c0;">
     </canvas><br/>
       <script>
 	      var canvas = document.getElementById('canvas');
@@ -574,7 +574,7 @@ class ElectionController {
 
 	      var imageObj = new Image();
 	      imageObj.onload = function() {
-	        context.drawImage(imageObj,0,-10);
+	        context.drawImage(imageObj,0,0);
           <?php
           foreach ($dots as $d) {
             ?>
@@ -613,6 +613,92 @@ class ElectionController {
 		bottom();
 	}
 
+	public static function processDonation() {
+		top();
+
+		# select a random unprocessed donation, along with the X/Y of the next donation on the same
+		# page, if any, for bounding box purposes.
+		$row = getDatabase()->one(" 
+			select
+				d.*
+			from 
+				candidate_donation d
+			where 
+				d.amount is null 
+			order by rand()
+			limit 1
+		");
+		$next = getDatabase()->one(" select min(y) y from candidate_donation where returnid = {$row['returnid']} and page = {$row['page']} and y > {$row['y']} ");
+
+		$ret = getDatabase()->one(" select c.*,r.filename from candidate_return r join candidate c on c.id = r.candidateid where r.id = {$row['returnid']} ");
+		$pages = self::getReturnPages($ret['year'],$ret['filename']);
+
+		$page = $row['page'];
+		$pagefile = $pages[$page];
+    $size = getimagesize($pagefile);
+    $imgW = $size[0];
+		if (isset($next['y'])) {
+			$imgH = $next['y']-$row['y']+5;
+		} else {
+	    $imgH = 200;
+		}
+
+		# use canvas to display the image
+		?>
+		<center>
+    <canvas id="canvas" width="<?php print $imgW; ?>" height="<?php print $imgH; ?>" style="border: solid 1px #c0c0c0; margin-bottom: 20px;">
+    </canvas><br/>
+    <script>
+		var canvas = document.getElementById('canvas');
+		var context = canvas.getContext('2d');
+		var imageObj = new Image();
+		context.fillStyle = "blue";
+		context.font = "bold 16px Verdana";
+	  context.fillText("... loading donation image ... could take a few seconds ... chill!", 20,<?php print $imgH/2; ?>);
+		imageObj.onload = function() {
+			context.drawImage(imageObj,0,-<?php print $row['y']; ?>);
+		};
+		imageObj.src = '/election/processReturn/<?php print "{$row['returnid']}?png=1&page=$page"; ?>';
+		</script>
+		<form method="post" action="/election/processDonation/">
+		<input type="hidden" name="id" value="<?php print $row['id']; ?>"/>
+    <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
+		<tr>
+		<td style="vertical-align: top; width: 400px;"><input  style="width: 90%;" type="text" placeholder="name" name="name" /><br/>
+		If a corporation or union is shown, put that in the <b>NAME</b> field and ignore any personal names shown.
+		</td>
+		<td style="vertical-align: top; width: 350px;"><input  style="width: 90%;" type="text" placeholder="address" name="address" />
+		Just street address (and unit/apt).
+		</td>
+		<td style="vertical-align: top; width: 100px;"><input  style="width: 90%;" type="text" value="Ottawa" placeholder="city" name="city" />
+		Leave as Ottawa for pre-almalgamation names.
+		</td>
+		<td style="vertical-align: top; width: 50px;"><input  style="width: 90%;" type="text" value="ON" placeholder="prov" name="prov" />
+		Nothing should come in from out-of-province
+		</td>
+		<td style="vertical-align: top; width: 100px;"><input  style="width: 90%;" type="text" placeholder="postal" name="postal" />
+		Postal code is really important for later geo-location reports!
+		</td>
+		<td style="vertical-align: top; width: 100px;"><input  style="width: 90%;" type="text" placeholder="$" name="amount" />
+		</td>
+		</tr>
+		</table>
+		<input class="btn btn-large btn-success" type="submit" value="save"/>
+		</form>
+		<h3>Instructions</h4>
+		<p>
+		You are looking at a single donation record from a 2010 campaign return! This is your chance to digitize it for better transparency and accountability.
+		</p>
+		</center>
+		<?php
+		bottom();
+	}
+
+	public static function processDonationSave() {
+		// straight to DB, back to GET
+		db_update('candidate_donation',$_POST,'id');
+		header("Location: /election/processDonation/");
+	}
 
 }
 
