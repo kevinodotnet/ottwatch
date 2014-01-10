@@ -776,10 +776,11 @@ class ElectionController {
 		<td style="vertical-align: top; width: 100px;"><input  style="width: 90%;" type="text" placeholder="postal" name="postal" />
 		Postal code is really important for later geo-location reports!
 		</td>
-		<td style="vertical-align: top; width: 100px;"><input  style="width: 90%;" type="text" placeholder="$" name="amount" /><br/>
+		<td style="vertical-align: top; width: 100px;">
+		<input  style="width: 90%;" type="text" placeholder="$" name="amount" /><br/>
 		<center>
-		<input class="btn btn-large btn-success" type="submit" value="Save"/><br/>
-		<input name="report" class="btn btn-large btn-danger" type="submit" value="(Unreadable)"/>
+		<input class="btn btn-large btn-success" type="submit" value="Save" style="margin-top: 20px;"/><br/>
+		<input name="report" class="btn btn-large btn-danger" type="submit" value="(Unreadable)" style="margin-top: 20px;"/>
 		</center>
 		</td>
 		</tr>
