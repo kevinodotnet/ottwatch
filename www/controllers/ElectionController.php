@@ -884,24 +884,63 @@ class ElectionController {
 				d.city,
 				d.postal,
 				d.amount,
+				d.page,
+				d.x,
+				d.y,
 				c.year,
 				c.ward,
 				c.first,
-				c.last
+				c.last,
+				r.filename,
+				r.id retid
 			from
 				candidate_donation d
 				join candidate_return r on d.returnid = r.id
 				join candidate c on r.candidateid = c.id
 			where d.id = $id
 		";
+		$r = getDatabase()->one($sql);
+		$next = getDatabase()->one(" select min(y) y from candidate_donation where returnid = {$r['retid']} and page = {$r['page']} and y > {$r['y']} ");
+
+		$pages = self::getReturnPages($r['year'],$r['filename']);
+		$page = $r['page'];
+		$pagefile = $pages[$page];
+    $size = getimagesize($pagefile);
+    $imgW = $size[0];
+		$padding = 100;
+		if (isset($next['y'])) {
+			$imgH = $next['y']-$r['y']+$padding;
+		} else {
+	    $imgH = 200;
+		}
 			top("Campaign Donation Details: ");
 			?>
 			<h1>Campaign Donation Details</h1>
+
+		<center>
+    <canvas id="canvas" width="<?php print $imgW; ?>" height="<?php print $imgH; ?>" style="border: solid 1px #c0c0c0; margin-bottom: 20px;">
+    </canvas><br/>
+    <script>
+		var canvas = document.getElementById('canvas');
+		var context = canvas.getContext('2d');
+		var imageObj = new Image();
+		context.fillStyle = "blue";
+		context.font = "bold 16px Verdana";
+	  context.fillText("... loading donation image ... could take a few seconds ... chill!", 20,<?php print $imgH/2; ?>);
+		imageObj.onload = function() {
+			context.drawImage(imageObj,0,-<?php print $r['y']-($padding/2); ?>);
+		        context.beginPath();
+		        context.arc(<?php print $r['x']; ?>-5,<?php print ($padding/2)+5; ?>, 5, 0, Math.PI*2, true); 
+		        context.closePath();
+		        context.fill();
+		};
+		imageObj.src = '/election/processReturn/<?php print "{$r['retid']}?png=1&page={$r['page']}"; ?>';
+		</script>
+
 			<div class="row-fluid">
 			<div class="span6">
 	    <table class="table table-bordered table-hover table-condensed">
 			<?php
-		$r = getDatabase()->one($sql);
 			print "<tr><th>Donor Name</th><td><a href=\"/election/donation/{$r['id']}\">{$r['donor']}</a></td></tr>";
 			print "<tr><th>Amount</th><td><a href=\"/election/donation/{$r['id']}\">{$r['amount']}</a></td></tr>";
 			print "<tr><th>Address</th><td>{$r['address']}</td></tr>";
@@ -910,6 +949,14 @@ class ElectionController {
 			print "<tr><th>Postal</th><td>{$r['postal']}</td></tr>";
 			print "<tr><th>Candidate</th><td>{$r['last']}, {$r['first']} ({$r['year']})</td></tr>";
 			print "<tr><th>Ward</th><td>{$r['ward']}</td></tr>";
+			?>
+			<tr><th>Location</th>
+			<td>
+				<a target="_blank" href="http://documents.ottawa.ca/sites/documents.ottawa.ca/files/documents/<?php print $r['filename']; ?>"><?php print $r['filename']; ?></a>,
+				page <?php print ($r['page']+1); ?>, <?php print round($r['y']*100/$size[1]); ?>% down from top
+			</td>
+			</tr>
+			<?php
 			// print "<tr><th>Type</th><td>{$r['type']}</td></tr>";
 			?>
 			</table>
