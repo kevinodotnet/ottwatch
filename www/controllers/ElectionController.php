@@ -697,10 +697,12 @@ class ElectionController {
 		<tr>
 		<td style="vertical-align: top; width: 400px;">
 		<input  style="width: 90%;" type="text" placeholder="name" name="name" /><br/>
+		<!--
 		choose: <select size="2" name="type">
 		<option value="0">Individual</option>
 		<option value="1">Business/Union</option>
 		</select><br/>
+		-->
 		If a corporation or union is shown, put that in the <b>NAME</b> field and ignore any personal names shown.
 		</td>
 		<td style="vertical-align: top; width: 350px;"><input  style="width: 90%;" type="text" placeholder="address" name="address" />
@@ -717,12 +719,14 @@ class ElectionController {
 		<td style="vertical-align: top; width: 100px;"><input  style="width: 90%;" type="text" placeholder="postal" name="postal" />
 		Postal code is really important for later geo-location reports!
 		</td>
-		<td style="vertical-align: top; width: 100px;"><input  style="width: 90%;" type="text" placeholder="$" name="amount" />
+		<td style="vertical-align: top; width: 100px;"><input  style="width: 90%;" type="text" placeholder="$" name="amount" /><br/>
+		<center>
+		<input class="btn btn-large btn-success" type="submit" value="Save"/><br/>
+		<input name="report" class="btn btn-large btn-danger" type="submit" value="(Unreadable)"/>
+		</center>
 		</td>
 		</tr>
 		</table>
-		<input name="report" class="btn btn-large btn-failure" type="submit" value="Report Broken or Unreadable"/>
-		<input class="btn btn-large btn-success" type="submit" value="Save"/>
 		</form>
 		</center>
 		<?php
