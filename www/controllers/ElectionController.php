@@ -756,7 +756,9 @@ class ElectionController {
 		<option value="1">Business/Union</option>
 		</select><br/>
 		-->
-		If a corporation or union is shown, put that in the <b>NAME</b> field and ignore any personal names shown.
+		
+		If a corporation or union is shown, put that in the <b>NAME</b> field and ignore any personal names shown.<br/><br/>
+		For people, please do "Last, First" if you can. Some of the records are shown as "First Last". No biggie either way.
 		</td>
 		<td style="vertical-align: top; width: 350px;"><input  style="width: 90%;" type="text" placeholder="address" name="address" />
 		Just street address (and unit/apt).<br/><br/>
