@@ -840,7 +840,6 @@ class ElectionController {
 				join candidate c on r.candidateid = c.id
 			where d.amount is not null and d.amount != ''
 			order by c.year desc, c.ward, c.last, c.first, d.type, d.name
-			limit 10;
 		");
 		?>
 	  <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
