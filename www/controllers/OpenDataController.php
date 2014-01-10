@@ -160,6 +160,7 @@ class OpenDataController {
 					if ($r->url == 'http://opl-bpo.ca/en/rss-feeds'
 						|| $r->url == 'http://octranspo1.com/developers/register'
 						|| $r->url == 'http://biblioottawalibrary.ca/branches.xml'
+						|| $r->url == 'http://app06.ottawa.ca/online_services/opendata/data/spotlight/events.xml'
 						) {
 						# these pages are always updated on every scan, for some reason, and are spammy on the update channel.
 						# save them, but without 'updated' timestamp changes, so they are in the catelog but dont make tweets.
