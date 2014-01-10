@@ -624,8 +624,8 @@ class ElectionController {
 			<p class="lead">All donation records have been processed! More might get scanned in though - so check back again!</p>
 			</center>
 			<?php
-			return;
 			bottom();
+			return;
 		}
 
 			?>
@@ -687,7 +687,12 @@ class ElectionController {
 		<input type="hidden" name="id" value="<?php print $row['id']; ?>"/>
     <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
 		<tr>
-		<td style="vertical-align: top; width: 400px;"><input  style="width: 90%;" type="text" placeholder="name" name="name" /><br/>
+		<td style="vertical-align: top; width: 400px;">
+		<input  style="width: 90%;" type="text" placeholder="name" name="name" /><br/>
+		<select size="2" name="type" style="width: 90%;">
+		<option value="0">Individual</option>
+		<option value="1">Business/Union</option>
+		</select><br/>
 		If a corporation or union is shown, put that in the <b>NAME</b> field and ignore any personal names shown.
 		</td>
 		<td style="vertical-align: top; width: 350px;"><input  style="width: 90%;" type="text" placeholder="address" name="address" />
