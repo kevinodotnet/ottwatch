@@ -666,6 +666,10 @@ class ElectionController {
 
 		# select a random unprocessed donation, along with the X/Y of the next donation on the same
 		# page, if any, for bounding box purposes.
+		$returnWhere = "";
+		if (preg_match('/^\d+$/',$_GET['returnid'])) {
+			$returnWhere = " and returnid = {$_GET['returnid']} ";
+		}
 		$row = getDatabase()->one(" 
 			select
 				d.*
@@ -673,9 +677,18 @@ class ElectionController {
 				candidate_donation d
 			where 
 				d.amount is null
+				$returnWhere
 			order by rand()
 			limit 1
 		");
+		if (!isset($row['id'])) {
+			?>
+			Um, looks like you're done?
+			<a href="/election/processDonation/">Maybe click here to refresh and double-check.</a>
+			<?php
+			bottom();
+			return;
+		}
 		$next = getDatabase()->one(" select min(y) y from candidate_donation where returnid = {$row['returnid']} and page = {$row['page']} and y > {$row['y']} ");
 
 		$ret = getDatabase()->one(" select c.*,r.filename from candidate_return r join candidate c on c.id = r.candidateid where r.id = {$row['returnid']} ");
@@ -711,6 +724,7 @@ class ElectionController {
 		</script>
 		<form method="post" action="/election/processDonation/">
 		<input type="hidden" name="id" value="<?php print $row['id']; ?>"/>
+		<input type="hidden" name="returnid" value="<?php print $_GET['returnid']; ?>"/>
     <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
 		<tr>
 		<td style="vertical-align: top; width: 400px;">
@@ -757,9 +771,12 @@ class ElectionController {
 			$_POST['prov'] = 'BROKEN';
 		}
 		$_POST['updated'] = date('Y-m-d H:i:s');
+		$returnid = $_POST['returnid'];
+		unset($_POST['returnid']);
+		
 		// straight to DB, back to GET
  		db_update('candidate_donation',$_POST,'id');
-		header("Location: /election/processDonation/");
+		header("Location: /election/processDonation/?thanks=yes&returnid=$returnid");
 	}
 
 	public static function listDonations() {
