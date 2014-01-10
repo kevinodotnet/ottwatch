@@ -651,6 +651,9 @@ class ElectionController {
 
 		$done = getDatabase()->one(" select count(1) c from candidate_donation where amount is not null ");
 		$done = $done['c'];
+		$total = getDatabase()->one(" select count(1) c from candidate_donation ");
+		$total = $total['c'];
+
 		$remaining = getDatabase()->one(" select count(1) c from candidate_donation where amount is null ");
 		if ($remaining['c'] == 0) {
 			?>
@@ -663,7 +666,7 @@ class ElectionController {
 			return;
 		}
 
-		$donePerc = round($done/$remaining['c']*100);
+		$donePerc = round($done/$total*100);
 
 			?>
 			<center>
@@ -674,8 +677,9 @@ class ElectionController {
 			<p class="lead">
 			<b>Take 10 seconds ... bring more transparency to Ottawa's election.</b><br/>
 			Below is one donation image from the 2010 election. Please type in the details.<br/>
-			<b><a href="/election/listDonations"><span style="color: #f00;"><?php print $done; ?></span></b> done - thats <?php print $donePerc; ?>%</a>!
-			Only <b><span style="color: #f00;"><?php print ($remaining['c']-$done); ?></span></b> more to go!<br/>
+			<b>
+			<a href="/election/listDonations"><span style="color: #f00;"><?php print $done; ?></span></b> done (<?php print $donePerc; ?>%)</a> out of <?php print $total; ?>.
+			Only <b><span style="color: #f00;"><?php print ($remaining['c']); ?></span></b> more to go!<br/>
 			<small>(until I scan more candidate returns in)</small>
 			</p>
 			</center>
