@@ -719,6 +719,10 @@ class ElectionController {
 	  context.fillText("... loading donation image ... could take a few seconds ... chill!", 20,<?php print $imgH/2; ?>);
 		imageObj.onload = function() {
 			context.drawImage(imageObj,0,-<?php print $row['y']-($padding/2); ?>);
+		        context.beginPath();
+		        context.arc(<?php print $row['x']-5; ?>,<?php print ($padding); ?>, 5, 0, Math.PI*2, true); 
+		        context.closePath();
+		        context.fill();
 		};
 		imageObj.src = '/election/processReturn/<?php print "{$row['returnid']}?png=1&page=$page"; ?>';
 		</script>
