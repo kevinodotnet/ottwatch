@@ -144,6 +144,7 @@ getRoute()->get('/election/processReturn/(\d+)', array('ElectionController','pro
 getRoute()->get('/election/processDonation/*', array('ElectionController','processDonation'));
 getRoute()->post('/election/processDonation/*', array('ElectionController','processDonationSave'));
 getRoute()->get('/election/listDonations', array('ElectionController','listDonations'));
+getRoute()->get('/election/donation/(\d+)', array('ElectionController','showDonation'));
 
 getRoute()->get('.*', 'error404');
 getRoute()->run();

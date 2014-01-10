@@ -823,6 +823,7 @@ class ElectionController {
 		<?php
 		$rows = getDatabase()->all("
 			select 
+				d.id,
 				d.type,
 				d.name donor,
 				d.address,
@@ -839,6 +840,7 @@ class ElectionController {
 				join candidate c on r.candidateid = c.id
 			where d.amount is not null and d.amount != ''
 			order by c.year desc, c.ward, c.last, c.first, d.type, d.name
+			limit 10;
 		");
 		?>
 	  <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
@@ -859,8 +861,8 @@ class ElectionController {
 			print "<td>{$r['year']}</td>";
 			print "<td>{$r['ward']}</td>";
 			print "<td>{$r['last']}, {$r['first']}</td>";
-			print "<td>{$r['donor']}</td>";
-			print "<td>{$r['amount']}</td>";
+			print "<td><a href=\"/election/donation/{$r['id']}\">{$r['donor']}</a></td>";
+			print "<td><a href=\"/election/donation/{$r['id']}\">{$r['amount']}</a></td>";
 			print "<td>{$r['address']}</td>";
 			print "<td>{$r['city']}</td>";
 			print "<td>{$r['postal']}</td>";
@@ -870,6 +872,54 @@ class ElectionController {
 		?>
 		</table>
 		<?php
+		bottom();
+	}
+
+	public static function showDonation($id) {
+		$sql = "
+			select 
+				d.id,
+				d.type,
+				d.name donor,
+				d.address,
+				d.city,
+				d.postal,
+				d.amount,
+				c.year,
+				c.ward,
+				c.first,
+				c.last
+			from
+				candidate_donation d
+				join candidate_return r on d.returnid = r.id
+				join candidate c on r.candidateid = c.id
+			where d.id = $id
+		";
+			top("Campaign Donation Details: ");
+			?>
+			<h1>Campaign Donation Details</h1>
+			<div class="row-fluid">
+			<div class="span6">
+	    <table class="table table-bordered table-hover table-condensed">
+			<?php
+		$r = getDatabase()->one($sql);
+			print "<tr><th>Donor Name</th><td><a href=\"/election/donation/{$r['id']}\">{$r['donor']}</a></td></tr>";
+			print "<tr><th>Amount</th><td><a href=\"/election/donation/{$r['id']}\">{$r['amount']}</a></td></tr>";
+			print "<tr><th>Address</th><td>{$r['address']}</td></tr>";
+			print "<tr><th>City</th><td>{$r['city']}</td></tr>";
+			print "<tr><th>Province</th><td>{$r['prov']}</td></tr>";
+			print "<tr><th>Postal</th><td>{$r['postal']}</td></tr>";
+			print "<tr><th>Candidate</th><td>{$r['last']}, {$r['first']} ({$r['year']})</td></tr>";
+			print "<tr><th>Ward</th><td>{$r['ward']}</td></tr>";
+			// print "<tr><th>Type</th><td>{$r['type']}</td></tr>";
+			?>
+			</table>
+			</div>
+			<div class="span6">
+			<?php disqus(); ?>
+			</div>
+			</div>
+			<?php
 		bottom();
 	}
 
