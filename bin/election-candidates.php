@@ -167,7 +167,8 @@ foreach ($lines as $l) {
     continue;
 	}
 
-  $l = preg_replace('/<td>/',"\t",$l);
+
+  $l = preg_replace('/<td/',"\t<td",$l);
   $l = preg_replace('/not provided/',"",$l);
   $l = preg_replace('/not provided/',"",$l);
   $l = strip_tags($l);
