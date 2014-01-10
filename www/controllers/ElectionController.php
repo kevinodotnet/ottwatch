@@ -738,6 +738,7 @@ class ElectionController {
 			unset($_POST['report']);
 			$_POST['prov'] = 'BROKEN';
 		}
+		$_POST['updated'] = date('Y-m-d H:i:s');
 		// straight to DB, back to GET
  		db_update('candidate_donation',$_POST,'id');
 		header("Location: /election/processDonation/");
