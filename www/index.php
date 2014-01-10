@@ -513,6 +513,8 @@ function copyToClipboard (text) {
 
 <?php
 if ($quiet) { return; }
+$remaining = getDatabase()->one(" select count(1) c from candidate_donation where amount is null ");
+$remaining = $remaining['c'];
 ?>
 
 <div class="row-fluid">
@@ -534,6 +536,7 @@ if (!LoginController::isLoggedIn()) {
 }
 ?>
 <li><a href="<?php print $OTT_WWW; ?>/about">About</a></li>
+<li><a style="font-weight: bold; color: #f00;" href="<?php print $OTT_WWW; ?>/election/processDonation/">HELP: <?php print $remaining; ?> donations left to scan!</a></li>
 </ul>
 </div>
 </div>
