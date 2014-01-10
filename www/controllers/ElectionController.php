@@ -53,6 +53,7 @@ class ElectionController {
     while (($file = readdir($d)) !== false) {
       if (preg_match('/^\./',$file)) { continue; }
       if (!preg_match('/^page-\d+\.png/',$file)) { continue; }
+			if (file_exists("$dir/$file.rotated")) { continue; }
       $pages[] = "$dir/$file";
     }
     closedir($d);
@@ -471,6 +472,7 @@ class ElectionController {
 	}
 
 	public static function processReturn ($id) {
+
 		if ($id == '') {
 			top();
 			#
@@ -510,6 +512,7 @@ class ElectionController {
 
 		$page = $_GET['page'];
 		$png = $_GET['png'];
+		$rotate = $_GET['rotate'];
     if ($_GET['saveA'] == 1) {	
 			# click in a <canvass> denoting location of a campaign donation
       $values = array();
@@ -536,6 +539,20 @@ class ElectionController {
 
     $dots = getDatabase()->all(" select * from candidate_donation where returnid = $id and page = $page ");
 		$pagefile = $pages[$page];
+
+		if ($rotate == 1) {
+			# rotation requested, so do that then continue;
+			$cmd = MfippaController::CONVERT . " '$pagefile' -rotate 90 '$pagefile.rotated' ";
+			system($cmd);
+			# redirect to non rotate=1 GET request so the hard refresh can be done.
+			header("Location: ?page=$page");
+			return;
+		}
+
+		if (file_exists("$pagefile.rotated")) {
+			$pagefile = "$pagefile.rotated";
+		}
+
     $size = getimagesize($pagefile);
 
 		if ($png != '') {
@@ -561,6 +578,7 @@ class ElectionController {
 		print "<a href=\"?page=".($page-1)."\">PREV</a>";
 		if (isset($pages[($page+1)])) {
 		print " | <a href=\"?page=".($page+1)."\">NEXT</a> ";
+		print " | <a href=\"?rotate=1&page=".($page)."\">ROTATE</a> ";
 		}
 		print "<br/>";
     $imgW = $size[0];
