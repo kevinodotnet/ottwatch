@@ -741,6 +741,16 @@ class ElectionController {
 
 	public static function listDonations() {
 		top();
+		?>
+		<div class="row-fluid">
+		<div class="span6">
+		<h1>Campaign Donations Report</h1>
+		</div>
+		<div class="span6">
+		<p class="lead">Like this data? <a href="/election/processDonation/">Help create more of it</a> - 10 seconds at a time.</p>
+		</div>
+		</div>
+		<?php
 		$rows = getDatabase()->all("
 			select 
 				d.type,
