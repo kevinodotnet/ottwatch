@@ -696,7 +696,7 @@ class ElectionController {
     <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
 		<tr>
 		<td style="vertical-align: top; width: 400px;">
-		<input  style="width: 90%;" type="text" placeholder="name" name="name" /><br/>
+		<input  style="width: 90%;" type="text" placeholder="name" name="name" autofocus='1'/><br/>
 		<!--
 		choose: <select size="2" name="type">
 		<option value="0">Individual</option>
