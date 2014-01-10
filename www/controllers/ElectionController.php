@@ -618,7 +618,7 @@ class ElectionController {
 
 		$done = getDatabase()->one(" select count(1) c from candidate_donation where amount is not null and amount != '' ");
 		$done = $done['c'];
-		$remaining = getDatabase()->one(" select count(1) c from candidate_donation where amount is null or amount = '' ");
+		$remaining = getDatabase()->one(" select count(1) c from candidate_donation where amount is null ");
 		if ($remaining['c'] == 0) {
 			?>
 			<center>
