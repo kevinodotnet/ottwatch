@@ -639,7 +639,7 @@ class ElectionController {
 			<p class="lead">
 			<b>Take 10 seconds ... bring more transparency to Ottawa's election.</b><br/>
 			Below is one donation image from the 2010 election. Please type in the details.<br/>
-			<b><a href="/election/listDonations/"><span style="color: #f00;"><?php print $done; ?></span></b> done</a>!
+			<b><a href="/election/listDonations"><span style="color: #f00;"><?php print $done; ?></span></b> done</a>!
 			Only <b><span style="color: #f00;"><?php print $remaining['c']; ?></span></b> more to go!<br/>
 			<small>(until I scan more candidate returns in)</small>
 			</p>
