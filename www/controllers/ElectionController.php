@@ -324,7 +324,7 @@ class ElectionController {
   }
 
   public static function showMain() {
-    top();
+    top("Election Dashboard");
     ?>
     <div class="row-fluid">
     <div class="span4">
@@ -655,7 +655,7 @@ class ElectionController {
 	}
 
 	public static function processDonation() {
-		top();
+		top("Process a donation record");
 
 		$done = getDatabase()->one(" select count(1) c from candidate_donation where amount is not null ");
 		$done = $done['c'];
@@ -829,14 +829,26 @@ class ElectionController {
 		$candidateE = mysql_escape_string($candidate);
 		$where = '';
 
+		$filtered = 0;
 		if ($donor != '') {
 			$where .= " and d.name like '%$donorE%' ";
+			$filtered = 1;
 		}
 		if ($candidate != '') {
 			$where .= " and (c.first like '%$candidateE%' or c.last like '%$candidateE%' ) ";
+			$filtered = 1;
 		}
 		if ($postal != '') {
 			$where .= " and d.postal = '$postalE' ";
+			$filtered = 1;
+		}
+		if ($_GET['format'] == 'json') {
+			# not actually filtered, but we want the SQL to run
+			$filtered = 1;
+		}
+		if ($_GET['format'] == 'csv') {
+			# not actually filtered, but we want the SQL to run
+			$filtered = 1;
 		}
 
 		$sql = "
@@ -864,13 +876,27 @@ class ElectionController {
 			order by c.year desc, c.ward, c.last, c.first, d.type, d.name
 		";
 
-		$rows = getDatabase()->all($sql);
+		$rows = array();
+		if ($filtered == 1) {
+			$rows = getDatabase()->all($sql);
+		}
 
-		if ($_GET['json'] == 1) {
-			print json_encode($rows);
+		if ($_GET['format'] == 'json') {
+			$data = json_encode($rows);
+			header("Content-Disposition: attachment; filename=ottawa_election_donations.json");
+			header("Content-Type: application/force-download");
+			header("Content-Type: application/octet-stream");
+			header("Content-Type: application/download");
+			header("Content-Description: File Transfer");             
+			print $data;
 			return;
 		}
-		if ($_GET['csv'] == 1) {
+		if ($_GET['format'] == 'csv') {
+			header("Content-Disposition: attachment; filename=ottawa_election_donations.csv");
+			header("Content-Type: application/force-download");
+			header("Content-Type: application/octet-stream");
+			header("Content-Type: application/download");
+			header("Content-Description: File Transfer");             
 			$cols = array( 'id', 'type', 'donor', 'address', 'city', 'postal', 'amount', 'year', 'ward', 'first', 'last');
 			foreach ($cols as $c) {
 				print "{$c}\t";
@@ -885,21 +911,52 @@ class ElectionController {
 			return;
 		}
 
-		top();
-		?>
-		<?php
+		top("Campaign Donations Report");
 		?>
 		<div class="row-fluid">
 		<div class="span6">
 		<h1>Campaign Donations Report</h1>
-		</div>
-		<div class="span6">
 		<p class="lead">Like this data? <a href="/election/processDonation/">Help create more of it</a> - 10 seconds at a time.</p>
+		<p><i>Note: this report may not include all donations. The digitization of PDF documents is ongoing.</i></p>
 		<p>
-		<i>Note: this report may not include all donations. The digitization of PDF documents is ongoing.</i>
+			Download all donations: 
+			<a href="?format=csv">CSV</a>
+			<a href="?format=json">JSON</a>
 		</p>
-		</div>
-		</div>
+		</div><!-- /span -->
+		<div class="span6">
+			<h3>Filter <small>hint: "evin" will match "Kevin" and "Devin", etc.</small></h3>
+			<form class="form-horizontal" action="/election/listDonations">
+				<div class="control-group">
+					<label class="control-label" for="inputDonor">by donor</label>
+					<div class="controls"> <input type="text" id="inputDonor" class="input-medium" name="donor" placeholder="donor" value="<?php print $donor; ?>"/> </div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="inputCandidate">by candidate</label>
+					<div class="controls"> <input type="text" id="inputCandidate" class="input-medium" name="candidate" placeholder="(first or last)" value="<?php print $candidate; ?>"/> </div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="inputPostal">by postal code</label>
+					<div class="controls"> <input type="text" id="inputPostal" class="input-medium" name="postal" placeholder="H0H 0H0" value="<?php print $postal; ?>"/> </div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="inputFormat">Format</label>
+					<div class="controls"> 
+					<select name="format">
+						<option value="" selected="1">HTML page</option>
+						<option value="csv" >CSV</option>
+						<option value="json" >JSON</option>
+					</select>
+					</div>
+				</div>
+				<div class="control-group">
+					<div class="controls"> <button type="submit" class="btn">Filter</button> </div>
+				</div>
+			</form>
+		</div><!-- /span -->
+		</div><!-- /row -->
+
+		<?php if (count($rows) > 0) { ?>
 	  <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
 		<tr>
 				<th>year</th>
@@ -919,9 +976,9 @@ class ElectionController {
 			print "<tr>";
 			print "<td>{$r['year']}</td>";
 			print "<td>{$r['ward']}</td>";
-			print "<td><a href=\"/election/listDonations?candidate={$r['last']}\">{$r['last']}</a>, {$r['first']}</td>";
+			print "<td><nobr><a href=\"/election/listDonations?candidate={$r['last']}\">{$r['last']}</a>, {$r['first']}<nobr></td>";
 			print "<td>{$r['donor']}</td>";
-			print "<td><a href=\"/election/donation/{$r['id']}\">\${$r['amount']}</a></td>";
+			print "<td><a href=\"/election/donation/{$r['id']}\">\$".formatMoney($r['amount'],true)."</a></td>";
 			print "<td>{$r['address']}</td>";
 			print "<td>{$r['city']}</td>";
 			print "<td><a href=\"/election/listDonations?postal={$r['postal']}\">{$r['postal']}</a></td>";
@@ -935,7 +992,18 @@ class ElectionController {
 			print "<td></td>";
 			print "<td></td>";
 			print "<td><b>Total Amount</b></td>";
-			print "<td><b>\${$total}</b></td>";
+			print "<td><b>\$".formatMoney($total,true)."</b></td>";
+			print "<td></td>";
+			print "<td></td>";
+			print "<td></td>";
+			print "<td></td>";
+			print "</tr>";
+			print "<tr>";
+			print "<td></td>";
+			print "<td></td>";
+			print "<td></td>";
+			print "<td><b>Total Donations</b></td>";
+			print "<td><b>".count($rows)."</b></td>";
 			print "<td></td>";
 			print "<td></td>";
 			print "<td></td>";
@@ -954,33 +1022,34 @@ class ElectionController {
 			print "</tr>";
 		?>
 		</table>
+		<?php } else { ?>
+			<center><h3>No records found for this search</h3></center>
+		<?php } ?>
 
 		<div class="row-fluid">
 		<div class="span12">
-
-		<h2>Filter</h2>
-		<p>hint: you can search for "evin" to match "Kevin" and "Devin", etc.</p>
-
-		<form class="form-horizontal" action="/election/listDonations">
-			<div class="control-group">
-				<label class="control-label" for="inputDonor">by donor</label>
-				<div class="controls"> <input type="text" id="inputDonor" class="input-medium" name="donor" placeholder="donor" value="<?php print $donor; ?>"/> </div>
-			</div>
-			<div class="control-group">
-				<label class="control-label" for="inputCandidate">by candidate</label>
-				<div class="controls"> <input type="text" id="inputCandidate" class="input-medium" name="candidate" placeholder="(first or last)" value="<?php print $candidate; ?>"/> </div>
-			</div>
-			<div class="control-group">
-				<label class="control-label" for="inputPostal">by postal code</label>
-				<div class="controls"> <input type="text" id="inputPostal" class="input-medium" name="postal" placeholder="Postal Code" value="<?php print $postal; ?>"/> </div>
-			</div>
-			<div class="control-group">
-				<div class="controls"> <button type="submit" class="btn">Filter</button> </div>
-			</div>
-		</form>
-		
-		</div>
-		</div>
+		<h3>Browse by candidate lastname</h3>
+    <table class="table table-bordered table-hover table-condensed">
+		<tr>
+			<th>Last</th>
+			<th>First</th>
+			<th>Donations*<br/><small>database is not yet complete</small></th>
+		</tr>
+		<?php
+		$sql = " 
+			select c.last, c.first, sum(case when d.id is null then 0 else 1 end) as donations
+			from candidate c
+				left join candidate_return r on r.candidateid = c.id
+				left join candidate_donation d on d.returnid = r.id
+			group by c.last, c.first ";
+		$rows = getDatabase()->all($sql);
+		foreach ($rows as $r) {
+			print "<tr><td><a href=\"/election/listDonations?candidate={$r['last']}\">{$r['last']}</a></td><td>{$r['first']}</td><td>{$r['donations']}</td></tr>";
+		}
+		?>
+		</table>
+		</div><!-- /span -->
+		</div><!-- /row -->
 
 		<?php
 		bottom();
