@@ -876,13 +876,17 @@ class ElectionController {
 			$where .= " and d.postal = '$postalE' ";
 			$filtered = 1;
 		}
+
+		$orderby = " c.year desc, c.ward, c.last, c.first, d.type, d.name ";
 		if ($_GET['format'] == 'json') {
 			# not actually filtered, but we want the SQL to run
 			$filtered = 1;
+			$orderby = " c.id, r.id, d.page, d.y ";
 		}
 		if ($_GET['format'] == 'csv') {
 			# not actually filtered, but we want the SQL to run
 			$filtered = 1;
+			$orderby = " c.id, r.id, d.page, d.y ";
 		}
 
 		$sql = "
@@ -898,7 +902,11 @@ class ElectionController {
 				c.ward,
 				c.first,
 				c.last,
-				c.id candidateid
+				c.id candidateid,
+				d.page,
+				d.x,
+				d.y,
+				r.id retid
 			from
 				candidate_donation d
 				join candidate_return r on d.returnid = r.id
@@ -907,7 +915,8 @@ class ElectionController {
 				d.amount is not null 
 				and d.amount != ''
 				$where
-			order by c.year desc, c.ward, c.last, c.first, d.type, d.name
+			order by 
+				$orderby
 		";
 
 		$rows = array();
@@ -931,7 +940,7 @@ class ElectionController {
 			header("Content-Type: application/octet-stream");
 			header("Content-Type: application/download");
 			header("Content-Description: File Transfer");             
-			$cols = array( 'id', 'type', 'donor', 'address', 'city', 'postal', 'amount', 'year', 'ward', 'first', 'last');
+			$cols = array( 'id', 'type', 'donor', 'address', 'city', 'postal', 'amount', 'year', 'ward', 'first', 'last','page','x','y','retid');
 			foreach ($cols as $c) {
 				print "{$c}\t";
 			}
@@ -1007,6 +1016,13 @@ class ElectionController {
 		$total = 0;
 		$candidates = array();
 		foreach ($rows as $r) {
+			if (!isset($r['type'])) {
+				$r['type'] = 'Unknown';
+			} elseif ($r['type'] == 0) {
+				$r['type'] = 'Individual';
+			} else {
+				$r['type'] = 'Corporate/Union';
+			}
 			print "<tr>";
 			print "<td>{$r['year']}</td>";
 			print "<td>{$r['ward']}</td>";
@@ -1164,7 +1180,17 @@ class ElectionController {
 			<div class="span6">
 	    <table class="table table-bordered table-hover table-condensed">
 			<?php
+
+			if (!isset($r['type'])) {
+				$r['type'] = 'Unknown';
+			} elseif ($r['type'] == 0) {
+				$r['type'] = 'Individual';
+			} else {
+				$r['type'] = 'Corporate/Union';
+			}
+
 			print "<tr><th>Donor Name</th><td>{$r['donor']}</td></tr>";
+			print "<tr><th>Donor Type</th><td>{$r['type']}</td></tr>";
 			print "<tr><th>Amount</th><td>{$r['amount']}</td></tr>";
 			print "<tr><th>Address</th><td>{$r['address']}</td></tr>";
 			print "<tr><th>City</th><td>{$r['city']}</td></tr>";
@@ -1180,7 +1206,6 @@ class ElectionController {
 			</td>
 			</tr>
 			<?php
-			// print "<tr><th>Type</th><td>{$r['type']}</td></tr>";
 			?>
 			</table>
 			</div>
