@@ -513,7 +513,10 @@ class ElectionController {
 					$sql = " select count(1) c ,sum(case when amount is not null and amount != '' then 1 else 0 end ) filled from candidate_donation d where returnid = {$r['retid']} group by returnid ";
 					$c = getDatabase()->one($sql);
 					if (isset($c['c'])) {
-						print "<a href=\"/election/processDonation/?returnid={$r['retid']}\">{$c['filled']} of {$c['c']}</a>";
+						if ($c['filled'] < $c['c']) {
+							$style = " style=\"color: #f00;\" ";
+						}
+						print "<a $style href=\"/election/processDonation/?returnid={$r['retid']}\">{$c['filled']} of {$c['c']}</a>";
 					} else {
 						print "-";
 					}
@@ -761,7 +764,7 @@ class ElectionController {
     <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
 		<tr>
 		<td style="vertical-align: top; width: 400px;">
-		<input  style="width: 90%;" type="text" placeholder="name" name="name" autofocus='1'/><br/>
+		<input value="<?php print $row['name']; ?>"  style="width: 90%;" type="text" placeholder="name" name="name" autofocus='1'/><br/>
 		<!--
 		choose: <select size="2" name="type">
 		<option value="0">Individual</option>
@@ -772,11 +775,11 @@ class ElectionController {
 		If a corporation or union is shown, put that in the <b>NAME</b> field and ignore any personal names shown.<br/><br/>
 		For people, please do "Last, First" if you can. Some of the records are shown as "First Last". No biggie either way.
 		</td>
-		<td style="vertical-align: top; width: 350px;"><input  style="width: 90%;" type="text" placeholder="address" name="address" />
+		<td style="vertical-align: top; width: 350px;"><input  value="<?php print $row['address']; ?>" style="width: 90%;" type="text" placeholder="address" name="address" />
 		Just street address (and unit/apt).<br/><br/>
 		example: 2140 Oakmount St.<br/>
 		</td>
-		<td style="vertical-align: top; width: 100px;"><input  style="width: 90%;" type="text" value="Ottawa" placeholder="city" name="city" />
+		<td style="vertical-align: top; width: 100px;"><input  value="<?php print $row['city']; ?>" style="width: 90%;" type="text" value="Ottawa" placeholder="city" name="city" />
 		Leave as Ottawa if it's "Kanata", "Orleans", etc. Only change if it's outside the amalgamated city.
 		When in doubt, just make sure postal code is right.
 		</td>
@@ -785,11 +788,11 @@ class ElectionController {
 		Nothing should come in from out-of-province
 		</td>
 		-->
-		<td style="vertical-align: top; width: 100px;"><input  style="width: 90%;" type="text" placeholder="postal" name="postal" />
+		<td style="vertical-align: top; width: 100px;"><input  value="<?php print $row['postal']; ?>" style="width: 90%;" type="text" placeholder="postal" name="postal" />
 		Postal code is really important for later geo-location reports!
 		</td>
 		<td style="vertical-align: top; width: 100px;">
-		<input  style="width: 90%;" type="text" placeholder="$" name="amount" /><br/>
+		<input  value="<?php print $row['amount']; ?>" style="width: 90%;" type="text" placeholder="$" name="amount" /><br/>
 		<center>
 		<input class="btn btn-large btn-success" type="submit" value="Save" style="margin-top: 20px;"/><br/>
 		<input name="report" class="btn btn-large btn-danger" type="submit" value="(Unreadable)" style="margin-top: 20px;"/>
