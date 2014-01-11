@@ -538,7 +538,17 @@ if (!LoginController::isLoggedIn()) {
 }
 ?>
 <li><a href="<?php print $OTT_WWW; ?>/about">About</a></li>
-<li><a style="font-weight: bold; color: #f00;" href="<?php print $OTT_WWW; ?>/election/processDonation/">HELP: <?php print $remaining; ?> donations left to scan!</a></li>
+<?php
+if ($remaining == 0) {
+	?>
+	<li><a style="" href="<?php print $OTT_WWW; ?>/election/processDonation/">0 donations remaining</a></li>
+	<?php
+} else {
+	?>
+	<li><a style="font-weight: bold; color: #f00;" href="<?php print $OTT_WWW; ?>/election/processDonation/">HELP: <?php print $remaining; ?> donations left to scan!</a></li>
+	<?php
+}
+?>
 </ul>
 </div>
 </div>

@@ -260,6 +260,12 @@ class ElectionController {
       </td>
     </tr>
     <tr>
+      <th>Donations</th>
+      <td>
+      <a href="/election/listDonations?candidate=<?php print $incumbent['last']; ?>">View past donations</a>
+      </td>
+    </tr>
+    <tr>
       <th>Record</th>
       <td>
       <a href="/meetings/votes/member/<?php print substr($incumbent['first'],0,1).'. '.$incumbent['last'] ?>">All votes by <?php print $incumbent['first'] ?></a> (since mid-2012)
@@ -337,6 +343,8 @@ class ElectionController {
 		?>
     </div><!-- findward -->
     <div class="span4">
+		<p class="lead">More Data</p>
+		<a href="/election/listDonations">Campaign donation database</a>.
     </div>
     </div>
 
@@ -676,7 +684,7 @@ class ElectionController {
 			<h1>Campaign Donation Data-Entry</h1>
 			<p class="lead">
 			<b>Take 10 seconds ... bring more transparency to Ottawa's election.</b><br/>
-			Below is one donation image from the 2010 election. Please type in the details.<br/>
+			Below is one donation image from the 2010 election. Please type in the details. <br/>
 			<b>
 			<a href="/election/listDonations"><span style="color: #f00;"><?php print $done; ?></span></b> done (<?php print $donePerc; ?>%)</a> out of <?php print $total; ?>.
 			Only <b><span style="color: #f00;"><?php print ($remaining['c']); ?></span></b> more to go!<br/>
@@ -887,6 +895,9 @@ class ElectionController {
 		</div>
 		<div class="span6">
 		<p class="lead">Like this data? <a href="/election/processDonation/">Help create more of it</a> - 10 seconds at a time.</p>
+		<p>
+		<i>Note: this report may not include all donations. The digitization of PDF documents is ongoing.</i>
+		</p>
 		</div>
 		</div>
 	  <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
@@ -1014,7 +1025,7 @@ class ElectionController {
 		} else {
 	    $imgH = 200;
 		}
-			top("Campaign Donation Details: ");
+			top("Campaign Donation from " . $r['donor'] . ' to ' . $r['first'] . ' ' . $r['last'] . ' for $' . $r['amount'] . ' in ' . $r['year']);
 			?>
 			<h1>Campaign Donation Details</h1>
 
