@@ -1056,7 +1056,6 @@ class ElectionController {
 		</table>
 		<?php } else { ?>
 			<center><h3>No records found for this search</h3></center>
-		<?php } ?>
 
 		<div class="row-fluid">
 		<div class="span12">
@@ -1082,6 +1081,8 @@ class ElectionController {
 		</table>
 		</div><!-- /span -->
 		</div><!-- /row -->
+
+		<?php } ?>
 
 		<?php
 		bottom();
@@ -1183,5 +1184,12 @@ class ElectionController {
 	}
 
 }
+
+/*
+
+
+
+
+*/
 
 ?>
