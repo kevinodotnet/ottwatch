@@ -1014,6 +1014,7 @@ class ElectionController {
 		</tr>
 		<?php
 		$total = 0;
+		$totalType = array();
 		$candidates = array();
 		foreach ($rows as $r) {
 			if (!isset($r['type'])) {
@@ -1023,6 +1024,9 @@ class ElectionController {
 			} else {
 				$r['type'] = 'Corporate/Union';
 			}
+
+			$totalType[$r['type']] += $r['amount'];
+
 			print "<tr>";
 			print "<td>{$r['year']}</td>";
 			print "<td>{$r['ward']}</td>";
@@ -1048,6 +1052,19 @@ class ElectionController {
 			print "<td></td>";
 			print "<td></td>";
 			print "</tr>";
+			foreach ($totalType as $k => $v) {
+			print "<tr>";
+			print "<td></td>";
+			print "<td></td>";
+			print "<td></td>";
+			print "<td><b>Total from {$k}</b></td>";
+			print "<td><b>\$".formatMoney($v,true)." (".round($v/$total*100)."%)</b></td>";
+			print "<td></td>";
+			print "<td></td>";
+			print "<td></td>";
+			print "<td></td>";
+			print "</tr>";
+			}
 			print "<tr>";
 			print "<td></td>";
 			print "<td></td>";
