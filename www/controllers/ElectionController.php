@@ -805,15 +805,31 @@ class ElectionController {
 
 	public static function processDonationSave() {
 		if (isset($_POST['report'])) {
+			# the "is broken" submit button was pressed, 
 			unset($_POST['report']);
+			# mark the broken-ness by hacking on province.
 			$_POST['prov'] = 'BROKEN';
 		}
+
 		$_POST['updated'] = date('Y-m-d H:i:s');
+
+		# do not allow mutation of the FK
 		$returnid = $_POST['returnid'];
 		unset($_POST['returnid']);
 		
-		// straight to DB, back to GET
+		// update in bulk
  		db_update('candidate_donation',$_POST,'id');
+
+		// normalize, the bulk lazy way!
+		getDatabase()->execute(" 
+			update candidate_donation set 
+				postal = replace(upper(postal),' ','') 
+			where 
+				postal != upper(postal) 
+				or postal like '% %';
+		");
+
+		// send them back for MOAR!
 		header("Location: /election/processDonation/?thanks=yes&returnid=$returnid");
 	}
 
