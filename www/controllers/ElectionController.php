@@ -487,8 +487,13 @@ class ElectionController {
 
 	public static function processReturn ($id) {
 
-		if (!LoginController::blockUnlessLoggedIn()) { 
-			// controller has produced a VIEW
+		$page = $_GET['page'];
+		$png = $_GET['png'];
+		$rotate = $_GET['rotate'];
+
+		if ($png == '' && !LoginController::blockUnlessLoggedIn()) { 
+			// allow PNG=1 to fall through for public access to images;
+			// should move the whole image thing to a dedicated GET path.
 			return;
 		}
 
@@ -548,9 +553,6 @@ class ElectionController {
 		$ret = getDatabase()->one(" select c.*,r.filename from candidate_return r join candidate c on c.id = r.candidateid where r.id = $id ");
 		$pages = self::getReturnPages($ret['year'],$ret['filename']);
 
-		$page = $_GET['page'];
-		$png = $_GET['png'];
-		$rotate = $_GET['rotate'];
     if ($_GET['saveA'] == 1) {	
 			# click in a <canvass> denoting location of a campaign donation
       $values = array();
