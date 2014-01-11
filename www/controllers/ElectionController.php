@@ -811,7 +811,27 @@ class ElectionController {
 
 	public static function listDonations() {
 
-		$rows = getDatabase()->all("
+		$postal = $_GET['postal'];
+		$postal = strtoupper($postal);
+		$postal = preg_replace('/ /','',$postal);
+		$postalE = mysql_escape_string($postal);
+		$donor = $_GET['donor'];
+		$donorE = mysql_escape_string($donor);
+		$candidate = $_GET['candidate'];
+		$candidateE = mysql_escape_string($candidate);
+		$where = '';
+
+		if ($donor != '') {
+			$where .= " and d.name like '%$donorE%' ";
+		}
+		if ($candidate != '') {
+			$where .= " and (c.first like '%$candidateE%' or c.last like '%$candidateE%' ) ";
+		}
+		if ($postal != '') {
+			$where .= " and d.postal = '$postalE' ";
+		}
+
+		$sql = "
 			select 
 				d.id,
 				d.type,
@@ -823,14 +843,20 @@ class ElectionController {
 				c.year,
 				c.ward,
 				c.first,
-				c.last
+				c.last,
+				c.id candidateid
 			from
 				candidate_donation d
 				join candidate_return r on d.returnid = r.id
 				join candidate c on r.candidateid = c.id
-			where d.amount is not null and d.amount != ''
+			where 
+				d.amount is not null 
+				and d.amount != ''
+				$where
 			order by c.year desc, c.ward, c.last, c.first, d.type, d.name
-		");
+		";
+
+		$rows = getDatabase()->all($sql);
 
 		if ($_GET['json'] == 1) {
 			print json_encode($rows);
@@ -876,21 +902,75 @@ class ElectionController {
 				<th>type</th>
 		</tr>
 		<?php
+		$total = 0;
+		$candidates = array();
 		foreach ($rows as $r) {
 			print "<tr>";
 			print "<td>{$r['year']}</td>";
 			print "<td>{$r['ward']}</td>";
-			print "<td>{$r['last']}, {$r['first']}</td>";
-			print "<td><a href=\"/election/donation/{$r['id']}\">{$r['donor']}</a></td>";
-			print "<td><a href=\"/election/donation/{$r['id']}\">{$r['amount']}</a></td>";
+			print "<td><a href=\"/election/listDonations?candidate={$r['last']}\">{$r['last']}</a>, {$r['first']}</td>";
+			print "<td>{$r['donor']}</td>";
+			print "<td><a href=\"/election/donation/{$r['id']}\">\${$r['amount']}</a></td>";
 			print "<td>{$r['address']}</td>";
 			print "<td>{$r['city']}</td>";
-			print "<td>{$r['postal']}</td>";
+			print "<td><a href=\"/election/listDonations?postal={$r['postal']}\">{$r['postal']}</a></td>";
 			print "<td>{$r['type']}</td>";
 			print "</tr>";
+			$total += $r['amount'];
+			$candidates[$r['candidateid']] = 1;
 		}
+			print "<tr>";
+			print "<td></td>";
+			print "<td></td>";
+			print "<td></td>";
+			print "<td><b>Total Amount</b></td>";
+			print "<td><b>\${$total}</b></td>";
+			print "<td></td>";
+			print "<td></td>";
+			print "<td></td>";
+			print "<td></td>";
+			print "</tr>";
+			print "<tr>";
+			print "<td></td>";
+			print "<td></td>";
+			print "<td></td>";
+			print "<td><b>Total Candidates</b></td>";
+			print "<td><b>".count($candidates)."</b></td>";
+			print "<td></td>";
+			print "<td></td>";
+			print "<td></td>";
+			print "<td></td>";
+			print "</tr>";
 		?>
 		</table>
+
+		<div class="row-fluid">
+		<div class="span12">
+
+		<h2>Filter</h2>
+		<p>hint: you can search for "evin" to match "Kevin" and "Devin", etc.</p>
+
+		<form class="form-horizontal" action="/election/listDonations">
+			<div class="control-group">
+				<label class="control-label" for="inputDonor">by donor</label>
+				<div class="controls"> <input type="text" id="inputDonor" class="input-medium" name="donor" placeholder="donor" value="<?php print $donor; ?>"/> </div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="inputCandidate">by candidate</label>
+				<div class="controls"> <input type="text" id="inputCandidate" class="input-medium" name="candidate" placeholder="(first or last)" value="<?php print $candidate; ?>"/> </div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="inputPostal">by postal code</label>
+				<div class="controls"> <input type="text" id="inputPostal" class="input-medium" name="postal" placeholder="Postal Code" value="<?php print $postal; ?>"/> </div>
+			</div>
+			<div class="control-group">
+				<div class="controls"> <button type="submit" class="btn">Filter</button> </div>
+			</div>
+		</form>
+		
+		</div>
+		</div>
+
 		<?php
 		bottom();
 	}
@@ -962,8 +1042,8 @@ class ElectionController {
 			<div class="span6">
 	    <table class="table table-bordered table-hover table-condensed">
 			<?php
-			print "<tr><th>Donor Name</th><td><a href=\"/election/donation/{$r['id']}\">{$r['donor']}</a></td></tr>";
-			print "<tr><th>Amount</th><td><a href=\"/election/donation/{$r['id']}\">{$r['amount']}</a></td></tr>";
+			print "<tr><th>Donor Name</th><td>{$r['donor']}</td></tr>";
+			print "<tr><th>Amount</th><td>{$r['amount']}</td></tr>";
 			print "<tr><th>Address</th><td>{$r['address']}</td></tr>";
 			print "<tr><th>City</th><td>{$r['city']}</td></tr>";
 			print "<tr><th>Province</th><td>{$r['prov']}</td></tr>";
