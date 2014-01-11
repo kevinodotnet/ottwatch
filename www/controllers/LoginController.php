@@ -358,9 +358,47 @@ class LoginController {
   }
 
   static public function logout() {
+    $next = $_GET['next'];
     getSession()->end();
-    header("Location: " . OttWatchConfig::WWW);
+		if (!isset($next) || $next == '') {
+    	$next = OttWatchConfig::WWW;
+		}
+    header("Location: $next");
   }
+
+	static public function blockUnlessLoggedIn() {
+
+		if (LoginController::isLoggedIn()) {
+			// calling function shows intended content
+			return true;
+		}
+
+		top();
+
+		?>
+		<center>
+		<h1>You must be logged in to access this page.</h1>
+		<p class="lead">
+		<a href="<?php print self::getLoginUrl(); ?>">Click here to login. You will be returned to this page automatically.</a>
+		</p>
+		</center>
+		<?php
+
+		bottom();
+		return;
+
+		pr($_SERVER);
+		pr($_POST);
+		pr($_GET);
+
+	}
+
+	static public function getLoginUrl($url) {
+		if (!isset($url) || $url == '') {
+			$url = $_SERVER['REQUEST_URI'];
+		}
+		return $OTT_WWW . '/user/login?next='.urlencode($url);
+	}
 
 }
 
