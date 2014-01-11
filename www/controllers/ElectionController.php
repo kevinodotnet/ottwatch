@@ -1064,21 +1064,28 @@ class ElectionController {
 		<tr>
 			<th>Last</th>
 			<th>First</th>
-			<th>Donations*<br/><small>database is not yet complete</small></th>
+			<th>Donations*</th>
+			<th>Amount*</th>
 		</tr>
 		<?php
 		$sql = " 
-			select c.last, c.first, sum(case when d.id is null then 0 else 1 end) as donations
+			select c.last, c.first, sum(case when d.id is null then 0 else 1 end) as donations, sum(amount) as total
 			from candidate c
 				left join candidate_return r on r.candidateid = c.id
 				left join candidate_donation d on d.returnid = r.id
 			group by c.last, c.first ";
 		$rows = getDatabase()->all($sql);
 		foreach ($rows as $r) {
-			print "<tr><td><a href=\"/election/listDonations?candidate={$r['last']}\">{$r['last']}</a></td><td>{$r['first']}</td><td>{$r['donations']}</td></tr>";
+			print "<tr>
+			<td><a href=\"/election/listDonations?candidate={$r['last']}\">{$r['last']}</a></td>
+			<td>{$r['first']}</td>
+			<td>{$r['donations']}</td>
+			<td>\$".formatMoney($r['total'])."</td>
+			</tr>";
 		}
 		?>
 		</table>
+		<p>*database is not yet complete</p>
 		</div><!-- /span -->
 		</div><!-- /row -->
 

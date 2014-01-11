@@ -445,6 +445,7 @@ function sendEmail($to,$subject,$body) {
 }
 
 function formatMoney($number, $fractional=false) { 
+		if ($number == '') { $number = 0; }
     if ($fractional) { 
         $number = sprintf('%.2f', $number); 
     } 
