@@ -671,6 +671,7 @@ class ElectionController {
 			<center>
 			<h1>All Done!</h1>
 			<p class="lead">All donation records have been processed! More might get scanned in though - so check back again!</p>
+			<p class="lead"><a href="/election/listDonations">Browse them here!</a></p>
 			</center>
 			<?php
 			bottom();
@@ -730,7 +731,7 @@ class ElectionController {
 		$pagefile = $pages[$page];
     $size = getimagesize($pagefile);
     $imgW = $size[0];
-		$padding = 20;
+		$padding = 100;
 		if (isset($next['y'])) {
 			$imgH = $next['y']-$row['y']+$padding;
 		} else {
