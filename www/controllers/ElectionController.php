@@ -343,8 +343,14 @@ class ElectionController {
 		?>
     </div><!-- findward -->
     <div class="span4">
-		<p class="lead">More Data</p>
-		<a href="/election/listDonations">Campaign donation database</a>.
+		  <div style="background: #08c; color: #ffffff; padding: 20px; font-size: 200%; border-radius: 4px;">
+		  <center>
+		  <a href="/election/listDonations" style="color: #ffffff;">
+		  <i class="fa fa-search fa-4" style="font-size: 125%;"></i>
+			Search donations
+		  </center>
+		  </a>
+		  </div>
     </div>
     </div>
 
