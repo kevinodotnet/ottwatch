@@ -830,6 +830,12 @@ class ElectionController {
 			$_POST['prov'] = 'BROKEN';
 		}
 
+		$ajax = 0;
+		if (isset($_POST['ajax'])) {
+			$ajax = 1;
+			unset($_POST['ajax']);
+		}
+
 		$_POST['updated'] = date('Y-m-d H:i:s');
 
 		# do not allow mutation of the FK
@@ -847,6 +853,11 @@ class ElectionController {
 				postal != upper(postal) 
 				or postal like '% %';
 		");
+
+		if ($ajax) {
+			print "ok";
+			return;
+		}
 
 		// send them back for MOAR!
 		header("Location: /election/processDonation/?thanks=yes&returnid=$returnid");
@@ -1226,6 +1237,49 @@ class ElectionController {
 			<?php
 			?>
 			</table>
+
+			<?php if (false && LoginController::isLoggedIn()) { ?>
+
+			<div id="wardmsg">
+				Postal code magic coming your way!
+			</div>
+
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=<?php print OttWatchConfig::GOOGLE_API_KEY; ?>&sensor=false"></script>
+		<script>
+      var geocoder = new google.maps.Geocoder();
+      var addr = '<?php print "{$r['address']}, {$r['city']}, {$r['prov']}"; ?>';
+      geocoder.geocode({address: addr},
+        function(results, status) { 
+          if (status != 'OK') {
+            $('#wardmsg').html('Error mapping address');
+            return;
+          }
+          $('#wardmsg').html('GEO worked, parsing...');
+					console.log(results);
+					results[0].address_components.forEach(function(entry){
+						if (entry.types[0] == 'postal_code') {
+							googlepostal = entry.long_name;
+	            $('#wardmsg').html('found a postal code');
+	            $('#wardmsg').html(googlepostal);
+							if (googlepostal != '<?php print $r['postal']; ?>') {
+		            $('#wardmsg').html('Sending new postal code to the database');
+								$.post( '/election/processDonation', { ajax: 1, id: <?php print $r['id']; ?>, postal: googlepostal } , function( data ) {
+			            $('#wardmsg').html(data);
+								});
+							} else {
+		            $('#wardmsg').html('no updated required: ' . googlepostal);
+							}
+						}
+					});
+          lat = results[0].geometry.location.lat();
+          lon = results[0].geometry.location.lng();
+        }
+      );
+		</script>
+
+			<?php } ?>
+
+
 			</div>
 			<div class="span6">
 			<?php disqus(); ?>
