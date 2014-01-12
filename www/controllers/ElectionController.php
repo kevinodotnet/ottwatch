@@ -794,7 +794,8 @@ class ElectionController {
 		Just street address (and unit/apt).<br/><br/>
 		example: 2140 Oakmount St.<br/>
 		</td>
-		<td style="vertical-align: top; width: 100px;"><input  value="<?php print $row['city']; ?>" style="width: 90%;" type="text" value="Ottawa" placeholder="city" name="city" />
+		<?php if ($row['city'] == '') { $row['city'] = 'Ottawa'; } ?>
+		<td style="vertical-align: top; width: 100px;"><input  value="<?php print $row['city']; ?>" style="width: 90%;" type="text" placeholder="city" name="city" />
 		Leave as Ottawa if it's "Kanata", "Orleans", etc. Only change if it's outside the amalgamated city.
 		When in doubt, just make sure postal code is right.
 		</td>
