@@ -11,7 +11,6 @@ $total = 0;
 $matched = 0;
 
 	$rows = getDatabase()->all(" select * from candidate_donation where location is null ");
-	$rows = getDatabase()->all(" select * from candidate_donation where id = 3547 ");
 	foreach ($rows as $row) {
 		$total ++;
 		if (setDonorLocation($row)) {
@@ -43,9 +42,14 @@ function setDonorLocation($row) {
 	$prop_matches = filterPropertyMatches($row,$props);
 	if (count($prop_matches) == 1) {
 		# best case yo!
-		$sql = " update candidate_donation set location = ( select centroid(shape) from geo_property where ottwatchid = {$prop_matches[0]['ottwatchid']} ) where id = {$row['id']} ";
-		print "$sql\n";
-		exit;
+		$geo = getDatabase()->one(" select astext(centroid(shape)) centroid from geo_property where ottwatchid = {$prop_matches[0]['ottwatchid']} ");
+		$mercator = getLatLonFromPoint($geo['centroid']);
+		$latlon = mercatorToLatLon($mercator['lon'],$mercator['lat']);
+		$lat = $latlon['lat'];
+		$lon = $latlon['lon'];
+		$pointval = "PointFromText('POINT($lon $lat)')";
+		// $sql = " update candidate_donation set location = ( select centroid(shape) from geo_property where ottwatchid = {$prop_matches[0]['ottwatchid']} ) where id = {$row['id']} ";
+		$sql = " update candidate_donation set location = $pointval where id = {$row['id']} ";
 		getDatabase()->execute($sql);
 		return true;
 	} else {
