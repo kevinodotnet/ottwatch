@@ -694,6 +694,9 @@ class ElectionController {
 
 		$donePerc = round($done/$total*100);
 
+		$sql = "select timestampdiff(MINUTE,max(updated),now()) minutes, max(updated) latest,count(1) count from candidate_donation where timediff(now(),updated) < '02:00:00' ";
+		$stats = getDatabase()->one($sql);
+
 			?>
 			<center>
 			<div style="float: right;">
@@ -706,7 +709,7 @@ class ElectionController {
 			<b>
 			<a href="/election/listDonations"><span style="color: #f00;"><?php print $done; ?></span></b> done (<?php print $donePerc; ?>%)</a> out of <?php print $total; ?>.
 			Only <b><span style="color: #f00;"><?php print ($remaining['c']); ?></span></b> more to go!<br/>
-			<small>(until I scan more candidate returns in)</small>
+			<small>It has been <?php print $stats['minutes']; ?> minute(s) since the last data entry, with <?php print $stats['count']; ?> done in the last 2 hours!</small>
 			</p>
 			</center>
 			<?php
@@ -767,7 +770,7 @@ class ElectionController {
 		imageObj.onload = function() {
 			context.drawImage(imageObj,0,-<?php print $row['y']-($padding/2); ?>);
 		        context.beginPath();
-		        context.arc(<?php print $row['x']; ?>-5,<?php print ($padding/2)+5; ?>, 5, 0, Math.PI*2, true); 
+		        context.arc(<?php print $row['x']; ?>-5,<?php print ($padding/2)+2; ?>, 5, 0, Math.PI*2, true); 
 		        context.closePath();
 		        context.fill();
 		};
@@ -1198,7 +1201,7 @@ class ElectionController {
 		imageObj.onload = function() {
 			context.drawImage(imageObj,0,-<?php print $r['y']-($padding/2); ?>);
 		        context.beginPath();
-		        context.arc(<?php print $r['x']; ?>-5,<?php print ($padding/2)+5; ?>, 5, 0, Math.PI*2, true); 
+		        context.arc(<?php print $r['x']; ?>-5,<?php print ($padding/2)+2; ?>, 5, 0, Math.PI*2, true); 
 		        context.closePath();
 		        context.fill();
 		};
