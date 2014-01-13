@@ -776,6 +776,9 @@ class ElectionController {
 		};
 		imageObj.src = '/election/processReturn/<?php print "{$row['returnid']}?png=1&page=$page"; ?>';
 		</script>
+		</center>
+		<b>Look for the blue dot - the record you should copy is below it (or right at it) but never above it</b>
+		<center>
 		<form method="post" action="/election/processDonation/">
 		<input type="hidden" name="id" value="<?php print $row['id']; ?>"/>
 		<input type="hidden" name="returnid" value="<?php print $_GET['returnid']; ?>"/>
