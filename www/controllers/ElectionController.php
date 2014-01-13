@@ -1244,6 +1244,11 @@ class ElectionController {
 			?>
 			</table>
 
+			<h3>Report an error</h3>
+			<p>Donor details were hand-entered through a crowdsource effort. If you see an error
+			in the digitization, please drop a note using the comments section. We'll get an 
+			email and automatically know which donation you're talking about. Thanks!</p>
+
 			<?php if (false && LoginController::isLoggedIn()) { ?>
 
 			<div id="wardmsg">
