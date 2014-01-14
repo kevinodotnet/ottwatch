@@ -1152,10 +1152,11 @@ class ElectionController {
 			<th>First</th>
 			<th>Donations*</th>
 			<th>Amount*</th>
+			<th>Year(s)</th>
 		</tr>
 		<?php
 		$sql = " 
-			select c.last, c.first, sum(case when d.id is null then 0 else 1 end) as donations, sum(amount) as total
+			select c.last, c.first, min(c.year) minyear, max(c.year) maxyear, sum(case when d.id is null then 0 else 1 end) as donations, sum(amount) as total
 			from candidate c
 				left join candidate_return r on r.candidateid = c.id
 				left join candidate_donation d on d.returnid = r.id
@@ -1167,7 +1168,13 @@ class ElectionController {
 			<td>{$r['first']}</td>
 			<td>{$r['donations']}</td>
 			<td>\$".formatMoney($r['total'])."</td>
-			</tr>";
+			";
+			if ($r['minyear'] == $r['maxyear']) {
+				print "<td>{$r['minyear']}</td>";
+			} else {
+				print "<td>{$r['minyear']} - {$r['maxyear']}</td>";
+			}
+			print "</tr>";
 		}
 		?>
 		</table>
