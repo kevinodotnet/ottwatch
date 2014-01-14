@@ -515,8 +515,9 @@ function copyToClipboard (text) {
 
 <?php
 if ($quiet) { return; }
-$remaining = getDatabase()->one(" select count(1) c from candidate_donation where amount is null ");
-$remaining = $remaining['c'];
+#$remaining = getDatabase()->one(" select count(1) c from candidate_donation where amount is null ");
+#$remaining = $remaining['c'];
+$remaining = 0;
 ?>
 
 <div class="row-fluid">
