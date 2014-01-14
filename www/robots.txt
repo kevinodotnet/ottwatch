@@ -2,3 +2,6 @@ User-agent: *
 
 Disallow: /api/
 
+User-agent: MJ12bot
+Disallow: /
+
