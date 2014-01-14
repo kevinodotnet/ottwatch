@@ -480,6 +480,7 @@ function top($title = '',$quiet = false) {
 <html>
 <head>
 <title><?php print $title; ?></title>
+<meta property="twitter:account_id" content="1512911885" /><!-- ads.twitter -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href="<?php print $OTT_WWW; ?>/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen" type="text/css">
