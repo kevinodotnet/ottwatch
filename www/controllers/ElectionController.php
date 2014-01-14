@@ -1273,17 +1273,19 @@ class ElectionController {
 				page <?php print ($r['page']+1); ?>, <?php print round($r['y']*100/$size[1]); ?>% down from top
 			</td>
 			</tr>
+			<tr><th>Found an error?</th>
+			<td>
+				<?php if (LoginController::isLoggedIn()) { ?>
+				<a href="/election/processDonation/?id=<?php print $r['id']; ?>">You are logged in, so just go fix it!</a>
+				<?php } else { ?>
+				<a href="/user/login?next=<?php print urlencode("/election/processDonation?id={$r['id']}"); ?>">Log in to fix it!</a>
+				<?php } ?>
+			</td>
+			</tr>
 			<?php
 			?>
 			</table>
 
-			<?php if (LoginController::isLoggedIn()) { ?>
-			<h3>Report an error</h3>
-			<a href="/election/processDonation/?id=<?php print $r['id']; ?>">You are logged in, so just go fix it!</a>
-			<?php } else { ?>
-			<h3>Report an error</h3>
-			Spotted an error? <a href="/user/login?next=<?php print urlencode("/election/processDonation?id={$r['id']}"); ?>">Log in to fix it!</a>
-			<?php } ?>
 
 			<?php if (false && LoginController::isLoggedIn()) { ?>
 
