@@ -1181,7 +1181,7 @@ class ElectionController {
 		$pagefile = $pages[$page];
     $size = getimagesize($pagefile);
     $imgW = $size[0];
-		$padding = 100;
+		$padding = 150;
 		if (isset($next['y'])) {
 			$imgH = $next['y']-$r['y']+$padding;
 		} else {
