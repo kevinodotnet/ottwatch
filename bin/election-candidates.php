@@ -259,18 +259,26 @@ foreach ($sql as $key) {
   $c = $key['count'];
   $key = $key['name'];
 
+	$i = preg_replace("/\t/"," ",$i);
+	$u = preg_replace("/\t/"," ",$u);
+	$i = preg_replace("/\n/"," ",$i);
+	$u = preg_replace("/\n/"," ",$u);
+
   $row = getDatabase()->one($c);
 
   if ($row['c'] == 0) {
     print "$key added: NEW candidate\n";
 		print "$tweet\n";
-    getDatabase()->execute($i);
-		getDatabase()->execute($u);
+		print "\n$i\n$u\n";
+    #getDatabase()->execute($i);
+		#getDatabase()->execute($u);
 		continue;
   }
 
-  $c = getDatabase()->execute($u);
+  #$c = getDatabase()->execute($u);
 	if ($c > 0) {
+		print "\nupdating just cause maybe\n";
+		print "\n$u\n";
 		print "$key updated\n";
 	}
 }
