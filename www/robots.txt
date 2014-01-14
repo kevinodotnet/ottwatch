@@ -1,7 +1,6 @@
 User-agent: *
 
 Disallow: /api/
-
-User-agent: MJ12bot
-Disallow: /
+Disallow: /user/login
+Disallow: /user/logout
 
