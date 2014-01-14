@@ -674,13 +674,18 @@ class ElectionController {
 	public static function processDonation() {
 		top("Process a donation record");
 
+		$id = '';
+		if (LoginController::isLoggedIn()) {
+			$id = $_GET['id'];
+		}
+
 		$done = getDatabase()->one(" select count(1) c from candidate_donation where amount is not null ");
 		$done = $done['c'];
 		$total = getDatabase()->one(" select count(1) c from candidate_donation ");
 		$total = $total['c'];
 
 		$remaining = getDatabase()->one(" select count(1) c from candidate_donation where amount is null ");
-		if ($remaining['c'] == 0) {
+		if ($id == '' && $remaining['c'] == 0) {
 			?>
 			<center>
 			<h1>All Done!</h1>
@@ -703,6 +708,7 @@ class ElectionController {
 			<?php renderShareLinks("Help me do some data-entry to improve transparency. {$remaining['c']} donation records to go...",'/election/processDonation/'); ?>
 			</div>
 			<h1>Campaign Donation Data-Entry</h1>
+			<!--
 			<p class="lead">
 			<b>Take 10 seconds ... bring more transparency to Ottawa's election.</b><br/>
 			Below is one donation image from the 2010 election. Please type in the details. <br/>
@@ -711,6 +717,7 @@ class ElectionController {
 			Only <b><span style="color: #f00;"><?php print ($remaining['c']); ?></span></b> more to go!<br/>
 			<small>It has been <?php print $stats['minutes']; ?> minute(s) since the last data entry, with <?php print $stats['count']; ?> done in the last 2 hours!</small>
 			</p>
+			-->
 			</center>
 			<?php
 
@@ -720,17 +727,28 @@ class ElectionController {
 		if (preg_match('/^\d+$/',$_GET['returnid'])) {
 			$returnWhere = " and returnid = {$_GET['returnid']} ";
 		}
-		$row = getDatabase()->one(" 
-			select
-				d.*
-			from 
-				candidate_donation d
-			where 
-				d.amount is null
-				$returnWhere
-			order by rand()
-			limit 1
-		");
+		if ($id != '') {
+			$row = getDatabase()->one(" 
+				select
+					d.*
+				from 
+					candidate_donation d
+				where 
+					id = :id
+			",array('id'=>$id));
+		} else {
+			$row = getDatabase()->one(" 
+				select
+					d.*
+				from 
+					candidate_donation d
+				where 
+					d.amount is null
+					$returnWhere
+				order by rand()
+				limit 1
+			");
+		}
 		if (!isset($row['id'])) {
 			?>
 			Um, looks like you're done?
@@ -758,6 +776,11 @@ class ElectionController {
 		# use canvas to display the image
 		?>
 		<center>
+		<?php
+		$next = $row['id']+1;
+		$prev = $row['id']-1;
+		?>
+		<a href="?id=<?php print $prev; ?>">PREV</a> | <a href="?id=<?php print $next; ?>">NEXT</a>
     <canvas id="canvas" width="<?php print $imgW; ?>" height="<?php print $imgH; ?>" style="border: solid 1px #c0c0c0; margin-bottom: 20px;">
     </canvas><br/>
     <script>
@@ -823,6 +846,9 @@ class ElectionController {
 		</tr>
 		</table>
 		</form>
+		<br/>
+
+
 		</center>
 		<?php
 		bottom();
@@ -842,26 +868,33 @@ class ElectionController {
 			unset($_POST['ajax']);
 		}
 
-		$_POST['updated'] = date('Y-m-d H:i:s');
-
 		# do not allow mutation of the FK
 		$returnid = $_POST['returnid'];
 		unset($_POST['returnid']);
+		$_POST['updated'] = date('Y-m-d H:i:s');
+
+		// first save the current row
+		$cur = getDatabase()->one(" select * from candidate_donation where id = :id ",array('id'=>$_POST['id']));
+		db_insert('archive_candidate_donation',$cur);
+
+		if (LoginController::isLoggedIn()) {
+			# put editor id into the database
+			$_POST['peopleid'] = getSession()->get("user_id");
+		}
 		
 		// update in bulk
  		db_update('candidate_donation',$_POST,'id');
 
 		// normalize, the bulk lazy way!
-		getDatabase()->execute(" 
-			update candidate_donation set 
-				postal = replace(upper(postal),' ','') 
-			where 
-				postal != upper(postal) 
-				or postal like '% %';
-		");
+		getDatabase()->execute(" update candidate_donation set postal = replace(upper(postal),' ','') where postal != upper(postal) or postal like '% %' ");
 
 		if ($ajax) {
 			print "ok";
+			return;
+		}
+
+		if (LoginController::isLoggedIn()) {
+			header("Location: /election/processDonation/?id=".$_POST['id']);
 			return;
 		}
 
@@ -1231,7 +1264,7 @@ class ElectionController {
 			print "<tr><th>City</th><td>{$r['city']}</td></tr>";
 			print "<tr><th>Province</th><td>{$r['prov']}</td></tr>";
 			print "<tr><th>Postal</th><td>{$r['postal']}</td></tr>";
-			print "<tr><th>Candidate</th><td>{$r['last']}, {$r['first']} ({$r['year']})</td></tr>";
+			print "<tr><th>Candidate</th><td><a href=\"/election/listDonations?candidate={$r['last']}\">{$r['last']}</a>, {$r['first']} ({$r['year']})</td></tr>";
 			print "<tr><th>Ward</th><td>{$r['ward']}</td></tr>";
 			?>
 			<tr><th>Location</th>
@@ -1244,10 +1277,13 @@ class ElectionController {
 			?>
 			</table>
 
+			<?php if (LoginController::isLoggedIn()) { ?>
 			<h3>Report an error</h3>
-			<p>Donor details were hand-entered through a crowdsource effort. If you see an error
-			in the digitization, please drop a note using the comments section. We'll get an 
-			email and automatically know which donation you're talking about. Thanks!</p>
+			<a href="/election/processDonation/?id=<?php print $r['id']; ?>">You are logged in, so just go fix it!</a>
+			<?php } else { ?>
+			<h3>Report an error</h3>
+			Spotted an error? <a href="/user/login?next=<?php print urlencode("/election/processDonation?id={$r['id']}"); ?>">Log in to fix it!</a>
+			<?php } ?>
 
 			<?php if (false && LoginController::isLoggedIn()) { ?>
 
