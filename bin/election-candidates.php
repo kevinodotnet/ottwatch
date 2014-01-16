@@ -226,7 +226,11 @@ foreach ($lines as $l) {
     #print "$k = '$v'\n";
   }
 
-  $c = " select count(1) c from candidate where ward = $ward and first = '{$candidate['first']}' and last = '{$candidate['last']}'; ";
+  $c = " select count(1) c from candidate where 
+		(ward = $ward and first = '{$candidate['first']}' and last = '{$candidate['last']}')
+		or (nominated is null and nominated is null and incumbent = 1 and ward = $ward and first = '{$candidate['first']}' and last = '{$candidate['last']}')
+	;
+	";
   $i = "insert into candidate (ward,year,first,last) values ($ward,2014,'{$candidate['first']}','{$candidate['last']}'); ";
   $u = "update candidate set 
 		nominated = (case when nominated is null then now() else nominated end) , 
@@ -243,9 +247,12 @@ foreach ($lines as $l) {
   $sql[] = array('ward'=>$ward,'name'=>$key,'insert'=>$i,'update'=>$u,'count'=>$c,'details'=>$candidate);
 
   #pr($candidate);
-
 }
 
+$dbc = getDatabase()->one(" select count(1) c from candidate where nominated is not null and year = 2014 ");
+$dbc = $dbc['c'];
+print "HTML count: ".count($sql)."\n";
+print "DB   count: $dbc\n";
 foreach ($sql as $key) {
 
 	$c = $key['details'];
