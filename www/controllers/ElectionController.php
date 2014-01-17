@@ -98,8 +98,8 @@ class ElectionController {
     ];
     polygon = new google.maps.Polygon({
       paths: coords,
-      strokeColor: '#c0c0c0',
-      fillColor: '#c0c0c0',
+      strokeColor: '#ff0000',
+      fillColor: '#ff0000',
       fillOpacity: 0.35,
     });
     polygon.setMap(map);
