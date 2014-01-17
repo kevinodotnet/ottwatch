@@ -317,6 +317,16 @@ class ConsultationController {
 			return;
 		}
 
+    if (preg_match('/<title>Documents<\/title>/',$data)) {
+			# we ended up on documents.ottawa.ca; TODO 2014-01-19 crawl forward again to the actual PDF page, etc
+			#print "\n\n\n";
+			#print $data;
+			#print "\n\n\n";
+			#print "SKIPPING documents.ottawa HTML page";
+			#exit;
+			return;
+    }
+
     $md5 = md5($data);
     if (preg_match('/<html/',$data)) {
       $data = self::getCityContent($data,'');
