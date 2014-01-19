@@ -178,7 +178,7 @@ class ApiController {
         l.id activityid,
         l.lobbydate,
         l.activity,
-        l.lobbied,
+        l.lobbied
       from lobbying l
         join lobbyfile f on f.id = l.lobbyfileid
       order by
