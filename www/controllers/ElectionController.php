@@ -175,7 +175,7 @@ class ElectionController {
 	      ?>
 	      <tr>
 	        <td>
-	          <?php print "<span $style >{$r['last']}, {$r['first']} {$r['middle']}</span>"; ?>
+	          <?php print "<span $style >{$r['first']} {$r['middel']} {$r['last']}</span>"; ?>
 	          <?php if ($r['incumbent'] == TRUE) { /*print "*";*/ } ?>
 	        </td>
 	        <td>
@@ -210,7 +210,7 @@ class ElectionController {
 	      <tr>
 	        <td>
 						<span style="text-decoration: line-through;">
-	          <?php print "{$r['last']}, {$r['first']} {$r['middle']}"; ?>
+	          <?php print "{$r['first']} {$r['middle']} {$r['last']}"; ?>
 						</span>
 	        </td>
 	        <td>
@@ -416,7 +416,7 @@ class ElectionController {
 				if (isset($row['withdrew'])) {
 					$style = ' style="text-decoration: line-through;" ';
 				}
-        print "<span $style>{$row['last']}, {$row['first']}</span>";
+        print "<span $style>{$row['first']} {$row['last']}</span>";
         #if ($row['incumbent']) { print " *"; }
         print "<br/>\n";
       }
