@@ -227,8 +227,8 @@ foreach ($lines as $l) {
   }
 
   $c = " select count(1) c from candidate where 
-		(ward = $ward and first = '{$candidate['first']}' and last = '{$candidate['last']}')
-		or (nominated is null and nominated is null and incumbent = 1 and ward = $ward and first = '{$candidate['first']}' and last = '{$candidate['last']}')
+		(year = 2014 and ward = $ward and first = '{$candidate['first']}' and last = '{$candidate['last']}')
+		or (year = 2014 and nominated is null and incumbent = 1 and ward = $ward and first = '{$candidate['first']}' and last = '{$candidate['last']}')
 	;
 	";
   $i = "insert into candidate (ward,year,first,last) values ($ward,2014,'{$candidate['first']}','{$candidate['last']}'); ";
@@ -249,11 +249,17 @@ foreach ($lines as $l) {
   #pr($candidate);
 }
 
-$dbc = getDatabase()->one(" select count(1) c from candidate where nominated is not null and year = 2014 ");
-$dbc = $dbc['c'];
-print "HTML count: ".count($sql)."\n";
-print "DB   count: $dbc\n";
+$indb = array();
+$inhtml = array();
+
+$all  = getDatabase()->all(" select * from candidate where nominated is not null and year = 2014 ");
+foreach ($all as $a) {
+	$key  = "ward:{$a['ward']} last:{$a['last']} first:{$a['first']}";
+	$indb[] = $key;
+}
 foreach ($sql as $key) {
+	$htmlkey  = "ward:{$key['details']['ward']} last:{$key['details']['last']} first:{$key['details']['first']}";
+	$inhtml[] = $htmlkey;
 
 	$c = $key['details'];
 
@@ -283,11 +289,27 @@ foreach ($sql as $key) {
   }
 
   #$c = getDatabase()->execute($u);
+	#print "$u\n";
 	if ($c > 0) {
 		print "\nupdating just cause maybe\n";
 		print "\n$u\n";
 		print "$key updated\n";
 	}
+}
+
+#foreach ($indb as $a) { print "REPORT :: $a :: DATABASE\n"; }
+#foreach ($inhtml as $a) { print "REPORT :: $a :: HTML\n"; }
+
+$removed = array_diff($indb,$inhtml);
+$added = array_diff($inhtml,$indb);
+
+if (count($added) > 0) {
+	print "Need to add to database:\n";
+	pr($added);
+}
+if (count($removed) > 0) {
+	print "\nNeed to remove from database\n";
+	pr($removed);
 }
 
 return;
