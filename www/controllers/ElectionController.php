@@ -169,10 +169,13 @@ class ElectionController {
 	    </tr>
 	    <?php
 	    foreach ($rows as $r) {
+				if (isset($r['withdrew'])) {
+					continue;
+				}
 	      ?>
 	      <tr>
 	        <td>
-	          <?php print "{$r['last']}, {$r['first']} {$r['middle']}"; ?>
+	          <?php print "<span $style >{$r['last']}, {$r['first']} {$r['middle']}</span>"; ?>
 	          <?php if ($r['incumbent'] == TRUE) { /*print "*";*/ } ?>
 	        </td>
 	        <td>
@@ -195,6 +198,28 @@ class ElectionController {
 	        </td>
 	        <td>
 	        <?php print substr($r['nominated'],0,10); ?>
+	        </td>
+	      </tr>
+	      <?php
+	    }
+	    foreach ($rows as $r) {
+				if (!isset($r['withdrew'])) {
+					continue;
+				}
+	      ?>
+	      <tr>
+	        <td>
+						<span style="text-decoration: line-through;">
+	          <?php print "{$r['last']}, {$r['first']} {$r['middle']}"; ?>
+						</span>
+	        </td>
+	        <td>
+	        </td>
+	        <td>
+	        </td>
+	        <td>
+					<span style="text-decoration: line-through;"><?php print substr($r['nominated'],0,10); ?></span><br/>
+					Withdrew on or before:<br/><?php print substr($r['withdrew'],0,10); ?>
 	        </td>
 	      </tr>
 	      <?php
@@ -387,7 +412,11 @@ class ElectionController {
         print "<i style=\"color: #c0c0c0;\">No Candidates Registered Yet</i>\n";
       }
       foreach ($rows as $row) {
-        print "{$row['last']}, {$row['first']}";
+				$style = '';
+				if (isset($row['withdrew'])) {
+					$style = ' style="text-decoration: line-through;" ';
+				}
+        print "<span $style>{$row['last']}, {$row['first']}</span>";
         #if ($row['incumbent']) { print " *"; }
         print "<br/>\n";
       }
