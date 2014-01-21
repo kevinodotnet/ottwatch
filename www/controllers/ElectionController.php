@@ -1101,8 +1101,10 @@ class ElectionController {
 				$r['type'] = 'Unknown';
 			} elseif ($r['type'] == 0) {
 				$r['type'] = 'Individual';
-			} else {
+			} elseif ($r['type'] == 1) {
 				$r['type'] = 'Corporate/Union';
+			} elseif ($r['type'] == 2) {
+				$r['type'] = 'Individuals under $100';
 			}
 
 			$totalType[$r['type']] += $r['amount'];
@@ -1289,8 +1291,10 @@ class ElectionController {
 				$r['type'] = 'Unknown';
 			} elseif ($r['type'] == 0) {
 				$r['type'] = 'Individual';
-			} else {
+			} elseif ($r['type'] == 1) {
 				$r['type'] = 'Corporate/Union';
+			} elseif ($r['type'] == 2) {
+				$r['type'] = 'Individuals under $100';
 			}
 
 			print "<tr><th>Donor Name</th><td>{$r['donor']}</td></tr>";
