@@ -983,6 +983,7 @@ class ElectionController {
 				c.first,
 				c.last,
 				c.id candidateid,
+				c.incumbent,
 				d.page,
 				d.x,
 				d.y,
@@ -1020,7 +1021,7 @@ class ElectionController {
 			header("Content-Type: application/octet-stream");
 			header("Content-Type: application/download");
 			header("Content-Description: File Transfer");             
-			$cols = array( 'id', 'type', 'donor', 'address', 'city', 'postal', 'amount', 'year', 'ward', 'first', 'last','page','x','y','retid');
+			$cols = array( 'id', 'type', 'donor', 'address', 'city', 'postal', 'amount', 'year', 'ward', 'first', 'last', 'incumbent', 'page','x','y','retid');
 			foreach ($cols as $c) {
 				print "{$c}\t";
 			}
