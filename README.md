@@ -57,24 +57,24 @@ Here is the crontab I use on ottwatch.ca to scrape data and also post it to Twit
   25,55 7-18 * * * php /mnt/www/ottwatch/bin/lobby-tweeter2.php
 
 
-  # Current crontab as of Jan-21-2014
-  */5 * * * * php /mnt/www/ottwatch/bin/media-rss.php
-  */5 * * * * php /mnt/www/ottwatch/bin/syndicate.php
-  00,30 * * * * php /mnt/www/ottwatch/bin/meeting-parser.php
-  05,35 * * * * php /mnt/www/ottwatch/bin/meeting-tweeter.php
-  00 5,15,19,22 * * * php /mnt/www/ottwatch/bin/meeting-parser.php hardScan
-  00 8-18 * * * php /mnt/www/ottwatch/bin/meeting-parser.php getVideos
-  00 8-18/2 * * * php /mnt/www/ottwatch/bin/meeting-parser.php getVideoStart
-  00 7,19 * * * php /mnt/www/ottwatch/bin/opendata.php 
-  15,45 * * * * php /mnt/www/ottwatch/bin/devapp-tweeter.php
-  20,50 * * * * php /mnt/www/ottwatch/bin/lobby-scaper.php 30
-  25,55 * * * * php /mnt/www/ottwatch/bin/lobby-tweeter2.php
-  00 8 * * * php /mnt/www/ottwatch/bin/election-countdown.php
-  0 7-21/2 * * * php /mnt/www/ottwatch/bin/consultations-parser.php
-  0 * * * * php /mnt/www/ottwatch/bin/public-notice-tweeter.php 
-  */5 * * * * php /mnt/www/ottwatch/bin/page-monitor.php http://ottawa.ca/en/city-hall/your-city-government/elections/councillor
-  */5 * * * * php /mnt/www/ottwatch/bin/page-monitor.php http://ottawa.ca/en/city-hall/your-city-government/elections/mayor
-  */5 * * * * php /mnt/www/ottwatch/bin/disqus.php
+	# Current crontab as of Jan-21-2014
+	*/5 * * * * php /mnt/www/ottwatch/bin/media-rss.php
+	*/5 * * * * php /mnt/www/ottwatch/bin/syndicate.php
+	00,30 * * * * php /mnt/www/ottwatch/bin/meeting-parser.php
+	05,35 * * * * php /mnt/www/ottwatch/bin/meeting-tweeter.php
+	00 5,15,19,22 * * * php /mnt/www/ottwatch/bin/meeting-parser.php hardScan
+	00 8-18 * * * php /mnt/www/ottwatch/bin/meeting-parser.php getVideos
+	00 8-18/2 * * * php /mnt/www/ottwatch/bin/meeting-parser.php getVideoStart
+	00 7,19 * * * php /mnt/www/ottwatch/bin/opendata.php 
+	15,45 * * * * php /mnt/www/ottwatch/bin/devapp-tweeter.php
+	20,50 * * * * php /mnt/www/ottwatch/bin/lobby-scaper.php 30
+	25,55 * * * * php /mnt/www/ottwatch/bin/lobby-tweeter2.php
+	00 8 * * * php /mnt/www/ottwatch/bin/election-countdown.php
+	0 7-21/2 * * * php /mnt/www/ottwatch/bin/consultations-parser.php
+	0 * * * * php /mnt/www/ottwatch/bin/public-notice-tweeter.php 
+	*/5 * * * * php /mnt/www/ottwatch/bin/page-monitor.php http://ottawa.ca/en/city-hall/your-city-government/elections/councillor
+	*/5 * * * * php /mnt/www/ottwatch/bin/page-monitor.php http://ottawa.ca/en/city-hall/your-city-government/elections/mayor
+	*/5 * * * * php /mnt/www/ottwatch/bin/disqus.php
 
 Contributions
 =============
