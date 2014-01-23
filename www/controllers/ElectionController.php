@@ -1155,9 +1155,9 @@ class ElectionController {
       foreach ($rows as $r) { 
         $pinColor = '';
         if ($r['type'] == 0) {
-          $pinColor = 'ff0000';
-        } else if ($r['type'] == 1) {
           $pinColor = '00ff00';
+        } else if ($r['type'] == 1) {
+          $pinColor = 'ff0000';
         } else {
           $pinColor = '0000ff';
         }
