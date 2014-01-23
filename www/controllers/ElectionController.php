@@ -1083,18 +1083,7 @@ class ElectionController {
 
 		<?php 
     if (count($rows) > 0) { 
-			foreach ($rows as &$r) {
-				if (!isset($r['type'])) {
-					$r['type'] = 'Unknown';
-				} elseif ($r['type'] == 0) {
-					$r['type'] = 'Individual';
-				} elseif ($r['type'] == 1) {
-					$r['type'] = 'Corporate/Union';
-				} elseif ($r['type'] == 2) {
-					$r['type'] = 'Individuals under $100';
-				} else {
-          $r['type'] = 'Huh?';
-        }
+			foreach ($rows as $r) {
       }
 
       if ($mapMode > 0) {
@@ -1133,6 +1122,21 @@ class ElectionController {
       var mapOptions = { center: new google.maps.LatLng(45.35,-75.70), zoom: 11, mapTypeId: google.maps.MapTypeId.ROADMAP };
       map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
 
+			var bounds = new google.maps.LatLngBounds();
+			<?php
+      foreach ($rows as $r) { 
+        if ($r['location'] == '') { 
+          continue; 
+        }
+        $ll = getLatLonFromPoint($r['location']);
+        $lat = $ll['lat'];
+        $lon = $ll['lon'];
+				?>
+				bounds.extend(new google.maps.LatLng(<?php print $lat; ?>, <?php print $lon; ?>));
+        <?php 
+      } 
+      ?>
+
       var pointArray = new google.maps.MVCArray(heatpoints);
       heatmap = new google.maps.visualization.HeatmapLayer({data: pointArray });
       var gradient = [ 
@@ -1149,6 +1153,17 @@ class ElectionController {
       <?php 
       if ($mapMode == 2) {
       foreach ($rows as $r) { 
+				if (!isset($r['type'])) {
+					$r['type'] = 'Unknown';
+				} elseif ($r['type'] == 0) {
+					$r['type'] = 'Individual';
+				} elseif ($r['type'] == 1) {
+					$r['type'] = 'Corporate/Union';
+				} elseif ($r['type'] == 2) {
+					$r['type'] = 'Individuals under $100';
+				} else {
+          $r['type'] = 'Huh?';
+        }
         if ($r['location'] == '') { 
           continue; 
         }
@@ -1170,6 +1185,7 @@ class ElectionController {
       } 
       }
       ?>
+			map.fitBounds(bounds);  
       </script>
       &nbsp;
         <?php 
@@ -1193,6 +1209,17 @@ class ElectionController {
 			$totalType = array();
 			$candidates = array();
 			foreach ($rows as $r) {
+				if (!isset($r['type'])) {
+					$r['type'] = 'Unknown';
+				} elseif ($r['type'] == 0) {
+					$r['type'] = 'Individual';
+				} elseif ($r['type'] == 1) {
+					$r['type'] = 'Corporate/Union';
+				} elseif ($r['type'] == 2) {
+					$r['type'] = 'Individuals under $100';
+				} else {
+          $r['type'] = 'Huh?';
+        }
 	
 				$totalType[$r['type']] += $r['amount'];
 	
@@ -1433,9 +1460,14 @@ class ElectionController {
             $('#wardmsg').html('Error mapping address');
             return;
           }
-          $('#wardmsg').html('GEO worked, parsing...');
+          lat = results[0].geometry.location.lat();
+          lon = results[0].geometry.location.lng();
+					sql = " update candidate_donation set location = PointFromText('POINT("+lon+" "+lat+")') where id = " + <?php print $r['id']; ?> + "; ";
+          $('#wardmsg').html('GEO worked<br/>' + sql);
 					console.log(results);
+					return;
 					results[0].address_components.forEach(function(entry){
+						console.log('type: ' + entry.types[0]);
 						if (entry.types[0] == 'postal_code') {
 							googlepostal = entry.long_name;
 	            $('#wardmsg').html('found a postal code');
@@ -1450,8 +1482,6 @@ class ElectionController {
 							}
 						}
 					});
-          lat = results[0].geometry.location.lat();
-          lon = results[0].geometry.location.lng();
         }
       );
 		</script>
