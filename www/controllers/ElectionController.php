@@ -1156,11 +1156,11 @@ class ElectionController {
 				if (!isset($r['type'])) {
 					$r['type'] = 'Unknown';
 				} elseif ($r['type'] == 0) {
-					$r['type'] = 'Individual';
+					$r['type'] = 'Individual over $100';
 				} elseif ($r['type'] == 1) {
 					$r['type'] = 'Corporate/Union';
 				} elseif ($r['type'] == 2) {
-					$r['type'] = 'Individuals under $100';
+					$r['type'] = 'Individuals $100 or less';
 				} else {
           $r['type'] = 'Huh?';
         }
@@ -1212,11 +1212,11 @@ class ElectionController {
 				if (!isset($r['type'])) {
 					$r['type'] = 'Unknown';
 				} elseif ($r['type'] == 0) {
-					$r['type'] = 'Individual';
+					$r['type'] = 'Individual over $100';
 				} elseif ($r['type'] == 1) {
 					$r['type'] = 'Corporate/Union';
 				} elseif ($r['type'] == 2) {
-					$r['type'] = 'Individuals under $100';
+					$r['type'] = 'Individuals $100 or less';
 				} else {
           $r['type'] = 'Huh?';
         }
@@ -1407,11 +1407,11 @@ class ElectionController {
 			if (!isset($r['type'])) {
 				$r['type'] = 'Unknown';
 			} elseif ($r['type'] == 0) {
-				$r['type'] = 'Individual';
-			} elseif ($r['type'] == 1) {
-				$r['type'] = 'Corporate/Union';
-			} elseif ($r['type'] == 2) {
-				$r['type'] = 'Individuals under $100';
+					$r['type'] = 'Individual over $100';
+				} elseif ($r['type'] == 1) {
+					$r['type'] = 'Corporate/Union';
+				} elseif ($r['type'] == 2) {
+					$r['type'] = 'Individuals $100 or less';
 			}
 
 			print "<tr><th>Donor Name</th><td>{$r['donor']}</td></tr>";
