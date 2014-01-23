@@ -1153,6 +1153,14 @@ class ElectionController {
       <?php 
       if ($mapMode == 2) {
       foreach ($rows as $r) { 
+        $pinColor = '';
+        if ($r['type'] == 0) {
+          $pinColor = 'ff0000';
+        } else if ($r['type'] == 1) {
+          $pinColor = '00ff00';
+        } else {
+          $pinColor = '0000ff';
+        }
 				if (!isset($r['type'])) {
 					$r['type'] = 'Unknown';
 				} elseif ($r['type'] == 0) {
@@ -1171,14 +1179,6 @@ class ElectionController {
         $lat = $ll['lat'];
         $lon = $ll['lon'];
 
-        $pinColor = '';
-        if ($r['type'] == 0) {
-          $pinColor = 'ff0000';
-        } else if ($r['type'] == 1) {
-          $pinColor = '00ff00';
-        } else {
-          $pinColor = '0000ff';
-        }
         ?>
         var pinColor = "<?php print $pinColor; ?>";
         var pinImage = new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|" + pinColor, new google.maps.Size(21, 34), new google.maps.Point(0,0), new google.maps.Point(10, 34));
