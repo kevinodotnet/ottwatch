@@ -1036,11 +1036,15 @@ class ElectionController {
 			return;
 		}
 
+    $mapMode = $_GET['map'];
+
 		top("Campaign Donations Report");
 		?>
 		<div class="row-fluid">
 		<div class="span6">
 		<h1>Campaign Donations Report</h1>
+    </div>
+		<div class="span6">
 		<p class="lead">Like this data? <a href="/election/processDonation/">Help create more of it</a> - 10 seconds at a time.</p>
 		<p><i>Note: this report may not include all donations. The digitization of PDF documents is ongoing.</i></p>
 		<p>
@@ -1049,47 +1053,33 @@ class ElectionController {
 			<a href="?format=json">JSON</a>
 		</p>
 		</div><!-- /span -->
-		<div class="span6">
-			<h3>Filter <small>hint: "evin" will match "Kevin" and "Devin", etc.</small></h3>
-			<form class="form-horizontal" action="/election/listDonations">
-				<div class="control-group">
-					<label class="control-label" for="inputDonor">by donor</label>
-					<div class="controls"> <input type="text" id="inputDonor" class="input-medium" name="donor" placeholder="donor" value="<?php print $donor; ?>"/> </div>
-				</div>
-				<div class="control-group">
-					<label class="control-label" for="inputCandidate">by candidate</label>
-					<div class="controls"> <input type="text" id="inputCandidate" class="input-medium" name="candidate" placeholder="(first or last)" value="<?php print $candidate; ?>"/> </div>
-				</div>
-				<div class="control-group">
-					<label class="control-label" for="inputPostal">by postal code</label>
-					<div class="controls"> <input type="text" id="inputPostal" class="input-medium" name="postal" placeholder="H0H 0H0" value="<?php print $postal; ?>"/> </div>
-				</div>
-				<div class="control-group">
-					<label class="control-label" for="inputFormat">Format</label>
-					<div class="controls"> 
+		</div><!-- /row -->
+
+    <h3>Search <small>Search by donor and/or candidate and/or postal code</small></h3>
+
+			<form class="form-inline" action="/election/listDonations">
+					<!-- <label class="control-label" for="inputDonor">by donor</label> -->
+					 <input type="text" id="inputDonor" class="input-medium" name="donor" placeholder="Donor Name" value="<?php print $donor; ?>"/> 
+					<!-- <label class="control-label" for="inputCandidate">by candidate</label> -->
+					 <input type="text" id="inputCandidate" class="input-medium" name="candidate" placeholder="(first or last)" value="<?php print $candidate; ?>"/> 
+					<!-- <label class="control-label" for="inputPostal">by postal code</label> -->
+					 <input type="text" id="inputPostal" class="input-medium" name="postal" placeholder="H0H 0H0" value="<?php print $postal; ?>"/>
+					<!-- <label class="control-label" for="inputFormat">Format</label> -->
+          Output as:
 					<select name="format">
 						<option value="" selected="1">HTML page</option>
 						<option value="csv" >CSV</option>
 						<option value="json" >JSON</option>
 					</select>
-					</div>
-				</div>
-				<div class="control-group">
-					<label class="control-label" for="inputFormat">Map</label>
-					<div class="controls"> 
+					<!-- <label class="control-label" for="inputFormat">Map</label> -->
+          Map: 
 					<select name="map">
-						<option value="1" selected="1">Heatmap</option>
-						<option value="2">Placemarks</option>
-						<option value="0" >No</option>
+						<option <?php print ($mapMode == 0 ? ' selected="1" ' : ''); ?> value="0">No</option>
+						<option <?php print ($mapMode == 1 ? ' selected="1" ' : ''); ?> value="1">Heatmap</option>
+						<option <?php print ($mapMode == 2 ? ' selected="1" ' : ''); ?> value="2">Placemarks</option>
 					</select>
-					</div>
-				</div>
-				<div class="control-group">
-					<div class="controls"> <button type="submit" class="btn">Filter</button> </div>
-				</div>
+					 <button type="submit" class="btn">Filter</button> 
 			</form>
-		</div><!-- /span -->
-		</div><!-- /row -->
 
 		<?php 
     if (count($rows) > 0) { 
@@ -1107,7 +1097,6 @@ class ElectionController {
         }
       }
 
-      $mapMode = $_GET['map'];
       if ($mapMode > 0) {
 
       $noLocationCount = 0;
@@ -1171,7 +1160,8 @@ class ElectionController {
         google.maps.event.addListener(marker<?php print $r['id'] ?>, 'click', function() {
           infowindow.setContent(
             '<p>Amount: <?php print $r['amount']; ?> - <a target="_blank" href="/election/donation/<?php print $r['id']; ?>">Details</a></p> ' +
-            '<p>From: <?php print $r['donor']; ?>, <?php print $r['address']; ?>, <?php print $r['city']; ?>, <?php print $r['postal']; ?></p>' + 
+            '<p>From: <?php print $r['donor']; ?>, <?php print $r['address']; ?>, <?php print $r['city']; ?>, ' + 
+            '<a target="_blank" href="/election/listDonations?postal=<?php print $r['postal']; ?>&map=0"><?php print $r['postal']; ?></a></p>' + 
             '<p>To: <?php print $r['last']; ?>, <?php print $r['first']; ?> (<?php print $r['year']; ?>)</p>' +
             '<p>Type: <?php print $r['type']; ?></p>'
           );
