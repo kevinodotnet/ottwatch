@@ -569,8 +569,25 @@ class MeetingController {
 				if ($chunk % 100 == 0) { print " $chunk"; }
 			}
 	    $data = `wget -qO - '$fragUrl'`;
+			# abort on empty data file chunks?
+			if (strlen($data) == 0) {
+				print "\nChunk $chunk had zero size; aborting\n";
+				getDatabase()->execute(" update meeting set youtube = null, youtubestate = null where id = :id ",array('id'=>$m['id']));
+				unlink($video_file);
+				return;
+			}
 			file_put_contents($video_file,$data,FILE_APPEND);
 		}
+
+		# ensure filesize is non-zero
+		if (filesize($video_file) == 0) {
+			# video not ready; try again some other day?
+			print "\nFile size of $video_file is zeo... resetting for next time\n";
+			getDatabase()->execute(" update meeting set youtube = null, youtubestate = null where id = :id ",array('id'=>$m['id']));
+			unlink($video_file);
+			return;
+		}
+
 
 		# Mark the video URL as 'uploading' so that we know we've attempted it once
 		getDatabase()->execute(" update meeting set youtube = 'UPLOADING', youtubestate = 'UPLOADING' where id = :id ",array('id'=>$m['id']));
