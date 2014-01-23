@@ -1159,11 +1159,10 @@ class ElectionController {
         var marker<?php print $r['id']; ?> = new google.maps.Marker({ position: new google.maps.LatLng(<?php print $lat; ?>, <?php print $lon; ?>), map: map, title: '<?php print $r['amount'];?>' });
         google.maps.event.addListener(marker<?php print $r['id'] ?>, 'click', function() {
           infowindow.setContent(
-            '<p>Amount: <?php print $r['amount']; ?> - <a target="_blank" href="/election/donation/<?php print $r['id']; ?>">Details</a></p> ' +
-            '<p>From: <?php print $r['donor']; ?>, <?php print $r['address']; ?>, <?php print $r['city']; ?>, ' + 
-            '<a target="_blank" href="/election/listDonations?postal=<?php print $r['postal']; ?>&map=0"><?php print $r['postal']; ?></a></p>' + 
-            '<p>To: <?php print $r['last']; ?>, <?php print $r['first']; ?> (<?php print $r['year']; ?>)</p>' +
-            '<p>Type: <?php print $r['type']; ?></p>'
+						'<p><a target="_blank" href="/election/donation/<?php print $r['id']; ?>">Details</a></p> ' +
+            '<p>Amount: <?php print $r['amount']; ?></p>' + 
+            '<p>Type: <?php print $r['type']; ?></p>' +
+            '<a target="_blank" href="/election/listDonations?postal=<?php print $r['postal']; ?>&map=0"><?php print $r['postal']; ?></a></p>' 
           );
           infowindow.open(map,marker<?php print $r['id'] ?>);
         });
