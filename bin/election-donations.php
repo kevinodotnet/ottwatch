@@ -16,7 +16,8 @@ if (@$argv[1] == 'setinclude') {
 $total = 0;
 $matched = 0;
 
-$rows = getDatabase()->all(" select * from candidate_donation where city = 'Ottawa' and location is null order by updated desc ");
+#$rows = getDatabase()->all(" select * from candidate_donation where city = 'Ottawa' and location is null order by updated desc ");
+$rows = getDatabase()->all(" select * from candidate_donation where returnid = 101 and location is null order by id ");
 foreach ($rows as $row) {
 	$total ++;
 	if (setDonorLocation($row)) {
@@ -27,7 +28,7 @@ foreach ($rows as $row) {
 
 function setDonorLocation($row) {
 
-	print "id: {$row['id']} ADDRESS: {$row['address']} POSTAL: {$row['postal']} NAME: {$row['name']}\n";
+	print "id: {$row['id']} ADDRESS: {$row['address']} CITY: {$r['city']} POSTAL: {$row['postal']} NAME: {$row['name']}\n";
 	
 	$debug = 0;
 	$postal = $row['postal'];
