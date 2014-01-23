@@ -987,6 +987,7 @@ class ElectionController {
 				d.page,
 				d.x,
 				d.y,
+        astext(d.location) location,
 				r.id retid
 			from
 				candidate_donation d
@@ -1074,149 +1075,248 @@ class ElectionController {
 					</div>
 				</div>
 				<div class="control-group">
+					<label class="control-label" for="inputFormat">Map</label>
+					<div class="controls"> 
+					<select name="map">
+						<option value="1" selected="1">Heatmap</option>
+						<option value="2">Placemarks</option>
+						<option value="0" >No</option>
+					</select>
+					</div>
+				</div>
+				<div class="control-group">
 					<div class="controls"> <button type="submit" class="btn">Filter</button> </div>
 				</div>
 			</form>
 		</div><!-- /span -->
 		</div><!-- /row -->
 
-		<?php if (count($rows) > 0) { ?>
-	  <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
-		<tr>
-				<th>year</th>
-				<th>ward</th>
-				<th>candidate</th>
-				<th>donor</th>
-				<th>amount</th>
-				<th>address</th>
-				<th>city</th>
-				<th>postal</th>
-				<th>type</th>
-		</tr>
-		<?php
-		$total = 0;
-		$totalType = array();
-		$candidates = array();
-		foreach ($rows as $r) {
-			if (!isset($r['type'])) {
-				$r['type'] = 'Unknown';
-			} elseif ($r['type'] == 0) {
-				$r['type'] = 'Individual';
-			} elseif ($r['type'] == 1) {
-				$r['type'] = 'Corporate/Union';
-			} elseif ($r['type'] == 2) {
-				$r['type'] = 'Individuals under $100';
-			}
+		<?php 
+    if (count($rows) > 0) { 
+			foreach ($rows as &$r) {
+				if (!isset($r['type'])) {
+					$r['type'] = 'Unknown';
+				} elseif ($r['type'] == 0) {
+					$r['type'] = 'Individual';
+				} elseif ($r['type'] == 1) {
+					$r['type'] = 'Corporate/Union';
+				} elseif ($r['type'] == 2) {
+					$r['type'] = 'Individuals under $100';
+				} else {
+          $r['type'] = 'Huh?';
+        }
+      }
 
-			$totalType[$r['type']] += $r['amount'];
+      $mapMode = $_GET['map'];
+      if ($mapMode > 0) {
 
-			print "<tr>";
-			print "<td>{$r['year']}</td>";
-			print "<td>{$r['ward']}</td>";
-			print "<td><nobr><a href=\"/election/listDonations?candidate={$r['last']}\">{$r['last']}</a>, {$r['first']}<nobr></td>";
-			print "<td>{$r['donor']}</td>";
-			print "<td><a href=\"/election/donation/{$r['id']}\">\$".formatMoney($r['amount'],true)."</a></td>";
-			print "<td>{$r['address']}</td>";
-			print "<td>{$r['city']}</td>";
-			print "<td><a href=\"/election/listDonations?postal={$r['postal']}\">{$r['postal']}</a></td>";
-			print "<td>{$r['type']}</td>";
-			print "</tr>";
-			$total += $r['amount'];
-			$candidates[$r['candidateid']] = 1;
-		}
-			print "<tr>";
-			print "<td></td>";
-			print "<td></td>";
-			print "<td></td>";
-			print "<td><b>Total Amount</b></td>";
-			print "<td><b>\$".formatMoney($total,true)."</b></td>";
-			print "<td></td>";
-			print "<td></td>";
-			print "<td></td>";
-			print "<td></td>";
-			print "</tr>";
-			foreach ($totalType as $k => $v) {
-			print "<tr>";
-			print "<td></td>";
-			print "<td></td>";
-			print "<td></td>";
-			print "<td><b>Total from {$k}</b></td>";
-			print "<td><b>\$".formatMoney($v,true)." (".round($v/$total*100)."%)</b></td>";
-			print "<td></td>";
-			print "<td></td>";
-			print "<td></td>";
-			print "<td></td>";
-			print "</tr>";
+      $noLocationCount = 0;
+      foreach ($rows as $r) { 
+        if ($r['location'] == '') { 
+          $noLocationCount ++;
+          continue; 
+        }
+      }
+      $perc = round((count($rows)-$noLocationCount)/count($rows)*100);
+      ?>
+      <a name="donationheatmap"></a>
+      <h3>Donation Map <small><?php print (count($rows)-$noLocationCount); ?> donations (<?php print $perc; ?>%) have location data</small></h3>
+      <div id="map_canvas" style="width:100%; height:600px;"></div>
+      <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=visualization&key=<?php print OttWatchConfig::GOOGLE_API_KEY; ?>"></script>
+      <script>
+      var map, pointarray, heatmap;
+      var heatpoints = [
+      <?php 
+      foreach ($rows as $r) { 
+        if ($r['location'] == '') { 
+          continue; 
+        }
+        $ll = getLatLonFromPoint($r['location']);
+        $lat = $ll['lat'];
+        $lon = $ll['lon'];
+        ?>
+        {location: new google.maps.LatLng(<?php print $lat; ?>, <?php print $lon; ?>), weight: <?php print $r['amount']; ?>},
+        <?php 
+      } 
+      ?>
+      ];
+
+      var mapOptions = { center: new google.maps.LatLng(45.35,-75.70), zoom: 11, mapTypeId: google.maps.MapTypeId.ROADMAP };
+      map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
+
+      var pointArray = new google.maps.MVCArray(heatpoints);
+      heatmap = new google.maps.visualization.HeatmapLayer({data: pointArray });
+      var gradient = [ 
+        'rgba(0, 255, 255, 0)', 'rgba(0, 255, 255, 1)', 'rgba(0, 191, 255, 1)', 'rgba(0, 127, 255, 1)', 'rgba(0, 63, 255, 1)', 'rgba(0, 0, 255, 1)',
+        'rgba(0, 0, 223, 1)', 'rgba(0, 0, 191, 1)', 'rgba(0, 0, 159, 1)', 'rgba(0, 0, 127, 1)', 'rgba(63, 0, 91, 1)', 'rgba(127, 0, 63, 1)',
+        'rgba(191, 0, 31, 1)', 'rgba(255, 0, 0, 1)' ];
+      heatmap.set('gradient', heatmap.get('gradient') ? null : gradient);
+      heatmap.set('opacity', 1);
+      // heatmap.set('radius', 10);
+      <?php if ($mapMode == 1) { ?>
+      heatmap.setMap(map);
+      <?php } ?>
+      var infowindow = new google.maps.InfoWindow();
+      <?php 
+      if ($mapMode == 2) {
+      foreach ($rows as $r) { 
+        if ($r['location'] == '') { 
+          continue; 
+        }
+        $ll = getLatLonFromPoint($r['location']);
+        $lat = $ll['lat'];
+        $lon = $ll['lon'];
+        ?>
+        var marker<?php print $r['id']; ?> = new google.maps.Marker({ position: new google.maps.LatLng(<?php print $lat; ?>, <?php print $lon; ?>), map: map, title: '<?php print $r['amount'];?>' });
+        google.maps.event.addListener(marker<?php print $r['id'] ?>, 'click', function() {
+          infowindow.setContent(
+            '<p>Amount: <?php print $r['amount']; ?> - <a target="_blank" href="/election/donation/<?php print $r['id']; ?>">Details</a></p> ' +
+            '<p>From: <?php print $r['donor']; ?>, <?php print $r['address']; ?>, <?php print $r['city']; ?>, <?php print $r['postal']; ?></p>' + 
+            '<p>To: <?php print $r['last']; ?>, <?php print $r['first']; ?> (<?php print $r['year']; ?>)</p>' +
+            '<p>Type: <?php print $r['type']; ?></p>'
+          );
+          infowindow.open(map,marker<?php print $r['id'] ?>);
+        });
+        <?php 
+      } 
+      }
+      ?>
+      </script>
+      &nbsp;
+        <?php 
+      } // mapMode
+      ?>
+
+		  <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
+			<tr>
+					<th>year</th>
+					<th>ward</th>
+					<th>candidate</th>
+					<th>donor</th>
+					<th>amount</th>
+					<th>address</th>
+					<th>city</th>
+					<th>postal</th>
+					<th>type</th>
+			</tr>
+			<?php
+			$total = 0;
+			$totalType = array();
+			$candidates = array();
+			foreach ($rows as $r) {
+	
+				$totalType[$r['type']] += $r['amount'];
+	
+				print "<tr>";
+				print "<td>{$r['year']}</td>";
+				print "<td>{$r['ward']}</td>";
+				print "<td><nobr><a href=\"/election/listDonations?candidate={$r['last']}\">{$r['last']}</a>, {$r['first']}<nobr></td>";
+				print "<td>{$r['donor']}</td>";
+				print "<td><a href=\"/election/donation/{$r['id']}\">\$".formatMoney($r['amount'],true)."</a></td>";
+				print "<td>{$r['address']}</td>";
+				print "<td>{$r['city']}</td>";
+				print "<td><a href=\"/election/listDonations?postal={$r['postal']}\">{$r['postal']}</a></td>";
+				print "<td>{$r['type']}</td>";
+				print "</tr>";
+				$total += $r['amount'];
+				$candidates[$r['candidateid']] = 1;
 			}
-			print "<tr>";
-			print "<td></td>";
-			print "<td></td>";
-			print "<td></td>";
-			print "<td><b>Total Donations</b></td>";
-			print "<td><b>".count($rows)."</b></td>";
-			print "<td></td>";
-			print "<td></td>";
-			print "<td></td>";
-			print "<td></td>";
-			print "</tr>";
-			print "<tr>";
-			print "<td></td>";
-			print "<td></td>";
-			print "<td></td>";
-			print "<td><b>Total Candidates</b></td>";
-			print "<td><b>".count($candidates)."</b></td>";
-			print "<td></td>";
-			print "<td></td>";
-			print "<td></td>";
-			print "<td></td>";
-			print "</tr>";
-		?>
-		</table>
-		<?php } else { ?>
+				print "<tr>";
+				print "<td></td>";
+				print "<td></td>";
+				print "<td></td>";
+				print "<td><b>Total Amount</b></td>";
+				print "<td><b>\$".formatMoney($total,true)."</b></td>";
+				print "<td></td>";
+				print "<td></td>";
+				print "<td></td>";
+				print "<td></td>";
+				print "</tr>";
+				foreach ($totalType as $k => $v) {
+				print "<tr>";
+				print "<td></td>";
+				print "<td></td>";
+				print "<td></td>";
+				print "<td><b>Total from {$k}</b></td>";
+				print "<td><b>\$".formatMoney($v,true)." (".round($v/$total*100)."%)</b></td>";
+				print "<td></td>";
+				print "<td></td>";
+				print "<td></td>";
+				print "<td></td>";
+				print "</tr>";
+				}
+				print "<tr>";
+				print "<td></td>";
+				print "<td></td>";
+				print "<td></td>";
+				print "<td><b>Total Donations</b></td>";
+				print "<td><b>".count($rows)."</b></td>";
+				print "<td></td>";
+				print "<td></td>";
+				print "<td></td>";
+				print "<td></td>";
+				print "</tr>";
+				print "<tr>";
+				print "<td></td>";
+				print "<td></td>";
+				print "<td></td>";
+				print "<td><b>Total Candidates</b></td>";
+				print "<td><b>".count($candidates)."</b></td>";
+				print "<td></td>";
+				print "<td></td>";
+				print "<td></td>";
+				print "<td></td>";
+				print "</tr>";
+			?>
+			</table>
+  		<?php 
+    } else { 
+      # serach returned nothing, so prompt the user with some useful candidate based queries.
+      ?>
 			<center><h3>No records found for this search</h3></center>
-
-		<div class="row-fluid">
-		<div class="span12">
-		<h3>Browse by candidate lastname</h3>
-    <table class="table table-bordered table-hover table-condensed">
-		<tr>
-			<th>Last</th>
-			<th>First</th>
-			<th>Donations*</th>
-			<th>Amount*</th>
-			<th>Year(s)</th>
-		</tr>
-		<?php
-		$sql = " 
-			select c.last, c.first, min(c.year) minyear, max(c.year) maxyear, sum(case when d.id is null then 0 else 1 end) as donations, sum(amount) as total
-			from candidate c
-				left join candidate_return r on r.candidateid = c.id
-				left join candidate_donation d on d.returnid = r.id
-			group by c.last, c.first ";
-		$rows = getDatabase()->all($sql);
-		foreach ($rows as $r) {
-			print "<tr>
-			<td><a href=\"/election/listDonations?candidate={$r['last']}\">{$r['last']}</a></td>
-			<td>{$r['first']}</td>
-			<td>{$r['donations']}</td>
-			<td>\$".formatMoney($r['total'])."</td>
-			";
-			if ($r['minyear'] == $r['maxyear']) {
-				print "<td>{$r['minyear']}</td>";
-			} else {
-				print "<td>{$r['minyear']} - {$r['maxyear']}</td>";
+	
+			<div class="row-fluid">
+			<div class="span12">
+			<h3>Browse by candidate lastname</h3>
+	    <table class="table table-bordered table-hover table-condensed">
+			<tr>
+				<th>Last</th>
+				<th>First</th>
+				<th>Donations*</th>
+				<th>Amount*</th>
+				<th>Year(s)</th>
+			</tr>
+			<?php
+			$sql = " 
+				select c.last, c.first, min(c.year) minyear, max(c.year) maxyear, sum(case when d.id is null then 0 else 1 end) as donations, sum(amount) as total
+				from candidate c
+					left join candidate_return r on r.candidateid = c.id
+					left join candidate_donation d on d.returnid = r.id
+				group by c.last, c.first ";
+			$rows = getDatabase()->all($sql);
+			foreach ($rows as $r) {
+				print "<tr>
+				<td><a href=\"/election/listDonations?candidate={$r['last']}\">{$r['last']}</a></td>
+				<td>{$r['first']}</td>
+				<td>{$r['donations']}</td>
+				<td>\$".formatMoney($r['total'])."</td>
+				";
+				if ($r['minyear'] == $r['maxyear']) {
+					print "<td>{$r['minyear']}</td>";
+				} else {
+					print "<td>{$r['minyear']} - {$r['maxyear']}</td>";
+				}
+				print "</tr>";
 			}
-			print "</tr>";
-		}
-		?>
-		</table>
-		<p>*database is not yet complete</p>
-		</div><!-- /span -->
-		</div><!-- /row -->
+			?>
+			</table>
+			<p>*database is not yet complete</p>
+			</div><!-- /span -->
+			</div><!-- /row -->
 
-		<?php } ?>
+  		<?php 
+    } 
 
-		<?php
 		bottom();
 	}
 
