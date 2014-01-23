@@ -1155,8 +1155,26 @@ class ElectionController {
         $ll = getLatLonFromPoint($r['location']);
         $lat = $ll['lat'];
         $lon = $ll['lon'];
+
+        $pinColor = '';
+        if ($r['type'] == 0) {
+          $pinColor = 'ff0000';
+        } else if ($r['type'] == 1) {
+          $pinColor = '00ff00';
+        } else {
+          $pinColor = '0000ff';
+        }
         ?>
-        var marker<?php print $r['id']; ?> = new google.maps.Marker({ position: new google.maps.LatLng(<?php print $lat; ?>, <?php print $lon; ?>), map: map, title: '<?php print $r['amount'];?>' });
+        var pinColor = "<?php print $pinColor; ?>";
+        var pinImage = new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|" + pinColor, new google.maps.Size(21, 34), new google.maps.Point(0,0), new google.maps.Point(10, 34));
+        var pinShadow = new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_shadow", new google.maps.Size(40, 37), new google.maps.Point(0, 0), new google.maps.Point(12, 35));
+        var marker<?php print $r['id']; ?> = new google.maps.Marker({ 
+          position: new google.maps.LatLng(<?php print $lat; ?>, <?php print $lon; ?>), 
+          map: map, 
+          title: '<?php print $r['amount'];?>',
+          icon: pinImage,
+          shadow: pinShadow
+        });
         google.maps.event.addListener(marker<?php print $r['id'] ?>, 'click', function() {
           infowindow.setContent(
             '<p>Amount: <?php print $r['amount']; ?> - <a target="_blank" href="/election/donation/<?php print $r['id']; ?>">Details</a></p> ' +
