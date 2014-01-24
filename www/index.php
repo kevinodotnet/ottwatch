@@ -114,7 +114,8 @@ getRoute()->get('/meetings/votes/report/closeVotes', array('MeetingController','
 getRoute()->get('/meetings/dump/all', array('MeetingController','dump'));
 getRoute()->get('/meetings/calendar', array('MeetingController','calendarView'));
 getRoute()->get('/meetings/calendar.ics', array('MeetingController','calendar'));
-getRoute()->get('/meetings/file/(\d+)', array('MeetingController','getFileCacheUrl'));
+getRoute()->get('/meetings/file/(\d+)/(.*)', array('MeetingController','getFileCacheUrl'));
+#getRoute()->get('/meetings/file/(\d+)', array('MeetingController','getFileCacheUrl'));
 getRoute()->get('/meetings', array('MeetingController','dolist')); // meetings
 getRoute()->get('/meetings/([^\/]*)', array('MeetingController','dolist')); // meetings/CATEGORY
 getRoute()->get('/meetings/meetid/(\d+)', array('MeetingController','meetidForward')); // meetings/CATEGORY/ID

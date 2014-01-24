@@ -789,7 +789,66 @@ class MeetingController {
   }
 
   # for a given fileid, resolve the "cache" trick, then proxy download the real PDF
-  static public function getFileCacheUrl ($fileid) {
+  static public function getFileCacheUrl ($fileid,$desc) {
+
+		$file = getDatabase()->one(" 
+			select
+				f.id,
+				f.created created,
+				f.title filetitle,
+				i.title itemtitle,
+				m.meetid,
+				m.starttime,
+				m.category
+			from 
+				ifile f
+				join item i on i.id = f.itemid
+				join meeting m on m.id = i.meetingid
+			where 
+				f.fileid = :fileid
+		",array('fileid'=>$fileid));
+
+		if (!isset($file['id'])) {
+			# the fileid is now dead, as happens from time to time.
+			# give a best effort warning based on the DESC that we might now about
+			top();
+			?>
+			<h1>This file is no longer available</h1>
+			<p>
+			Most likely, the "fileid" has simply changed to something else, as happens from time to time as
+			city agendas are updated before and after a meeting.
+			</p>
+			<?php if ($desc != '') { ?>
+			<p>
+			This file description may help you locate the relevant meeting date / item, so you can lookup 
+			that meeting in <a href="/meetings/">the list of all meetings</a>.<br/>
+			</p>
+			<p>
+			<b>Description:</b> <?php print htmlentities($desc); ?>
+			</p>
+			<?php } ?>
+			<?php
+			bottom();
+			return;
+		}
+
+		# the fileid exists
+
+    $meetingtitle = meeting_category_to_title($file['category']);
+		$dbdesc = "File: {$file['filetitle']} Item: {$file['itemtitle']} Meeting: {$meetingtitle} Date: {$file['starttime']}";
+		$dbdesc = preg_replace('/[: -\.\(\)]/','_',$dbdesc);
+		$dbdesc = preg_replace('/__/','_',$dbdesc);
+		$dbdesc = preg_replace('/__/','_',$dbdesc);
+		$dbdesc = preg_replace('/__/','_',$dbdesc);
+		$dbdesc = preg_replace('/__/','_',$dbdesc);
+
+		if ($desc != $dbdesc) {
+			# coming in with mis-matched description; send them to the correc tone, which will be another HTTP GET but
+			# the next hit will get past this IF.
+			header("Location: /meetings/file/{$fileid}/{$dbdesc}");
+			return;
+		}
+
     # get the data
     $curl = 'http://app05.ottawa.ca/sirepub/view.aspx?cabinet=published_meetings&fileid=' . $fileid;
     $odata = file_get_contents($curl);
@@ -809,10 +868,21 @@ class MeetingController {
 			</p>
 			<p>
 			If the problem persists, please email or tweet me.
+			</p>
+			<?php if ($desc != '') { ?>
+			<p>
+			This file description may help you locate the relevant meeting date / item, so you can lookup 
+			that meeting in <a href="/meetings/">the list of all meetings</a>.<br/>
+			</p>
+			<p>
+			<b>Description:</b> <?php print htmlentities($desc); ?>
+			</p>
+			<?php } ?>
       <?php
 			bottom();
       return;
     }
+
     $data = preg_replace("/';.*/","",$odata);
     $data = preg_replace("/.*'/","",$data);
     $url = "http://app05.ottawa.ca/sirepub/$data";
