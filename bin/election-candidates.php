@@ -115,7 +115,7 @@ foreach ($lines as $l) {
 
   $c = " select count(1) c from candidate where ward = $ward and first = '{$candidate['first']}' and last = '{$candidate['last']}'; ";
   $i = "insert into candidate (ward,year,first,last) values ($ward,2014,'{$candidate['first']}','{$candidate['last']}'); ";
-  $u = "update candidate set nominated = (case when nominated is null then now() else nominated end) , phone = '{$candidate['phone']}', email = '{$candidate['email']}'  where year = 2014 and ward = $ward and first = '{$candidate['first']}' and last = '{$candidate['last']}'; ";
+  $u = "update candidate set nominated = (case when nominated is null then now() else nominated end) , url = '{$candidate['web']}', phone = '{$candidate['phone']}', email = '{$candidate['email']}'  where year = 2014 and ward = $ward and first = '{$candidate['first']}' and last = '{$candidate['last']}'; ";
   $key = "$ward {$candidate['first']} {$candidate['last']}";
   $sql[] = array('ward'=>$ward,'name'=>$key,'insert'=>$i,'update'=>$u,'count'=>$c,'details'=>$candidate);
 }
@@ -238,13 +238,17 @@ foreach ($lines as $l) {
 		twitter = '{$candidate['twitter']}', 
 		facebook = '{$candidate['facebook']}', 
 		url = '{$candidate['web']}', 
-		email = '{$candidate['email']}'  
+		email = '{$candidate['email']}'
 		where year = 2014 and ward = $ward and first = '{$candidate['first']}' and last = '{$candidate['last']}'; ";
-  $u = "update candidate set 
+/*  $u = "update candidate set 
 		nominated = (case when nominated is null then now() else nominated end) , phone = '{$candidate['phone']}', email = '{$candidate['email']}'  
-		where year = 2014 and ward = $ward and first = '{$candidate['first']}' and last = '{$candidate['last']}'; ";
+		where year = 2014 and ward = $ward and first = '{$candidate['first']}' and last = '{$candidate['last']}'; ";*/
   $key = "$ward {$candidate['first']} {$candidate['last']}";
   $sql[] = array('ward'=>$ward,'name'=>$key,'insert'=>$i,'update'=>$u,'count'=>$c,'details'=>$candidate);
+
+	if ($candidate['web'] != '') {
+		print "update candidate set url = '{$candidate['web']}' where (url is null or url = '') and year = 2014 and ward = {$candidate['ward']} and last = '{$candidate['last']}'; \n";
+	}
 
   #pr($candidate);
 }
