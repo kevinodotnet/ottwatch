@@ -41,6 +41,87 @@ class ElectionController {
   const year = 2014;
   const prevyear = 2010;
 
+	public static function tmp() {
+		top();
+
+		if (!LoginController::isLoggedIn()) { 
+			print "Not logged in!";
+			bottom();
+			return;
+		}
+
+		$rows = getDatabase()->all(" select * from candidate_donation where address != '' and prov != 'BROKEN' and returnid != 18 and location is null order by rand() ");
+		if (count($rows) == 0) {
+			print "No coding to do\n";
+			bottom();
+			return;
+		}
+
+		print "<h1>".count($rows)." records to code...</h1>";
+
+		$r = $rows[0];
+
+		$r['addr'] = preg_replace("/'/","''",$r['addr']);
+		?>
+
+		<div class="row-fluid">
+
+		<div class="span6">
+			<h2>Console</h2>
+			<div id="wardmsg">
+			Postal code magic coming your way!
+			</div>
+		</div>
+
+		<div class="span6">
+			<h2>Record</h2>
+		<?php pr($r); ?>
+		</div>
+
+
+		</div><!-- /row -->
+
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=<?php print OttWatchConfig::GOOGLE_API_KEY; ?>&sensor=false"></script>
+		<script>
+      var geocoder = new google.maps.Geocoder();
+      var addr = "<?php print "{$r['address']}, {$r['city']}, {$r['prov']}"; ?>";
+      geocoder.geocode({address: addr},
+        function(results, status) { 
+          if (status != 'OK') {
+            $('#wardmsg').html('Error mapping address');
+            return;
+          }
+          $('#wardmsg').html('GEO worked');
+          lat = results[0].geometry.location.lat();
+          lon = results[0].geometry.location.lng();
+					googlepostal = '';
+					console.log(results);
+					results[0].address_components.forEach(function(entry){
+						if (entry.types[0] == 'postal_code') {
+							googlepostal = entry.long_name;
+						}
+					});
+					$.post( '/election/processDonation', 
+						{ 
+							ajax: 1, 
+							id: <?php print $r['id']; ?>, 
+							lat: lat,
+							lon: lon
+						} , function( data ) {
+	            $('#wardmsg').html(data);
+							location.reload(); 
+					});
+        }
+      );
+
+			$(document).ready( function() { 
+				setTimeout(function() { location.reload(); }, 2000); 
+			}); 
+		</script>
+		<?php
+		bottom();
+	}
+
 	public static function getReturnPagesDir($year,$filename) {
 		$filename = preg_replace('/\.pdf/','',$filename);
 		return OttWatchConfig::FILE_DIR."/election/$year/financial_returns/$filename";
@@ -740,9 +821,6 @@ class ElectionController {
 
 			?>
 			<center>
-			<div style="float: right;">
-			<?php renderShareLinks("Help me do some data-entry to improve transparency. {$remaining['c']} donation records to go...",'/election/processDonation/'); ?>
-			</div>
 			<h1>Campaign Donation Data-Entry</h1>
 			<!--
 			<p class="lead">
@@ -904,6 +982,24 @@ class ElectionController {
 			unset($_POST['ajax']);
 		}
 
+		foreach ($_POST as $k => $v) {
+			if ($k == 'postal') {
+				$_POST[$k] = strtoupper(preg_replace('/ /','',$_POST[$k]));
+			}
+			if ($v == '') {
+				unset($_POST[$k]);
+			}
+		}
+
+		$geo = 0;
+		if (isset($_POST['lat'])) {
+			$geo = 1;
+			$lat = $_POST['lat'];
+			$lon = $_POST['lon'];
+			unset($_POST['lat']);
+			unset($_POST['lon']);
+		}
+
 		# do not allow mutation of the FK
 		$returnid = $_POST['returnid'];
 		unset($_POST['returnid']);
@@ -922,10 +1018,18 @@ class ElectionController {
  		db_update('candidate_donation',$_POST,'id');
 
 		// normalize, the bulk lazy way!
-		getDatabase()->execute(" update candidate_donation set postal = replace(upper(postal),' ','') where postal != upper(postal) or postal like '% %' ");
+		// getDatabase()->execute(" update candidate_donation set postal = replace(upper(postal),' ','') where postal != upper(postal) or postal like '% %' ");
+
+		// assume 'burn' the location on save, for now
+		getDatabase()->execute(" update candidate_donation set location = null where id = :id ",array('id'=>$_POST['id']));
+
+		if ($geo) {
+			getDatabase()->execute(" update candidate_donation set location = PointFromText('POINT($lon $lat)') where id = :id ",array('id'=>$_POST['id']));
+		}
 
 		if ($ajax) {
-			print "ok";
+			$after = getDatabase()->one(" select id,postal,astext(location) location from candidate_donation where id = :id ",array('id'=>$_POST['id']));
+			pr($after);
 			return;
 		}
 
@@ -1052,7 +1156,9 @@ class ElectionController {
 		<h1>Campaign Donations Report</h1>
     </div>
 		<div class="span6">
+		<!--
 		<p class="lead">Like this data? <a href="/election/processDonation/">Help create more of it</a> - 10 seconds at a time.</p>
+		-->
 		<p><i>Note: this report may not include all donations. The digitization of PDF documents is ongoing.</i></p>
 		<p>
 			Download all donations: 
@@ -1090,8 +1196,6 @@ class ElectionController {
 
 		<?php 
     if (count($rows) > 0) { 
-			foreach ($rows as $r) {
-      }
 
       if ($mapMode > 0) {
 
@@ -1131,7 +1235,7 @@ class ElectionController {
 
 			var bounds = new google.maps.LatLngBounds();
 			<?php
-      foreach ($rows as $r) { 
+      foreach ($rows as $r) {
         if ($r['location'] == '') { 
           continue; 
         }
@@ -1185,6 +1289,15 @@ class ElectionController {
         $ll = getLatLonFromPoint($r['location']);
         $lat = $ll['lat'];
         $lon = $ll['lon'];
+
+				$randShift = rand(0,10000);
+				if ($randShift % 2 == 0) { $randShift = $randShift * -1; }
+				$randShift = $randShift/100000000;
+				$lat += $randShift;
+				$randShift = rand(0,10000);
+				if ($randShift % 2 == 0) { $randShift = $randShift * -1; }
+				$randShift = $randShift/100000000;
+				$lon += $randShift;
 
         ?>
         var pinColor = "<?php print $pinColor; ?>";
@@ -1374,6 +1487,7 @@ class ElectionController {
 				d.page,
 				d.x,
 				d.y,
+				astext(d.location) as geo,
 				c.year,
 				c.ward,
 				c.first,
@@ -1387,6 +1501,7 @@ class ElectionController {
 			where d.id = $id
 		";
 		$r = getDatabase()->one($sql);
+
 		$next = getDatabase()->one(" select min(y) y from candidate_donation where returnid = {$r['retid']} and page = {$r['page']} and y > {$r['y']} ");
 
 		$pages = self::getReturnPages($r['year'],$r['filename']);
@@ -1464,72 +1579,39 @@ class ElectionController {
 				<?php } ?>
 			</td>
 			</tr>
-			<?php
-			?>
 			</table>
-
-
-			<?php if (false && LoginController::isLoggedIn()) { ?>
-
-			<div id="wardmsg">
-				Postal code magic coming your way!
-			</div>
-
-    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=<?php print OttWatchConfig::GOOGLE_API_KEY; ?>&sensor=false"></script>
-		<script>
-      var geocoder = new google.maps.Geocoder();
-      var addr = '<?php print "{$r['address']}, {$r['city']}, {$r['prov']}"; ?>';
-      geocoder.geocode({address: addr},
-        function(results, status) { 
-          if (status != 'OK') {
-            $('#wardmsg').html('Error mapping address');
-            return;
-          }
-          lat = results[0].geometry.location.lat();
-          lon = results[0].geometry.location.lng();
-					sql = " update candidate_donation set location = PointFromText('POINT("+lon+" "+lat+")') where id = " + <?php print $r['id']; ?> + "; ";
-          $('#wardmsg').html('GEO worked<br/>' + sql);
-					console.log(results);
-					return;
-					results[0].address_components.forEach(function(entry){
-						console.log('type: ' + entry.types[0]);
-						if (entry.types[0] == 'postal_code') {
-							googlepostal = entry.long_name;
-	            $('#wardmsg').html('found a postal code');
-	            $('#wardmsg').html(googlepostal);
-							if (googlepostal != '<?php print $r['postal']; ?>') {
-		            $('#wardmsg').html('Sending new postal code to the database');
-								$.post( '/election/processDonation', { ajax: 1, id: <?php print $r['id']; ?>, postal: googlepostal } , function( data ) {
-			            $('#wardmsg').html(data);
-								});
-							} else {
-		            $('#wardmsg').html('no updated required: ' . googlepostal);
-							}
-						}
-					});
-        }
-      );
-		</script>
-
-			<?php } ?>
 
 
 			</div>
 			<div class="span6">
+
+			<?php
+			if ($r['geo'] != '') {
+      $ll = getLatLonFromPoint($r['geo']);
+      $lat = $ll['lat'];
+      $lon = $ll['lon'];
+			?>
+	    <div id="map_canvas" style="width:100%; height:300px;"></div>
+	    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=<?php print OttWatchConfig::GOOGLE_API_KEY; ?>&sensor=false"></script>
+	    <script>
+	    var mapOptions = { center: new google.maps.LatLng(<?php print $lat; ?>,<?php print $lon; ?>), zoom: 14, mapTypeId: google.maps.MapTypeId.ROADMAP };
+	    map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
+      var marker = new google.maps.Marker({ 
+        position: new google.maps.LatLng(<?php print $lat; ?>, <?php print $lon; ?>), 
+        map: map
+      });
+			</script>
+			<?php } // map ?>
+
+			</div>
+			</div>
+
 			<?php disqus(); ?>
-			</div>
-			</div>
+
 			<?php
 		bottom();
 	}
 
 }
-
-/*
-
-
-
-
-*/
 
 ?>

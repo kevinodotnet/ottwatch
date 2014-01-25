@@ -146,6 +146,7 @@ getRoute()->get('/election/processDonation/*', array('ElectionController','proce
 getRoute()->post('/election/processDonation/*', array('ElectionController','processDonationSave'));
 getRoute()->get('/election/listDonations', array('ElectionController','listDonations'));
 getRoute()->get('/election/donation/(\d+)', array('ElectionController','showDonation'));
+getRoute()->get('/election/tmp', array('ElectionController','tmp'));
 
 getRoute()->get('.*', 'error404');
 getRoute()->run();
@@ -544,7 +545,7 @@ if (!LoginController::isLoggedIn()) {
 <?php
 if ($remaining == 0) {
 	?>
-	<li><a style="" href="<?php print $OTT_WWW; ?>/election/processDonation/">0 donations remaining</a></li>
+	<!--<li><a style="" href="<?php print $OTT_WWW; ?>/election/processDonation/">0 donations remaining</a></li>-->
 	<?php
 } else {
 	?>
