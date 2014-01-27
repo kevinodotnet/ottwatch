@@ -78,6 +78,7 @@ return;
 # MAYOR
 ##########################################################################################
 
+if (false) {
 $url = "http://ottawa.ca/en/city-hall/your-city-government/elections/mayor";
 $html = file_get_contents($url);
 $html = ConsultationController::getCityContent($html,"<h3><table><tr><td><th>");
@@ -121,12 +122,17 @@ foreach ($lines as $l) {
   $sql[] = array('ward'=>$ward,'name'=>$key,'insert'=>$i,'update'=>$u,'count'=>$c,'details'=>$candidate);
 }
 
+}
+
 ##########################################################################################
 # CANDIDATES
 ##########################################################################################
 
 $url = "http://ottawa.ca/en/city-hall/your-city-government/elections/councillor";
-$html = file_get_contents($url);
+$html = @file_get_contents($url);
+if (strlen($html) == 0) {
+	exit;
+}
 $html = ConsultationController::getCityContent($html,"<h3><table><tr><td><th>");
 
 $html = preg_replace("/\n/",'',$html);
