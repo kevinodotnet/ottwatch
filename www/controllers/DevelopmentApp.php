@@ -426,7 +426,11 @@ class DevelopmentAppController {
     foreach ($pages as $p) {
       $changed = 0;
       $url="http://app01.ottawa.ca/postingplans/searchResults.jsf?lang=en&action=sort&sortField=objectCurrentStatusDate&keyword=.&page=$p";
-      $html = file_get_contents($url);
+      $html = @file_get_contents($url);
+      if (strlen($html) == 0) {
+        # http failure; no worries; will be back soon.
+        continue;
+      }
       #file_put_contents("p.html",$html);
       #$html = file_get_contents("p.html");
       $lines = explode("\n",$html); 
