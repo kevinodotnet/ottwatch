@@ -392,7 +392,10 @@ class DevelopmentAppController {
     # get dev-apps sorted by status update.
     # results are sorted with oldtest date first, so then jump to last page, and start scanning backwards
     # until no dates on page are "new"
-    $html = file_get_contents('http://app01.ottawa.ca/postingplans/searchResults.jsf?lang=en&newReq=true&action=sort&sortField=objectCurrentStatusDate&keyword=.');
+    $html = @file_get_contents('http://app01.ottawa.ca/postingplans/searchResults.jsf?lang=en&newReq=true&action=sort&sortField=objectCurrentStatusDate&keyword=.');
+		if (strlen($html) == 0) {
+			return;
+		}
     #file_put_contents("t.html",$html);
     #$html = file_get_contents("t.html");
 
