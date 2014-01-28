@@ -284,7 +284,11 @@ class ConsultationController {
     $row = getDatabase()->one(" select * from consultation where url = :url ",array('url'=>$url));
 
     # read individual documents.
-    $xml = simplexml_load_string($html);
+    $xml = @simplexml_load_string($html);
+		if (!is_object($xml)) {
+			# nothign to crawl
+			return;
+		}
     $div = $xml->xpath('//div[@id="cityott-content"]');
     $div = simplexml_load_string($div[0]->asXML());
     $links = $div->xpath('//a');

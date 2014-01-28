@@ -17,7 +17,7 @@ $total = 0;
 $matched = 0;
 
 #$rows = getDatabase()->all(" select * from candidate_donation where city = 'Ottawa' and location is null order by updated desc ");
-$rows = getDatabase()->all(" select * from candidate_donation where returnid = 101 and location is null order by id ");
+$rows = getDatabase()->all(" select * from candidate_donation where returnid = 18 and location is null order by rand() limit 10  ");
 foreach ($rows as $row) {
 	$total ++;
 	if (setDonorLocation($row)) {
@@ -28,7 +28,14 @@ foreach ($rows as $row) {
 
 function setDonorLocation($row) {
 
-	print "id: {$row['id']} ADDRESS: {$row['address']} CITY: {$r['city']} POSTAL: {$row['postal']} NAME: {$row['name']}\n";
+	if ($row['city'] == '') { $row['city'] = 'Ottawa'; }
+	if ($row['prov'] == '') { $row['prov'] = 'Ontario'; }
+
+	print "--------------------------------------------------------------------------------------------\n";
+	print "id: {$row['id']} ADDRESS: {$row['address']} CITY: {$row['city']} POSTAL: {$row['postal']} NAME: {$row['name']}\n";
+	print "\n";
+	print "    http://beta.ottwatch.ca/election/donation/{$row['id']}\n";
+	print "\n";
 	
 	$debug = 0;
 	$postal = $row['postal'];

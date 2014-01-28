@@ -146,6 +146,7 @@ getRoute()->get('/election/processDonation/*', array('ElectionController','proce
 getRoute()->post('/election/processDonation/*', array('ElectionController','processDonationSave'));
 getRoute()->get('/election/listDonations', array('ElectionController','listDonations'));
 getRoute()->get('/election/donation/(\d+)', array('ElectionController','showDonation'));
+getRoute()->get('/election/tmp', array('ElectionController','tmp'));
 
 getRoute()->get('.*', 'error404');
 getRoute()->run();
@@ -241,6 +242,15 @@ function dashboard() {
   </center>
   </a>
   </div>
+
+		  <div style="margin-top: 10px; background: #08c; color: #ffffff; padding: 20px; font-size: 200%; border-radius: 4px;">
+		  <center>
+		  <a href="/election/listDonations" style="color: #ffffff;">
+		  <i class="fa fa-search fa-4" style="font-size: 125%;"></i>
+			Campaign Donations
+		  </center>
+		  </a>
+		  </div>
 
   <div style="margin-top: 10px; background: #08c; color: #ffffff; padding: 20px; font-size: 125%; border-radius: 4px;">
   <center>
@@ -544,7 +554,7 @@ if (!LoginController::isLoggedIn()) {
 <?php
 if ($remaining == 0) {
 	?>
-	<li><a style="" href="<?php print $OTT_WWW; ?>/election/processDonation/">0 donations remaining</a></li>
+	<!--<li><a style="" href="<?php print $OTT_WWW; ?>/election/processDonation/">0 donations remaining</a></li>-->
 	<?php
 } else {
 	?>

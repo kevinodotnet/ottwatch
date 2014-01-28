@@ -22,7 +22,11 @@ set_include_path(get_include_path() . PATH_SEPARATOR . "$dirname/../www");
 require_once('include.php');
 require_once('twitteroauth.php');
 
-$html = file_get_contents($url);
+$html = @file_get_contents($url);
+if (strlen($html) == 0) {
+	# skip; no data
+	return;
+}
 $html = ConsultationController::getCityContent($html,'');
 $md5 = md5($html);
 

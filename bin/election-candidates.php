@@ -78,6 +78,7 @@ return;
 # MAYOR
 ##########################################################################################
 
+if (false) {
 $url = "http://ottawa.ca/en/city-hall/your-city-government/elections/mayor";
 $html = file_get_contents($url);
 $html = ConsultationController::getCityContent($html,"<h3><table><tr><td><th>");
@@ -112,12 +113,15 @@ foreach ($lines as $l) {
   $candidate['last'] = $names[count($names)-1];
   $candidate['phone'] = @$row[1];
   $candidate['email'] = @$row[2];
+  $candidate['web'] = '';
 
   $c = " select count(1) c from candidate where ward = $ward and first = '{$candidate['first']}' and last = '{$candidate['last']}'; ";
   $i = "insert into candidate (ward,year,first,last) values ($ward,2014,'{$candidate['first']}','{$candidate['last']}'); ";
-  $u = "update candidate set nominated = (case when nominated is null then now() else nominated end) , phone = '{$candidate['phone']}', email = '{$candidate['email']}'  where year = 2014 and ward = $ward and first = '{$candidate['first']}' and last = '{$candidate['last']}'; ";
+  $u = "update candidate set nominated = (case when nominated is null then now() else nominated end) , url = '{$candidate['web']}', phone = '{$candidate['phone']}', email = '{$candidate['email']}'  where year = 2014 and ward = $ward and first = '{$candidate['first']}' and last = '{$candidate['last']}'; ";
   $key = "$ward {$candidate['first']} {$candidate['last']}";
   $sql[] = array('ward'=>$ward,'name'=>$key,'insert'=>$i,'update'=>$u,'count'=>$c,'details'=>$candidate);
+}
+
 }
 
 ##########################################################################################
@@ -125,7 +129,10 @@ foreach ($lines as $l) {
 ##########################################################################################
 
 $url = "http://ottawa.ca/en/city-hall/your-city-government/elections/councillor";
-$html = file_get_contents($url);
+$html = @file_get_contents($url);
+if (strlen($html) == 0) {
+	exit;
+}
 $html = ConsultationController::getCityContent($html,"<h3><table><tr><td><th>");
 
 $html = preg_replace("/\n/",'',$html);
@@ -238,13 +245,17 @@ foreach ($lines as $l) {
 		twitter = '{$candidate['twitter']}', 
 		facebook = '{$candidate['facebook']}', 
 		url = '{$candidate['web']}', 
-		email = '{$candidate['email']}'  
+		email = '{$candidate['email']}'
 		where year = 2014 and ward = $ward and first = '{$candidate['first']}' and last = '{$candidate['last']}'; ";
-  $u = "update candidate set 
+/*  $u = "update candidate set 
 		nominated = (case when nominated is null then now() else nominated end) , phone = '{$candidate['phone']}', email = '{$candidate['email']}'  
-		where year = 2014 and ward = $ward and first = '{$candidate['first']}' and last = '{$candidate['last']}'; ";
+		where year = 2014 and ward = $ward and first = '{$candidate['first']}' and last = '{$candidate['last']}'; ";*/
   $key = "$ward {$candidate['first']} {$candidate['last']}";
   $sql[] = array('ward'=>$ward,'name'=>$key,'insert'=>$i,'update'=>$u,'count'=>$c,'details'=>$candidate);
+
+#	if ($candidate['web'] != '') {
+#		print "update candidate set url = '{$candidate['web']}' where (url is null or url = '') and year = 2014 and ward = {$candidate['ward']} and last = '{$candidate['last']}'; \n";
+#	}
 
   #pr($candidate);
 }
