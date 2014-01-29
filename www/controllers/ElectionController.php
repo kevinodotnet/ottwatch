@@ -1034,8 +1034,8 @@ class ElectionController {
 		}
 
 		if (LoginController::isLoggedIn()) {
-			header("Location: /election/processDonation/?id=".$_POST['id']);
-			return;
+#			header("Location: /election/processDonation/?id=".$_POST['id']);
+#			return;
 		}
 
 		// send them back for MOAR!
