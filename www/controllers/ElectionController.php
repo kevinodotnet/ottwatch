@@ -761,7 +761,7 @@ class ElectionController {
           }
           ?>
 	      };
-	      imageObj.src = '<?php print "?png=1&page=$page"; ?>';
+	      imageObj.src = '<?php print "?png=1&page=$page&rand=".rand(0,20000); ?>';
         canvas.addEventListener('click', function(event) { 
           c = document.getElementById('canvas');
           x = event.pageX - c.offsetLeft;
