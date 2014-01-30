@@ -677,6 +677,9 @@ class ElectionController {
       $values['x'] = $_GET['x'];
       $values['y'] = $_GET['y'];
       $values['page'] = $page;
+			if (LoginController::isLoggedIn()) {
+	      $values['peopleid'] = getSession()->get("user_id");
+			}
       $id = db_insert('candidate_donation',$values);
 			return;
 		}
