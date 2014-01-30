@@ -57,7 +57,7 @@ class ApiController {
             } else {
 	            $('#wardmsg').html(
 	              postal + 
-									' is in <b><a target="_blank" href="javascript:window.top.location.href = \'<?php print OttWatchConfig::WWW; ?>/election/ward/'+data.ward.wardnum+'\'; return false;">' + data.ward.ward + '</a></b>' + 
+									' is in <b><a target="_blank" href="javascript:window.top.location.href = \'<?php print OttWatchConfig::WWW; ?>/election/ward/'+data.ward.wardnum+'?fromFinder=1\'; return false;">' + data.ward.ward + '</a></b>' + 
 									' (<a href="javascript:findwardagain(); return false;">again</a>)'
 	            );
             }
