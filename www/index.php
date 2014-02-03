@@ -148,6 +148,11 @@ getRoute()->get('/election/listDonations', array('ElectionController','listDonat
 getRoute()->get('/election/donation/(\d+)', array('ElectionController','showDonation'));
 getRoute()->get('/election/tmp', array('ElectionController','tmp'));
 
+getRoute()->get('/election/question/(\d+)/(.*)', array('ElectionController','showQuestion'));
+getRoute()->get('/election/question/add', array('ElectionController','questionAdd'));
+getRoute()->post('/election/question/add', array('ElectionController','questionAddPost'));
+getRoute()->post('/election/question/answer', array('ElectionController','saveAnswer'));
+
 getRoute()->get('.*', 'error404');
 getRoute()->run();
 

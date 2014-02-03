@@ -1615,6 +1615,203 @@ class ElectionController {
 		bottom();
 	}
 
+  public static function questionAdd() {
+		if (!LoginController::blockUnlessLoggedIn()) { 
+      return;
+    }
+    top();
+
+    ?>
+    <h3>Submit an Election Question</h3>
+
+    <form class="form-horizontal" method="post">
+
+    <div class="control-group">
+    <label class="control-label" for="inputtitle">Question Title</label>
+    <div class="controls">
+    <input type="text" id="inputtitle" name="title" placeholder="" class="input-block-level">
+    <i>Try to ask the entire question in a tweetable-sized title. You can elaborate in the 'body' if need be. (100 chars max)</i>
+    </div>
+    </div>
+
+    <div class="control-group">
+    <label class="control-label" for="inputbody">Question Body</label>
+    <div class="controls">
+    <textarea id="inputbody" name="body" class="input-block-level" rows="5"></textarea>
+    <i>You can expand on the question body if need be. Short is better. 500-characters max</i>
+    </div>
+    </div>
+
+    <div class="control-group">
+    <label class="control-label" for="inputrace">Race</label>
+    <div class="controls">
+    <select name="race" class="input-block-level">
+      <option value="-1">City Wide (mayor and councillor races)</option>
+      <option value="0">Mayor Race Only</option>
+      <?php
+      $races = getDatabase()->all(" select ward,wardnum from electedofficials where ward != '' order by ward ");
+      foreach ($races as $r) {
+        ?>
+        <option value="<?php print $r['wardnum']; ?>"><?php print $r['ward']; ?></option>
+        <?php
+      }
+      ?>
+    </select>
+    <i>Which candidates should answer this question? All candidates? Just the mayors? If this is a hyper-local question about your neighbourhood, please choose your local ward.</i>
+    </div>
+    </div>
+
+    <div class="control-group">
+    <div class="controls">
+    <button type="submit" class="btn">Submit Question</button>
+    </div>
+    </div>
+
+    </form>
+    <?php
+    bottom();
+  }
+
+  public static function questionAddPost() {
+    $values = array();
+    $values['title'] = $_POST['title'];
+    $values['body'] = $_POST['body'];
+    $values['published'] = 1; # no pre-moderation, for now
+    $values['personid'] = getSession()->get("user_id");
+    $id = db_insert('question',$values);
+
+    $values = array();
+    $values['questionid'] = $id;
+    $values['ward'] = $_POST['race'];
+    $id = db_insert('election_question',$values);
+
+    header("Location: /election/question/$id/".urlencode($_POST['title']));
+  }
+
+  public static function saveAnswer() {
+    $values = array();
+    $values['body'] = $_POST['answer'];
+    $values['questionid'] = $_POST['questionid'];
+    $values['personid'] = getSession()->get("user_id");
+    $id = db_insert('answer',$values);
+    header("Location: /election/question/{$_POST['electionquestionid']}/");
+  }
+
+  public static function showQuestion($id,$title) {
+
+    $races = getDatabase()->all(" select ward,wardnum from electedofficials where ward != '' order by ward ");
+    $wards = array();
+    $wards[-1] = 'City Wide';
+    $wards[0] = 'Mayor';
+    foreach ($races as $r) {
+      $wards[$r['wardnum']] = $r['ward'];
+    }
+
+    $q = getDatabase()->one(" 
+      select e.ward,q.id,title,body,published,e.id electionquestionid,p.name,q.created
+      from election_question e 
+        join question q on q.id = e.questionid 
+        join people p on p.id = q.personid
+      where published = 1 and e.id = :id ",array('id'=>$id));
+    if (!isset($q['title'])) {
+      top();
+      ?>
+      <h1>Not found</h1>
+      This question was not found, or it has not been published yet. Or it was un-published after the fact by the moderator. Or all hell has broken loose.
+      <?php
+      bottom();
+      return;
+    }
+    $dbtitle = $q['title'];
+    if ($dbtitle != $title) {
+      # make title match the database
+      header("Location: /election/question/$id/".urlencode($dbtitle));
+      return;
+    }
+
+    $ward = $q['ward'];
+    if ($ward == -1) {
+      $wardname = 'City Wide';
+      $candidates = getDatabase()->all(" select * from candidate where nominated is not null and year = " . self::year . " order by ward,rand() ");
+    } else if ($ward == 0) {
+      $wardname = 'Mayor';
+      $candidates = getDatabase()->all(" select * from candidate where nominated is not null and ward = 0 and year = " . self::year . " order by ward,rand() ");
+    } else {
+      $candidates = getDatabase()->all(" select * from candidate where nominated is not null and ward = $ward and year = " . self::year . " order by ward,rand() ");
+      $wardname = getDatabase()->one(" select ward from electedofficials where wardnum = $ward ");
+      $wardname = $wardname['ward'];
+    }
+
+    top("Election Question: $title");
+    ?>
+
+    <div class="row-fluid">
+    <div class="span8">
+
+    <div style="background: #f0f0f0; padding: 20px; border-radius: 5px; margin-bottom: 5px;">
+    <h1><?php print htmlentities($title); ?></h1>
+    <p style="float: right; text-align: right;">Asked by <b><?php print htmlentities($q['name']); ?></b><br/><?php print $q['created']; ?></p>
+    <p class="lead"><?php print htmlentities($q['body']); ?></p>
+    </div>
+
+    <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
+    <?php
+    $prevward = -1;
+    foreach ($candidates as $c) {
+      if ($prevward != $c['ward']) {
+        ?>
+        <tr>
+        <th colspan="2"><h3>Ward <?php print $c['ward']; ?>: <?php print $wards[$c['ward']]; ?></h3></th>
+        </tr>
+        <?php
+      }
+      $prevward = $c['ward'];
+      ?>
+      <tr>
+      <th><h5><?php print "{$c['first']} {$c['last']}\n"; ?></h5></th>
+      <td>
+      <?php
+      if (!isset($c['personid'])) {
+        ?>
+        <i><?php print $c['first']; ?> has not registered on OttWatch to answer questions. Please encourage the candidate to do so!</i>
+        </td>
+        </tr>
+        <?php
+        continue;
+      }
+      $answer = getDatabase()->one(" select * from answer where questionid = {$q['id']} and personid = {$c['personid']} order by created desc limit 1 ");
+      if (LoginController::isLoggedIn() && getSession()->get("user_id") == $c['personid']) {
+        ?>
+        <form class="form-incine" action="/election/question/answer" method="post">
+        <input type="hidden" name="questionid" value="<?php print $q['id']; ?>"/>
+        <input type="hidden" name="electionquestionid" value="<?php print $q['electionquestionid']; ?>"/>
+        <textarea class="input-block-level" rows="10" name="answer"><?php print htmlentities($answer['body']); ?></textarea>
+    		<input class="btn btn-success" type="submit" value="Save Answer"/>
+        </form>
+        <?php
+        continue;
+      }
+      ?>
+      <blockquote><?php print htmlentities($answer['body']); ?><br/><i><?php print substr($answer['created'],0,10); ?></i></blockquote>
+      </td>
+      </tr>
+      <?php
+    }
+    ?>
+    </table>
+    </div><!-- /span -->
+    <div class="span4">
+    <a href="/election/question/add"><h3>Want to ask a question?</h3></a>
+    Anyone can ask a question using OttWatch. After logging in with Twitter or Facebook create a question title
+    and body, then put it to either all candidates ("City-Wide"), just the mayoral candidates, or make it specific
+    to one ward. <a href="/election/question/add">Ask your question</a>.
+    </div><!-- /span -->
+    </div><!-- /row -->
+    <?php
+    bottom();
+
+  }
+
 }
 
 ?>

@@ -374,7 +374,9 @@ create table candidate (
   facebook varchar(100),
   nominated datetime,
 	incumbent boolean default false,
-  primary key (id)
+  personid mediumint,
+  primary key (id),
+  constraint foreign key (personid) references people (id)
 ) engine = innodb;
 
 -- note, a candidate can have multiple returns (main, plus supplementary) or no return (left join only)
@@ -457,4 +459,39 @@ create table story (
   primary key (id),
   constraint foreign key (personid) references people (id)
 ) engine = innodb;
+
+drop table if exists question;
+create table question (
+  id mediumint not null auto_increment,
+  title varchar(100) not null,
+  body varchar(500),
+  created datetime default CURRENT_TIMESTAMP,
+  updated datetime default CURRENT_TIMESTAMP,
+	published boolean default false,
+  personid mediumint not null,
+  primary key (id),
+  constraint foreign key (personid) references people (id)
+) engine = innodb;
+
+drop table if exists answer;
+create table answer (
+  id mediumint not null auto_increment,
+  questionid mediumint not null,
+  personid mediumint not null,
+  body varchar(500),
+  created datetime default CURRENT_TIMESTAMP,
+  updated datetime default CURRENT_TIMESTAMP,
+  primary key (id),
+  constraint foreign key (questionid) references question (id)
+) engine = innodb;
+
+drop table if exists election_question;
+create table election_question (
+  id mediumint not null auto_increment,
+  questionid mediumint not null,
+  ward tinyint, -- -1 for city wide, 0 for mayor, elese ward number
+  primary key (id),
+  constraint foreign key (questionid) references question (id)
+) engine = innodb;
+
 
