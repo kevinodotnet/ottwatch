@@ -135,6 +135,10 @@ $data = `wget -qO - http://app05.ottawa.ca/sirepub/rss/rss.aspx | head -1`; # fi
 #$data = file_get_contents("rss.rss");
 
 $xml = simplexml_load_string($data);
+if (!is_object($xml)) {
+  # network bubble; ignore
+  return;
+)
 $items = $xml->xpath("//item");
 
 # keep track of all meetids in the RSS (to find deleted meetings)
@@ -221,6 +225,5 @@ foreach ($rows as $r) {
 	getDatabase()->execute(" delete from meeting where id = :id ",array('id'=>$r['id']));
 
 }
-
 
 ?>
