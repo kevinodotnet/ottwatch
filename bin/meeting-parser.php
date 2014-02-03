@@ -138,7 +138,7 @@ $xml = simplexml_load_string($data);
 if (!is_object($xml)) {
   # network bubble; ignore
   return;
-)
+}
 $items = $xml->xpath("//item");
 
 # keep track of all meetids in the RSS (to find deleted meetings)
