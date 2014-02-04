@@ -460,7 +460,11 @@ create table story (
   constraint foreign key (personid) references people (id)
 ) engine = innodb;
 
+drop table if exists answer;
+drop table if exists election_question;
+drop table if exists question_vote;
 drop table if exists question;
+
 create table question (
   id mediumint not null auto_increment,
   title varchar(100) not null,
@@ -470,10 +474,9 @@ create table question (
 	published boolean default false,
   personid mediumint not null,
   primary key (id),
-  constraint foreign key (personid) references people (id)
+  constraint foreign key (personid) references people (id) on delete cascade on update cascade
 ) engine = innodb;
 
-drop table if exists question_vote;
 create table question_vote (
   id mediumint not null auto_increment,
   questionid mediumint not null,
@@ -481,12 +484,11 @@ create table question_vote (
 	vote tinyint not null,
   created datetime default CURRENT_TIMESTAMP,
   primary key (id),
-  constraint foreign key (questionid) references question (id),
-  constraint foreign key (personid) references people (id),
+  constraint foreign key (questionid) references question (id) on delete cascade on update cascade,
+  constraint foreign key (personid) references people (id) on delete cascade on update cascade,
 	unique index question_vote_in1 (questionid,personid)
 ) engine = innodb;
 
-drop table if exists answer;
 create table answer (
   id mediumint not null auto_increment,
   questionid mediumint not null,
@@ -495,16 +497,15 @@ create table answer (
   created datetime default CURRENT_TIMESTAMP,
   updated datetime default CURRENT_TIMESTAMP,
   primary key (id),
-  constraint foreign key (questionid) references question (id)
+  constraint foreign key (questionid) references question (id) on delete cascade on update cascade
 ) engine = innodb;
 
-drop table if exists election_question;
 create table election_question (
   id mediumint not null auto_increment,
   questionid mediumint not null,
   ward tinyint, -- -1 for city wide, 0 for mayor, elese ward number
   primary key (id),
-  constraint foreign key (questionid) references question (id)
+  constraint foreign key (questionid) references question (id) on delete cascade on update cascade
 ) engine = innodb;
 
 
