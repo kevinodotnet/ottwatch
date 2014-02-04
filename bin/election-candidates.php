@@ -7,6 +7,32 @@ set_include_path(get_include_path() . PATH_SEPARATOR . "$dirname/../lib");
 set_include_path(get_include_path() . PATH_SEPARATOR . "$dirname/../www");
 require_once('include.php');
 
+#
+# Create PEOPLE accounts for candidates, when needed.
+#
+function createPeople() {
+	$rows = getDatabase()->all(" select * from candidate where email > '' and personid is null and nominated is not null and year = 2014 ");
+	foreach ($rows as $r) {
+		$values = array();
+		$values['name'] = "{$r['first']} {$r['last']}";
+		$values['email'] = $r['email'];
+		print "Saving person for {$values['name']}\n";
+		pr($values);
+		$id = db_insert('people',$values);
+		$values = array();
+		$values['id'] = $id;
+		$values['password'] = md5($id.":".rand(0,20000));
+		db_update('people',$values,'id');
+		$values = array();
+		$values['id'] = $r['id'];
+		$values['personid'] = $id;
+		db_update('candidate',$values,'id');
+	}
+}
+
+createPeople();
+exit;
+
 ##########################################################################################
 # TRUSTEE
 ##########################################################################################
@@ -322,6 +348,9 @@ if (count($removed) > 0) {
 	print "\nNeed to remove from database\n";
 	pr($removed);
 }
+
+
+createPeople();
 
 return;
 
