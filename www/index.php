@@ -520,6 +520,16 @@ function top($title = '',$quiet = false) {
 function copyToClipboard (text) {
   window.prompt ("Copy to clipboard: Ctrl+C, Enter", text);
 }
+function voteOnQuestion(i,v) {
+	$.post( '/election/question/vote', 
+		{ 
+			ajax: 1, 
+			id: i, 
+			vote: v
+		} , function( data ) {
+			console.log(data);
+	});
+}
 </script>
 </head>
 <body>

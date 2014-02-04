@@ -267,14 +267,17 @@ class LoginController {
     ?>
     <div class="row-fluid">
 
-    <div class="span4">
+    <div class="span4 offset4" style="text-align: center;">
     <h3>Sign in with Social Media</h3>
     <a class="btn btn-primary" href="login/twitter">Sign in with Twitter</a><br/><br/>
     <a class="btn btn-primary" href="login/facebook">Sign in with Facebook</a>
     </div>
 
-    <div class="span4">
-    <h3>Login</h3>
+    </div>
+    <div class="row-fluid">
+
+    <div class="span4 offset4" style="margin-top: 50px;">
+    <h3 style="text-align: center;">Admins Only</h3>
     <form class="form-horizontal" method="post">
 
     <?php if ($err != '') { ?>

@@ -464,7 +464,7 @@ class ElectionController {
 		  </center>
 		  </a>
 		  </div>
-			<!--
+
 		  <div style="background: #08c; color: #ffffff; padding: 10px; font-size: 125%; border-radius: 4px; margin-top: 5px;">
 		  <center>
 		  <a href="/election/question/list" style="color: #ffffff;">
@@ -473,7 +473,7 @@ class ElectionController {
 		  </center>
 		  </a>
 		  </div>
-			-->
+
     </div>
     </div>
 
@@ -1709,6 +1709,8 @@ class ElectionController {
     $values['ward'] = $_POST['race'];
     $id = db_insert('election_question',$values);
 
+    sendEmail("ottwatch@gmail.com","New question ($id)", "link: ".OttWatchConfig::WWW."/election/question/$id/ \n\ntitle: {$_POST['title']}\n\nbody: {$_POST['body']}\n\n");
+
     header("Location: /election/question/$id/".urlencode($_POST['title']));
   }
 
@@ -1775,17 +1777,6 @@ class ElectionController {
     <div class="span8">
 
 		<script>
-		function vote(v) {
-			$.post( '/election/question/vote', 
-				{ 
-					ajax: 1, 
-					id: <?php print $q['id']; ?>, 
-					vote: v
-				} , function( data ) {
-					console.log(data);
-					// location.reload(); 
-			});
-		}
 		</script>
 
     <div style="background: #f0f0f0; padding: 20px; border-radius: 5px; margin-bottom: 5px;">
@@ -1794,8 +1785,8 @@ class ElectionController {
 		Asked by <b><?php print htmlentities($q['name']); ?></b><br/><?php print $q['created']; ?><br/>
 		<?php if (LoginController::isLoggedIn()) { ?>
 			<span style="font-size: 150%;">
-			<a href="javascript:vote(1);"><i class="fa fa-thumbs-o-up"></i></a>
-			<a href="javascript:vote(-1);"><i class="fa fa-thumbs-o-down"></i></a>
+			<a href="javascript:voteOnQuestion(<?php print $q['id']; ?>,1);"><i class="fa fa-thumbs-o-up"></i></a>
+			<a href="javascript:voteOnQuestion(<?php print $q['id']; ?>,-1);"><i class="fa fa-thumbs-o-down"></i></a>
 			</span><br/>
 		<?php } else { ?>
 		<a href="<?php print LoginController::getLoginUrl(); ?>">Login to vote this question up or down</a><br/>
@@ -1806,8 +1797,9 @@ class ElectionController {
     <p class="lead"><?php print htmlentities($q['body']); ?></p>
     </div>
 
-		<!--<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>-->
+		<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
 
+		<?php if (false) { ?>
     <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
     <?php
     $prevward = -1;
@@ -1815,7 +1807,7 @@ class ElectionController {
       if ($prevward != $c['ward']) {
         ?>
         <tr>
-        <th colspan="2"><h3>Ward <?php print $c['ward']; ?>: <?php print $wards[$c['ward']]; ?></h3></th>
+        <th colspan="2"><h3><a href="/election/ward/<?php print $c['ward']; ?>">Ward <?php print $c['ward']; ?>: <?php print $wards[$c['ward']]; ?></a></h3></th>
         </tr>
         <?php
       }
@@ -1842,29 +1834,37 @@ class ElectionController {
 			$answer = array();
       if (isset($c['personid'])) {
 	      $answer = getDatabase()->one(" select * from answer where questionid = {$q['id']} and personid = {$c['personid']} order by created desc limit 1 ");
-			}
-			if (!isset($answer['body']) || $answer['body'] == '') {
-        ?>
-        <i><?php print $c['first']; ?> has not registered on OttWatch to answer questions. Please encourage the candidate to do so!</i>
-				<?php
-				if ($c['twitter'] != '') {
-					$text = ".@{$c['twitter']} I want to know your answer: {$q['title']}";
-					$url = OttWatchConfig::WWW."/election/question/".$id."/".urlencode($title)."#candidate".$c['id'];
+				if (!isset($answer['body']) || $answer['body'] == '') {
+	        ?>
+					No answer provided (yet).
+					<?php
+					if ($c['twitter'] != '') {
+						$text = ".@{$c['twitter']} I want to know: {$q['title']}";
+						$url = OttWatchConfig::WWW."/election/question/".$id."/".urlencode($title);
+						?>
+						Remind <?php print $c['first']; ?> to answer!<br/>
+						<a target="_blank" href="mailto:<?php print $c['email']; ?>?Subject=Election Question: <?php print htmlentities($q['title']); ?>&Body=<?php print $url; ?>">Email <?php print $c['email']; ?></a><br/>
+						Twitter:
+						<a href="https://twitter.com/share" class="twitter-share-button" 
+							data-text="<?php print htmlentities($text); ?>"
+							data-count="none"
+							data-hashtags="ottvote"
+							data-lang="en">Tweet to <?php print $c['twitter']; ?></a>
+						<?php
+					}
 					?>
-					<a href="https://twitter.com/share" class="twitter-share-button" 
-						data-url="<?php print htmlentities($url); ?>"
-						data-text="<?php print htmlentities($text); ?>"
-						data-lang="en">Tweet to <?php print $c['twitter']; ?></a>
+	        </td>
+	        </tr>
+	        <?php
+				} else {
+		      print htmlentities($answer['body']);
+					?>
+					<br/><i><?php print substr($answer['created'],0,10); ?></i>
 					<?php
 				}
-				?>
-        </td>
-        </tr>
-        <?php
 			} else {
-	      print htmlentities($answer['body']);
 				?>
-				<br/><i><?php print substr($answer['created'],0,10); ?></i>
+        <i>No known email address for the candidate. Let ottwatch@gmail.com know if you know it.</i><br/>
 				<?php
 			}
 			?>
@@ -1874,6 +1874,12 @@ class ElectionController {
     }
     ?>
     </table>
+		<?php } else { // hide candidate table for now ?>
+		<center><i>
+		We're just collecting questions for the month of February.<br/>
+		On March 1 candidates will be invited to start answering.
+		</i></center>
+		<?php } ?>
     </div><!-- /span -->
     <div class="span4">
     <a href="/election/question/list"><h3>See Other Questions</h3></a>
@@ -1899,6 +1905,7 @@ class ElectionController {
 		Important questions from regular people. What do you want to know from candidates?
     <b><a href="/election/question/add">Ask one</a></b>.
 		</p>
+		<p>Click through to see the answers, and vote questions up or down.</p>
 		<div class="row-fluid">
 
 		<?php
@@ -1949,9 +1956,11 @@ class ElectionController {
 			<?php if ($q['body'] != '') { ?>
 			<i><?php print htmlentities($q['body']); ?></i><br/>
 			<?php } ?>
+			<!--
 			<?php print $q['count']; ?> answers.<br/>
 			Asked: <?php print $q['created']; ?><br/>
 			Latest:  <?php print $q['latest']; ?>
+			-->
 			</p>
 			</div>
 			<?php
