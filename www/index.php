@@ -520,15 +520,18 @@ function top($title = '',$quiet = false) {
 function copyToClipboard (text) {
   window.prompt ("Copy to clipboard: Ctrl+C, Enter", text);
 }
-function voteOnQuestion(i,v) {
+function voteOnQuestion(p,i,v) {
 	$.post( '/election/question/vote', 
 		{ 
 			ajax: 1, 
 			id: i, 
 			vote: v
-		} , function( data ) {
-			console.log(data);
-	});
+		}, function( data ) {
+			$('#'+p+'Tally').html(data.tally);
+			$('#'+p+'Votes').html(data.votes);
+			$('#'+p+'Result').html('<p>Vote recorded!</p>');
+		},'json'
+	);
 }
 </script>
 </head>

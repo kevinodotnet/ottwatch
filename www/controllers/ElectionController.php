@@ -1693,7 +1693,17 @@ class ElectionController {
 		$values['vote'] = $_POST['vote'];
     $values['personid'] = getSession()->get("user_id");
     $id = db_insert('question_vote',$values);
-		print "voteid $id saved";
+
+		$votes = getDatabase()->one(" 
+			select 
+			count(1) votes, 
+			sum(vote) tally,
+			sum(case when vote = 1 then 1 else 0 end) up,
+			sum(case when vote = -1 then 1 else 0 end) down
+			from question_vote 
+			where questionid = {$_POST['id']} "
+		);
+		print json_encode($votes);
   }
 
   public static function questionAddPost() {
@@ -1785,13 +1795,14 @@ class ElectionController {
 		Asked by <b><?php print htmlentities($q['name']); ?></b><br/><?php print $q['created']; ?><br/>
 		<?php if (LoginController::isLoggedIn()) { ?>
 			<span style="font-size: 150%;">
-			<a href="javascript:voteOnQuestion(<?php print $q['id']; ?>,1);"><i class="fa fa-thumbs-o-up"></i></a>
-			<a href="javascript:voteOnQuestion(<?php print $q['id']; ?>,-1);"><i class="fa fa-thumbs-o-down"></i></a>
+			<a href="javascript:voteOnQuestion('qv',<?php print $q['id']; ?>,1);"><i class="fa fa-thumbs-o-up"></i></a>
+			<a href="javascript:voteOnQuestion('qv',<?php print $q['id']; ?>,-1);"><i class="fa fa-thumbs-o-down"></i></a>
 			</span><br/>
 		<?php } else { ?>
 		<a href="<?php print LoginController::getLoginUrl(); ?>">Login to vote this question up or down</a><br/>
 		<?php } ?>
-		Score <?php print $votes['tally']; ?> (<?php print $votes['votes']; ?> votes)
+		Score <span id="qvTally"><?php print $votes['tally']; ?></span> (<span id="qvVotes"><?php print $votes['votes']; ?></span> votes)
+		<span id="qvResult"></span>
 
 		</p>
     <p class="lead"><?php print htmlentities($q['body']); ?></p>
