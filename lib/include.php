@@ -431,6 +431,7 @@ function sendEmail($to,$subject,$body) {
   $mail = new PHPMailer;
   $mail->isSMTP();    
   $mail->Host = OttWatchConfig::SMTP_HOST;
+  $mail->Port = OttWatchConfig::SMTP_PORT;
   $mail->From = OttWatchConfig::SMTP_FROM_EMAIL;
   $mail->FromName = OttWatchConfig::SMTP_FROM_NAME;
   $mail->addAddress($to);
