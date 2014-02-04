@@ -150,7 +150,9 @@ getRoute()->get('/election/tmp', array('ElectionController','tmp'));
 
 getRoute()->get('/election/question/(\d+)/(.*)', array('ElectionController','showQuestion'));
 getRoute()->get('/election/question/add', array('ElectionController','questionAdd'));
+getRoute()->get('/election/question/list', array('ElectionController','questionList'));
 getRoute()->post('/election/question/add', array('ElectionController','questionAddPost'));
+getRoute()->post('/election/question/vote', array('ElectionController','questionVote'));
 getRoute()->post('/election/question/answer', array('ElectionController','saveAnswer'));
 
 getRoute()->get('.*', 'error404');
@@ -703,3 +705,4 @@ function disqusRecent ($count) {
 }
 
 ?>
+

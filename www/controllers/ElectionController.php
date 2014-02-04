@@ -223,7 +223,7 @@ class ElectionController {
     }
 
 		top($title);
-		print "<h1>$title <small>(<a href=\"/election\">main election page</a>)</small></h1>\n";
+		print "<h1>$title <small><a href=\"/election\">main election page</a></small></h1>\n";
 
     $rows = getDatabase()->all("
       select * 
@@ -456,14 +456,24 @@ class ElectionController {
 		?>
     </div><!-- findward -->
     <div class="span4">
-		  <div style="background: #08c; color: #ffffff; padding: 20px; font-size: 200%; border-radius: 4px;">
+		  <div style="background: #08c; color: #ffffff; padding: 10px; font-size: 125%; border-radius: 4px;">
 		  <center>
 		  <a href="/election/listDonations" style="color: #ffffff;">
 		  <i class="fa fa-search fa-4" style="font-size: 125%;"></i>
-			Search donations
+			Search Donations
 		  </center>
 		  </a>
 		  </div>
+			<!--
+		  <div style="background: #08c; color: #ffffff; padding: 10px; font-size: 125%; border-radius: 4px; margin-top: 5px;">
+		  <center>
+		  <a href="/election/question/list" style="color: #ffffff;">
+		  <i class="fa fa-list fa-4" style="font-size: 125%;"></i>
+			Questions to the Candidates
+		  </center>
+		  </a>
+		  </div>
+			-->
     </div>
     </div>
 
@@ -1672,6 +1682,20 @@ class ElectionController {
     bottom();
   }
 
+  public static function questionVote() {
+		if (abs($_POST['vote']) != 1) {
+			print "BAD VOTE value\n";
+			return;
+		}
+		getDatabase()->execute(" delete from question_vote where personid = ".getSession()->get("user_id"));
+		$values = array();
+		$values['questionid'] = $_POST['id'];
+		$values['vote'] = $_POST['vote'];
+    $values['personid'] = getSession()->get("user_id");
+    $id = db_insert('question_vote',$values);
+		print "voteid $id saved";
+  }
+
   public static function questionAddPost() {
     $values = array();
     $values['title'] = $_POST['title'];
@@ -1729,6 +1753,8 @@ class ElectionController {
       return;
     }
 
+		$votes = getDatabase()->one(" select count(1) votes, sum(vote) tally from question_vote where questionid = {$q['id']} ");
+
     $ward = $q['ward'];
     if ($ward == -1) {
       $wardname = 'City Wide';
@@ -1748,11 +1774,39 @@ class ElectionController {
     <div class="row-fluid">
     <div class="span8">
 
+		<script>
+		function vote(v) {
+			$.post( '/election/question/vote', 
+				{ 
+					ajax: 1, 
+					id: <?php print $q['id']; ?>, 
+					vote: v
+				} , function( data ) {
+					console.log(data);
+					// location.reload(); 
+			});
+		}
+		</script>
+
     <div style="background: #f0f0f0; padding: 20px; border-radius: 5px; margin-bottom: 5px;">
     <h1><?php print htmlentities($title); ?></h1>
-    <p style="float: right; text-align: right;">Asked by <b><?php print htmlentities($q['name']); ?></b><br/><?php print $q['created']; ?></p>
+    <p style="float: right; text-align: right;">
+		Asked by <b><?php print htmlentities($q['name']); ?></b><br/><?php print $q['created']; ?><br/>
+		<?php if (LoginController::isLoggedIn()) { ?>
+			<span style="font-size: 150%;">
+			<a href="javascript:vote(1);"><i class="fa fa-thumbs-o-up"></i></a>
+			<a href="javascript:vote(-1);"><i class="fa fa-thumbs-o-down"></i></a>
+			</span><br/>
+		<?php } else { ?>
+		<a href="<?php print LoginController::getLoginUrl(); ?>">Login to vote this question up or down</a><br/>
+		<?php } ?>
+		Score <?php print $votes['tally']; ?> (<?php print $votes['votes']; ?> votes)
+
+		</p>
     <p class="lead"><?php print htmlentities($q['body']); ?></p>
     </div>
+
+		<!--<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>-->
 
     <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
     <?php
@@ -1768,18 +1822,11 @@ class ElectionController {
       $prevward = $c['ward'];
       ?>
       <tr>
-      <th><h5><?php print "{$c['first']} {$c['last']}\n"; ?></h5></th>
+      <!--<th><h5><?php print "{$c['first']} {$c['last']}"; ?></h5></th>-->
+      <td><a name="candidate<?php print $c['id']; ?>"></a><?php print "{$c['first']} {$c['last']}"; ?></td>
       <td>
       <?php
-      if (!isset($c['personid'])) {
-        ?>
-        <i><?php print $c['first']; ?> has not registered on OttWatch to answer questions. Please encourage the candidate to do so!</i>
-        </td>
-        </tr>
-        <?php
-        continue;
-      }
-      $answer = getDatabase()->one(" select * from answer where questionid = {$q['id']} and personid = {$c['personid']} order by created desc limit 1 ");
+
       if (LoginController::isLoggedIn() && getSession()->get("user_id") == $c['personid']) {
         ?>
         <form class="form-incine" action="/election/question/answer" method="post">
@@ -1791,8 +1838,36 @@ class ElectionController {
         <?php
         continue;
       }
-      ?>
-      <blockquote><?php print htmlentities($answer['body']); ?><br/><i><?php print substr($answer['created'],0,10); ?></i></blockquote>
+
+			$answer = array();
+      if (isset($c['personid'])) {
+	      $answer = getDatabase()->one(" select * from answer where questionid = {$q['id']} and personid = {$c['personid']} order by created desc limit 1 ");
+			}
+			if (!isset($answer['body']) || $answer['body'] == '') {
+        ?>
+        <i><?php print $c['first']; ?> has not registered on OttWatch to answer questions. Please encourage the candidate to do so!</i>
+				<?php
+				if ($c['twitter'] != '') {
+					$text = ".@{$c['twitter']} I want to know your answer: {$q['title']}";
+					$url = OttWatchConfig::WWW."/election/question/".$id."/".urlencode($title)."#candidate".$c['id'];
+					?>
+					<a href="https://twitter.com/share" class="twitter-share-button" 
+						data-url="<?php print htmlentities($url); ?>"
+						data-text="<?php print htmlentities($text); ?>"
+						data-lang="en">Tweet to <?php print $c['twitter']; ?></a>
+					<?php
+				}
+				?>
+        </td>
+        </tr>
+        <?php
+			} else {
+	      print htmlentities($answer['body']);
+				?>
+				<br/><i><?php print substr($answer['created'],0,10); ?></i>
+				<?php
+			}
+			?>
       </td>
       </tr>
       <?php
@@ -1801,6 +1876,8 @@ class ElectionController {
     </table>
     </div><!-- /span -->
     <div class="span4">
+    <a href="/election/question/list"><h3>See Other Questions</h3></a>
+		See what other questions have been put to candidates.
     <a href="/election/question/add"><h3>Want to ask a question?</h3></a>
     Anyone can ask a question using OttWatch. After logging in with Twitter or Facebook create a question title
     and body, then put it to either all candidates ("City-Wide"), just the mayoral candidates, or make it specific
@@ -1811,6 +1888,80 @@ class ElectionController {
     bottom();
 
   }
+
+	public static function questionList() {
+		top();
+		?>
+		<h1>Election Questions
+		<small><a href="/election">main election page</a></small>
+		</h1>
+		<p class="lead">
+		Important questions from regular people. What do you want to know from candidates?
+    <b><a href="/election/question/add">Ask one</a></b>.
+		</p>
+		<div class="row-fluid">
+
+		<?php
+		$questions = getDatabase()->all("
+			select 
+				eq.id electionquestionid,
+				q.id,
+				q.title,
+				q.body,
+				q.created,
+				p.name,
+				case 
+					when eq.ward > 0 then eo.ward
+					when eq.ward = 0 then 'Mayor'
+					when eq.ward = -1 then 'City Wide'
+					else 'Unknown'
+				end wardname,
+				case when a.count is null then 0 else a.count end count,
+				case when a.count is null then 'never' else a.latest end latest
+			from question q
+				join election_question eq on eq.questionid = q.id
+				join people p on p.id = q.personid
+				left join electedofficials eo on eo.wardnum = eq.ward
+				left join (
+					select questionid,count(1) count,max(created) latest from answer group by questionid
+				) a on a.questionid = q.id
+			order by 
+				case when eq.ward <= 0 then 0 else 1 end,
+				wardname,
+				latest desc
+		");
+
+		?>
+
+		<?php
+		$count = 0;
+		foreach ($questions as $q) {
+			if ($count++ % 3 == 0) {
+				?>
+				</div>
+				<div class="row-fluid">
+				<?php
+			}
+			?>
+			<div class="span4">
+			<a href="/election/question/<?php print $q['electionquestionid']; ?>/<?php print urlencode($q['title']); ?>"><h3><?php print htmlentities($q['title']); ?></h3></a>
+			<p>
+			<?php if ($q['body'] != '') { ?>
+			<i><?php print htmlentities($q['body']); ?></i><br/>
+			<?php } ?>
+			<?php print $q['count']; ?> answers.<br/>
+			Asked: <?php print $q['created']; ?><br/>
+			Latest:  <?php print $q['latest']; ?>
+			</p>
+			</div>
+			<?php
+		}
+		?>
+
+    </div><!-- /row -->
+		<?php
+		bottom();
+	}
 
 }
 

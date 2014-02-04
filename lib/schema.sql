@@ -473,6 +473,19 @@ create table question (
   constraint foreign key (personid) references people (id)
 ) engine = innodb;
 
+drop table if exists question_vote;
+create table question_vote (
+  id mediumint not null auto_increment,
+  questionid mediumint not null,
+  personid mediumint not null,
+	vote tinyint not null,
+  created datetime default CURRENT_TIMESTAMP,
+  primary key (id),
+  constraint foreign key (questionid) references question (id),
+  constraint foreign key (personid) references people (id),
+	unique index question_vote_in1 (questionid,personid)
+) engine = innodb;
+
 drop table if exists answer;
 create table answer (
   id mediumint not null auto_increment,
