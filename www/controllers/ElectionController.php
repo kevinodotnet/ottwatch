@@ -1943,6 +1943,8 @@ class ElectionController {
 				left join (
 					select questionid,count(1) count,max(created) latest from answer group by questionid
 				) a on a.questionid = q.id
+			where
+				q.published = 1
 			order by 
 				case when eq.ward <= 0 then 0 else 1 end,
 				wardname,
