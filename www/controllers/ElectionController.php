@@ -1687,7 +1687,7 @@ class ElectionController {
 			print "BAD VOTE value\n";
 			return;
 		}
-		getDatabase()->execute(" delete from question_vote where personid = ".getSession()->get("user_id"));
+		getDatabase()->execute(" delete from question_vote where questionid = :id and personid = ".getSession()->get("user_id"),array('id'=>$_POST['id']);
 		$values = array();
 		$values['questionid'] = $_POST['id'];
 		$values['vote'] = $_POST['vote'];
