@@ -12,7 +12,10 @@ $token = OttWatchConfig::DISQUS_TOKEN;
 
 $url = "https://disqus.com/api/3.0/forums/listPosts.json?forum=ottwatch";
 $url .= "&api_key=$key";
-$json = file_get_contents($url);
+$json = @file_get_contents($url);
+if (strlen($json) == 0) {
+	return;
+}
 
 $response = json_decode($json);
 if ($response->code != 0) {
@@ -38,7 +41,10 @@ foreach ($response->response as $r) {
   $url .= "?thread=$thread";
   $url .= "&api_key=$key";
 
-  $json = file_get_contents($url);
+  $json = @file_get_contents($url);
+	if (strlen($json) == 0) {
+		exit;
+	}
   $r = json_decode($json);
 
   if ($r->code == 0) {
