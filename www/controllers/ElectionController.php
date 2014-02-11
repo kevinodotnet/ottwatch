@@ -1802,7 +1802,7 @@ class ElectionController {
 
     <div style="background: #f0f0f0; padding: 20px; border-radius: 5px; margin-bottom: 5px;">
     <h1><?php print htmlentities($title); ?></h1>
-    <p style="float: right; text-align: right;">
+    <p style="float: right; text-align: right; padding-left: 5px;">
 		Asked by <b><?php print htmlentities($q['name']); ?></b><br/><?php print $q['created']; ?><br/>
 		<?php if (LoginController::isLoggedIn()) { ?>
 			<span style="font-size: 150%;">
@@ -1948,7 +1948,9 @@ class ElectionController {
 					else 'Unknown'
 				end wardname,
 				case when a.count is null then 0 else a.count end count,
-				case when a.count is null then 'never' else a.latest end latest
+				case when a.count is null then 'never' else a.latest end latest,
+				case when v.questionid is null then 0 else v.votes end votes,
+				case when v.questionid is null then 0 else v.score end score
 			from question q
 				join election_question eq on eq.questionid = q.id
 				join people p on p.id = q.personid
@@ -1956,12 +1958,15 @@ class ElectionController {
 				left join (
 					select questionid,count(1) count,max(created) latest from answer group by questionid
 				) a on a.questionid = q.id
+				left join (
+					select questionid,sum(vote) score,count(1) votes from question_vote group by questionid
+				) v on v.questionid = q.id
 			where
 				q.published = 1
 			order by 
 				case when eq.ward <= 0 then 0 else 1 end,
 				wardname,
-				latest desc
+				rand()
 		");
 
 		?>
@@ -1980,7 +1985,8 @@ class ElectionController {
 			<a href="/election/question/<?php print $q['electionquestionid']; ?>/<?php print urlencode($q['title']); ?>"><h3><?php print htmlentities($q['title']); ?></h3></a>
 			<p>
 			<?php if ($q['body'] != '') { ?>
-			<i><?php print htmlentities($q['body']); ?></i><br/>
+			<i><?php print htmlentities($q['body']); ?> <b>(Score: <?php print $q['score']; ?> based on <?php print $q['votes']; ?> votes)</b></i>
+			<br/>
 			<?php } ?>
 			<!--
 			<?php print $q['count']; ?> answers.<br/>
