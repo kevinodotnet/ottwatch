@@ -573,7 +573,7 @@ class MeetingController {
 			if (strlen($data) == 0) {
 				print "\nChunk $chunk had zero size; aborting\n";
 				getDatabase()->execute(" update meeting set youtube = null, youtubestate = null where id = :id ",array('id'=>$m['id']));
-				unlink($video_file);
+				@unlink($video_file);
 				return;
 			}
 			file_put_contents($video_file,$data,FILE_APPEND);
