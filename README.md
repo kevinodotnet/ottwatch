@@ -94,6 +94,7 @@ License
 * PHPoAuthLib is re-distributed with permission, see https://github.com/Lusitanian/PHPoAuthLib
 * Snapshots of Ottawa Open Data files (lib/opendata_*) re-distributed with permission, see http://ottawa.ca/en/open-data-terms-use
 * CkEditor is re-distributed with permission, see https://github.com/ckeditor/ckeditor-releases
+* Springy is re-distributed with permission, see https://github.com/dhotson/springy
 
 About Me
 ========
