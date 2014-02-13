@@ -81,8 +81,7 @@ class ApiController {
 		$result = array();
 		$result['params'] = array('q'=>$q,'type'=>$type);
 		$result['matches'] = $matches;
-		pr($result);
-		#return $result;
+		return $result;
 	}
 
 	public static function widgetFindWard() {
