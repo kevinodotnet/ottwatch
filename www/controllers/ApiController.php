@@ -7,6 +7,9 @@ class ApiController {
 		if ($type == '') { $type = $_GET['type']; }
 
 		$qs = mysql_real_escape_string($q);
+    if ($qs === FALSE) {
+      $qs = $q;
+    }
 
 		$matches = array();
 
@@ -36,10 +39,12 @@ class ApiController {
 			$rows = getDatabase()->all($sql);
 			foreach ($rows as $r) {
 				$match = array();
+				$match['desc'] = 'Donation: $'.$r['amount'];
 				$match['type'] = 'donation';
 				$match['id'] = $r['id'];
+				$match['url'] = OttWatchConfig::WWW . '/election/donation/' . $r['id'];
 				$match['detail'] = $r;
-				$match['related'] = array(array('id'=>$r['candidateid'],'type'=>'candidate'));
+				$match['related'] = array('candidate.'.$r['candidateid']);
 				$matches[] = $match;
 			}
 		}
@@ -49,38 +54,75 @@ class ApiController {
 			$rows = getDatabase()->all($sql);
 			foreach ($rows as $r) {
 				$match = array();
+				$match['desc'] = 'Devapp: '.$r['devid'];
 				$match['type'] = 'devapp';
 				$match['id'] = $r['id'];
+				$match['url'] = OttWatchConfig::WWW . '/devapps/' . $r['devid'];
 				$match['detail'] = $r;
 				$matches[] = $match;
 			}
 		}
 
-		if ($type == '' || $type == 'lobbying') {
+		if (false && $type == '' || $type == 'lobbying') {
 			$sql = " select * from lobbyfile where lobbyist like '%$qs%' or client like '%$qs%' or issue like '%$qs%' ";
 			$rows = getDatabase()->all($sql);
 			foreach ($rows as $r) {
 				$match = array();
+				$match['desc'] = 'Lobbying: '.substr($r['issue'],0,10);
 				$match['type'] = 'lobbyfile';
+				$match['url'] = OttWatchConfig::WWW . '/lobbying/files/'.$r['id'];
 				$match['id'] = $r['id'];
 				$match['detail'] = $r;
 				$matches[] = $match;
 			}
 			$sql = " select * from lobbying where lobbied like '%$qs%' ";
 			$rows = getDatabase()->all($sql);
+      $rows = array();
 			foreach ($rows as $r) {
 				$match = array();
-				$match['type'] = 'lobbied';
+				$match['desc'] = 'Lobbying by: ' . $r['lobbyist'];
+				$match['type'] = 'lobbying';
 				$match['id'] = $r['id'];
-				$match['related'] = array(array('id'=>$r['lobbyfileid'],'type'=>'lobbyfile'));
+				$match['url'] = OttWatchConfig::WWW . '/lobbying/files/'.$r['lobbyfileid'];
+				$match['related'] = array('lobbyfile.'.$r['lobbyfileid']);
 				$match['detail'] = $r;
 				$matches[] = $match;
 			}
 		}
 
+    $uids = array();
+
+    # assign UID values based on type/id and populate list of known uids.
+    foreach ($matches as &$m) {
+      $m['uid'] = "{$m['type']}.{$m['id']}";
+      $uids[$m['uid']] = $m;
+    }
+    $more = array();
+    foreach ($matches as &$m) {
+      if (isset($m['related'])) {
+        foreach ($m['related'] as $r) {
+          if (!isset($uids[$r])) {
+            # match refers to a UID that is not in matches set; fake one out
+            $related = array();
+            $related['id'] = 'TBD';
+            $related['type'] = 'TBD';
+            $related['uid'] = $r;
+            $related['desc'] = $related['uid'];
+            $uids[$r] = $related;
+            $more[] = $related;
+          }
+        }
+      }
+    }
+    #$matches = array();
+    foreach ($more as $m) {
+      $matches[] = $m;
+    }
+
 		$result = array();
-		$result['params'] = array('q'=>$q,'type'=>$type);
+		$result['params'] = array('qs'=>$qs,'q'=>$q,'type'=>$type);
 		$result['matches'] = $matches;
+    pr($result); return;
 		return $result;
 	}
 
