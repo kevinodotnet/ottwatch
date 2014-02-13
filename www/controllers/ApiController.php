@@ -2,6 +2,89 @@
 
 class ApiController {
 
+	public static function search($q = '',$type = '') {
+		if ($q == '') { $q = $_GET['q']; }
+		if ($type == '') { $type = $_GET['type']; }
+
+		$qs = mysql_real_escape_string($q);
+
+		$matches = array();
+
+		if ($type == '' || $type == 'donation') {
+			$sql = " 
+				select
+					d.id,
+					d.type,
+					d.name,
+					d.address,
+					d.city,
+					d.prov,
+					d.postal,
+					d.amount,
+					c.id candidateid,
+					c.year,
+					c.first candidatefirst,
+					c.middle candidatemiddle,
+					c.last candidatelast
+				from
+					candidate_donation d
+					join candidate_return r on r.id = d.returnid
+					join candidate c on c.id = r.candidateid
+				where
+					d.name like '%$qs%'
+			";
+			$rows = getDatabase()->all($sql);
+			foreach ($rows as $r) {
+				$match = array();
+				$match['type'] = 'donation';
+				$match['id'] = $r['id'];
+				$match['detail'] = $r;
+				$match['related'] = array(array('id'=>$r['candidateid'],'type'=>'candidate'));
+				$matches[] = $match;
+			}
+		}
+
+		if ($type == '' || $type == 'devapp') {
+			$sql = " select * from devapp where devid = '$qs' or address like '%$qs%' or description like '%$qs%' ";
+			$rows = getDatabase()->all($sql);
+			foreach ($rows as $r) {
+				$match = array();
+				$match['type'] = 'devapp';
+				$match['id'] = $r['id'];
+				$match['detail'] = $r;
+				$matches[] = $match;
+			}
+		}
+
+		if ($type == '' || $type == 'lobbying') {
+			$sql = " select * from lobbyfile where lobbyist like '%$qs%' or client like '%$qs%' or issue like '%$qs%' ";
+			$rows = getDatabase()->all($sql);
+			foreach ($rows as $r) {
+				$match = array();
+				$match['type'] = 'lobbyfile';
+				$match['id'] = $r['id'];
+				$match['detail'] = $r;
+				$matches[] = $match;
+			}
+			$sql = " select * from lobbying where lobbied like '%$qs%' ";
+			$rows = getDatabase()->all($sql);
+			foreach ($rows as $r) {
+				$match = array();
+				$match['type'] = 'lobbied';
+				$match['id'] = $r['id'];
+				$match['related'] = array(array('id'=>$r['lobbyfileid'],'type'=>'lobbyfile'));
+				$match['detail'] = $r;
+				$matches[] = $match;
+			}
+		}
+
+		$result = array();
+		$result['params'] = array('q'=>$q,'type'=>$type);
+		$result['matches'] = $matches;
+		pr($result);
+		#return $result;
+	}
+
 	public static function widgetFindWard() {
 		top('',true);
 		self::widgetFindWardInner(true);

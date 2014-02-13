@@ -33,6 +33,8 @@ getRoute()->get('/story/add', array('StoryController', 'add'));
 getRoute()->get('/story/edit/(\d+)', array('StoryController', 'edit'));
 getRoute()->post('/story/save', array('StoryController', 'save'));
 
+getApi()->get('/api/search', array('ApiController', 'search'), EpiApi::external);
+
 getApi()->get('/api/about', array('ApiController', 'about'), EpiApi::external);
 getApi()->get('/api/point', array('ApiController', 'point'), EpiApi::external);
 getApi()->get('/api/roads/search/(.*)', array('ApiController', 'roadSearch'), EpiApi::external);
