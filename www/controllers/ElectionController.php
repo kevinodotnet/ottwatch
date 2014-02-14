@@ -148,18 +148,13 @@ class ElectionController {
 
   public static function showWardMap($ward) {
     top();
-		self::showWardMapPriv($ward,-1);
+		self::showWardMapPriv($ward,-1,1);
 		bottom();
 	}
 
-  public static function showWardMapPriv($ward,$height) {
+  public static function showWardMapPriv($ward,$height,$showPolls) {
 
 		if ($height <= 0) { $height = 590; }
-
-    $json = file_get_contents(OttWatchConfig::WWW."/api/wards/$ward?polygon=1");
-    $data = json_decode($json);
-    $poly = $data->polygon;
-
 
     ?>
 		<center>
@@ -170,6 +165,64 @@ class ElectionController {
     var mapOptions = { center: new google.maps.LatLng(45.420833,-75.59), zoom: 10, mapTypeId: google.maps.MapTypeId.ROADMAP };
     infowindow = new google.maps.InfoWindow({ content: '' });
     map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
+
+    <?php
+    if ($showPolls > 0) {
+	    # add polygon poll data too
+	    $json = file_get_contents(OttWatchConfig::WWW."/api/wards/$ward/polls");
+	    $polls = json_decode($json);
+	    $polls = get_object_vars($polls);
+	    $year = 2010;
+	    $polls = $polls[$year];
+	    $index = 0;
+	    foreach ($polls as $p) {
+	      $json = file_get_contents(OttWatchConfig::WWW."/api/wards/$ward/polls/$year/$p");
+	      $data = json_decode($json);
+	      $poly = $data->polygon;
+	      $index++;
+	      ?>
+			    var coords<?php print $index; ?> = [
+				    <?php
+				    foreach ($poly as $latlon) {
+				      print "new google.maps.LatLng({$latlon->lat}, {$latlon->lon}), \n"; # 25.774252, -80.190262),
+				    }
+				    ?>
+			    ];
+			    polygon<?php print $index; ?> = new google.maps.Polygon({
+			      paths: coords<?php print $index; ?>,
+			      strokeColor: '#ff0000',
+			      fillColor: '#ff0000',
+			      fillOpacity: 0.10,
+			    });
+			    polygon<?php print $index; ?>.setMap(map);
+
+          var marker<?php print $index; ?> = new google.maps.Marker({ 
+            position: new google.maps.LatLng(<?php print $data->center->lat; ?>,<?php print $data->center->lon; ?>), 
+            map: map
+          });
+	        google.maps.event.addListener(marker<?php print $index; ?>, 'click', function() {
+	          infowindow.setContent( 
+              '<p>Poll: <?php print $p; ?><br/>' + 
+              '<a target="_blank" href="<?php print OttWatchConfig::WWW; ?>/api/wards/<?php print $ward; ?>/polls/<?php print $year; ?>/<?php print $p; ?>/map/live">Live Map</a><br/>' + 
+              '<a target="_blank" href="<?php print OttWatchConfig::WWW; ?>/api/wards/<?php print $ward; ?>/polls/<?php print $year; ?>/<?php print $p; ?>/map/static">Static Map</a><br/>' + 
+              '<a target="_blank" href="<?php print OttWatchConfig::WWW; ?>/api/wards/<?php print $ward; ?>/polls/<?php print $year; ?>/<?php print $p; ?>/map/img">PNG Image</a><br/>' + 
+              '</p>'
+            );
+	          infowindow.open(map,marker<?php print $index; ?>);
+	        });
+
+	      <?php
+	      #if ($index > 5) { break; }
+	    }
+    }
+    ?>
+
+    <?php
+    $json = file_get_contents(OttWatchConfig::WWW."/api/wards/$ward?polygon=1");
+    $data = json_decode($json);
+    $poly = $data->polygon;
+    ?>
+
     var coords = [
 	    <?php
 	    foreach ($poly as $latlon) {
@@ -180,10 +233,11 @@ class ElectionController {
     polygon = new google.maps.Polygon({
       paths: coords,
       strokeColor: '#ff0000',
-      fillColor: '#ff0000',
-      fillOpacity: 0.35,
+      fillColor: '#000000',
+      fillOpacity: 0.0,
     });
     polygon.setMap(map);
+
 
     // from http://stackoverflow.com/questions/2177055/how-do-i-get-google-maps-to-show-a-whole-polygon
     // TODO: move this to an include, perhaps the one that can also import the script tag for google maps
@@ -419,7 +473,7 @@ class ElectionController {
       ?>
 	    <h2>Map <small>(<a href="/election/ward/<?php print $race; ?>/map">fullsize</a>)</small></h2>
 	    <?php
-			self::showWardMapPriv($race,200);
+			self::showWardMapPriv($race,200,0);
     }
     ?>
 
