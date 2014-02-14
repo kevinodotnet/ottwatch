@@ -169,11 +169,17 @@ class ElectionController {
     <?php
     if ($showPolls > 0) {
 	    # add polygon poll data too
-	    $json = file_get_contents(OttWatchConfig::WWW."/api/wards/$ward/polls");
-	    $polls = json_decode($json);
-	    $polls = get_object_vars($polls);
+      $polls = $_GET['polls'];
 	    $year = 2010;
-	    $polls = $polls[$year];
+      if (!isset($polls)) {
+		    $json = file_get_contents(OttWatchConfig::WWW."/api/wards/$ward/polls");
+		    $polls = json_decode($json);
+		    $polls = get_object_vars($polls);
+		    $polls = $polls[$year];
+      } else {
+        # use CSV list of polls, for a subset map
+        $polls = explode(',',$polls);
+      }
 	    $index = 0;
 	    foreach ($polls as $p) {
 	      $json = file_get_contents(OttWatchConfig::WWW."/api/wards/$ward/polls/$year/$p");
@@ -181,6 +187,7 @@ class ElectionController {
 	      $poly = $data->polygon;
 	      $index++;
 	      ?>
+          <?php print "// $p\n"; ?>
 			    var coords<?php print $index; ?> = [
 				    <?php
 				    foreach ($poly as $latlon) {
