@@ -176,6 +176,7 @@ class ElectionController {
 		    $polls = json_decode($json);
 		    $polls = get_object_vars($polls);
 		    $polls = $polls[$year];
+        $polls = array();
       } else {
         # use CSV list of polls, for a subset map
         $polls = explode(',',$polls);
