@@ -642,8 +642,8 @@ class ElectionController {
 			order by 
 				case when p.id is null then 0 else 1 end desc,
 				d.donations,
-				rand(),
-				c.year,c.ward,c.last,c.first 
+				c.year desc,
+				rand()
 			");
 			$returns = array();
 			foreach ($rows as $r) {
