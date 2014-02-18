@@ -13,7 +13,7 @@ $diff = date_diff($datetime1,$datetime2);
 $days = $diff->days;
 
 if ($days > 0 && $days % 25 == 0) {
-  tweet("$days days until election day");
+  tweet("$days days until election day #ottvote");
 }
 
 ?>
