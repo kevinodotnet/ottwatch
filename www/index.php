@@ -584,7 +584,6 @@ if ($remaining == 0) {
 	<?php
 }
 ?>
-<li><a href="https://docs.google.com/presentation/d/1rI_Ky_KNBnxAulO4MQJud8yqyZoRtHsR0cn2DsmV2W4/edit?usp=sharing">Presention</a></li>
 </ul>
 </div>
 </div>
