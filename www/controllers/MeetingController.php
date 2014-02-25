@@ -994,6 +994,11 @@ class MeetingController {
         join item i on p.itemid = i.id
       where p.itemid in (select id from item where meetingid = :meetingid) ",array("meetingid"=>$m['id']));
     # LEFT hand navigation, items and files links
+
+		foreach ($places as &$p) {
+			$sql = " select * from devapp where address like '%{$p['rd_num']} {$p['rd_name']}%' limit 1 ";
+			$p['devapps'] = getDatabase()->all($sql);
+		}
     ?>
 
     <script>
@@ -1074,6 +1079,15 @@ class MeetingController {
           print "<small><a target=\"_blank\" href=\"{$fileurl}\"><i class=\"icon-share-alt\"></i></a> <a href=\"javascript:focusOn('file',{$f['fileid']},'{$ft}')\"><i class=\"icon-edit\"></i> {$ft}</small></a><br/>\n";
         }
       }
+			# devapps?
+			foreach ($places as $p) {
+				if ($p['itemid'] != $i['itemid']) {
+					continue;
+				}
+				foreach ($p['devapps'] as $d) {
+          print "<small><a target=\"_blank\" href=\"/devapps/{$d['devid']}\"><i class=\"icon-share-alt\"></i> Possibly related development application: {$d['devid']}</a></small><br/>\n";
+				}
+			}
       print "<br/>\n";
     }
     ?>
