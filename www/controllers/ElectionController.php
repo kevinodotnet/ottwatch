@@ -1587,6 +1587,12 @@ class ElectionController {
 			where d.id = $id
 		";
 		$r = getDatabase()->one($sql);
+		if (!$r['id']) {
+			top();
+			print "The donation with ID $id was not found";
+			bottom();
+			return;
+		}
 
 		$next = getDatabase()->one(" select min(y) y from candidate_donation where returnid = {$r['retid']} and page = {$r['page']} and y > {$r['y']} ");
 
