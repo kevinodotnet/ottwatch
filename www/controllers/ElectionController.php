@@ -1130,6 +1130,8 @@ class ElectionController {
 
 	public static function listDonations() {
 
+		$toptitle = 'Campaign Donations Report';
+
 		$postal = $_GET['postal'];
 		$postal = strtoupper($postal);
 		$postal = preg_replace('/ /','',$postal);
@@ -1142,15 +1144,18 @@ class ElectionController {
 
 		$filtered = 0;
 		if ($donor != '') {
+			$toptitle = "Campaign Donations Report for donor $donorE";
 			$where .= " and d.name like '%$donorE%' ";
-			$filtered = 1;
-		}
-		if ($candidate != '') {
-			$where .= " and (c.first like '%$candidateE%' or c.last like '%$candidateE%' ) ";
 			$filtered = 1;
 		}
 		if ($postal != '') {
 			$where .= " and d.postal = '$postalE' ";
+			$toptitle = "Campaign Donations Report for postal code $postalE";
+			$filtered = 1;
+		}
+		if ($candidate != '') {
+			$toptitle = "Campaign Donations Report for candidate $candidateE";
+			$where .= " and (c.first like '%$candidateE%' or c.last like '%$candidateE%' ) ";
 			$filtered = 1;
 		}
 
@@ -1235,7 +1240,7 @@ class ElectionController {
 
     $mapMode = $_GET['map'];
 
-		top("Campaign Donations Report");
+		top($toptitle);
 		?>
 		<div class="row-fluid">
 		<div class="span6">
