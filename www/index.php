@@ -231,7 +231,7 @@ function feed() {
 
 function dashboard() {
   global $OTT_WWW;
-  top();
+  top("OttWatch: collating Ottawa City Council for you!");
 
   ?>
   <div class="row-fluid">
