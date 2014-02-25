@@ -1080,11 +1080,16 @@ class MeetingController {
         }
       }
 			# devapps?
+			$touched = array();
 			foreach ($places as $p) {
 				if ($p['itemid'] != $i['itemid']) {
 					continue;
 				}
-				foreach ($p['devapps'] as $d) {
+				foreach ($p['devapps'] as &$d) {
+					if (in_array($d['id'],$touched)) {
+						continue;
+					}
+					$touched[] = $d['id'];
           print "<small><a target=\"_blank\" href=\"/devapps/{$d['devid']}\"><i class=\"icon-share-alt\"></i> Possibly related development application: {$d['devid']}</a></small><br/>\n";
 				}
 			}
