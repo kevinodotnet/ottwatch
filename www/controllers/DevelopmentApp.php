@@ -38,14 +38,19 @@ class DevelopmentAppController {
     <?php 
     foreach ($a['address'] as $addr) {
       print $addr->addr;
-      $zoning = getApi()->invoke("/api/zoning/{$addr->lat}/{$addr->lon}");
-      print " (";
-      if ($zoning['ZONE_CODE'] != '') {
-        print "<a href=\"{$zoning['URL']}\">{$zoning['ZONE_CODE']}</a>";
-      } else {
-        print "zoning unknown";
-      }
-      print ")<br/>\n";
+			if (isset($addr->lat)) {
+	      $zoning = getApi()->invoke("/api/zoning/{$addr->lat}/{$addr->lon}");
+	      print " (";
+	      if ($zoning['ZONE_CODE'] != '') {
+	        print "<a href=\"{$zoning['URL']}\">{$zoning['ZONE_CODE']}</a>";
+	      } else {
+	        print "zoning unknown";
+	      }
+	      print ")\n";
+			} else {
+				print " (zoning unknown)";
+			}
+			print "<br/>\n";
     }
     ?>
     </td></tr>
