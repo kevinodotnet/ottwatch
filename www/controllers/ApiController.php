@@ -2,6 +2,17 @@
 
 class ApiController {
 
+	public static function candidates() {
+
+    $rows = getDatabase()->all(" select * from candidate where nominated is not null order by year desc, ward, last, first, middle ");
+    foreach ($rows as &$r) {
+      # an FK that makes no sense for the API
+      unset($r['personid']);
+    }
+    return $rows;
+
+  }
+
 	public static function search($q = '',$type = '') {
 		if ($q == '') { $q = $_GET['q']; }
 		if ($type == '') { $type = $_GET['type']; }
