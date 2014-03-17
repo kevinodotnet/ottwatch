@@ -286,16 +286,21 @@ foreach ($lines as $l) {
 $indb = array();
 $inhtml = array();
 
+$c_indb = array();
+$c_inhtml = array();
+
 $all  = getDatabase()->all(" select * from candidate where nominated is not null and year = 2014 ");
 foreach ($all as $a) {
 	$key  = "ward:{$a['ward']} last:{$a['last']} first:{$a['first']}";
 	$indb[] = $key;
+	$c_indb[] = $a;
 }
 foreach ($sql as $key) {
 	$htmlkey  = "ward:{$key['details']['ward']} last:{$key['details']['last']} first:{$key['details']['first']}";
 	$inhtml[] = $htmlkey;
 
 	$c = $key['details'];
+	$c_inhtml[] = $c;
 
 	$tweet = "NEW candidate: {$c['first']} {$c['last']} ({$c['wardname']}) http://ottwatch.ca/election/ward/{$key['ward']} #ottvote";
 
@@ -328,6 +333,22 @@ foreach ($sql as $key) {
 		print "\nupdating just cause maybe\n";
 		print "\n$u\n";
 		print "$key updated\n";
+	}
+}
+
+foreach ($c_inhtml as $h) {
+	foreach ($c_indb as $d) {
+		$h['url'] = @$h['web'];
+		if ($d['last'] == $h['last']) {
+		if ($d['first'] == $h['first']) {
+		if ($d['ward'] == $h['ward']) {
+			if ($d['url'] == '' & $h['url'] != '' && $h['url'] != $d['url']) { print " update candidate set url = '{$h['url']}' where (url is null or url = '') and id = {$d['id']}; \n"; }
+			if ($d['twitter'] == '' & $h['twitter'] != '' && $h['twitter'] != $d['twitter']) { print " update candidate set twitter = '{$h['twitter']}' where (twitter is null or twitter = '') and id = {$d['id']}; \n"; }
+			if ($d['email'] == '' & $h['email'] != '' && $h['email'] != $d['email']) { print " update candidate set email = '{$h['email']}' where (email is null or email = '') and id = {$d['id']}; \n"; }
+			if ($d['facebook'] == '' & $h['facebook'] != '' && $h['facebook'] != $d['facebook']) { print " update candidate set facebook = '{$h['facebook']}' where (facebook is null or facebook = '') and id = {$d['id']}; \n"; }
+		}
+		}
+		}
 	}
 }
 
