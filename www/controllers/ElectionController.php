@@ -979,8 +979,8 @@ class ElectionController {
 		<?php
 		$next = $row['id']+1;
 		$prev = $row['id']-1;
+		if (false) { ?> <a href="?id=<?php print $prev; ?>">PREV</a> | <a href="?id=<?php print $next; ?>">NEXT</a><br/> <?php }
 		?>
-		<a href="?id=<?php print $prev; ?>">PREV</a> | <a href="?id=<?php print $next; ?>">NEXT</a>
     <canvas id="canvas" width="<?php print $imgW; ?>" height="<?php print $imgH; ?>" style="border: solid 1px #c0c0c0; margin-bottom: 20px;">
     </canvas><br/>
     <script>
@@ -993,7 +993,12 @@ class ElectionController {
 		imageObj.onload = function() {
 			context.drawImage(imageObj,0,-<?php print $row['y']-($padding/2); ?>);
 		        context.beginPath();
-		        context.arc(<?php print $row['x']; ?>-5,<?php print ($padding/2)+2; ?>, 5, 0, Math.PI*2, true); 
+		        context.moveTo(0,<?php print ($padding/2); ?>);
+		        context.lineTo(<?php print $row['x']; ?>-20,<?php print ($padding/2); ?>);
+						context.stroke();
+		        context.closePath();
+		        context.beginPath();
+		        context.arc(<?php print $row['x']; ?>-20,<?php print ($padding/2); ?>, 5, 0, Math.PI*2, true); 
 		        context.closePath();
 		        context.fill();
 		};
