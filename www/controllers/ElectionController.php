@@ -1978,8 +1978,9 @@ class ElectionController {
     </table>
 		<?php } else { // hide candidate table for now ?>
 		<center><i>
-		We're just collecting questions for the month of February.<br/>
-		On March 1 candidates will be invited to start answering.
+		We're just collecting questions for now. When enough candidates have registered
+		we'll start prompting candidates to answer questions (and show if they have 
+		declined to do so). Two questions per person, max.
 		</i></center>
 		<?php } ?>
     </div><!-- /span -->
