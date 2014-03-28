@@ -213,12 +213,15 @@ class ConsultationController {
   }
 
   public static function crawlConsultations() {
+
+		# use this to find consultations that have been removed (because they won't be updated)
+		getDatabase()->execute(" update consultation set category = 'DELETED'; ");
+
     # start at the stop level consultation listing.
     $html = file_get_contents("http://ottawa.ca/en/city-hall/public-consultations");
     $html = strip_tags($html,"<a>");
     $matches = array();
     preg_match_all("/<a[^h]+href=\"([^\"]+)\"[^>t]+title=\"([^\"]+)\"[^<]+<\/a>/",$html,$matches);
-    #print_r($matches);
     for ($x = 0; $x < count($matches[0]); $x++) {
       if (! preg_match('/Learn/',$matches[2][$x])) { continue; }
       $matches[2][$x] = preg_replace('/Learn more about /','',$matches[2][$x]);
@@ -226,6 +229,10 @@ class ConsultationController {
       $category = $matches[2][$x];
       self::crawlCategory($category,"http://ottawa.ca{$url}");
     }
+
+		# purge any deleted (or URL renamed) consultations
+		getDatabase()->execute(" delete from consultation where category = 'DELETED'; ");
+
   }
 
   // crawl a category for its consultations
@@ -233,7 +240,6 @@ class ConsultationController {
   public static function crawlCategory ($category, $url) {
     #print "CATEGORY: $category\n";
     $html = file_get_contents($url);
-
 		$html = self::getCityContent($html,'');
 
     $xml = simplexml_load_string($html);
@@ -271,13 +277,14 @@ class ConsultationController {
 
     $row = getDatabase()->one(" select * from consultation where url = :url ",array('url'=>$url));
     if ($row['id']) {
+      getDatabase()->execute(" update consultation set category = :category where id = :id ",array('id'=>$row['id'],'category'=>$category));
       if ($row['md5'] != $contentMD5) {
-        print "consultation.id = {$row['id']} md5 changed: {$row['md5']} $contentMD5\nurl: $url\n\n";
+        print "$category/$title consultation.id = {$row['id']} md5 changed: {$row['md5']} $contentMD5\nurl: $url\n\n";
         getDatabase()->execute(" update consultation set md5 = :md5, updated = CURRENT_TIMESTAMP where id = :id ",array('id'=>$row['id'],'md5'=>$contentMD5));
       }
     } else {
       $id = db_insert("consultation",array( 'category'=>$category, 'title'=>$title, 'url'=>$url, 'md5'=>$contentMD5)); 
-      print "consultation.id = {$id} is new\nurl: $url\n\n";
+      print "$category/$title consultation.id = {$id} is new\nurl: $url\n\n";
     }
 
     # reset from database, may have updated/inserted
@@ -292,6 +299,9 @@ class ConsultationController {
     $div = $xml->xpath('//div[@id="cityott-content"]');
     $div = simplexml_load_string($div[0]->asXML());
     $links = $div->xpath('//a');
+
+		getDatabase()->execute(" update consultationdoc set title = 'DELETED' where consultationid = {$row['id']} ");
+
     foreach ($links as $a) {
       $docLink = $a->attributes();
       if (substr($docLink,0,1) == '/') {
@@ -307,6 +317,9 @@ class ConsultationController {
 
       self::crawlConsultationLink($row,$docTitle,$docLink);
     }
+
+		getDatabase()->execute(" delete from consultationdoc where title = 'DELETED' and consultationid = {$row['id']} ");
+
   }
 
   // crawl all links within the consultation page itself; might be links to other ottawa.ca/drupal nodes
@@ -315,21 +328,21 @@ class ConsultationController {
   public static function crawlConsultationLink ($parent, $title, $url) {
     #print "    LINK: $title\n";
 
+		if (!preg_match('/\/ottawa.ca\//',$url)) {
+			# do not leave ottawa.ca
+			return;
+		}
+
     $data = @file_get_contents($url);
 		if ($data === FALSE) { 
 			# probably 403 or 404 error codes; ignore
 			return;
 		}
 
-    if (preg_match('/<title>Documents<\/title>/',$data)) {
-			# we ended up on documents.ottawa.ca; TODO 2014-01-19 crawl forward again to the actual PDF page, etc
-			#print "\n\n\n";
-			#print $data;
-			#print "\n\n\n";
-			#print "SKIPPING documents.ottawa HTML page";
-			#exit;
+		if (preg_match('/link.*canonical.*documents\.ottawa\.ca/',$data)) {
+			# the document management pages are skipped for now.
 			return;
-    }
+		}
 
     $md5 = md5($data);
     if (preg_match('/<html/',$data)) {
@@ -339,6 +352,7 @@ class ConsultationController {
 
     $row = getDatabase()->one(" select * from consultationdoc where url = :url ",array('url'=>$url));
     if ($row['id']) {
+      getDatabase()->execute(" update consultationdoc set title = :title where id = :id ",array('id'=>$row['id'],'title'=>$title));
       if ($row['md5'] != $md5) {
         print "consultation.id = {$parent['id']} doc.id = {$row['id']} md5 changed: {$row['md5']} $md5\nurl: $url\n\n";
         getDatabase()->execute(" update consultationdoc set md5 = :md5, updated = CURRENT_TIMESTAMP where id = :id ",array('id'=>$row['id'],'md5'=>$md5));
@@ -348,6 +362,7 @@ class ConsultationController {
       print "consultation.id = {$parent['id']} doc.id = {$id} is new\nurl: $url\n\n";
     }
 
+		$data = "DOCUMENT|$url|$title\n.$data";
     file_put_contents(OttWatchConfig::FILE_DIR."/consultationmd5/".$md5,$data);
   }
 
