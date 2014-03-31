@@ -2,6 +2,50 @@
 
 class ApiController {
 
+	public static function meetingsJson() {
+		$sql = "
+			select 
+				m.id,
+				m.meetid,
+				m.starttime,
+				m.title,
+				m.category,
+				m.created,
+				m.starttime,
+				m.youtube
+			from 
+				meeting m
+			order by
+				m.starttime desc
+		";
+		$result = getDatabase()->all($sql);
+		foreach ($result as &$r) {
+			$r['url'] = OttWatchConfig::WWW."/meetings/{$r['category']}/{$r['meetid']}";
+    	$r['ottawaurl'] = "http://app05.ottawa.ca/sirepub/mtgviewer.aspx?meetid={$r['meetid']}&doctype=AGENDA";
+			$id = $r['id'];
+			$sql = " select id, itemid, title from item where meetingid = $id ";
+			$items = getDatabase()->all($sql);
+			foreach ($items as &$i) {
+				$id = $i['id'];
+				$files = getDatabase()->all(" select fileid,title from ifile where itemid = $id ");
+				foreach ($files as &$f) {
+					$f['url'] = OttWatchConfig::WWW."/meetings/file/{$f['fileid']}";
+				}
+				$i['files'] = $files;
+
+				$votes = getDatabase()->all(" select * from itemvote where itemid = $id ");
+				foreach ($votes as &$v) {
+					$cast = getDatabase()->all(" select id, name, vote from itemvotecast where itemvoteid = {$v['id']} ");
+					$v['cast'] = $cast;
+				}
+				$i['votes'] = $votes;
+
+			}
+			$r['items'] = $items;
+		}
+		return $result;
+	}
+
 	public static function candidates() {
 
     $rows = getDatabase()->all(" select * from candidate where nominated is not null order by year desc, ward, last, first, middle ");

@@ -51,6 +51,7 @@ getApi()->get('/api/committees', array('ApiController', 'committees'), EpiApi::e
 getApi()->get('/api/candidates', array('ApiController', 'candidates'), EpiApi::external);
 getApi()->get('/api/councillors/(\d+)', array('ApiController', 'councillorById'), EpiApi::external);
 getApi()->get('/api/councillors/([^/]+)/(.*)', array('ApiController', 'councillorByName'), EpiApi::external);
+getApi()->get('/api/meetings/json', array('ApiController', 'meetingsJson'), EpiApi::external);
 getApi()->get('/api/feed/', array('ApiController', 'feed'), EpiApi::external);
 getApi()->get('/api/feed/(\d+)', array('ApiController', 'feed'), EpiApi::external);
 getApi()->get('/api/feed/(\d+)/(\d+)', array('ApiController', 'feed'), EpiApi::external);
