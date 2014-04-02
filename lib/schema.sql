@@ -508,4 +508,11 @@ create table election_question (
   constraint foreign key (questionid) references question (id) on delete cascade on update cascade
 ) engine = innodb;
 
+create table data311 (
+  created datetime, 
+  type varchar(50), 
+  description varchar(50), 
+  ward tinyint, 
+  count mediumint
+); 
 
