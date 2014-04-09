@@ -9,5 +9,6 @@ require_once('include.php');
 
 LobbyistController::scrapeForNewLobbyActivities($argv[1]);
 LobbyistController::fixLobbyingNames();
+LobbyistController::tweetNewActivities();
 
 ?>
