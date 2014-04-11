@@ -8,7 +8,7 @@ require_once('include.php');
 require_once('twitteroauth.php');
 
 $datetime1 = date_create('2014-10-27');
-$datetime2 = date_create('now');
+$datetime2 = date_create(date('Y-m-d'));
 $diff = date_diff($datetime1,$datetime2);
 $days = $diff->days;
 
