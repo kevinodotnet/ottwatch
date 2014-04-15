@@ -10,6 +10,7 @@ require '../vendor/autoload.php';
 include_once '../lib/include.php';
 include_once 'epiphany/src/Epi.php';
 include_once 'controllers/ApiController.php';
+include_once 'controllers/ScrapeApiController.php';
 include_once 'controllers/MeetingController.php';
 include_once 'controllers/DevelopmentApp.php';
 include_once 'controllers/LobbyistController.php';
@@ -58,6 +59,9 @@ getApi()->get('/api/feed/(\d+)/(\d+)', array('ApiController', 'feed'), EpiApi::e
 getApi()->get('/api/zoning/(-{0,1}[\d\.]+)/(-{0,1}[\d\.]+)', array('ApiController', 'zoning'), EpiApi::external);
 getApi()->post('/api/inbound/traffic-incident', 'traffic_incident', EpiApi::external);
 getRoute()->get('/api/widget/findward', array('ApiController', 'widgetFindWard'));
+
+# Scraper API
+getApi()->get('/api/scrape/item/(\d+)/votes', array('ScrapeApiController','itemVote'), EpiApi::external);
 
 getRoute()->get('/feed/', 'feed');
 

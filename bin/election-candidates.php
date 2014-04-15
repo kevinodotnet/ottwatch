@@ -289,7 +289,7 @@ $inhtml = array();
 $c_indb = array();
 $c_inhtml = array();
 
-$all  = getDatabase()->all(" select * from candidate where nominated is not null and year = 2014 ");
+$all  = getDatabase()->all(" select * from candidate where nominated is not null and year = 2014 and withdrew is null ");
 foreach ($all as $a) {
 	$key  = "ward:{$a['ward']} last:{$a['last']} first:{$a['first']}";
 	$indb[] = $key;
@@ -362,31 +362,14 @@ if (count($added) > 0) {
 	print "Need to add to database:\n";
 	pr($added);
 }
-if (count($removed) > 0) {
-	print "\nNeed to remove from database\n";
-	pr($removed);
+foreach ($removed as $r) {
+	if ($r['ward'] != 0) {
+		# skip mayors for now
+		print "NEED TO REMOVE\n";
+		pr($r);
+	}
 }
-
 
 createPeople();
-
-return;
-
-$no = array('sympatico.ca','gmail.com','hotmail.com','yahoo.com','gmail.com');
-$rows = getDatabase()->all(" select id,email from candidate where year = 2014 and (url is null or url = '') and (email is not null and email != '') ");
-foreach ($rows as $r) {
-	$url = $r['email'];
-	$url = preg_replace('/.*@/','',$url);
-	$yes = 1;
-	foreach ($no as $n) {
-		if (preg_match("/$n/",$url)) {
-			$yes = 0;
-		}
-	}
-	if ($yes) {
-		$sql = " update candidate set url = '$url' where id = {$r['id']}; ";
-		print "$sql\n";
-	}
-}
 
 ?>
