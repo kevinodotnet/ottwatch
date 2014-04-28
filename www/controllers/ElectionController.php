@@ -991,14 +991,14 @@ class ElectionController {
 		context.font = "bold 16px Verdana";
 	  context.fillText("... loading donation image ... could take a few seconds ... chill!", 20,<?php print $imgH/2; ?>);
 		imageObj.onload = function() {
-			context.drawImage(imageObj,0,-<?php print $row['y']-($padding/2); ?>);
+			context.drawImage(imageObj,-<?php print $row['x']; ?>+50,-<?php print $row['y']-($padding/2); ?>);
 		        context.beginPath();
 		        context.moveTo(0,<?php print ($padding/2); ?>);
-		        context.lineTo(<?php print $row['x']; ?>-20,<?php print ($padding/2); ?>);
+		        context.lineTo(40,<?php print ($padding/2); ?>);
 						context.stroke();
 		        context.closePath();
 		        context.beginPath();
-		        context.arc(<?php print $row['x']; ?>-20,<?php print ($padding/2); ?>, 5, 0, Math.PI*2, true); 
+		        context.arc(40,<?php print ($padding/2); ?>, 5, 0, Math.PI*2, true); 
 		        context.closePath();
 		        context.fill();
 		};
