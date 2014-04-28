@@ -250,10 +250,17 @@ class MeetingController {
 
   static public function votesMember($name) {
     top($name . " Voting History");
-    ?>
-    <?php
 
-    $votes = getDatabase()->all(" 
+		$category = $_GET['category'];
+
+		$v = array('name'=>$name);
+		$categoryWhere = '';
+		if ($category != '') {
+			$v['category'] = $category;
+			$categoryWhere = ' and category = :category ';
+		}
+
+		$sql = "
       select 
         ivc.vote,
         iv.id voteid,
@@ -271,10 +278,12 @@ class MeetingController {
         join meeting m on m.id = i.meetingid
       where 
         ivc.name = :name
+				$categoryWhere
       order by
         m.starttime desc,
         ivc.id
-      ",array('name'=>$name));
+		";
+    $votes = getDatabase()->all($sql,$v);
 
     $againstMajorityTotal = 0;
     $totalYesNo = 0;
