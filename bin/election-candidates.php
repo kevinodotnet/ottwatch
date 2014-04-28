@@ -363,11 +363,10 @@ if (count($added) > 0) {
 	pr($added);
 }
 foreach ($removed as $r) {
-	if ($r['ward'] != 0) {
-		# skip mayors for now
-		print "NEED TO REMOVE\n";
-		pr($r);
+	if (preg_match('/ward:0 /',$r)) {
+		continue;
 	}
+	print "TO REMOVE: $r\n";
 }
 
 createPeople();
