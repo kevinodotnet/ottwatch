@@ -1604,6 +1604,12 @@ class ElectionController {
 			return;
 		}
 
+		$r['donor'] = htmlentities($r['donor']);
+		$r['address'] = htmlentities($r['address']);
+		$r['city'] = htmlentities($r['city']);
+		$r['postal'] = htmlentities($r['postal']);
+		$r['amount'] = htmlentities($r['amount']);
+
 		$next = getDatabase()->one(" select min(y) y from candidate_donation where returnid = {$r['retid']} and page = {$r['page']} and y > {$r['y']} ");
 
 		$pages = self::getReturnPages($r['year'],$r['filename']);
@@ -2084,5 +2090,3 @@ class ElectionController {
 	}
 
 }
-
-?>
