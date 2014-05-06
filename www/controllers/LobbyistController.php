@@ -392,16 +392,33 @@ class LobbyistController {
   public static function showClient ($client) {
     top("Lobbying Client: $client");
 
-    $rows = getDatabase()->all("
-      select *
-      from lobbyfile f
-        join lobbying l on l.lobbyfileid = f.id
-      where client = :client
-      order by
-        l.created desc
-      ",array(
-      'client' => $client
-      ));
+		$lobbied = $_GET['lobbied'];
+		if ($lobbied != '') {
+	    $lobbied_sql = mysql_escape_string($lobbied);
+	    $rows = getDatabase()->all("
+	      select *
+	      from lobbyfile f
+	        join lobbying l on l.lobbyfileid = f.id
+	      where client = :client
+					and lobbied like '%$lobbied_sql%'
+	      order by
+	        l.created desc
+	      ",array(
+	      'client' => $client
+	      ));
+		} else {
+	    $rows = getDatabase()->all("
+	      select *
+	      from lobbyfile f
+	        join lobbying l on l.lobbyfileid = f.id
+	      where client = :client
+	      order by
+	        l.created desc
+	      ",array(
+	      'client' => $client
+	      ));
+		}
+
 
     ?>
     <div class="row-fluid">
@@ -411,13 +428,30 @@ class LobbyistController {
     # count lobbyists
     $lobbyists = array();
     $issues = array();
+		$lobbied_l = array();
     foreach ($rows as $r) {
       $lobbyists[$r['lobbyist']] = 1;
       $issues[$r['issue']] = 1;
+			$lobbied_l[$r['lobbied']] = 1;
     }
     print "Total actitives: ".count($rows)."<br/>";
     print "Number of lobbyists: ".count($lobbyists)."<br/>";
     print "Number of issues: ".count($issues)."<br/>";
+		print "<br/>";
+		if ($lobbied != '') {
+			print "Filter by: <b>'$lobbied'</b> \n";
+			?>
+      <a href="<?php print OttWatchConfig::WWW."/lobbying/clients/{$r['client']}"; ?>?lobbied=<?php print $l; ?>">(show all)</a></li>
+			<?php
+		} else {
+			print "Filter by: <ul>";
+			foreach ($lobbied_l as $l=>$v) {
+				?>
+	      <li><a href="<?php print OttWatchConfig::WWW."/lobbying/clients/{$r['client']}"; ?>?lobbied=<?php print $l; ?>"><?php print $l; ?></a></li>
+				<?php
+			}
+			print "</ul>";
+		}
     ?>
     <br/>
     <b>Full size charts:</b>
@@ -963,5 +997,3 @@ class LobbyistController {
 	}
 
 }
-
-?>
