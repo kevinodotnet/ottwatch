@@ -686,5 +686,3 @@ class DevelopmentAppController {
 
   
 }
-
-?>

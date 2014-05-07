@@ -45,4 +45,3 @@ while (($buffer = fgets($handle, 4096)) !== false) {
 fclose($handle);
 #print_r($row);
 
-?>

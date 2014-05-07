@@ -19,4 +19,3 @@ if ($argv[1] == 'hardScan') {
 $appid = $argv[1];
 DevelopmentAppController::injestApplication($appid,'notweets');
 
-?>

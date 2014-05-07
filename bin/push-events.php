@@ -8,4 +8,3 @@ require_once('include.php');
 
 EventController::pushNewEvents();
 
-?>

@@ -371,4 +371,3 @@ foreach ($removed as $r) {
 
 createPeople();
 
-?>

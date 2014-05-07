@@ -60,4 +60,3 @@ print "JSON\n\n$json\n\n";
 
 pr($result);
 
-?>

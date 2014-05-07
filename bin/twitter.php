@@ -31,4 +31,3 @@ require_once('twitteroauth.php');
 		#pr($s);
 	}
 
-?>

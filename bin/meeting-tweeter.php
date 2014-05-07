@@ -9,4 +9,3 @@ require_once('twitteroauth.php');
 
 MeetingController::tweetNewMeetings();
 
-?>

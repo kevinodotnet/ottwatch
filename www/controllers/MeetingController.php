@@ -2024,5 +2024,3 @@ class MeetingController {
 	}
   
 }
-
-?>

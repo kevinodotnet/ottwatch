@@ -139,4 +139,3 @@ function filterPropertyMatches($row,$props) {
 	return $prop_matches;
 }
 
-?>

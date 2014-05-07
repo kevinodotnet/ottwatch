@@ -10,4 +10,3 @@ require_once('twitteroauth.php');
 
 DevelopmentAppController::scanDevApps();
 
-?>

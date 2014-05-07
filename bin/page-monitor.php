@@ -41,4 +41,3 @@ setvar($var,$md5);
 
 sendEmail('kevino@kevino.net',"$url is updated","$url\n\nis updated");
 
-?>

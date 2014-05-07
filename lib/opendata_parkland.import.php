@@ -17,4 +17,3 @@ print `$cmd`;
 
 `rm -rf t`;
 
-?>

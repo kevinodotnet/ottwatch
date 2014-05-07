@@ -315,5 +315,3 @@ class StoryController {
   }
 
 }
-
-?>

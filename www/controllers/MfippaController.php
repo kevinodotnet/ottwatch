@@ -592,5 +592,3 @@ class MfippaController {
   }
 
 }
-
-?>

@@ -461,4 +461,3 @@ function formatMoney($number, $fractional=false) {
     return $number; 
 } 
 
-?>

@@ -11,4 +11,3 @@ require_once('twitteroauth.php');
 ConsultationController::crawlConsultations();
 ConsultationController::tweetUpdatedConsultations();
 
-?>

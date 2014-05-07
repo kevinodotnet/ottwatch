@@ -11,4 +11,3 @@ LobbyistController::scrapeForNewLobbyActivities($argv[1]);
 LobbyistController::fixLobbyingNames();
 LobbyistController::tweetNewActivities();
 
-?>

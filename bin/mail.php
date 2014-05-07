@@ -15,4 +15,3 @@ $body = 'Will it send?';
 
 sendEmail($to,$subject,$body);
 
-?>

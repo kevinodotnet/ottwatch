@@ -69,4 +69,3 @@ foreach ($lines as $line) {
 
 }
 
-?>

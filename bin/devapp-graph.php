@@ -28,4 +28,3 @@ foreach ($rows as $r) {
 	print '"'.implode('","',$r).'"'."\n";
 }
 
-?>

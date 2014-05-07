@@ -306,5 +306,3 @@ function pointsFromLineString($l) {
 	return $points;
 }
 
-?>
-

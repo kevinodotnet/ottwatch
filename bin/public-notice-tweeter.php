@@ -40,4 +40,3 @@ print "\n\n";
 $tweet = tweet_txt_and_url("Public Notices & Meetings updated",$url);
 tweet($tweet);
 
-?>

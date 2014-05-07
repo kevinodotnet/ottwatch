@@ -1194,4 +1194,3 @@ function bitly_post_curl($uri, $fields) {
   return $output;
 }
 
-?>
