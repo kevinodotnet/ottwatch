@@ -101,6 +101,8 @@ return;
 # MAYOR
 ##########################################################################################
 
+$sql = array();
+
 if (false) {
 $url = "http://ottawa.ca/en/city-hall/your-city-government/elections/mayor";
 $html = file_get_contents($url);
@@ -255,6 +257,10 @@ foreach ($lines as $l) {
     $candidate[$k] = $v;
     #print "$k = '$v'\n";
   }
+
+	if ( $candidate['first'] == 'Catherine' and $candidate['last'] == 'LeFaivre') { 
+		$candidate['last'] = 'Fortin LeFaivre';
+	}
 
   $c = " select count(1) c from candidate where 
 		(year = 2014 and ward = $ward and first = '{$candidate['first']}' and last = '{$candidate['last']}')
