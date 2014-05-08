@@ -8,9 +8,13 @@ require_once('include.php');
 
 include 'PHPExcel/IOFactory.php';
 
-$data = file_get_contents("http://app06.ottawa.ca/en/city_hall/statisticsdata/opendata/info/constr_demo_pool_permits/index.htm");
+#$data = file_get_contents("http://app06.ottawa.ca/en/city_hall/statisticsdata/opendata/info/constr_demo_pool_permits/index.htm");
 #$data = file_put_contents("permits-index.html",$data);
 #$data = file_get_contents("permits-index.html");
+
+injestXLS('http://bit.ly/1ovcaMk','April');
+
+exit;
 
 $lines = explode("<a ",$data);
 foreach ($lines as $l) {
@@ -55,11 +59,12 @@ function injestXLS ($url,$title) {
         # header row of actual data
         $header = $r;
         # confirm headers are the same between files; could change over time.
-        $t = array_values($header);
-        asort($t);
-        $t = implode("::",$t);
-        if ($t != 'Application Type::Building Type::Contractor::D.U.::Description::Lot Number::Municipality::Permit Issued Date::Permit Number::Plan Number::Postal Code::Sq. Ft.::Street Name::Street Number::Value::Ward') {
+        $ta = array_values($header);
+        asort($ta);
+        $t = implode("::",$ta);
+        if ($t != 'Application Type::Building Type::Contractor::D.U. (Added)::Description::Lot Number::Municipality::Permit Issued Date::Permit Number::Plan Number::Postal Code::Sq. Ft.::Street Name::Street Number::Value::Ward') {
           print "ERROR: column names have changed!\n";
+					print "$t\n";
           exit;
         }
         $skip = 0;
@@ -103,7 +108,7 @@ function injestXLS ($url,$title) {
 			# [Building Type] => Rowhouse
 			# [Municipality] => Nepean
 			# [Description] => Finish the basement in a 2 storey rowhouse
-			# [D.U.] => 0
+			# [D.U. (Added)] => 0
 			# [Value] => 6575
 			# [Sq. Ft.] => 263
 			# [Permit Number] => 1300563
@@ -125,7 +130,7 @@ function injestXLS ($url,$title) {
 					'contractor' => $p['Contractor'],
 					'building_type' => $p['Building Type'],
 					'description' => $p['Description'],
-					'du' => $p['D.U.'],
+					'du' => $p['D.U. (Added)'],
 					'value' => $p['Value'],
 					'area' => $p['Sq. Ft.'],
 					'permit_number' => $p['Permit Number'],
