@@ -38,16 +38,18 @@ class ConsultationController {
     # tweet each one, only once
 		$tweeted = array();
     foreach ($rows as $row) {
+      /*
       if ($row['created'] == $row['updated']) {
 				// welcome to the world!
         $tweet = "NEW Consultation: {$row['title']}";
       } elseif ($row['cupdated'] == 1) {
 				// consultation row is updated (as opposed to present because of join to updated document)
-        $tweet = "Consultation updated: {$row['title']}";
 			} else {
 				// one or more documents inside a consultation is updated
         $tweet = "Consultation sub-page(s) updated: {$row['title']}";
 			}
+      */
+      $tweet = "Consultation updated: {$row['title']}";
 			if (isset($tweeted[$row['id']])) {
 				continue;
 			}
