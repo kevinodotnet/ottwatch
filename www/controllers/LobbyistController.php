@@ -595,8 +595,12 @@ class LobbyistController {
 
     # Use the first lobbyist search results page to find all lobbyists
     # how have activities in the given range.
+		LobbyistController::scrapeForNewLobbyActivitiesFromTo($from,$to);
 
-    # print "Loading results for $from to $to ($daterange days)\n";
+	}
+
+  public static function scrapeForNewLobbyActivitiesFromTo($from,$to) {
+    #print "Loading results for $from to $to\n";
 
 		$html = LobbyistController::searchByDate($from,$to);
 		#file_put_contents("lobbysearch.html",$html);
@@ -666,7 +670,7 @@ class LobbyistController {
       $lobbyist = trim($lobbyist);
     }
 
-    #print "Scraping $lobbyist, client: $client, issue: $issue\n";
+    # print "Scraping $lobbyist, client: $client, issue: $issue\n";
 
     if ($issue == 'ERR: issue parsing failed') {
       file_put_contents("err.html",$html);
@@ -732,7 +736,7 @@ class LobbyistController {
         # then the row is actually new, so perhaps it should be tweeted.
         # for now, do nothing. Other processes can pick up on CREATED value to see
         # if tweet action should happen.
-        # print "  $date activity: $activity lobbied: $lobbied\n";
+        print "fileid: $fileid, date: $date, activity: $activity, lobbied: $lobbied\n";
       } catch (Exception $e) {
         if (!preg_match('/Duplicate/',$e)) {
           # only duplicate key is expected since we are not selecting to detect if we
@@ -793,6 +797,7 @@ class LobbyistController {
       }
       if (preg_match('/<input.*name="(ctl00.*gvSearchResults.*btnView)"/',$lines[$x],$matches)) {
         $ctl = $matches[1];
+
         # print ">>> $l\n";
         # print "\n";
         # print "$from to $to :: $lobbyist :: $issue\n";
@@ -802,6 +807,11 @@ class LobbyistController {
         # TODO: possible to miss details if lobbyist registers "old" activity within existing min/max
         # activitydate. But worth the risk, as it speeds up scraping because no need to load detail
         # page for all files.
+
+				# ACTUALLY: SKIP, because new items may have appeared on a date we already knkow about.
+				# lobbyist adds actiivty on date X, we scrape, they add another for date X, now we wont
+				# catch those ones until date Y when the bookends have changed, causing eroneous "late" detections.
+				/*
         $all = getDatabase()->all("
           select 
             f.lobbyist,
@@ -823,9 +833,8 @@ class LobbyistController {
           'from' => $from,
           'to' => $to,
         ));
-        if (count($all) > 0) {
-          continue;
-        }
+        if (count($all) > 0) { continue; }
+				*/
 
 				$fields = array(
 				  '__VIEWSTATE' => $viewstate,
