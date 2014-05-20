@@ -1986,6 +1986,8 @@ class MeetingController {
       if (count($attendees) != count($votefors)) {
         # should not be possible.
         print "\n\nERROR: attendees/votefors does not match; should not happen\n\n";
+        pr($item);
+        print "\n\n";
         return;
       }
       for ($x = 0; $x < count($attendees); $x ++) {
