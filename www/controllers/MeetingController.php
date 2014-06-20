@@ -1005,7 +1005,7 @@ class MeetingController {
     # LEFT hand navigation, items and files links
 
 		foreach ($places as &$p) {
-			$sql = " select * from devapp where address like '%{$p['rd_num']} {$p['rd_name']}%' limit 1 ";
+			$sql = " select * from devapp where address like '%{$p['rd_num']} ".mysql_escape_string($p['rd_name'])."%' limit 1 ";
 			$p['devapps'] = getDatabase()->all($sql);
 		}
     ?>
