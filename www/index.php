@@ -521,6 +521,9 @@ function top($title = '',$quiet = false) {
 		line-height: 140%;
 		color: #565656;
 	}
+	.fb-like {
+		vertical-align: top;
+	}
 </style>
 <script src="<?php print $OTT_WWW; ?>/jquery.js" type="text/javascript"></script>
 <script src="<?php print $OTT_WWW; ?>/bootstrap/js/bootstrap.min.js"></script>
