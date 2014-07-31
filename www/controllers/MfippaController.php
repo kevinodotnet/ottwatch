@@ -75,9 +75,11 @@ class MfippaController {
       bottom();
       return;
     }
+
     $src = OttWatchConfig::WWW."/mfippa/$id/img";
     $next = self::getNext($row['id']);
     $prev = self::getPrev($row['id']);
+		
 
     if ($row['tag'] == '') {
       $matches = array();
@@ -168,7 +170,15 @@ class MfippaController {
     <b>Closed</b>
     </div>
     </div>
-    <img style="border-top: solid 1px #000000; border-bottom: 1px solid #000000;" src="<?php print $src; ?>"/><br/>
+
+		<?php
+		if ($row['created'] < '2014-07-01') {
+			# after July 2014 we are not doing OCR anymore, so no image to display
+			?>
+	    <img style="border-top: solid 1px #000000; border-bottom: 1px solid #000000;" src="<?php print $src; ?>"/><br/>
+			<?php
+		}
+		?>
 
     </center>
 
@@ -320,6 +330,8 @@ class MfippaController {
   public static function doList() {
     top('MFIPPA Requests');
 
+		$onlyGranted = ($_GET['granted'] == 1);
+
     if (LoginController::isAdmin()) {
       print "<b>Process MFIPPA results</b>\n";
       $req = self::getOttWatchMfippa();
@@ -348,20 +360,50 @@ class MfippaController {
     if (LoginController::isAdmin()) {
     	$rows = getDatabase()->all(" select * from mfippa order by source desc, tag desc, id desc ");
 		} else {
-    	$rows = getDatabase()->all(" select * from mfippa where published = 1 and tag is not null order by tag desc ");
+			if ($onlyGranted) {
+	    	$rows = getDatabase()->all(" select * from mfippa where published = 1 and tag is not null and disposition like '%granted%' order by tag desc ");
+			} else {
+	    	$rows = getDatabase()->all(" select * from mfippa where published = 1 and tag is not null order by tag desc ");
+			}
 		}
+
+		?>
+		<p>
+		<?php print count($rows); ?> records found.
+		Filter: 
+		(<a href="/mfippa/">all</a>)
+		(<a href="/mfippa/?granted=1">full/partly granted</a>)
+		</p>
+		<?php
+
     $prevmonthyear = '';
     foreach ($rows as $r) {
       $monthyear = date('F, Y',strtotime($r['created']));
 			if ($prevmonthyear != $monthyear) {
 				?>
     <tr>
-    <th colspan="2"><h2><?php print $monthyear; ?></h2></th>
+    <th colspan="4"><h2><?php print $monthyear; ?></h2></th>
     </tr>
+		<tr>
+		<th>Tag</th>
+		<th>Proactively Disclosed</th>
+		<th>Disposition</th>
+		<th>Summary</th>
+		</tr>
 				<?php
 			}
 			$prevmonthyear = $monthyear;
       $summary = self::cleanSummary($r['summary']);
+      $disposition = self::cleanSummary($r['disposition']);
+      $disclosed = self::cleanSummary($r['disclosed']);
+			if ($disposition == '') {
+	      $disposition = '?';
+			} 
+			if ($disclosed == '') {
+	      $disclosed = '?';
+			} else {
+	      $disclosed = ($disclosed == 1 ? "Yes" : "No");
+			}
 			$href = $r['tag'];
 			if ($href == '') {
 				$href = $r['id'];
@@ -369,6 +411,8 @@ class MfippaController {
       ?>
       <tr>
       <td><nobr><a href="<?php print $href; ?>"><?php print $href; ?></a></nobr></td>
+      <td><?php print $disclosed; ?></td>
+      <td><nobr><?php print $disposition; ?></nobr></td>
       <td><?php print $summary; ?></td>
       </tr>
       <?php

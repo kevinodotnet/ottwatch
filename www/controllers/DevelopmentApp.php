@@ -61,7 +61,7 @@ class DevelopmentAppController {
       if (!$first) {
         $sql .= " or ";
       }
-      $sql .= " address like '%{$addr->addr}%' ";
+      $sql .= " address like '%".mysql_escape_string($addr->addr)."%' ";
       $first = 0;
     }
     $sql .= " ) ";

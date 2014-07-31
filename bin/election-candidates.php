@@ -7,9 +7,30 @@ set_include_path(get_include_path() . PATH_SEPARATOR . "$dirname/../lib");
 set_include_path(get_include_path() . PATH_SEPARATOR . "$dirname/../www");
 require_once('include.php');
 
-#
-# Create PEOPLE accounts for candidates, when needed.
-#
+$canInHtml = array();
+getCandidates("http://ottawa.ca/en/city-hall/your-city-government/elections/mayor",1);
+getCandidates("http://ottawa.ca/en/city-hall/your-city-government/elections/councillor",0);
+$indb = getDatabase()->all(" select * from candidate where year = 2014 and withdrew is null and nominated is not null ");
+foreach ($indb as $c) {
+	$ok = 0;
+	foreach ($canInHtml as $h) {
+		if ($c['ward'] == $h['ward']
+			&& $c['first'] == $h['first']
+			&& $c['last'] == $h['last']) {
+			$ok = 1;
+		}
+	}
+	if ($ok == 0) {
+		print "Withdraw? ward:{$c['ward']} {$c['first']} {$c['last']}\n";
+	}
+}
+createPeople();
+exit;
+
+############################################################################################################################
+# END
+############################################################################################################################
+
 function createPeople() {
 	$rows = getDatabase()->all(" select * from candidate where email > '' and personid is null and nominated is not null and year = 2014 ");
 	foreach ($rows as $r) {
@@ -30,350 +51,126 @@ function createPeople() {
 	}
 }
 
-##########################################################################################
-# TRUSTEE
-##########################################################################################
-/*
+function getCandidates($url,$isMayor) {
 
-$url = "http://ottawa.ca/en/city-hall/your-city-government/elections/school-board-trustee";
-
-$html = file_get_contents($url);
-$html = ConsultationController::getCityContent($html,"<h3><table><tr><td><th>");
-
-$html = preg_replace("/\n/",'',$html);
-$html = preg_replace("/<tr/","\n<tr",$html);
-$html = preg_replace("/<\/tr>/","<\/tr>\n",$html);
-$html = preg_replace("/<h2/","\n<h2",$html);
-$html = preg_replace("/<\/h2>/","<\/h2>\n",$html);
-$html = preg_replace("/<h3/","\n<h3",$html);
-$html = preg_replace("/<\/h3>/","<\/h3>\n",$html);
-$lines = explode("\n",$html);
-
-foreach ($lines as $l) {
-
-	if (preg_match('/<h2/',$l)) {
-		$board = strip_tags($l);
-		continue;
+	global $canInHtml;
+	$html = file_get_contents($url);
+	if (strlen($html) == 0) {
+		exit;
 	}
-	if (preg_match('/<h3>/',$l)) {
-		$matches = array();
-		if (!preg_match('/<h3>Zone (\d+)/',$l,$matches)) {
-			print "ERROR: $l\n";
+	
+	$tags = "";
+	    $html = preg_replace("/\n/","KEVINO_NEWLINE",$html);
+	    $html = preg_replace("/<head.*<body/","<body",$html);
+	    $html = preg_replace("/&lang=en/","",$html); # not all HTML is escaped property, avoids <a href="...&lang=en" crap
+	    $html = preg_replace("/<script[^<]+<\/script>/"," ",$html);
+	    $html = preg_replace("/KEVINO_NEWLINE/","\n",$html);
+	    $html = preg_replace("/ & /"," and ",$html);
+	    $html = preg_replace("/<p[^>]+>/","",$html);
+	    $html = preg_replace("/<\/p>/","__BR__",$html);
+	    $html = strip_tags($html,"<div><br><a><h1><h2><h3><h4><h5><table><tr><td>");
+	    $html = preg_replace("/__BR__/","<br/><br/>",$html);
+	
+	    # the view-dom-id CLASS changes randomly, so remove it
+	    # example: view-dom-id-b477d62d0bdb286acc260d50c820060d
+	    $html = preg_replace("/view-dom-id-[a-z0-9]+/","",$html);
+	$html = preg_replace('/<br>/','',$html);
+	
+	    $xml = simplexml_load_string($html);
+	#$html = ConsultationController::getCityContent($html,"<tr><td><a><div>");
+	#$html = ConsultationController::getCityContent($html,"");
+	
+	$tables = $xml->xpath('//table');
+	foreach ($tables as $t) {
+		$t = simplexml_load_string($t->asXML());
+		if ($isMayor) {
+			$ward = 0;
+		} else {
+		$ward = $t->xpath("//div");
+		$ward = $ward[0];
+		$ward = preg_replace("/\n/","",$ward);
+		$ward = preg_replace("/\r/","",$ward);
+		$ward = trim($ward);
+		if (!preg_match('/Ward (\d+) /',$ward,$matches)) {
+			print "FAILED TO MATCH WARD\n";
+			exit;
 		}
-		$zone = $matches[1];
-		continue;
-	}
-
-	if (!preg_match('/^<tr/',$l)) { continue; }
-	if (preg_match('/Email Address/',$l)) { continue; }
-	if (preg_match('/No candidate/i',$l)) { continue; }
-  $l = preg_replace('/<td>/',"\t",$l);
-  $l = preg_replace('/not provided/',"",$l);
-  $l = preg_replace('/not provided/',"",$l);
-  $l = strip_tags($l);
-  $l = trim($l);
-  $row = explode("\t",$l);
-
-  $names = explode(" ",$row[0]);
-
-  $candidate['ward'] = $zone;
-  $candidate['wardname'] = $board;
-  $candidate['first'] = trim($names[0]);
-  $candidate['last'] = trim($names[count($names)-1]);
-  $candidate['phone'] = trim(@$row[1]);
-  $candidate['fax'] = trim(@$row[2]);
-  $candidate['email'] = trim(@$row[3]);
-
-  $c = " select count(1) c from candidate where ward = ${candidate['ward']} and first = '{$candidate['first']}' and last = '{$candidate['last']}'; ";
-  $i = "insert into candidate (ward,year,first,last) values ({$candidate['ward']},2014,'{$candidate['first']}','{$candidate['last']}'); ";
-  $u = "update candidate set nominated = (case when nominated is null then now() else nominated end) , phone = '{$candidate['phone']}', email = '{$candidate['email']}'  where ward = {$candidate['ward']} and first = '{$candidate['first']}' and last = '{$candidate['last']}'; ";
-  $key = "{$candidate['ward']} {$candidate['first']} {$candidate['last']}";
-  $sql[] = array('ward'=>$candidate['ward'],'insert'=>$i,'update'=>$u,'count'=>$c,'details'=>$candidate);
-
-}
-
-pr($sql);
-
-return;
-*/
-
-##########################################################################################
-# MAYOR
-##########################################################################################
-
-$sql = array();
-
-if (false) {
-$url = "http://ottawa.ca/en/city-hall/your-city-government/elections/mayor";
-$html = file_get_contents($url);
-$html = ConsultationController::getCityContent($html,"<h3><table><tr><td><th>");
-
-$html = preg_replace("/\n/",'',$html);
-$html = preg_replace("/<tr/","\n<tr",$html);
-$html = preg_replace("/<\/tr>/","<\/tr>\n",$html);
-$html = preg_replace("/<h3/","\n<h3",$html);
-$html = preg_replace("/<\/h3>/","<\/h3>\n",$html);
-$lines = explode("\n",$html);
-
-$ward = 0;
-$wardname = 'Mayor';
-
-foreach ($lines as $l) {
-	if (!preg_match('/^<tr/',$l)) { continue; }
-	if (preg_match('/Email Address/',$l)) { continue; }
-  $l = preg_replace('/<td>/',"\t",$l);
-  $l = preg_replace('/not provided/',"",$l);
-  $l = preg_replace('/not provided/',"",$l);
-  $l = strip_tags($l);
-  $l = trim($l);
-  $row = explode("\t",$l);
-
-
-  $names = explode(" ",$row[0]);
-
-	$candidate = array();
-  $candidate['ward'] = $ward;
-  $candidate['wardname'] = $wardname;
-  $candidate['first'] = $names[0];
-  $candidate['last'] = $names[count($names)-1];
-  $candidate['phone'] = @$row[1];
-  $candidate['email'] = @$row[2];
-  $candidate['web'] = '';
-
-  $c = " select count(1) c from candidate where ward = $ward and first = '{$candidate['first']}' and last = '{$candidate['last']}'; ";
-  $i = "insert into candidate (ward,year,first,last) values ($ward,2014,'{$candidate['first']}','{$candidate['last']}'); ";
-  $u = "update candidate set nominated = (case when nominated is null then now() else nominated end) , url = '{$candidate['web']}', phone = '{$candidate['phone']}', email = '{$candidate['email']}'  where year = 2014 and ward = $ward and first = '{$candidate['first']}' and last = '{$candidate['last']}'; ";
-  $key = "$ward {$candidate['first']} {$candidate['last']}";
-  $sql[] = array('ward'=>$ward,'name'=>$key,'insert'=>$i,'update'=>$u,'count'=>$c,'details'=>$candidate);
-}
-
-}
-
-##########################################################################################
-# CANDIDATES
-##########################################################################################
-
-$url = "http://ottawa.ca/en/city-hall/your-city-government/elections/councillor";
-$html = @file_get_contents($url);
-if (strlen($html) == 0) {
-	exit;
-}
-$html = ConsultationController::getCityContent($html,"<h3><table><tr><td><th>");
-
-$html = preg_replace("/\n/",'',$html);
-$html = preg_replace("/<tr/","\n<tr",$html);
-$html = preg_replace("/<\/tr>/","<\/tr>\n",$html);
-$html = preg_replace("/<h3/","\n<h3",$html);
-$html = preg_replace("/<\/h3>/","<\/h3>\n",$html);
-$lines = explode("\n",$html);
-
-$ward = -1;
-$wardname = '';
-
-foreach ($lines as $l) {
-  if (!(preg_match('/<h3>/',$l) || preg_match('/^<tr/',$l))) { continue; }
-  if (preg_match('/<th/',$l)) { continue; }
-  if (preg_match('/No Candidate/',$l)) { continue; }
-
-	$candidate = array();
-	$candidate['twitter'] = '';
-	$candidate['facebook'] = '';
-	$candidate['web'] = '';
-
-  $matches = array();
-  if (preg_match('/^<h3/',$l)) {
-		$l = preg_replace('/-/',' - ',$l);
-		$l = preg_replace('/–/',' - ',$l);
-		$l = preg_replace('/  /',' ',$l);
-		$l = preg_replace('/  /',' ',$l);
-		$l = preg_replace('/  /',' ',$l);
-		$l = preg_replace('/  /',' ',$l);
-	  if (preg_match('/Ward (\d+) - ([^<]+)/',$l,$matches)) {
-	    #print "$l\n";
-	    $ward = $matches[1];
-	    $wardname = $matches[2];
-			#print "$l\n";
-	  } else {
-			print "FAIL: $l\n";
+		$ward = $matches[1];
 		}
-    continue;
-	}
-
-
-  $l = preg_replace('/<td/',"\t<td",$l);
-  $l = preg_replace('/not provided/',"",$l);
-  $l = preg_replace('/not provided/',"",$l);
-  $l = strip_tags($l);
-  $l = trim($l);
-  $row = explode("\t",$l);
-
-  $names = explode(" ",$row[0]);
-
-	if (isset($row[3])) {
-		$other = $row[3];
-		$other = preg_replace('/website/i',' web ',$other);
-		$other = preg_replace('/twitter/i',' twitter ',$other);
-		$other = preg_replace('/facebook/i',' facebook ',$other);
-		$other = preg_replace('/linkedin/i',' linkedin ',$other);
-		$other = preg_replace('/fax number/i',' fax ',$other);
-		$other = preg_replace('/http:\/\//i','',$other);
-		$other = preg_replace('/https:\/\//i','',$other);
-		$other = preg_replace('/:/','',$other);
-		$other = preg_replace('/^ */','',$other);
-		$other = preg_replace('/ /',' ',$other);
-		$other = preg_replace('/  /',' ',$other);
-		$other = preg_replace('/  /',' ',$other);
-		$other = preg_replace('/  /',' ',$other);
-		$other = preg_replace('/  /',' ',$other);
-		$other = preg_replace('/  /',' ',$other);
-		$prev = '';
-		foreach (explode(" ",$other) as $o) {
-			if ($prev == 'web' || $prev == 'twitter' || $prev == 'facebook') {
-				$candidate[$prev] = trim($o);
-				if ($prev == 'facebook' && preg_match('/^\//',$candidate['facebook'])) {
-					$candidate['facebook'] = "http://facebook.com{$candidate['facebook']}";
-				}
-				if ($prev == 'twitter') {
-					$candidate['twitter'] = preg_replace('/^@/','',$candidate['twitter']);
+		$trs = $t->xpath("//tr");
+		array_shift($trs);
+	
+	
+		#pr($trs);
+		foreach ($trs as $tr) {
+			$tr = simplexml_load_string($tr->asXML());
+			$tds = $tr->xpath("//td");
+			$name = trim($tds[0].''); 
+			$name = preg_replace("/  /"," ",$name);
+			$name = preg_replace("/  /"," ",$name);
+			$name = preg_replace("/  /"," ",$name);
+			$name = preg_replace("/  /"," ",$name);
+			# print "NAME: $name\n";
+			$name = explode(" ",$name);
+			$first = $name[0];
+			$last = $name[count($name)-1];
+	
+			if ($last == 'LeFaivre') { $last = 'Fortin LeFaivre'; }
+	
+			if ($first == 'No') { continue; } # no candidates in ward yet.
+	
+			$row = getDatabase()->one(" select count(1) c from candidate where ward = $ward and year = 2014 and last = '$last' and first = '$first' and nominated is not null ");
+			$count = $row['c'];
+			if ($count != 1) {
+				print "CANDIDATE NOT FOUND: ward: $ward first: $first last: $last\n";
+			}
+	
+			$canInHtml[] = array('ward'=>$ward,'first'=>$first,'last'=>$last);
+	
+			continue;
+			$contact = $tds[1]->asXML();
+			$contact = preg_replace("/\n/"," ",$contact);
+			$contact = preg_replace("/\r/"," ",$contact);
+			$contact = preg_replace("/</"," <",$contact);
+			$contact = strip_tags($contact);
+			$contact = preg_replace("/  /"," ",$contact);
+			$contact = preg_replace("/  /"," ",$contact);
+			$contact = preg_replace("/  /"," ",$contact);
+			$contact = preg_replace("/  /"," ",$contact);
+			$contact = preg_replace("/  /"," ",$contact);
+			$contact = preg_replace("/  /"," ",$contact);
+			$contact = preg_replace("/  /"," ",$contact);
+			$values = explode(" ",$contact);
+			$email = '';
+			$facebook = '';
+			$web = '';
+			foreach ($values as $v) {
+				if ($v == 'Website:') { continue; }
+				if (preg_match('/@/',$v)) {
+					$email = $v;
+				} else if (preg_match('/faceboom.com/',$v)) {
+					$facebook  = $v;
+				} else if (preg_match('/^http/',$v)) {
+					$web = $v;
+				} else if ($v == '') {
+					continue;
+				} else {
+					#print "UNKNOWN: $v\n";
 				}
 			}
-			$prev = $o;
+			/*
+			pr($values);
+			print "name: $name\n";
+			print "email: $email\n";
+			print "facebook: $facebook\n";
+			print "web: $web\n";
+			# print "name: $name contact $contact\n";
+			#pr($contact);
+			*/
 		}
-
-		#print "-------------------\n";
-		#print "$other\n";
-		#pr($parts);
+	
 	}
 
-
-  $candidate['ward'] = $ward;
-  $candidate['wardname'] = $wardname;
-  $candidate['first'] = $names[0];
-  $candidate['last'] = $names[count($names)-1];
-  $candidate['phone'] = @$row[1];
-  $candidate['email'] = @$row[2];
-  foreach ($candidate as $k => $v) {
-    $v = preg_replace('/ /','',$v);
-    $candidate[$k] = $v;
-    #print "$k = '$v'\n";
-  }
-
-	if ( $candidate['first'] == 'Catherine' and $candidate['last'] == 'LeFaivre') { 
-		$candidate['last'] = 'Fortin LeFaivre';
-	}
-
-  $c = " select count(1) c from candidate where 
-		(year = 2014 and ward = $ward and first = '{$candidate['first']}' and last = '{$candidate['last']}')
-		or (year = 2014 and nominated is null and incumbent = 1 and ward = $ward and first = '{$candidate['first']}' and last = '{$candidate['last']}')
-	;
-	";
-  $i = "insert into candidate (ward,year,first,last) values ($ward,2014,'{$candidate['first']}','{$candidate['last']}'); ";
-  $u = "update candidate set 
-		nominated = (case when nominated is null then now() else nominated end) , 
-		phone = '{$candidate['phone']}', 
-		twitter = '{$candidate['twitter']}', 
-		facebook = '{$candidate['facebook']}', 
-		url = '{$candidate['web']}', 
-		email = '{$candidate['email']}'
-		where year = 2014 and ward = $ward and first = '{$candidate['first']}' and last = '{$candidate['last']}'; ";
-/*  $u = "update candidate set 
-		nominated = (case when nominated is null then now() else nominated end) , phone = '{$candidate['phone']}', email = '{$candidate['email']}'  
-		where year = 2014 and ward = $ward and first = '{$candidate['first']}' and last = '{$candidate['last']}'; ";*/
-  $key = "$ward {$candidate['first']} {$candidate['last']}";
-  $sql[] = array('ward'=>$ward,'name'=>$key,'insert'=>$i,'update'=>$u,'count'=>$c,'details'=>$candidate);
-
-#	if ($candidate['web'] != '') {
-#		print "update candidate set url = '{$candidate['web']}' where (url is null or url = '') and year = 2014 and ward = {$candidate['ward']} and last = '{$candidate['last']}'; \n";
-#	}
-
-  #pr($candidate);
 }
 
-$indb = array();
-$inhtml = array();
-
-$c_indb = array();
-$c_inhtml = array();
-
-$all  = getDatabase()->all(" select * from candidate where nominated is not null and year = 2014 and withdrew is null ");
-foreach ($all as $a) {
-	$key  = "ward:{$a['ward']} last:{$a['last']} first:{$a['first']}";
-	$indb[] = $key;
-	$c_indb[] = $a;
-}
-foreach ($sql as $key) {
-	$htmlkey  = "ward:{$key['details']['ward']} last:{$key['details']['last']} first:{$key['details']['first']}";
-	$inhtml[] = $htmlkey;
-
-	$c = $key['details'];
-	$c_inhtml[] = $c;
-
-	$tweet = "NEW candidate: {$c['first']} {$c['last']} ({$c['wardname']}) http://ottwatch.ca/election/ward/{$key['ward']} #ottvote";
-
-	#pr($key['details']);
-
-  $u = $key['update'];
-  $i = $key['insert'];
-  $c = $key['count'];
-  $key = $key['name'];
-
-	$i = preg_replace("/\t/"," ",$i);
-	$u = preg_replace("/\t/"," ",$u);
-	$i = preg_replace("/\n/"," ",$i);
-	$u = preg_replace("/\n/"," ",$u);
-
-  $row = getDatabase()->one($c);
-
-  if ($row['c'] == 0) {
-    print "$key added: NEW candidate\n";
-		print "$tweet\n";
-		print "\n$i\n$u\n";
-    #getDatabase()->execute($i);
-		#getDatabase()->execute($u);
-		continue;
-  }
-
-  #$c = getDatabase()->execute($u);
-	#print "$u\n";
-	if ($c > 0) {
-		print "\nupdating just cause maybe\n";
-		print "\n$u\n";
-		print "$key updated\n";
-	}
-}
-
-foreach ($c_inhtml as $h) {
-	foreach ($c_indb as $d) {
-		$h['url'] = @$h['web'];
-		if ($d['last'] == $h['last']) {
-		if ($d['first'] == $h['first']) {
-		if ($d['ward'] == $h['ward']) {
-			if ($d['url'] == '' & $h['url'] != '' && $h['url'] != $d['url']) { print " update candidate set url = '{$h['url']}' where (url is null or url = '') and id = {$d['id']}; \n"; }
-			if ($d['twitter'] == '' & $h['twitter'] != '' && $h['twitter'] != $d['twitter']) { print " update candidate set twitter = '{$h['twitter']}' where (twitter is null or twitter = '') and id = {$d['id']}; \n"; }
-			if ($d['email'] == '' & $h['email'] != '' && $h['email'] != $d['email']) { print " update candidate set email = '{$h['email']}' where (email is null or email = '') and id = {$d['id']}; \n"; }
-			if ($d['facebook'] == '' & $h['facebook'] != '' && $h['facebook'] != $d['facebook']) { print " update candidate set facebook = '{$h['facebook']}' where (facebook is null or facebook = '') and id = {$d['id']}; \n"; }
-		}
-		}
-		}
-	}
-}
-
-#foreach ($indb as $a) { print "REPORT :: $a :: DATABASE\n"; }
-#foreach ($inhtml as $a) { print "REPORT :: $a :: HTML\n"; }
-
-$removed = array_diff($indb,$inhtml);
-$added = array_diff($inhtml,$indb);
-
-if (count($added) > 0) {
-	print "Need to add to database:\n";
-	pr($added);
-}
-foreach ($removed as $r) {
-	if (preg_match('/ward:0 /',$r)) {
-		continue;
-	}
-	print "TO REMOVE: $r\n";
-}
-
-createPeople();
 

@@ -525,6 +525,7 @@ class ApiController {
 
     $points = self::getLinestringAsArray($row['points']);
     $result['points'] = $points;
+    $t = ApiController::point($midpoint['lat'],$midpoint['lon']);
     $result['ward'] = $t['ward'];
     $result['polls'] = $t['polls'];
 

@@ -521,6 +521,9 @@ function top($title = '',$quiet = false) {
 		line-height: 140%;
 		color: #565656;
 	}
+	.fb-like {
+		vertical-align: top;
+	}
 </style>
 <script src="<?php print $OTT_WWW; ?>/jquery.js" type="text/javascript"></script>
 <script src="<?php print $OTT_WWW; ?>/bootstrap/js/bootstrap.min.js"></script>
@@ -579,6 +582,16 @@ if (!LoginController::isLoggedIn()) {
 }
 ?>
 <li><a href="<?php print $OTT_WWW; ?>/about">About</a></li>
+<li>
+	<?php
+	{
+  $row = getDatabase()->one(" select * from story where deleted = 0 and published = 1 order by updated desc limit 1 ");
+	print "<a href=\"/story/{$row['id']}\">";
+	print "<b>Latest Story: {$row['title']}</b>";
+	print "</a>";
+	}
+	?>
+</li>
 <?php
 if ($remaining == 0) {
 	?>
