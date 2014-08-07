@@ -736,7 +736,7 @@ class LobbyistController {
         # then the row is actually new, so perhaps it should be tweeted.
         # for now, do nothing. Other processes can pick up on CREATED value to see
         # if tweet action should happen.
-        print "fileid: $fileid, date: $date, activity: $activity, lobbied: $lobbied\n";
+        # print "fileid: $fileid, date: $date, activity: $activity, lobbied: $lobbied\n";
       } catch (Exception $e) {
         if (!preg_match('/Duplicate/',$e)) {
           # only duplicate key is expected since we are not selecting to detect if we
