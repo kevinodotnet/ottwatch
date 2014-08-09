@@ -213,7 +213,7 @@ class ApiController {
       $('#wardmsg').css("display", "block");
       postal = $('#postal').val();
 			if (postal == '') {
-	      $('#wardmsg').html('Enter a postal code first.' + ' (<a href="javascript:findwardagain(); return false;">again</a>)');
+	      $('#wardmsg').html('Enter a postal code first.' + ' (<a href="javascript:findwardagain();">again</a>)');
 				return;
 			}
       $('#wardmsg').html('... googling for lat/lon ...');
@@ -236,8 +236,8 @@ class ApiController {
             } else {
 	            $('#wardmsg').html(
 	              postal + 
-									' is in <b><a target="_blank" href="javascript:window.top.location.href = \'<?php print OttWatchConfig::WWW; ?>/election/ward/'+data.ward.wardnum+'\'; return false;">' + data.ward.ward + '</a></b>' + 
-									' (<a href="javascript:findwardagain(); return false;">again</a>)'
+									' is in <b><a target="_blank" href="<?php print OttWatchConfig::WWW; ?>/election/ward/'+data.ward.wardnum+'">' + data.ward.ward + '</a></b>' + 
+									' (<a href="javascript:findwardagain(); ">again</a>)'
 	            );
             }
           });
