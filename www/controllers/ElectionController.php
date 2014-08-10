@@ -407,6 +407,9 @@ class ElectionController {
 		    <?php
 		    if ($incumbent['nominated'] != '') {
           print "Registered as candidate on ". substr($incumbent['nominated'],0,10);
+			    if ($incumbent['withdrew'] != '') {
+	          print " and subsequently withdrew on ". substr($incumbent['withdrew'],0,10);
+					}
 		    } else {
           if (self::isRaceOn()) {
 	          print "Has not (yet) registered as a candidate.";
