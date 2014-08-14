@@ -566,7 +566,7 @@ class ElectionController {
         $raceLink = OttWatchConfig::WWW . "/election/ward/{$ward['wardnum']}";
       }
 
-      $rows = getDatabase()->all("select * from candidate where ward = :ward and year = :year and nominated is not null order by ward,rand()",array('ward'=>$ward['wardnum'],'year'=>self::year));
+      $rows = getDatabase()->all("select * from candidate where ward = :ward and year = :year and nominated is not null order by ward,withdrew,rand()",array('ward'=>$ward['wardnum'],'year'=>self::year));
       ?>
       <div class="span3">
       <h4><a href="<?php print $raceLink; ?>"><?php print "{$wardInfo['ward']}"; if (count($rows) > 0) { print ' ('.count($rows).')'; } ?></a></h4>
@@ -579,11 +579,20 @@ class ElectionController {
 				if (isset($row['withdrew'])) {
 					$style = ' style="text-decoration: line-through;" ';
 				}
-        print "<span $style>{$row['first']} {$row['last']}</span>";
+        print "<span $style>";
+				if (isset($row['url']) && !isset($row['withdrew'])) {
+					print "<a target=\"_blank\" href=\"http://{$row['url']}\">";
+				}
+				print "{$row['first']} {$row['last']}";
+				if (isset($row['url']) && !isset($row['withdrew'])) {
+					print "</a>";
+				}
+				print "</span>";
         #if ($row['incumbent']) { print " *"; }
         print "<br/>\n";
       }
       ?>
+      <div style=""><a href="<?php print $raceLink; ?>">(full ward info)</a></div>
       </div>
       <?php
       if ($mod == 3) {
