@@ -1246,6 +1246,7 @@ class MeetingController {
               $title = $tempi['title'];
             }
           }
+					$p['addr'] = preg_replace("/'/",'',$p['addr']);
           # use anonymous functions so variable scope is not insane
 					# [addr] => 265 CARLING AVE 
 					# [point] => POINT(-75.6998273 45.4011291)
