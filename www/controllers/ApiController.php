@@ -198,7 +198,7 @@ class ApiController {
     </form>
     <div style="display: none;" id="wardmsg"></div>
 		<?php if ($branded) { ?>
-		<i style="color: #c0c0c0;">powered by <a href="http://ottwatch.ca/election">ottwatch.ca</i>
+		<i style="color: #c0c0c0;">powered by <a target="_blank" href="http://ottwatch.ca/election">ottwatch.ca</i>
 		<?php } ?>
 		</div><!-- /findwardwidget -->
     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=<?php print OttWatchConfig::GOOGLE_API_KEY; ?>&sensor=false"></script>

@@ -160,6 +160,7 @@ class OpenDataController {
 					if ($r->url == 'http://opl-bpo.ca/en/rss-feeds'
 						|| $r->url == 'http://octranspo1.com/developers/register'
 						|| $r->url == 'http://biblioottawalibrary.ca/branches.xml'
+						|| $r->url == 'http://biblioottawalibrary.ca/en/events-feed'
 						|| $r->url == 'http://app06.ottawa.ca/online_services/opendata/data/spotlight/events.xml'
 						|| $r->url == 'http://app06.ottawa.ca/online_services/opendata/data/spotlight/venues.xml'
 						) {
