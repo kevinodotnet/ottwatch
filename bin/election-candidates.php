@@ -8,8 +8,8 @@ set_include_path(get_include_path() . PATH_SEPARATOR . "$dirname/../www");
 require_once('include.php');
 
 $canInHtml = array();
-getCandidates("http://ottawa.ca/en/city-hall/your-city-government/elections/mayor",1);
 getCandidates("http://ottawa.ca/en/city-hall/your-city-government/elections/councillor",0);
+getCandidates("http://ottawa.ca/en/city-hall/your-city-government/elections/mayor",1);
 $indb = getDatabase()->all(" select * from candidate where year = 2014 and withdrew is null and nominated is not null ");
 foreach ($indb as $c) {
 	$ok = 0;
@@ -57,6 +57,28 @@ function createPeople() {
 	}
 }
 
+function reportUnknownLinks ($html) {
+
+  $html = preg_replace('/"/',' ',$html);
+  $html = preg_replace("/'/",' ',$html);
+  $html = preg_replace("/</",' ',$html);
+  $html = preg_replace("/>/",' ',$html);
+	$chunks = explode(" ",$html);
+  foreach ($chunks as $c) {
+    $matches = array();
+    if (preg_match('/http.*twitter.com\/(.*)/',$c,$matches)) {
+      $twitter = $matches[1];
+      if ($twitter != 'ottawacity') {
+        print "twitter $twitter :: $c\n";
+        $row = getDatabase()->one(" select * from candidate where year = 2014 and nominated is not null and withdrew is null and lower(twitter) = lower(:twitter) ",array("twitter"=>$twitter));
+        pr($row);
+      }
+    }
+  }
+  exit;
+
+}
+
 function getCandidates($url,$isMayor) {
 
 	global $canInHtml;
@@ -64,6 +86,9 @@ function getCandidates($url,$isMayor) {
 	if (strlen($html) == 0) {
 		exit;
 	}
+
+  reportUnknownLinks($html);
+  return;
 	
 	$tags = "";
 	    $html = preg_replace("/\n/","KEVINO_NEWLINE",$html);
