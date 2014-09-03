@@ -338,14 +338,14 @@ class ElectionController {
 					<div class="fb-like" data-href="<?php print $r['facebook']; ?>" data-layout="button_count" data-action="like" data-show-faces="false" data-share="false"></div>
           <?php } ?>
           <?php if ($r['twitter'] != '') { ?>
-					<a target="_blank" href="http://twitter.com/<?php print $r['twitter']; ?>"><i class="fa fa-share"></i>@<?php print $r['twitter']; ?></a>
+					<a target="_blank" href="http://twitter.com/<?php print $r['twitter']; ?>"><i class="fa fa-share"></i>@<?php print $r['twitter']; ?></a><br/>
           <?php } ?>
           <?php if ($r['facebook'] != '') { ?>
 					<a target="_blank" href="<?php print $r['facebook']; ?>"><i class="fa fa-share"></i>Facebook</a>
           <?php } ?>
 	        </td>
 	        <td>
-	        <?php print substr($r['nominated'],0,10); ?>
+	        <nobr><?php print substr($r['nominated'],0,10); ?></nobr>
 	        </td>
 	      </tr>
 	      <?php
