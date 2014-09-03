@@ -563,9 +563,11 @@ class ElectionController {
       }
 
       $rows = getDatabase()->all("select * from candidate where ward = :ward and year = :year and nominated is not null order by ward,withdrew,rand()",array('ward'=>$ward['wardnum'],'year'=>self::year));
+      $countNomed = getDatabase()->one("select count(1) c from candidate where ward = :ward and year = :year and nominated is not null and withdrew is null ",array('ward'=>$ward['wardnum'],'year'=>self::year));
+      $countNomed = $countNomed['c'];
       ?>
       <div class="span3">
-      <h4><a href="<?php print $raceLink; ?>"><?php print "{$wardInfo['ward']}"; if (count($rows) > 0) { print ' ('.count($rows).')'; } ?></a></h4>
+      <h4><a href="<?php print $raceLink; ?>"><?php print "{$wardInfo['ward']}"; if (count($rows) > 0) { print ' ('.$countNomed.')'; } ?></a></h4>
       <?php
       if (count($rows) == 0) {
         print "<i style=\"color: #c0c0c0;\">No Candidates Registered Yet</i>\n";
