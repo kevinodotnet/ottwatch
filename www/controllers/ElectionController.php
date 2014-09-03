@@ -281,11 +281,11 @@ class ElectionController {
     if ($race == 0) {
       $title = "Mayoral Race";
     } else {
-      $title = "$wardname Ward Race";
+      $title = "$wardname";
     }
 
 		top($title);
-		print "<h1>$title <small><a href=\"/election\">main election page</a></small></h1>\n";
+		print "<h1>$title <small>(<a href=\"/election\">main election page</a>)</small></h1>\n";
 
     $rows = getDatabase()->all("
       select * 
@@ -303,11 +303,10 @@ class ElectionController {
       <?php
     } else {
 	    ?>
-	    <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
+	    <table class="table table-bordered table-hover table-condensed">
 	    <tr>
 	      <th>Name</th>
-	      <th>Web</th>
-	      <th>Email/Phone/Etc</th>
+	      <th>Contact</th>
 	      <th>Registered</th>
 	    </tr>
 	    <?php
@@ -322,28 +321,27 @@ class ElectionController {
 	          <?php if ($r['incumbent'] == TRUE) { /*print "*";*/ } ?>
 	        </td>
 	        <td>
-	        <a target="_blank" href="http://<?php print $r['url']; ?>"><?php print $r['url']; ?></a>
-	        </td>
-	        <td>
+					<?php if ($r['url'] != '') { ?>
+	        <a target="_blank" href="http://<?php print $r['url']; ?>"><?php print $r['url']; ?></a><br/>
+					<?php } ?>
 					<?php if ($r['email'] != '') { ?>
 	        <a target="_blank" href="mailto:<?php print $r['email']; ?>?Subject=Election 2014"><?php print $r['email']; ?></a><br/>
 					<?php } ?>
 					<?php if ($r['phone'] != '') { ?>
 					<?php print $r['phone']; ?><br/>
 					<?php } ?>
-          <?php if ($r['twitter'] != '') { ?>
+          <?php if (false && $r['twitter'] != '') { ?>
           <a href="https://twitter.com/<?php print $r['twitter']; ?>" class="twitter-follow-button" data-show-count="false" data-lang="en"><?php print $r['twitter']; ?></a>
           <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
           <?php } ?>
-          <?php if ($r['facebook'] != '') { ?>
+          <?php if (false && $r['facebook'] != '') { ?>
 					<div class="fb-like" data-href="<?php print $r['facebook']; ?>" data-layout="button_count" data-action="like" data-show-faces="false" data-share="false"></div>
           <?php } ?>
-					<br/>
           <?php if ($r['twitter'] != '') { ?>
-					<a target="_blank" href="http://twitter.com/<?php print $r['twitter']; ?>"><i class="fa fa-share"></i> goto Twitter</a><br/>
+					<a target="_blank" href="http://twitter.com/<?php print $r['twitter']; ?>"><i class="fa fa-share"></i>@<?php print $r['twitter']; ?></a>
           <?php } ?>
           <?php if ($r['facebook'] != '') { ?>
-					<a target="_blank" href="<?php print $r['facebook']; ?>"><i class="fa fa-share"></i> goto Facebook</a><br/>
+					<a target="_blank" href="<?php print $r['facebook']; ?>"><i class="fa fa-share"></i>Facebook</a>
           <?php } ?>
 	        </td>
 	        <td>
@@ -362,8 +360,6 @@ class ElectionController {
 						<span style="text-decoration: line-through;">
 	          <?php print "{$r['first']} {$r['middle']} {$r['last']}"; ?>
 						</span>
-	        </td>
-	        <td>
 	        </td>
 	        <td>
 	        </td>
