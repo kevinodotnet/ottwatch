@@ -69,11 +69,18 @@ function reportUnknownLinks ($html) {
 		$c = $chunks[$x];
     $matches = array();
 		# print "$c\n";
+		# if ($c == 'Ward') { print "WARD: ".$chunks[$x+1]."\n"; }
 		if ($c == '(613)') {
-			$phone = "{$chunks[$x]}-{$chunks[$x+1]}";
+			$phone = "{$chunks[$x]} {$chunks[$x+1]}";
 			$phone = preg_replace('/\n/','',$phone);
 			$phone = preg_replace('/\r/','',$phone);
-			# TODO: print ">> phone $phone phone << \n";
+			$phone = preg_replace('/,.*/','',$phone);
+      $row = getDatabase()->one(" select * from candidate where year = 2014 and nominated is not null and withdrew is null and lower(phone) like '%$phone%' ");
+			if (!$row['id']) {
+				if ($phone != '(613) 699-3317' && $phone != '(613) 699-2078') {
+					print " update candidate set phone = lower('$phone') where phone is null and id = ; \n";
+				}
+			}
 		}
     if (preg_match('/mailto:(.*)/',$c,$matches)) {
 			$email = $matches[1];
