@@ -408,18 +408,22 @@ class ElectionController {
 					}
 		    } else {
           if (self::isRaceOn()) {
-	          print "Has not (yet) registered as a candidate.";
-	          if ($incumbent['twitter'] != '') {
-	            ?>
-	            Is the incumbent running again? Ask them with this tweet button:
-	            <a href="https://twitter.com/share" class="twitter-share-button" 
-	              data-via="ottwatch"
-	              data-text=".@<?php print $incumbent['twitter']; ?> are you running again? When will you be officially registered?"
-								data-hashtags="ottvote"
-	              data-lang="en"
-	              >.@<?php print $incumbent['twitter']; ?> are you running again? When will you be officially registered?</a>
-	            <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
-	            <?php
+	          if ($incumbent['retiring'] == 1) {
+							print "{$incumbent['first']} is retiring from this position.";
+						} else {
+		          print "Has not (yet) registered as a candidate.";
+		          if (false && $incumbent['twitter'] != '') {
+		            ?>
+		            Is the incumbent running again? Ask them with this tweet button:
+		            <a href="https://twitter.com/share" class="twitter-share-button" 
+		              data-via="ottwatch"
+		              data-text=".@<?php print $incumbent['twitter']; ?> are you running again? When will you be officially registered?"
+									data-hashtags="ottvote"
+		              data-lang="en"
+		              >.@<?php print $incumbent['twitter']; ?> are you running again? When will you be officially registered?</a>
+		            <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+		            <?php
+							}
 	          }
           } else {
             ?>
