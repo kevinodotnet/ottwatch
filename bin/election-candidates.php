@@ -64,18 +64,57 @@ function reportUnknownLinks ($html) {
   $html = preg_replace("/</",' ',$html);
   $html = preg_replace("/>/",' ',$html);
 	$chunks = explode(" ",$html);
-  foreach ($chunks as $c) {
+  #foreach ($chunks as $c) {
+	for ($x = 0; $x < count($chunks); $x++) {
+		$c = $chunks[$x];
     $matches = array();
+		# print "$c\n";
+		# if ($c == 'Ward') { print "WARD: ".$chunks[$x+1]."\n"; }
+		if ($c == '(613)') {
+			$phone = "{$chunks[$x]} {$chunks[$x+1]}";
+			$phone = preg_replace('/\n/','',$phone);
+			$phone = preg_replace('/\r/','',$phone);
+			$phone = preg_replace('/,.*/','',$phone);
+      $row = getDatabase()->one(" select * from candidate where year = 2014 and nominated is not null and withdrew is null and lower(phone) like '%$phone%' ");
+			if (!$row['id']) {
+				if ($phone != '(613) 699-3317' && $phone != '(613) 699-2078') {
+					print " update candidate set phone = lower('$phone') where phone is null and id = ; \n";
+				}
+			}
+		}
+    if (preg_match('/mailto:(.*)/',$c,$matches)) {
+			$email = $matches[1];
+        $row = getDatabase()->one(" select * from candidate where year = 2014 and nominated is not null and withdrew is null and lower(email) = lower(:email) ",array("email"=>$email));
+				if (!$row['id']) {
+					print " update candidate set email = lower('$email') where email is null and id = ; \n";
+				}
+		}
+    if (preg_match('/http.*facebook.*/',$c,$matches)) {
+			if (!preg_match('/cityofottawa/',$c)) {
+				$c = preg_replace('/^http:/','https:',$c);
+				$c = preg_replace('/www.facebook/','facebook',$c);
+				$facebook = $c;
+        $row = getDatabase()->one(" select * from candidate where year = 2014 and nominated is not null and withdrew is null and lower(facebook) = lower(:facebook) ",array("facebook"=>$facebook));
+				if (!$row['id']) {
+					print " update candidate set facebook = '$facebook' where facebook is null and id = ; \n";
+				}
+			}
+		}
     if (preg_match('/http.*twitter.com\/(.*)/',$c,$matches)) {
       $twitter = $matches[1];
+			$twitter = preg_replace('/@/','',$twitter);
+			if ($twitter == 'newott') {
+				# martin canning is actual account
+				continue;
+			}
       if ($twitter != 'ottawacity') {
-        print "twitter $twitter :: $c\n";
         $row = getDatabase()->one(" select * from candidate where year = 2014 and nominated is not null and withdrew is null and lower(twitter) = lower(:twitter) ",array("twitter"=>$twitter));
-        pr($row);
+				if (!$row['id']) {
+	        print "twitter $twitter :: is missing $c\n";
+				}
       }
     }
   }
-  exit;
 
 }
 
@@ -88,7 +127,6 @@ function getCandidates($url,$isMayor) {
 	}
 
   reportUnknownLinks($html);
-  return;
 	
 	$tags = "";
 	    $html = preg_replace("/\n/","KEVINO_NEWLINE",$html);
