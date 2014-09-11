@@ -18,14 +18,36 @@ Scraping is performed by files in /bin. See the "Crontab" section below for ottw
 Database
 ========
 
-After creating a MySQL database the schema can be created via:
+1) After creating a MySQL database the schema can be created via:
 
   % mysql < lib/schema.sql
+  
+  Example on Windows:
+  
+	connect to your mysql databases and if your database name is ottwatchdb do
+	
+	mysql> use ottwatchdb; 
+	
+	mysql> source lib/opendata_parkland.sql;
 
-I've also provided SQL files for the opendata used so you don't have to worry about using "ogr2ogr" to convert from
+2) I've also provided SQL files for the opendata used so you don't have to worry about using "ogr2ogr" to convert from
 SHP files to Mysql GIS objects. You can load each of those as well with:
 
   % for i in lib/opendata_*sql; do echo mysql < $i; done
+  
+  Example of bash shell:
+  
+  for OUTPUT in $(Linux-Or-Unix-Command-Here) 
+  
+  	do 
+  		
+  		command1 on $OUTPUT
+  		
+  		command2 on $OUTPUT
+  		
+  		commandN on $OUTPUT
+  	
+  	done
 
 Crontab
 =======
