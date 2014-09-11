@@ -7,7 +7,6 @@ class SyndicationController {
     $last = getvar('syndicate.last');
     if ($last == '') { $last = time(); }
 
-		# time of this run
 		$now = time();
     setvar('syndicate.last',$now);
 
@@ -27,8 +26,11 @@ class SyndicationController {
     ",array('now'=>$now,'last'=>$last));
 
     if (count($rows) > 10) {
-      print "\n\nTOO MANY UPDATES TO SYNDICATE!\n\n";
-      pr($rows);
+			$r = array();
+			$r['message'] = count($rows)." updates found, so you'll have to read them individually here ";
+			$r['url'] = null;
+			$r['path'] = '/feed';
+ 			self::twitter($r);
       return;
     }
 
@@ -37,9 +39,6 @@ class SyndicationController {
 			$path = $r['path'];
 			$url = $r['url'];
 
-			#print "\n-----------------------------------------------\n";
-			#pr($r);
-			#print "\n-----------------------------------------------\n";
       try {
   			self::twitter($r);
       } catch (Exception $e) {
@@ -59,6 +58,7 @@ class SyndicationController {
 		if ($url == null) {
 			$url = OttWatchConfig::WWW.$r['path'];
 		}
+		$message = preg_replace('/Cycling/i','#ottbike',$message);
     $tweet = tweet_txt_and_url($message,$url);
     tweet($tweet);
   }
