@@ -581,9 +581,11 @@ class ElectionController {
 				if (isset($row['withdrew'])) {
 					$style = ' style="text-decoration: line-through;" ';
 				}
+				# print "({$row['id']}) ";
         print "<span $style>";
 				if (isset($row['url']) && !isset($row['withdrew'])) {
-					print "<a target=\"_blank\" href=\"http://{$row['url']}\">";
+					#print "<a target=\"_blank\" href=\"http://{$row['url']}\">";
+					print "<a target=\"_blank\" href=\"$raceLink\">";
 				}
 				print "{$row['first']} {$row['last']}";
 				if (isset($row['url']) && !isset($row['withdrew'])) {
