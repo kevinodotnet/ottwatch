@@ -29,7 +29,7 @@ class SyndicationController {
 			$r = array();
 			$r['message'] = count($rows)." updates found, so you'll have to read them individually here ";
 			$r['url'] = null;
-			$r['path'] = '/feed';
+			$r['path'] = '/feed/';
  			self::twitter($r);
       return;
     }
