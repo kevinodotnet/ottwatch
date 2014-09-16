@@ -1823,7 +1823,7 @@ class ElectionController {
       }
       ?>
     </select>
-		<i>If you are not sure what ward you live in, use the "Find Your Ward" widget below...</i>
+		<i>We are only accepting questions at the local ward level. If you are not sure what ward you live in, use the "Find Your Ward" widget below.</i>
     </div>
     </div>
 
