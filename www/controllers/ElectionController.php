@@ -1809,8 +1809,11 @@ class ElectionController {
     <label class="control-label" for="inputrace">Race</label>
     <div class="controls">
     <select name="race" class="input-block-level">
-      <option value="-1">City Wide (mayor and councillor races)</option>
-      <option value="0">Mayor Race Only</option>
+			<?php
+      // <option value="-1">City Wide (mayor and councillor races)</option>
+      // <option value="0">Mayor Race Only</option>
+			?>
+      <option value="---">-----Choose Your Ward-----</option>
       <?php
       $races = getDatabase()->all(" select ward,wardnum from electedofficials where ward != '' order by ward ");
       foreach ($races as $r) {
@@ -1820,7 +1823,7 @@ class ElectionController {
       }
       ?>
     </select>
-    <i>Which candidates should answer this question? All candidates? Just the mayors? If this is a hyper-local question about your neighbourhood, please choose your local ward.</i>
+		<i>If you are not sure what ward you live in, use the "Find Your Ward" widget below...</i>
     </div>
     </div>
 
@@ -1829,6 +1832,9 @@ class ElectionController {
     <button type="submit" class="btn">Submit Question</button>
     </div>
     </div>
+
+		<h3>Find Your Ward</h3>
+		<iframe style="width: 100%; height: 100px; border: 0px solid #c0c0c0;" src="http://ottwatch.ca/api/widget/findward"></iframe>
 
     </form>
     <?php
