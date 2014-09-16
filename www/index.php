@@ -250,7 +250,7 @@ function dashboard() {
 
   <div style="background: #08c; color: #ffffff; padding: 20px; font-size: 200%; border-radius: 4px;">
   <center>
-  <a href="/election" style="color: #ffffff;">
+  <a href="/election/" style="color: #ffffff;">
   <i class="fa fa-check-square-o fa-4" style="font-size: 125%;"></i>
   Election Coverage 
   <i style="font-size: 75%"><b>#ottvote</b></i>
