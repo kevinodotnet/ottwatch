@@ -41,6 +41,39 @@ class ElectionController {
   const year = 2014;
   const prevyear = 2010;
 
+	public static function candidatesCSV() {
+		$rows = getDatabase()->all(" 
+			select 
+				id ottwatch_id,
+				year, ward, first, middle, last, url,
+				email, twitter, facebook, nominated, incumbent, phone, gender
+			from candidate
+			where
+				year = ".ElectionController::year."
+				and nominated is not null
+				and withdrew is null
+		");
+
+		header("Content-disposition: attachment; filename=\"ottvote_candidates_".ElectionController::year.".csv\""); 
+
+		$head = $rows[0];
+		$first = 1;
+		foreach ($head as $k=>$v) {
+			if ($first != 1) { print "\t"; }
+			print "$k";
+			$first = 0;
+		}
+		foreach ($rows as $r) {
+		foreach ($r as $k=>$v) {
+			if ($first != 1) { print "\t"; }
+			print $r[$k];
+			$first = 0;
+		}
+		print "\n";
+		}
+		#pr($rows);
+	}
+
 	public static function tmp() {
 		top();
 
@@ -526,6 +559,15 @@ class ElectionController {
 		  <a href="/election/listDonations" style="color: #ffffff;">
 		  <i class="fa fa-search fa-4" style="font-size: 125%;"></i>
 			Search Donations
+		  </a>
+		  </center>
+		  </div>
+
+		  <div style="background: #08c; color: #ffffff; padding: 10px; font-size: 125%; border-radius: 4px; margin-top: 5px;">
+		  <center>
+		  <a href="/election/candidates.csv" style="color: #ffffff;">
+		  <i class="fa fa-download fa-4" style="font-size: 125%;"></i>
+			Download Candidate Info (CSV)
 		  </a>
 		  </center>
 		  </div>
