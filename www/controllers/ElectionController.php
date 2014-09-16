@@ -2059,8 +2059,7 @@ class ElectionController {
 		See what other questions have been put to candidates.
     <a href="/election/question/add"><h3>Want to ask a question?</h3></a>
     Anyone can ask a question using OttWatch. After logging in with Twitter or Facebook create a question title
-    and body, then put it to either all candidates ("City-Wide"), just the mayoral candidates, or make it specific
-    to one ward. <a href="/election/question/add">Ask your question</a>.
+    and body, and pick the ward you live in. <a href="/election/question/add">Ask your question</a>.
     </div><!-- /span -->
     </div><!-- /row -->
     <?php
