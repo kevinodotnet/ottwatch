@@ -1971,7 +1971,7 @@ class ElectionController {
 
 		<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
 
-		<?php if (false) { ?>
+		<?php if (true) { ?>
     <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
     <?php
     $prevward = -1;
@@ -2010,7 +2010,7 @@ class ElectionController {
 	        ?>
 					No answer provided (yet).
 					<?php
-					if ($c['twitter'] != '') {
+					if (false && $c['twitter'] != '') {
 						$text = ".@{$c['twitter']} I want to know: {$q['title']}";
 						$url = OttWatchConfig::WWW."/election/question/".$id."/".urlencode($title);
 						?>
