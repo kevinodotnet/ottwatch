@@ -526,8 +526,8 @@ class ElectionController {
 		  <a href="/election/listDonations" style="color: #ffffff;">
 		  <i class="fa fa-search fa-4" style="font-size: 125%;"></i>
 			Search Donations
-		  </center>
 		  </a>
+		  </center>
 		  </div>
 
 		  <div style="background: #08c; color: #ffffff; padding: 10px; font-size: 125%; border-radius: 4px; margin-top: 5px;">
@@ -535,8 +535,8 @@ class ElectionController {
 		  <a href="/election/question/list" style="color: #ffffff;">
 		  <i class="fa fa-list fa-4" style="font-size: 125%;"></i>
 			Questions to the Candidates
-		  </center>
 		  </a>
+		  </center>
 		  </div>
 
     </div>
