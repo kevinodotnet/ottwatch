@@ -1822,13 +1822,16 @@ class ElectionController {
     ?>
     <h3>Submit an Election Question</h3>
 
+
     <form class="form-horizontal" method="post">
 
     <div class="control-group">
     <label class="control-label" for="inputtitle">Question Title</label>
     <div class="controls">
+		Please limit your questions to matters of policy, or platform. <b>Please do not ask factual questions</b>, like "Do you have a website" or 
+		"Are there any all-candidates debates planned".<br/>The goal is to compare how candidates differ in their answers.
     <input type="text" id="inputtitle" name="title" placeholder="" class="input-block-level">
-    <i>Try to ask the entire question in a tweetable-sized title. You can elaborate in the 'body' if need be. (100 chars max)</i>
+    <i>(100 chars max)</i>
     </div>
     </div>
 
