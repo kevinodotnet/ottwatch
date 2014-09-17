@@ -1828,8 +1828,10 @@ class ElectionController {
     <div class="control-group">
     <label class="control-label" for="inputtitle">Question Title</label>
     <div class="controls">
-		Please limit your questions to matters of policy, or platform. <b>Please do not ask factual questions</b>, like "Do you have a website" or 
-		"Are there any all-candidates debates planned".<br/>The goal is to compare how candidates differ in their answers.
+		<b>YES</b> ask questions on matters of policy, or platform, or vision, etc.<br/>
+		<b>DO NOT</b> ask factual questions with only one answer (ie: what is your website; are there all-candidate debates planned.)<br/>
+		<b>DO NOT</b> ask the same question in all the wards (I notice that, and will delete all of them.<br/>
+		<b>YES</b> have fun!
     <input type="text" id="inputtitle" name="title" placeholder="" class="input-block-level">
     <i>(100 chars max)</i>
     </div>
@@ -1839,7 +1841,6 @@ class ElectionController {
     <label class="control-label" for="inputbody">Question Body</label>
     <div class="controls">
     <textarea id="inputbody" name="body" class="input-block-level" rows="5"></textarea>
-    <i>You can expand on the question body if need be. Short is better. 500-characters max</i>
     </div>
     </div>
 
