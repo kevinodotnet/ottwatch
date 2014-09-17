@@ -1929,12 +1929,12 @@ class ElectionController {
     $ward = $q['ward'];
     if ($ward == -1) {
       $wardname = 'City Wide';
-      $candidates = getDatabase()->all(" select * from candidate where nominated is not null and year = " . self::year . " order by ward,rand() ");
+      $candidates = getDatabase()->all(" select * from candidate where withdrew is null and nominated is not null and year = " . self::year . " order by ward,rand() ");
     } else if ($ward == 0) {
       $wardname = 'Mayor';
-      $candidates = getDatabase()->all(" select * from candidate where nominated is not null and ward = 0 and year = " . self::year . " order by ward,rand() ");
+      $candidates = getDatabase()->all(" select * from candidate where withdrew is null and nominated is not null and ward = 0 and year = " . self::year . " order by ward,rand() ");
     } else {
-      $candidates = getDatabase()->all(" select * from candidate where nominated is not null and ward = $ward and year = " . self::year . " order by ward,rand() ");
+      $candidates = getDatabase()->all(" select * from candidate where withdrew is null and nominated is not null and ward = $ward and year = " . self::year . " order by ward,rand() ");
       $wardname = getDatabase()->one(" select ward from electedofficials where wardnum = $ward ");
       $wardname = $wardname['ward'];
     }
