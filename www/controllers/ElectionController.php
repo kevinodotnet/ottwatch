@@ -434,6 +434,7 @@ class ElectionController {
 				join question q on q.id = eq.questionid
 			where
 				eq.ward = $race 
+				and q.published = 1
 		");
 		if (count($qs) == 0) {
 			?>
