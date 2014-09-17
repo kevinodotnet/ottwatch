@@ -1944,7 +1944,10 @@ class ElectionController {
     }
 
     $q = getDatabase()->one(" 
-      select e.ward,q.id,title,body,published,e.id electionquestionid,p.name,q.created
+      select 
+				e.ward,
+				q.id,title,body,published,e.id electionquestionid,p.name,q.created,
+				p.twitter
       from election_question e 
         join question q on q.id = e.questionid 
         join people p on p.id = q.personid
@@ -1992,7 +1995,15 @@ class ElectionController {
     <div style="background: #f0f0f0; padding: 20px; border-radius: 5px; margin-bottom: 5px;">
     <h1><?php print htmlentities($title); ?></h1>
     <p style="float: right; text-align: right; padding-left: 5px;">
-		Asked by <b><?php print htmlentities($q['name']); ?></b><br/><?php print $q['created']; ?><br/>
+		Asked by <b><?php print htmlentities($q['name']); ?></b>
+		<?php 
+		if ($q['twitter'] != null) {
+			print "(<a href=\"http://twitter.com/@{$q['twitter']}\">";
+			print "@{$q['twitter']}";
+			print "</a>)";
+		}
+		?>
+		<br/><?php print $q['created']; ?><br/>
 		<?php if (LoginController::isLoggedIn()) { ?>
 			<span style="font-size: 150%;">
 			<a href="javascript:voteOnQuestion('qv',<?php print $q['id']; ?>,1);"><i class="fa fa-thumbs-o-up"></i></a>
