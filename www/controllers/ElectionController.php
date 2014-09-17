@@ -1947,7 +1947,8 @@ class ElectionController {
       select 
 				e.ward,
 				q.id,title,body,published,e.id electionquestionid,p.name,q.created,
-				p.twitter
+				p.twitter,
+				p.facebookid
       from election_question e 
         join question q on q.id = e.questionid 
         join people p on p.id = q.personid
@@ -2000,6 +2001,10 @@ class ElectionController {
 		if ($q['twitter'] != null) {
 			print "(<a href=\"http://twitter.com/@{$q['twitter']}\">";
 			print "@{$q['twitter']}";
+			print "</a>)";
+		} else if ($q['facebookid'] != null) {
+			print "(<a href=\"http://facebook.com/{$q['facebookid']}\">";
+			print "facebook";
 			print "</a>)";
 		}
 		?>
