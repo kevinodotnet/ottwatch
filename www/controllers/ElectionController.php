@@ -1828,6 +1828,7 @@ class ElectionController {
     <div class="control-group">
     <label class="control-label" for="inputtitle">Question Title</label>
     <div class="controls">
+		<b>Are you a candidate in this race? Don't ask a question here. It's for voters only.</b><br/>
 		<b>YES</b> ask questions on matters of policy, or platform, or vision, etc.<br/>
 		<b>DO NOT</b> ask factual questions with only one answer (ie: what is your website; are there all-candidate debates planned)<br/>
 		<b>DO NOT</b> ask the same question in all the wards (I notice that, and will delete all of them)<br/>
