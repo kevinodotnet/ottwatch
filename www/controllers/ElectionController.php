@@ -1829,8 +1829,8 @@ class ElectionController {
     <label class="control-label" for="inputtitle">Question Title</label>
     <div class="controls">
 		<b>YES</b> ask questions on matters of policy, or platform, or vision, etc.<br/>
-		<b>DO NOT</b> ask factual questions with only one answer (ie: what is your website; are there all-candidate debates planned.)<br/>
-		<b>DO NOT</b> ask the same question in all the wards (I notice that, and will delete all of them.<br/>
+		<b>DO NOT</b> ask factual questions with only one answer (ie: what is your website; are there all-candidate debates planned)<br/>
+		<b>DO NOT</b> ask the same question in all the wards (I notice that, and will delete all of them)<br/>
 		<b>YES</b> have fun!
     <input type="text" id="inputtitle" name="title" placeholder="" class="input-block-level">
     <i>(100 chars max)</i>
