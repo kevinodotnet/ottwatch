@@ -424,6 +424,38 @@ class ElectionController {
 			));
     ?>
 
+    <h2>Questions to Candidates</h2>
+		<?php
+		$qs = getDatabase()->all("
+			select 
+				q.*
+			from
+				election_question eq
+				join question q on q.id = eq.questionid
+			where
+				eq.ward = $race 
+		");
+		if (count($qs) == 0) {
+			?>
+			Nobody has posed a question to the candidates in this race yet. You should be the first!<br/>
+			<?php
+		} else {
+			print count($qs)." question(s) have been put to the candidates:<br/><br/>";
+			print "<ul>";
+			foreach ($qs as $q) {
+				?>
+				<li><a href="/election/question/<?php print $q['id']; ?>/"><?php print htmlentities($q['title']); ?></a></li>
+				<?php
+			}
+			print "</ul>";
+		}
+		?>
+		<br/>
+		<a href="/election/question/add?race=<?php print $race; ?>">
+		<i class="fa fa-list fa-4" style="font-size: 125%;"></i>
+		Ask your own question!
+		</a>
+
     <h2>Incumbent</h2>
     <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
     <tr>
@@ -1784,6 +1816,8 @@ class ElectionController {
     }
     top();
 
+		$race = $_GET['race'];
+
     ?>
     <h3>Submit an Election Question</h3>
 
@@ -1817,8 +1851,9 @@ class ElectionController {
       <?php
       $races = getDatabase()->all(" select ward,wardnum from electedofficials where ward != '' order by ward ");
       foreach ($races as $r) {
+				$selected = ($r['wardnum'] == $race ? ' selected="yes" ' : '');
         ?>
-        <option value="<?php print $r['wardnum']; ?>"><?php print $r['ward']; ?></option>
+        <option <?php print $selected; ?> value="<?php print $r['wardnum']; ?>"><?php print $r['ward']; ?></option>
         <?php
       }
       ?>
@@ -2053,6 +2088,8 @@ class ElectionController {
 		declined to do so). Two questions per person, max.
 		</i></center>
 		<?php } ?>
+
+		<?php disqus(); ?>
     </div><!-- /span -->
     <div class="span4">
     <a href="/election/question/list"><h3>See Other Questions</h3></a>
