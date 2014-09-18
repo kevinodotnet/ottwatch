@@ -20,8 +20,11 @@ foreach ($indb as $c) {
 			$ok = 1;
 		}
 	}
+	if ($h['last'] == 'St. Arnaud' && $h['ward'] == 0) {
+		$ok = 1;
+	}
 	if ($ok == 0) {
-		print "Withdraw? ward:{$c['ward']} {$c['first']} {$c['last']}\n";
+		print "Withdraw? ward:{$c['ward']} {$c['first']} '{$c['last']}'\n";
 	}
 }
 createPeople();
@@ -78,7 +81,7 @@ function reportUnknownLinks ($html) {
       $row = getDatabase()->one(" select * from candidate where year = 2014 and nominated is not null and withdrew is null and lower(phone) like '%$phone%' ");
 			if (!$row['id']) {
 				if ($phone != '(613) 699-3317' && $phone != '(613) 699-2078') {
-					print " update candidate set phone = lower('$phone') where phone is null and id = ; \n";
+					print " update candidate set phone = lower('$phone') where id = ; \n";
 				}
 			}
 		}
@@ -86,7 +89,7 @@ function reportUnknownLinks ($html) {
 			$email = $matches[1];
         $row = getDatabase()->one(" select * from candidate where year = 2014 and nominated is not null and withdrew is null and lower(email) = lower(:email) ",array("email"=>$email));
 				if (!$row['id']) {
-					print " update candidate set email = lower('$email') where email is null and id = ; \n";
+					print " update candidate set email = lower('$email') where id = ; \n";
 				}
 		}
     if (preg_match('/http.*facebook.*/',$c,$matches)) {
@@ -96,7 +99,7 @@ function reportUnknownLinks ($html) {
 				$facebook = $c;
         $row = getDatabase()->one(" select * from candidate where year = 2014 and nominated is not null and withdrew is null and lower(facebook) = lower(:facebook) ",array("facebook"=>$facebook));
 				if (!$row['id']) {
-					print " update candidate set facebook = '$facebook' where facebook is null and id = ; \n";
+					print " update candidate set facebook = '$facebook' where id = ; \n";
 				}
 			}
 		}
@@ -110,7 +113,7 @@ function reportUnknownLinks ($html) {
       if ($twitter != 'ottawacity') {
         $row = getDatabase()->one(" select * from candidate where year = 2014 and nominated is not null and withdrew is null and lower(twitter) = lower(:twitter) ",array("twitter"=>$twitter));
 				if (!$row['id']) {
-	        print "twitter $twitter :: is missing $c\n";
+					print " update candidate set twitter = '$twitter' where id = ; \n";
 				}
       }
     }
@@ -183,13 +186,14 @@ function getCandidates($url,$isMayor) {
 			$last = $name[count($name)-1];
 	
 			if ($last == 'LeFaivre') { $last = 'Fortin LeFaivre'; }
+			if ($last == 'Arnaud' && $ward == 0) { continue; }
 	
 			if ($first == 'No') { continue; } # no candidates in ward yet.
 	
 			$row = getDatabase()->one(" select count(1) c from candidate where ward = $ward and year = 2014 and last = '$last' and first = '$first' and nominated is not null ");
 			$count = $row['c'];
 			if ($count != 1) {
-				print "CANDIDATE NOT FOUND: ward: $ward first: $first last: $last\n";
+				print " insert into candidate (nominated,year,ward,first,last) values (now(),2014,$ward,'$first','$last'); \n";
 			}
 	
 			$canInHtml[] = array('ward'=>$ward,'first'=>$first,'last'=>$last);

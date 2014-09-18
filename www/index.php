@@ -144,6 +144,7 @@ getRoute()->get('/consultations/(\d+)', array('ConsultationController','showCons
 getRoute()->get('/consultations/(\d+)/content', array('ConsultationController','showConsultationContent'));
 
 getRoute()->get('/election/*', array('ElectionController','showMain'));
+getRoute()->get('/election/candidates.csv', array('ElectionController','candidatesCSV'));
 getRoute()->get('/election/tools', array('ElectionController','showTools'));
 getRoute()->get('/election/(mayor)/', array('ElectionController','showRace'));
 getRoute()->get('/election/ward/(\d+)', array('ElectionController','showRace'));

@@ -41,6 +41,39 @@ class ElectionController {
   const year = 2014;
   const prevyear = 2010;
 
+	public static function candidatesCSV() {
+		$rows = getDatabase()->all(" 
+			select 
+				id ottwatch_id,
+				year, ward, first, middle, last, url,
+				email, twitter, facebook, nominated, incumbent, phone, gender
+			from candidate
+			where
+				year = ".ElectionController::year."
+				and nominated is not null
+				and withdrew is null
+		");
+
+		header("Content-disposition: attachment; filename=\"ottvote_candidates_".ElectionController::year.".csv\""); 
+
+		$head = $rows[0];
+		$first = 1;
+		foreach ($head as $k=>$v) {
+			if ($first != 1) { print "\t"; }
+			print "$k";
+			$first = 0;
+		}
+		foreach ($rows as $r) {
+		foreach ($r as $k=>$v) {
+			if ($first != 1) { print "\t"; }
+			print $r[$k];
+			$first = 0;
+		}
+		print "\n";
+		}
+		#pr($rows);
+	}
+
 	public static function tmp() {
 		top();
 
@@ -391,6 +424,39 @@ class ElectionController {
 			));
     ?>
 
+    <h2>Questions to Candidates</h2>
+		<?php
+		$qs = getDatabase()->all("
+			select 
+				q.*
+			from
+				election_question eq
+				join question q on q.id = eq.questionid
+			where
+				eq.ward = $race 
+				and q.published = 1
+		");
+		if (count($qs) == 0) {
+			?>
+			Nobody has posed a question to the candidates in this race yet. You should be the first!<br/>
+			<?php
+		} else {
+			print count($qs)." question(s) have been put to the candidates:<br/><br/>";
+			print "<ul>";
+			foreach ($qs as $q) {
+				?>
+				<li><a href="/election/question/<?php print $q['id']; ?>/"><?php print htmlentities($q['title']); ?></a></li>
+				<?php
+			}
+			print "</ul>";
+		}
+		?>
+		<br/>
+		<a href="/election/question/add?race=<?php print $race; ?>">
+		<i class="fa fa-list fa-4" style="font-size: 125%;"></i>
+		Ask your own question!
+		</a>
+
     <h2>Incumbent</h2>
     <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
     <tr>
@@ -526,8 +592,17 @@ class ElectionController {
 		  <a href="/election/listDonations" style="color: #ffffff;">
 		  <i class="fa fa-search fa-4" style="font-size: 125%;"></i>
 			Search Donations
-		  </center>
 		  </a>
+		  </center>
+		  </div>
+
+		  <div style="background: #08c; color: #ffffff; padding: 10px; font-size: 125%; border-radius: 4px; margin-top: 5px;">
+		  <center>
+		  <a href="/election/candidates.csv" style="color: #ffffff;">
+		  <i class="fa fa-download fa-4" style="font-size: 125%;"></i>
+			Download Candidate Info (CSV)
+		  </a>
+		  </center>
 		  </div>
 
 		  <div style="background: #08c; color: #ffffff; padding: 10px; font-size: 125%; border-radius: 4px; margin-top: 5px;">
@@ -535,8 +610,8 @@ class ElectionController {
 		  <a href="/election/question/list" style="color: #ffffff;">
 		  <i class="fa fa-list fa-4" style="font-size: 125%;"></i>
 			Questions to the Candidates
-		  </center>
 		  </a>
+		  </center>
 		  </div>
 
     </div>
@@ -1742,16 +1817,24 @@ class ElectionController {
     }
     top();
 
+		$race = $_GET['race'];
+
     ?>
     <h3>Submit an Election Question</h3>
+
 
     <form class="form-horizontal" method="post">
 
     <div class="control-group">
     <label class="control-label" for="inputtitle">Question Title</label>
     <div class="controls">
+		<b>Are you a candidate in this race? Don't ask a question here. It's for voters only.</b><br/>
+		<b>YES</b> ask questions on matters of policy, or platform, or vision, etc.<br/>
+		<b>DO NOT</b> ask factual questions with only one answer (ie: what is your website; are there all-candidate debates planned)<br/>
+		<b>DO NOT</b> ask the same question in all the wards (I notice that, and will delete all of them)<br/>
+		<b>YES</b> have fun!
     <input type="text" id="inputtitle" name="title" placeholder="" class="input-block-level">
-    <i>Try to ask the entire question in a tweetable-sized title. You can elaborate in the 'body' if need be. (100 chars max)</i>
+    <i>(100 chars max)</i>
     </div>
     </div>
 
@@ -1759,7 +1842,6 @@ class ElectionController {
     <label class="control-label" for="inputbody">Question Body</label>
     <div class="controls">
     <textarea id="inputbody" name="body" class="input-block-level" rows="5"></textarea>
-    <i>You can expand on the question body if need be. Short is better. 500-characters max</i>
     </div>
     </div>
 
@@ -1767,18 +1849,22 @@ class ElectionController {
     <label class="control-label" for="inputrace">Race</label>
     <div class="controls">
     <select name="race" class="input-block-level">
-      <option value="-1">City Wide (mayor and councillor races)</option>
-      <option value="0">Mayor Race Only</option>
+			<?php
+      // <option value="-1">City Wide (mayor and councillor races)</option>
+      // <option value="0">Mayor Race Only</option>
+			?>
+      <option value="---">-----Choose Your Ward-----</option>
       <?php
       $races = getDatabase()->all(" select ward,wardnum from electedofficials where ward != '' order by ward ");
       foreach ($races as $r) {
+				$selected = ($r['wardnum'] == $race ? ' selected="yes" ' : '');
         ?>
-        <option value="<?php print $r['wardnum']; ?>"><?php print $r['ward']; ?></option>
+        <option <?php print $selected; ?> value="<?php print $r['wardnum']; ?>"><?php print $r['ward']; ?></option>
         <?php
       }
       ?>
     </select>
-    <i>Which candidates should answer this question? All candidates? Just the mayors? If this is a hyper-local question about your neighbourhood, please choose your local ward.</i>
+		<i>We are only accepting questions at the local ward level. If you are not sure what ward you live in, use the "Find Your Ward" widget below.</i>
     </div>
     </div>
 
@@ -1787,6 +1873,9 @@ class ElectionController {
     <button type="submit" class="btn">Submit Question</button>
     </div>
     </div>
+
+		<h3>Find Your Ward</h3>
+		<iframe style="width: 100%; height: 100px; border: 0px solid #c0c0c0;" src="http://ottwatch.ca/api/widget/findward"></iframe>
 
     </form>
     <?php
@@ -1855,7 +1944,11 @@ class ElectionController {
     }
 
     $q = getDatabase()->one(" 
-      select e.ward,q.id,title,body,published,e.id electionquestionid,p.name,q.created
+      select 
+				e.ward,
+				q.id,title,body,published,e.id electionquestionid,p.name,q.created,
+				p.twitter,
+				p.facebookid
       from election_question e 
         join question q on q.id = e.questionid 
         join people p on p.id = q.personid
@@ -1881,12 +1974,12 @@ class ElectionController {
     $ward = $q['ward'];
     if ($ward == -1) {
       $wardname = 'City Wide';
-      $candidates = getDatabase()->all(" select * from candidate where nominated is not null and year = " . self::year . " order by ward,rand() ");
+      $candidates = getDatabase()->all(" select * from candidate where withdrew is null and nominated is not null and year = " . self::year . " order by ward,rand() ");
     } else if ($ward == 0) {
       $wardname = 'Mayor';
-      $candidates = getDatabase()->all(" select * from candidate where nominated is not null and ward = 0 and year = " . self::year . " order by ward,rand() ");
+      $candidates = getDatabase()->all(" select * from candidate where withdrew is null and nominated is not null and ward = 0 and year = " . self::year . " order by ward,rand() ");
     } else {
-      $candidates = getDatabase()->all(" select * from candidate where nominated is not null and ward = $ward and year = " . self::year . " order by ward,rand() ");
+      $candidates = getDatabase()->all(" select * from candidate where withdrew is null and nominated is not null and ward = $ward and year = " . self::year . " order by ward,rand() ");
       $wardname = getDatabase()->one(" select ward from electedofficials where wardnum = $ward ");
       $wardname = $wardname['ward'];
     }
@@ -1903,7 +1996,19 @@ class ElectionController {
     <div style="background: #f0f0f0; padding: 20px; border-radius: 5px; margin-bottom: 5px;">
     <h1><?php print htmlentities($title); ?></h1>
     <p style="float: right; text-align: right; padding-left: 5px;">
-		Asked by <b><?php print htmlentities($q['name']); ?></b><br/><?php print $q['created']; ?><br/>
+		Asked by <b><?php print htmlentities($q['name']); ?></b>
+		<?php 
+		if ($q['twitter'] != null) {
+			print "(<a href=\"http://twitter.com/@{$q['twitter']}\">";
+			print "@{$q['twitter']}";
+			print "</a>)";
+		} else if ($q['facebookid'] != null) {
+			print "(<a href=\"http://facebook.com/{$q['facebookid']}\">";
+			print "facebook";
+			print "</a>)";
+		}
+		?>
+		<br/><?php print $q['created']; ?><br/>
 		<?php if (LoginController::isLoggedIn()) { ?>
 			<span style="font-size: 150%;">
 			<a href="javascript:voteOnQuestion('qv',<?php print $q['id']; ?>,1);"><i class="fa fa-thumbs-o-up"></i></a>
@@ -1923,7 +2028,7 @@ class ElectionController {
 
 		<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
 
-		<?php if (false) { ?>
+		<?php if (true) { ?>
     <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
     <?php
     $prevward = -1;
@@ -1962,7 +2067,7 @@ class ElectionController {
 	        ?>
 					No answer provided (yet).
 					<?php
-					if ($c['twitter'] != '') {
+					if (false && $c['twitter'] != '') {
 						$text = ".@{$c['twitter']} I want to know: {$q['title']}";
 						$url = OttWatchConfig::WWW."/election/question/".$id."/".urlencode($title);
 						?>
@@ -2005,14 +2110,15 @@ class ElectionController {
 		declined to do so). Two questions per person, max.
 		</i></center>
 		<?php } ?>
+
+		<?php disqus(); ?>
     </div><!-- /span -->
     <div class="span4">
     <a href="/election/question/list"><h3>See Other Questions</h3></a>
 		See what other questions have been put to candidates.
     <a href="/election/question/add"><h3>Want to ask a question?</h3></a>
     Anyone can ask a question using OttWatch. After logging in with Twitter or Facebook create a question title
-    and body, then put it to either all candidates ("City-Wide"), just the mayoral candidates, or make it specific
-    to one ward. <a href="/election/question/add">Ask your question</a>.
+    and body, and pick the ward you live in. <a href="/election/question/add">Ask your question</a>.
     </div><!-- /span -->
     </div><!-- /row -->
     <?php

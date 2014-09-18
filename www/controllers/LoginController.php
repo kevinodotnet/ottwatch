@@ -277,7 +277,7 @@ class LoginController {
     <div class="row-fluid">
 
     <div class="span4 offset4" style="margin-top: 50px;">
-    <h3 style="text-align: center;">Admins Only</h3>
+    <h3 style="text-align: center;">Candidates Only <small>(to answer questions)</small></h3>
     <form class="form-horizontal" method="post">
 
     <?php if ($err != '') { ?>
