@@ -63,7 +63,9 @@ class ElectionController {
 			print "$k";
 			$first = 0;
 		}
+		print "\n";
 		foreach ($rows as $r) {
+		$first = 1;
 		foreach ($r as $k=>$v) {
 			if ($first != 1) { print "\t"; }
 			print $r[$k];
