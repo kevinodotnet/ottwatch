@@ -52,10 +52,12 @@ OttWatch.ca";
 	$subject = "Campaign Question: $title";
 	$email = $c['email'];
 	if (strlen($email) > 0) {
-		sendEmail($email,$subject,$ebody);
+		#sendEmail($email,$subject,$ebody);
 	}
 
 	#print $ebody;
 	
 }
+
+sendEmail('kevino@kevino.net',$subject,$ebody);
 
