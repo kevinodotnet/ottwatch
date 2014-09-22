@@ -52,6 +52,8 @@ class ElectionController {
 				year = ".ElectionController::year."
 				and nominated is not null
 				and withdrew is null
+			order by
+				year,ward,last,first,middle
 		");
 
 		header("Content-disposition: attachment; filename=\"ottvote_candidates_".ElectionController::year.".csv\""); 
