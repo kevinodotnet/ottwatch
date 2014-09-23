@@ -2048,7 +2048,7 @@ class ElectionController {
       ?>
       <tr>
       <!--<th><h5><?php print "{$c['first']} {$c['last']}"; ?></h5></th>-->
-      <td><a name="candidate<?php print $c['id']; ?>"></a><?php print "{$c['first']} {$c['last']}"; ?></td>
+      <td><nobr><a name="candidate<?php print $c['id']; ?>"></a><?php print "{$c['first']} {$c['last']}"; ?></nobr></td>
       <td>
       <?php
 
@@ -2069,7 +2069,7 @@ class ElectionController {
 	      $answer = getDatabase()->one(" select * from answer where questionid = {$q['id']} and personid = {$c['personid']} order by created desc limit 1 ");
 				if (!isset($answer['body']) || $answer['body'] == '') {
 	        ?>
-					No answer provided (yet).
+					<span style="color: #c0c0c0;">(no answer yet)</span>
 					<?php
 					if (false && $c['twitter'] != '') {
 						$text = ".@{$c['twitter']} I want to know: {$q['title']}";
@@ -2092,7 +2092,6 @@ class ElectionController {
 				} else {
 		      print htmlentities($answer['body']);
 					?>
-					<br/><i><?php print substr($answer['created'],0,10); ?></i>
 					<?php
 				}
 			} else {
