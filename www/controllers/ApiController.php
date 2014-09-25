@@ -563,6 +563,10 @@ class ApiController {
       if ($row['vot_subd']) {
         $polls['2010'] = $row['vot_subd'];
       }
+	    $row = getDatabase()->one(" select vot_subd from polls_2014 where ST_Contains(shape,PointFromText('POINT($lon $lat)')) ");
+      if ($row['vot_subd']) {
+        $polls['2014'] = $row['vot_subd'];
+      }
       $result['polls'] = $polls;
 
     } else {
@@ -671,6 +675,8 @@ google.maps.Polygon.prototype.getBounds = function() {
     $table = '';
     if ($year == '2010') {
       $table = 'polls_2010';
+    } else if ($year == '2014') {
+      $table = 'polls_2014';
     } else {
       $result = array();
       $result['error'] = "unknown election year: $year";
@@ -713,10 +719,18 @@ google.maps.Polygon.prototype.getBounds = function() {
   }
 
   public static function wardPolls($wardnum) {
-    $rows = getDatabase()->all(" select vot_subd from polls_2010 where cast(ward as unsigned) = :wardnum order by vot_subd ",array("wardnum"=>$wardnum));
+		$result = array();
+
     $polls = array();
+    $rows = getDatabase()->all(" select vot_subd from polls_2010 where cast(ward as unsigned) = :wardnum order by vot_subd ",array("wardnum"=>$wardnum));
     foreach ($rows as $r) { $polls[] = $r['vot_subd']; }
     $result['2010'] = $polls;
+
+    $polls = array();
+    $rows = getDatabase()->all(" select vot_subd from polls_2014 where cast(ward as unsigned) = :wardnum order by vot_subd ",array("wardnum"=>$wardnum));
+    foreach ($rows as $r) { $polls[] = $r['vot_subd']; }
+    $result['2014'] = $polls;
+
     return $result;
   }
 
