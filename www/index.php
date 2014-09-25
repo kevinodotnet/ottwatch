@@ -47,6 +47,7 @@ getApi()->get('/api/wards/(\d+)/polls/(\d+)/([\d-\.]+)', array('ApiController', 
 getApi()->get('/api/wards/(\d+)/polls/(\d+)/([\d-\.]+)/map/live', array('ApiController', 'wardPollMapLive'), EpiApi::external);
 getApi()->get('/api/wards/(\d+)/polls/(\d+)/([\d-\.]+)/map/static', array('ApiController', 'wardPollMapStatic'), EpiApi::external);
 getRoute()->get('/api/wards/(\d+)/polls/(\d+)/([\d-\.]+)/map/img', array('ApiController', 'wardPollMapStatic302'), EpiApi::external);
+getRoute()->get('/api/ward/full', array('ApiController', 'wardFullDump'));
 getApi()->get('/api/wards', array('ApiController', 'listWards'), EpiApi::external);
 getApi()->get('/api/committees', array('ApiController', 'committees'), EpiApi::external);
 getApi()->get('/api/candidates', array('ApiController', 'candidates'), EpiApi::external);
