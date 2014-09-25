@@ -52,6 +52,8 @@ class ElectionController {
 				year = ".ElectionController::year."
 				and nominated is not null
 				and withdrew is null
+			order by
+				year,ward,last,first,middle
 		");
 
 		header("Content-disposition: attachment; filename=\"ottvote_candidates_".ElectionController::year.".csv\""); 
@@ -63,7 +65,9 @@ class ElectionController {
 			print "$k";
 			$first = 0;
 		}
+		print "\n";
 		foreach ($rows as $r) {
+		$first = 1;
 		foreach ($r as $k=>$v) {
 			if ($first != 1) { print "\t"; }
 			print $r[$k];
@@ -2044,7 +2048,7 @@ class ElectionController {
       ?>
       <tr>
       <!--<th><h5><?php print "{$c['first']} {$c['last']}"; ?></h5></th>-->
-      <td><a name="candidate<?php print $c['id']; ?>"></a><?php print "{$c['first']} {$c['last']}"; ?></td>
+      <td><nobr><a name="candidate<?php print $c['id']; ?>"></a><?php print "{$c['first']} {$c['last']}"; ?></nobr></td>
       <td>
       <?php
 
@@ -2065,7 +2069,7 @@ class ElectionController {
 	      $answer = getDatabase()->one(" select * from answer where questionid = {$q['id']} and personid = {$c['personid']} order by created desc limit 1 ");
 				if (!isset($answer['body']) || $answer['body'] == '') {
 	        ?>
-					No answer provided (yet).
+					<span style="color: #c0c0c0;">(no answer yet)</span>
 					<?php
 					if (false && $c['twitter'] != '') {
 						$text = ".@{$c['twitter']} I want to know: {$q['title']}";
@@ -2088,7 +2092,6 @@ class ElectionController {
 				} else {
 		      print htmlentities($answer['body']);
 					?>
-					<br/><i><?php print substr($answer['created'],0,10); ?></i>
 					<?php
 				}
 			} else {
