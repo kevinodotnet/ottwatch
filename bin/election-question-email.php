@@ -41,12 +41,16 @@ An OttWatch reader, {$q['name']}, has submitted the following question to you vi
 $title
 $body
 
-Please provide your answer via EMAIL (max 2000 characters) and I will be happy to publish it immediately.
+Your answer can be provided by reply-email. Mmax 2000 characters.
 
 Sincerely,
 Kevin O'Donnell
 (613) 203-2620
-OttWatch.ca";
+OttWatch.ca
+
+Please note: the question is online at http://ottwatch.ca/election/question/$id/
+
+";
 
 	$subject = "Campaign Question: $title";
 	$email = $c['email'];
@@ -61,4 +65,3 @@ OttWatch.ca";
 
 sendEmail('kevino@kevino.net',$subject,$ebody);
 
-# The question is online at http://ottwatch.ca/election/question/$id/
