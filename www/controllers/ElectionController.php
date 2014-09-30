@@ -1236,6 +1236,7 @@ class ElectionController {
 		$postal = strtoupper($postal);
 		$postal = preg_replace('/ /','',$postal);
 		$postalE = mysql_escape_string($postal);
+		$year = mysql_escape_string($_GET['year']);
 		$donor = $_GET['donor'];
 		$donorE = mysql_escape_string($donor);
 		$candidate = $_GET['candidate'];
@@ -1257,6 +1258,9 @@ class ElectionController {
 			$toptitle = "Campaign Donations Report for candidate $candidateE";
 			$where .= " and (c.first like '%$candidateE%' or c.last like '%$candidateE%' ) ";
 			$filtered = 1;
+		}
+		if ($year != '') {
+			$where .= " and c.year = $year ";
 		}
 
 		$orderby = " c.year desc, c.ward, c.last, c.first, case when d.type = 1 then 0 else 1 end, d.type, d.name ";
@@ -1368,6 +1372,11 @@ class ElectionController {
 					 <input type="text" id="inputCandidate" class="input-medium" name="candidate" placeholder="(first or last)" value="<?php print $candidate; ?>"/> 
 					<!-- <label class="control-label" for="inputPostal">by postal code</label> -->
 					 <input type="text" id="inputPostal" class="input-medium" name="postal" placeholder="H0H 0H0" value="<?php print $postal; ?>"/>
+					 <select name="year">
+					 	<option value="">-- All Years--</option>
+					 	<option value="2010">2010</option>
+					 	<option value="2006">2006</option>
+					 </select>
 					<!-- <label class="control-label" for="inputFormat">Format</label> -->
           Output as:
 					<select name="format">
