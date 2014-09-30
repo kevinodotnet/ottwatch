@@ -650,7 +650,7 @@ class ElectionController {
       $countNomed = $countNomed['c'];
       ?>
       <div class="span3">
-      <h4><a href="<?php print $raceLink; ?>"><?php print "{$wardInfo['ward']}"; if (count($rows) > 0) { print ' ('.$countNomed.')'; } ?></a></h4>
+      <h4><a href="<?php print $raceLink; ?>"><?php print "{$wardInfo['ward']}"; if (count($rows) > 0) { print ' <small>('.$countNomed.' candidates)</small>'; } ?></a></h4>
       <?php
       if (count($rows) == 0) {
         print "<i style=\"color: #c0c0c0;\">No Candidates Registered Yet</i>\n";
