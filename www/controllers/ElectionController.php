@@ -675,7 +675,7 @@ class ElectionController {
         print "<br/>\n";
       }
       ?>
-      <div style=""><a href="<?php print $raceLink; ?>">(full ward info)</a></div>
+      <div style=""><a href="<?php print $raceLink; ?>">(full ward <?php print $wardInfo['wardnum']; ?> info)</a></div>
       </div>
       <?php
       if ($mod == 3) {
