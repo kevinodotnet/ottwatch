@@ -2090,7 +2090,10 @@ class ElectionController {
 	        </tr>
 	        <?php
 				} else {
-		      print htmlentities($answer['body']);
+		      $bb = $answer['body'];
+					$bb = preg_replace('/\r/','',$bb);
+					$bb = preg_replace('/\n/','<br/>',$bb);
+					print $bb;
 					?>
 					<?php
 				}
