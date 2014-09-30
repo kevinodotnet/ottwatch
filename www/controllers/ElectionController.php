@@ -1259,7 +1259,7 @@ class ElectionController {
 			$filtered = 1;
 		}
 
-		$orderby = " c.year desc, c.ward, c.last, c.first, d.type, d.name ";
+		$orderby = " c.year desc, c.ward, c.last, c.first, case when d.type = 1 then 0 else 1 end, d.type, d.name ";
 		if ($_GET['format'] == 'json') {
 			# not actually filtered, but we want the SQL to run
 			$filtered = 1;
