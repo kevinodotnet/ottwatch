@@ -322,7 +322,7 @@ class ElectionController {
     }
 
 		top($title);
-		print "<h1>$title <small>(<a href=\"/election\">main election page</a>)</small></h1>\n";
+		print "<h1>$title <small>(<a href=\"/election/\">main election page</a>)</small></h1>\n";
 
     $rows = getDatabase()->all("
       select * 
@@ -2133,7 +2133,7 @@ class ElectionController {
 		top();
 		?>
 		<h1>Election Questions
-		<small><a href="/election">main election page</a></small>
+		<small><a href="/election/">main election page</a></small>
 		</h1>
 		<p class="lead">
 		Important questions from regular people. What do you want to know from candidates?
