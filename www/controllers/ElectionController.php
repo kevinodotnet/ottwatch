@@ -650,7 +650,7 @@ class ElectionController {
       $countNomed = $countNomed['c'];
       ?>
       <div class="span3">
-      <h4><a href="<?php print $raceLink; ?>"><?php print "{$wardInfo['ward']}"; if (count($rows) > 0) { print ' ('.$countNomed.')'; } ?></a></h4>
+      <h4><a href="<?php print $raceLink; ?>"><?php print "{$wardInfo['ward']}"; if (count($rows) > 0) { print ' <small>('.$countNomed.' candidates)</small>'; } ?></a></h4>
       <?php
       if (count($rows) == 0) {
         print "<i style=\"color: #c0c0c0;\">No Candidates Registered Yet</i>\n";
@@ -675,7 +675,7 @@ class ElectionController {
         print "<br/>\n";
       }
       ?>
-      <div style=""><a href="<?php print $raceLink; ?>">(full ward info)</a></div>
+      <div style=""><a href="<?php print $raceLink; ?>">(full ward <?php print $wardInfo['wardnum']; ?> info)</a></div>
       </div>
       <?php
       if ($mod == 3) {
@@ -1236,6 +1236,7 @@ class ElectionController {
 		$postal = strtoupper($postal);
 		$postal = preg_replace('/ /','',$postal);
 		$postalE = mysql_escape_string($postal);
+		$year = mysql_escape_string($_GET['year']);
 		$donor = $_GET['donor'];
 		$donorE = mysql_escape_string($donor);
 		$candidate = $_GET['candidate'];
@@ -1258,8 +1259,11 @@ class ElectionController {
 			$where .= " and (c.first like '%$candidateE%' or c.last like '%$candidateE%' ) ";
 			$filtered = 1;
 		}
+		if ($year != '') {
+			$where .= " and c.year = $year ";
+		}
 
-		$orderby = " c.year desc, c.ward, c.last, c.first, d.type, d.name ";
+		$orderby = " c.year desc, c.ward, c.last, c.first, case when d.type = 1 then 0 else 1 end, d.type, d.name ";
 		if ($_GET['format'] == 'json') {
 			# not actually filtered, but we want the SQL to run
 			$filtered = 1;
@@ -1368,6 +1372,11 @@ class ElectionController {
 					 <input type="text" id="inputCandidate" class="input-medium" name="candidate" placeholder="(first or last)" value="<?php print $candidate; ?>"/> 
 					<!-- <label class="control-label" for="inputPostal">by postal code</label> -->
 					 <input type="text" id="inputPostal" class="input-medium" name="postal" placeholder="H0H 0H0" value="<?php print $postal; ?>"/>
+					 <select name="year">
+					 	<option value="">-- All Years--</option>
+					 	<option value="2010">2010</option>
+					 	<option value="2006">2006</option>
+					 </select>
 					<!-- <label class="control-label" for="inputFormat">Format</label> -->
           Output as:
 					<select name="format">
@@ -2090,7 +2099,10 @@ class ElectionController {
 	        </tr>
 	        <?php
 				} else {
-		      print htmlentities($answer['body']);
+		      $bb = $answer['body'];
+					$bb = preg_replace('/\r/','',$bb);
+					$bb = preg_replace('/\n/','<br/>',$bb);
+					print $bb;
 					?>
 					<?php
 				}

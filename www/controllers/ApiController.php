@@ -2,6 +2,54 @@
 
 class ApiController {
 
+	public static function wardFullDump() {
+		top();
+
+		?>
+		<h2>Ward and Poll Data Index</h2>
+		Jump to: 
+		<?php
+    $wards = getApi()->invoke("/api/wards");
+		foreach ($wards as $num=>$name) {	
+			?>
+			<a href="#ward<?php print $num; ?>"><?php print $name; ?></a>
+			&nbsp;&nbsp;
+			&nbsp;&nbsp;
+			<?php
+		}
+
+		foreach ($wards as $num=>$name) {
+			?>
+			<a name="ward<?php print $num; ?>"></a>
+			<h3><?php print $name; ?></h3>
+			<?php
+			$polls = getApi()->invoke("/api/wards/$num/polls");
+			foreach ($polls as $year=>$p) {
+				print "<h5>$year Poll Maps</h5>\n";
+				?>
+		    <table class="table table-bordered table-hover table-condensed">
+				<?php
+				foreach ($p as $wps) {
+					?>
+					<tr>
+					<td><?php print $wps; ?></td>
+					<td><a href="<?php print OttWatchConfig::WWW."/api/wards/$num/polls/$year/$wps"; ?>">Polygon</a></td>
+					<td><a href="<?php print OttWatchConfig::WWW."/api/wards/$num/polls/$year/$wps/map/live"; ?>">Live Map</a></td>
+					<td><a href="<?php print OttWatchConfig::WWW."/api/wards/$num/polls/$year/$wps/map/static"; ?>">Static Map</a></td>
+					<td><a href="<?php print OttWatchConfig::WWW."/api/wards/$num/polls/$year/$wps/map/img"; ?>">PNG Map</a></td>
+					</tr>
+					<?php
+				}
+				?>
+				</table>
+				<?php
+
+			}
+		}
+		break;
+		bottom();
+	}
+
 	public static function meetingsJson() {
 		$sql = "
 			select 
