@@ -529,12 +529,13 @@ function top($title = '',$quiet = false) {
 	.top-action-alert {
 		text-align: center;
 		width: 100%;
-		border: solid 1px #ff0000;
-		background: #ff0000;
+		border: solid 1px #e12014;
+		background: #e12014;
 		color: #ffffff;
 		border-radius: 3px;
 		font-size: 125%;
-		padding: 5px;
+		padding-top: 10px;
+		padding-bottom: 10px;
 		margin-bottom: 5px;
 	}
 	.top-action-alert a {
