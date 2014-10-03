@@ -526,6 +526,20 @@ function top($title = '',$quiet = false) {
 	.fb-like {
 		vertical-align: top;
 	}
+	.top-action-alert {
+		text-align: center;
+		width: 100%;
+		border: solid 1px #ff0000;
+		background: #ff0000;
+		color: #ffffff;
+		border-radius: 3px;
+		font-size: 125%;
+		padding: 5px;
+		margin-bottom: 5px;
+	}
+	.top-action-alert a {
+		color: #ffffff;
+	}
 </style>
 <script src="<?php print $OTT_WWW; ?>/jquery.js" type="text/javascript"></script>
 <script src="<?php print $OTT_WWW; ?>/bootstrap/js/bootstrap.min.js"></script>
@@ -610,6 +624,14 @@ if ($remaining == 0) {
 </div>
 </div>
 </div>
+
+<?php if (true) { ?>
+
+<div class="top-action-alert">
+<a href="/story/21/in-support-of-ottawa123-and-ranked-ballots">Action: In Support of Ottawa123 and Ranked Ballots <i class="fa fa-share"></i></a>
+</div>
+
+<?php } ?>
 
 <?php
 	if ($title != '') {
