@@ -2207,9 +2207,12 @@ class ElectionController {
 			<a href="/election/question/<?php print $q['electionquestionid']; ?>/<?php print urlencode($q['title']); ?>"><h3><?php print htmlentities($q['title']); ?></h3></a>
 			<p>
 			<?php if ($q['body'] != '') { ?>
-			<i><?php print htmlentities($q['body']); ?> <b>(Score: <?php print $q['score']; ?> based on <?php print $q['votes']; ?> votes)</b></i>
-			<br/>
+			<i><?php print htmlentities($q['body']); ?> </i>
+			<!--
+			<b>(Score: <?php print $q['score']; ?> based on <?php print $q['votes']; ?> votes)</b></i>
+			-->
 			<?php } ?>
+			<i>(<?php print $q['wardname']; ?>)</i>
 			<!--
 			<?php print $q['count']; ?> answers.<br/>
 			Asked: <?php print $q['created']; ?><br/>
