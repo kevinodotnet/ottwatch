@@ -456,10 +456,12 @@ class ElectionController {
 		}
 		?>
 		<br/>
+		<!--
 		<a href="/election/question/add?race=<?php print $race; ?>">
 		<i class="fa fa-list fa-4" style="font-size: 125%;"></i>
 		Ask your own question!
 		</a>
+		-->
 
     <h2>Incumbent</h2>
     <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
@@ -1825,6 +1827,14 @@ class ElectionController {
 	}
 
   public static function questionAdd() {
+		
+		top();
+		?>
+		Times is up! No more asking questions until 2018!
+		<?php
+		bottom();
+
+		return;
 		if (!LoginController::blockUnlessLoggedIn()) { 
       return;
     }
@@ -2131,9 +2141,11 @@ class ElectionController {
     <div class="span4">
     <a href="/election/question/list"><h3>See Other Questions</h3></a>
 		See what other questions have been put to candidates.
+		<!--
     <a href="/election/question/add"><h3>Want to ask a question?</h3></a>
     Anyone can ask a question using OttWatch. After logging in with Twitter or Facebook create a question title
     and body, and pick the ward you live in. <a href="/election/question/add">Ask your question</a>.
+		-->
     </div><!-- /span -->
     </div><!-- /row -->
     <?php
@@ -2149,7 +2161,7 @@ class ElectionController {
 		</h1>
 		<p class="lead">
 		Important questions from regular people. What do you want to know from candidates?
-    <b><a href="/election/question/add">Ask one</a></b>.
+    <!-- <b><a href="/election/question/add">Ask one</a></b>. -->
 		</p>
 		<p>Click through to see the answers, and vote questions up or down.</p>
 		<div class="row-fluid">
