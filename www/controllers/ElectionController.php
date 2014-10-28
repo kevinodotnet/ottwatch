@@ -288,14 +288,52 @@ class ElectionController {
 		top($title);
 		print "<h1>$title <small>(<a href=\"/election/\">main election page</a>)</small></h1>\n";
 
-    $rows = getDatabase()->all("
-      select * 
+    $summ = getDatabase()->one("
+      select sum(votes) votes
       from candidate 
       where ward = :ward and year = :year and nominated is not null 
-      order by rand() ",array('ward'=>$race,'year'=>self::year));
+      ",array('ward'=>$race,'year'=>self::year));
+		$totalVotes = $summ['votes'];
+    $rows = getDatabase()->all("
+      select 
+				id,first,last,votes,round(votes/$totalVotes*100,2) perc,withdrew,winner
+      from candidate 
+      where ward = :ward and year = :year and nominated is not null 
+      order by votes desc, rand() ",array('ward'=>$race,'year'=>self::year));
     ?>
     <div class="row-fluid">
     <div class="span6">
+    <h2><?php print self::year; ?> Results</h2>
+    <table class="table table-bordered table-hover table-condensed">
+    <tr>
+      <th>Name</th>
+      <th>Votes</th>
+      <th>%</th>
+    </tr>
+		<?php
+    foreach ($rows as $r) {
+			$style = '';
+			if ($r['winner']) {
+				$style = 'style="font-weight: bold;"';
+			}
+			if (isset($r['withdrew'])) { continue; }
+			?>
+	      <tr>
+	        <td>
+	          <?php print "<span $style >{$r['first']} {$r['middel']} {$r['last']}</span>"; ?>
+	        </td>
+					<td <?php print $style; ?> >
+						<?php print $r['votes']; ?>
+					</td>
+					<td <?php print $style; ?> >
+						<?php print $r['perc']; ?>
+					</td>
+	      </tr>
+			<?php
+		}
+		?>
+		</table>
+		<?php if (false) { ?>
     <h2>Candidates</h2>
     <?php
     if (count($rows) == 0) {
@@ -372,6 +410,7 @@ class ElectionController {
 	      <?php
 	    }
     }
+		} // if false
     ?>
     </table>
 
