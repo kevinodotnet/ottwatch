@@ -626,7 +626,7 @@ if ($remaining == 0) {
 </div>
 </div>
 
-<?php if (true) { ?>
+<?php if (false) { ?>
 
 <div class="top-action-alert">
 <a href="/story/21/in-support-of-ottawa123-and-ranked-ballots">Action: In Support of Ottawa123 and Ranked Ballots <i class="fa fa-share"></i></a>
