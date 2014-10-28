@@ -1,41 +1,5 @@
 <?php
 
-/*
-
-Populate candidate table from electedofficials table:
-
-  delete from candidate where incumbent = 1;
-  insert into candidate (year,ward,   first,last,nominated,incumbent) 
-  select                 2014,case when wardnum > 0 then wardnum else 0 end,first,last,null,     1 from electedofficials
-  ;
-
-// and committing this because then I can't lose it
-update candidate set twitter = 'AllanHubley_23' where incumbent = 1 and ward = 23;
-update candidate set twitter = 'BarrhavenJan' where incumbent = 1 and ward = 3;
-update candidate set twitter = 'BobMonette1' where incumbent = 1 and ward = 1;
-update candidate set twitter = 'CouncilHolmes' where incumbent = 1 and ward = 14;
-update candidate set twitter = 'CouncillorDoug' where incumbent = 1 and ward = 20;
-update candidate set twitter = 'CouncillorMcRae' where incumbent = 1 and ward = 16;
-update candidate set twitter = 'Eli_Ward5' where incumbent = 1 and ward = 5;
-update candidate set twitter = 'Go_Taylor' where incumbent = 1 and ward = 7;
-update candidate set twitter = 'JimWatsonOttawa' where incumbent = 1 and ward = 0;
-update candidate set twitter = 'Katherine_Hobbs' where incumbent = 1 and ward = 15;
-update candidate set twitter = 'KeithEgli' where incumbent = 1 and ward = 9;
-update candidate set twitter = 'MathieuFleury' where incumbent = 1 and ward = 12;
-update candidate set twitter = 'PeterHumeOttawa' where incumbent = 1 and ward = 18;
-update candidate set twitter = 'RickChiarelli' where incumbent = 1 and ward = 8;
-update candidate set twitter = 'ScottMoffatt21' where incumbent = 1 and ward = 21;
-update candidate set twitter = 'ShadQadri' where incumbent = 1 and ward = 6;
-update candidate set twitter = 'StephenBlais' where incumbent = 1 and ward = 19;
-update candidate set twitter = 'SteveDesroches' where incumbent = 1 and ward = 22;
-update candidate set twitter = 'TimTierney' where incumbent = 1 and ward = 11;
-update candidate set twitter = 'chernushenko' where incumbent = 1 and ward = 17;
-update candidate set twitter = 'dianedeans' where incumbent = 1 and ward = 10;
-update candidate set twitter = 'marianne4kanata' where incumbent = 1 and ward = 4;
-update candidate set twitter = 'rainerbloess' where incumbent = 1 and ward = 2;
-
-*/
-
 class ElectionController {
 
   const year = 2014;
