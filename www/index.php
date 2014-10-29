@@ -158,6 +158,8 @@ getRoute()->get('/election/listDonations', array('ElectionController','listDonat
 getRoute()->get('/election/donation/(\d+)', array('ElectionController','showDonation'));
 getRoute()->get('/election/tmp', array('ElectionController','tmp'));
 
+getRoute()->get('/election/candidate/(\d+)', array('ElectionController','showCandidate'));
+
 getRoute()->get('/election/question/(\d+)/(.*)', array('ElectionController','showQuestion'));
 getRoute()->get('/election/question/add', array('ElectionController','questionAdd'));
 getRoute()->get('/election/question/list', array('ElectionController','questionList'));
@@ -761,6 +763,23 @@ function disqusRecent ($count) {
     <?php
 
   }
+}
+
+function mapToTable($o) {
+	?>
+  <table class="table table-bordered table-hover table-condensed">
+	<?php
+	foreach ($o as $k=>$v) {
+		?>
+		<tr>
+			<th><?php print $k; ?></th>
+			<td><?php print $v; ?></td>
+		</tr>
+		<?php
+	}
+	?>
+	</table>
+	<?php
 }
 
 ?>

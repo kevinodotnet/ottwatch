@@ -5,6 +5,24 @@ class ElectionController {
   const year = 2014;
   const prevyear = 2010;
 
+	public static function showCandidate($id) {
+		$row = getDatabase()->one(" select * from candidate where id = :id ",array('id'=>$id));
+		if (!isset($row['id'])) {
+			top();
+			?>
+			<h1>Candidate #<?php print $id; ?> not found</h1>
+			<?php
+			bottom();
+			return;
+		}
+
+		$title = "{$row['first']} {$row['last']}: {$row['year']} Election Candidate Information";
+		top($title);
+		print "<h1>$title</h1>";
+		mapToTable($row);
+		bottom();
+	}
+
 	public static function candidatesCSV() {
 		$rows = getDatabase()->all(" 
 			select 
@@ -320,7 +338,7 @@ class ElectionController {
 			?>
 	      <tr>
 	        <td>
-	          <?php print "<span $style >{$r['first']} {$r['middel']} {$r['last']}</span>"; ?>
+						<a href="/election/candidate/<?php print $r['id']; ?>"><?php print "<span $style >{$r['first']} {$r['middel']} {$r['last']}</span>"; ?></a>
 	        </td>
 					<td <?php print $style; ?> >
 						<?php print $r['votes']; ?>
