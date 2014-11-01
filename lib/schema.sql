@@ -516,3 +516,34 @@ create table data311 (
   count mediumint
 ); 
 
+create table election (
+  id mediumint not null auto_increment,
+	`date` date, -- election day
+  primary key (id)
+) engine = innodb;
+
+create table election_vote (
+  id mediumint not null auto_increment,
+  electionid mediumint not null,
+  candidateid mediumint not null,
+	race mediumint,
+	ward mediumint,
+	poll mediumint,
+	votes mediumint,
+	`type` varchar(10),
+	precinct varchar(128),
+  primary key (id),
+  constraint foreign key (electionid) references election (id) on delete cascade on update cascade,
+  constraint foreign key (candidateid) references candidate (id) on delete cascade on update cascade
+) engine = innodb;
+
+create table t (
+	race mediumint,
+	ward mediumint,
+	poll mediumint,
+	`type` varchar(10),
+	precinct varchar(128),
+	candidate varchar(64),
+	votes mediumint
+) engine = innodb;
+
