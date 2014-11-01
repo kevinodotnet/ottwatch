@@ -167,6 +167,8 @@ getRoute()->post('/election/question/add', array('ElectionController','questionA
 getRoute()->post('/election/question/vote', array('ElectionController','questionVote'));
 getRoute()->post('/election/question/answer', array('ElectionController','saveAnswer'));
 
+getRoute()->get('/election/(\d+)/race/(\d+)/results/', array('ElectionController','raceResults'));
+
 getRoute()->get('.*', 'error404');
 getRoute()->run();
 

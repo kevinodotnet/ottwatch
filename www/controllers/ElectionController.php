@@ -5,6 +5,221 @@ class ElectionController {
   const year = 2014;
   const prevyear = 2010;
 
+	public static function raceResults ($electionid,$race) {
+
+		$totalVotes = getDatabase()->one(" 
+			select 
+				sum(votes) votes
+			from election_vote v
+			where 
+				electionid = :electionid 
+				and race = :race 
+			",array('electionid'=>$electionid,'race'=>$race));
+		$totalVotes = $totalVotes['votes'];
+
+		$rows = getDatabase()->all(" 
+			select 
+				c.id,
+				c.first,
+				c.last,
+				c.winner,
+				c.incumbent,
+				sum(v.votes) votes,
+				round(sum(v.votes)/$totalVotes*100,1) perc
+			from election_vote v
+				join candidate c on c.id = v.candidateid
+			where 
+				c.electionid = :electionid 
+				and v.race = :race 
+			group by 
+				c.id,
+				c.first,
+				c.last
+			order by
+				sum(v.votes) desc
+			",array('electionid'=>$electionid,'race'=>$race));
+
+		#pr($rows);
+		top();
+		?>
+    <table id="racesummary" class="table table-bordered table-hover table-condensed">
+		<tr>
+			<th>Candidate</th>
+			<th>% Votes</th>
+			<th>Votes</th>
+		</tr>
+		<?php
+		foreach ($rows as $r) {
+			?>
+			<tr>
+				<td>
+					<?php print "{$r['first']} {$r['last']}"; ?>
+					<?php if ($r['winner']) { print "<small>(winner)</small>"; } ?>
+					<?php if ($r['incumbent']) { print "<small>(incumbent)</small>"; } ?>
+				</td>
+				<td><?php print $r['perc']; ?>
+				<td><?php print $r['votes']; ?>
+			</tr>
+			<?php
+		}
+		?>
+		</table>
+		<?php
+
+		$rows = getDatabase()->all(" 
+			select 
+				c.id candidateid,
+				c.first,
+				c.last,
+				c.incumbent,
+				c.winner,
+				v.ward,
+				v.poll,
+				v.precinct,
+				v.type,
+				v.votes,
+				md5(concat(v.ward,v.poll,v.precinct,v.type)) md5
+			from election_vote v
+				join candidate c on c.id = v.candidateid
+			where 
+				c.electionid = :electionid 
+				and v.race = :race 
+			order by
+				case when v.type like 'A%' or v.type like 'S%' then 1 else 0 end,
+				v.type,
+				v.race,
+				v.ward,
+				v.poll,
+				v.precinct,
+				c.winner desc,
+				c.incumbent desc,
+				c.last,
+				c.first,
+				c.id
+			",array('electionid'=>$electionid,'race'=>$race));
+
+		# convert to LIST of PRECIENT that has LIST of candidate results
+
+		$prevmd5 = '';
+		$voterows = array();
+		$candidates = array();
+		foreach ($rows as $r) {
+			if ($prevmd5 != $r['md5']) {
+				if (count($candidates) > 0) {
+					$voterows[] = $candidates;
+				}
+				$candidates = array();
+			}
+			$candidates[] = $r;
+			$prevmd5 = $r['md5'];
+		}
+
+		?>
+    <table id="pollbypollresults" class="table table-bordered table-hover table-condensed">
+		<tr>
+		<th style="text-align: center;" rowspan="2">Precinct</th>
+		<th style="text-align: center;" colspan="<?php print count($voterows[0]); ?>">Vote Count</th>
+		<th style="text-align: center;" colspan="<?php print count($voterows[0]); ?>">Percentage of Vote</th>
+		</tr>
+		<tr>
+			<?php
+			foreach ($voterows[0] as $r) {
+				print "<th >{$r['first']} {$r['last']}";
+				if ($r['winner'] || $r['incumbent']) { print "<br/>"; }
+				if ($r['winner']) { print " <small>(winner)</small>"; }
+				if ($r['incumbent']) { print " <small>(incumbent)</small>"; }
+				print "</th>";
+			}
+			print "<th>Total</th>";
+			foreach ($voterows[0] as $r) {
+				print "<th >{$r['first']} {$r['last']}";
+				if ($r['winner'] || $r['incumbent']) { print "<br/>"; }
+				if ($r['winner']) { print " <small>(winner)</small>"; }
+				if ($r['incumbent']) { print " <small>(incumbent)</small>"; }
+				print "</th>";
+			}
+			?>
+		</tr>
+
+		<?php
+		foreach ($voterows as $row) {
+			$total = 0;
+			$maxvotes = 0;
+			foreach ($row as $r) {
+				$total += $r['votes'];
+				if ($r['votes'] > $maxvotes) {
+					$maxvotes = $r['votes'];
+				}
+			}
+			$winnercount = 0;
+			foreach ($row as $r) {
+				if ($r['votes'] > 0 && $r['votes'] == $maxvotes) {
+					$winnercount ++;
+				}
+			}
+
+			print "<tr>";
+			print "<td>{$row[0]['precinct']}</td>";
+
+			foreach ($row as $r) {
+				$style = 'style="text-align: center;" ';
+				if ($r['votes'] == $maxvotes) {
+						$style = ' style="text-align: center; background: #17E859;" ';
+					if ($winnercount > 1) {
+						$style = ' style="text-align: center; background: #E2E86B;" ';
+					}
+					if ($r['votes'] == 0) {
+						$style = ' text-align: center; ';
+					}
+				}
+				print "<td $style >{$r['votes']}</td>";
+				#print "<td style=\"background: #f0c0f0; text-align: center;\" >".round(100*$r['votes']/$total,1)."%</td>";
+			}
+			print "<td style=\"background: #e0e0e0; text-align: center; border-left: solid 2px; border-right: solid 2px;\" >$total</td>";
+			foreach ($row as $r) {
+				$style = 'style="text-align: center;" ';
+				if ($r['votes'] == $maxvotes) {
+						$style = ' style="text-align: center; background: #17E859;" ';
+					if ($winnercount > 1) {
+						$style = ' style="text-align: center; background: #E2E86B;" ';
+					}
+					if ($r['votes'] == 0) {
+						$style = ' text-align: center; ';
+					}
+				}
+				#print "<td $style >{$r['votes']}</td>";
+				print "<td $style  >".round(100*$r['votes']/$total,1)."%</td>";
+			}
+			print "</tr>";
+		}
+		?>
+		</table>
+
+		<?php
+		bottom();
+		return;
+
+		$prevmd5 = '';
+		foreach ($rows as $r) {
+			if ($prevmd5 != $r['md5']) {
+				print "</tr><tr>";
+				print "<td>{$r['precinct']}</td>";
+			}
+			print "<td>{$r['votes']}</td>";
+			$prevmd5 = $r['md5'];
+		}
+		print "</tr>";
+		?>
+
+		<table>
+		<?php
+
+		#pr($rows);
+
+		bottom();
+
+	}
+
 	public static function showCandidate($id) {
 		$row = getDatabase()->one(" select * from candidate where id = :id ",array('id'=>$id));
 		if (!isset($row['id'])) {
@@ -314,7 +529,7 @@ class ElectionController {
 		$totalVotes = $summ['votes'];
     $rows = getDatabase()->all("
       select 
-				id,first,last,votes,round(votes/$totalVotes*100,2) perc,withdrew,winner
+				id,electionid,first,last,votes,round(votes/$totalVotes*100,2) perc,withdrew,winner
       from candidate 
       where ward = :ward and year = :year and nominated is not null 
       order by votes desc, rand() ",array('ward'=>$race,'year'=>self::year));
@@ -322,6 +537,7 @@ class ElectionController {
     <div class="row-fluid">
     <div class="span6">
     <h2><?php print self::year; ?> Results</h2>
+		<a href="/election/<?php print $rows[0]['electionid']; ?>/race/<?php print $race; ?>/results/">Full Results for this race</a>.
     <table class="table table-bordered table-hover table-condensed">
     <tr>
       <th>Name</th>
