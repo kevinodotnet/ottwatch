@@ -40,7 +40,7 @@ class ElectionController {
 			",array('electionid'=>$electionid,'race'=>$race));
 
 		#pr($rows);
-		top();
+		top("Detailed Election Results");
 		?>
     <table id="racesummary" class="table table-bordered table-hover table-condensed">
 		<tr>
