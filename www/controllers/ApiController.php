@@ -2,6 +2,31 @@
 
 class ApiController {
 
+	public static function electionResults() {
+		$elections = array();
+
+		$rows = getDatabase()->all(" select * from election where id = 1 order by date ");
+
+		foreach ($rows as $e) {
+			$e['candidates'] = array();
+			$e['votes'] = array();
+			foreach (getDatabase()->all(" select * from candidate where electionid = {$e['id']} order by ward, last, first ") as $c) {
+				$cid = $c['id'];
+				unset($c['year']);
+				unset($c['personid']);
+				$e['candidates'][$cid] = $c;
+			}
+			foreach (getDatabase()->all(" select * from election_vote where electionid = {$e['id']} ") as $v) {
+				$e['votes'][] = $v;
+			}
+			$elections[$e['id']] = $e;
+		}
+
+		$ret = array();
+		$ret['elections'] = $elections; #array('elections',&$elections);
+		return $ret;
+	}
+
 	public static function wardFullDump() {
 		top();
 

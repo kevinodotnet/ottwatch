@@ -60,6 +60,7 @@ getApi()->get('/api/feed/(\d+)/(\d+)', array('ApiController', 'feed'), EpiApi::e
 getApi()->get('/api/zoning/(-{0,1}[\d\.]+)/(-{0,1}[\d\.]+)', array('ApiController', 'zoning'), EpiApi::external);
 getApi()->post('/api/inbound/traffic-incident', 'traffic_incident', EpiApi::external);
 getRoute()->get('/api/widget/findward', array('ApiController', 'widgetFindWard'));
+getApi()->get('/api/election/results', array('ApiController','electionResults'), EpiApi::external);
 
 # Scraper API
 getApi()->get('/api/scrape/item/(\d+)/votes', array('ScrapeApiController','itemVote'), EpiApi::external);
