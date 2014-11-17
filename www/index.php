@@ -255,6 +255,7 @@ function dashboard() {
   part of the political conversation in Ottawa. 
   <a href="about">Read about all the features</a>.
 
+	<!--
   <div style="background: #08c; color: #ffffff; padding: 20px; font-size: 200%; border-radius: 4px;">
   <center>
   <a href="/election/" style="color: #ffffff;">
@@ -264,15 +265,17 @@ function dashboard() {
   </center>
   </a>
   </div>
-
-		  <div style="margin-top: 10px; background: #08c; color: #ffffff; padding: 20px; font-size: 200%; border-radius: 4px;">
-		  <center>
-		  <a href="/election/listDonations" style="color: #ffffff;">
-		  <i class="fa fa-search fa-4" style="font-size: 125%;"></i>
-			Campaign Donations
-		  </center>
-		  </a>
-		  </div>
+	-->
+	<!--
+  <div style="margin-top: 10px; background: #08c; color: #ffffff; padding: 20px; font-size: 200%; border-radius: 4px;">
+  <center>
+  <a href="/election/listDonations" style="color: #ffffff;">
+  <i class="fa fa-search fa-4" style="font-size: 125%;"></i>
+	Campaign Donations
+  </center>
+  </a>
+  </div>
+	-->
 
   <div style="margin-top: 10px; background: #08c; color: #ffffff; padding: 20px; font-size: 125%; border-radius: 4px;">
   <center>
