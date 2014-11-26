@@ -385,6 +385,7 @@ class ConsultationController {
     $html = preg_replace("/<head.*<body/","<body",$html);
     $html = preg_replace("/&lang=en/","",$html); # not all HTML is escaped property, avoids <a href="...&lang=en" crap
     $html = preg_replace("/<script[^<]+<\/script>/"," ",$html);
+    $html = preg_replace("/\/\//","",$html);
     $html = preg_replace("/KEVINO_NEWLINE/","\n",$html);
     $html = preg_replace("/ & /"," and ",$html);
     $html = preg_replace("/<p[^>]+>/","",$html);
