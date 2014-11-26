@@ -971,8 +971,9 @@ class MeetingController {
     $focusFrameSrc = self::getDocumentUrl($meetid,'AGENDA');
 		$focusFrameSrcBase = self::getDocumentUrl($meetid,'AGENDA');
 		if ($m['minutes']) {
-	    $focusFrameSrc = self::getDocumentUrl($meetid,'MINUTES');
-			$focusFrameSrcBase = self::getDocumentUrl($meetid,'MINUTES');
+			# this is cauing problems when minutes=1 gets marked early
+#	    $focusFrameSrc = self::getDocumentUrl($meetid,'MINUTES');
+#			$focusFrameSrcBase = self::getDocumentUrl($meetid,'MINUTES');
 		}
 
     $isStarted = $m['started'];
