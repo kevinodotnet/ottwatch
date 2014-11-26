@@ -402,7 +402,7 @@ class ConsultationController {
 			print "-----HTML-----\n";
 			print "$html";
 			print "/-----HTML-----\n";
-			return '';
+			return $html;
 		}
     $div = $xml->xpath('//div[@id="cityott-content"]');
 		if (count($div) == 0) {
