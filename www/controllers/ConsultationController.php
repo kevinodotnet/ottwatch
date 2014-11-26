@@ -397,6 +397,13 @@ class ConsultationController {
     $html = preg_replace("/view-dom-id-[a-z0-9]+/","",$html);
 
     $xml = simplexml_load_string($html);
+		if (!is_object($xml)) {	
+			print "ERROR: is not object";
+			print "-----HTML-----\n";
+			print "$html";
+			print "/-----HTML-----\n";
+			return '';
+		}
     $div = $xml->xpath('//div[@id="cityott-content"]');
 		if (count($div) == 0) {
 			# return original HTML
