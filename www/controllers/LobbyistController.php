@@ -861,7 +861,11 @@ class LobbyistController {
 
 	public static function searchByDate($from,$to) {
 	
-		$html = file_get_contents(self::URL);
+		@$html = file_get_contents(self::URL);
+		if (strlen($html) == 0) {
+			print "LOBBY scrape on ".self::URL." returned 0 bytes\n";
+			return;
+		}
 	  $viewstate = getViewState($html);
 	  $eventvalidation = getEventValidation($html);
 		
