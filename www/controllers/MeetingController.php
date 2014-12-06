@@ -1457,7 +1457,8 @@ class MeetingController {
     <?php
     $rows = getDatabase()->all(" 
       select 
-        m.id,m.category,id,meetid,date(starttime) starttime
+        m.id,m.category,id,meetid,date(starttime) starttime,
+				youtube,youtubestate,youtubestart
       from meeting m 
         left join category c on c.category = m.category 
       where 
@@ -1466,6 +1467,15 @@ class MeetingController {
       order by 
         starttime desc ",
       array('category' => $category));
+			?>
+			<tr>
+			<th>Date</th>
+			<th>Agenda</th>
+			<th>Category</th>
+			<th>Items</th>
+			<th>Video</th>
+			</tr>
+			<?php
     foreach ($rows as $r) { 
       $mtgurl = htmlspecialchars("http://app05.ottawa.ca/sirepub/mtgviewer.aspx?meetid={$r['meetid']}&doctype");
       $myurl = htmlspecialchars($OTT_WWW."/meetings/{$r['category']}/{$r['meetid']}");
@@ -1482,6 +1492,19 @@ class MeetingController {
         print "{$count['c']} items";
         ?>
         </td>
+				<td>
+					<?php
+					if ($r['youtubestate'] == 'ready') {
+						if ($r['youtubestart'] > 0) {
+							print "<a target=\"_blank\" href=\"http://youtu.be/tV-M8FKVseQ?t={$r['youtubestart']}s\">Youtube</a>\n";
+						} else {
+							print "<a target=\"_blank\" href=\"http://youtu.be/tV-M8FKVseQ\">Youtube</a>\n";
+						}
+					} else {
+						print "Not available";
+					}
+					?>
+				</td>
 	    </tr>
       <?php
     }
