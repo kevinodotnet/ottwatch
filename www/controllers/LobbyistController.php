@@ -713,8 +713,13 @@ class LobbyistController {
       }
       $date = $tds[0];
       $date = strftime("%Y-%m-%d",strtotime($date));
-      $activity = $tds[1];
-      $lobbied = $tds[2];
+      @$activity = $tds[1];
+      @$lobbied = $tds[2];
+			if (!isset($activity)) {
+				print "Undefined activity?\n";
+				pr($tds);
+				continue;
+			}
       foreach (explode("|",$lobbied) as $who) {
         self::insertLobbying($fileid,$date,$activity,$who);
       }
