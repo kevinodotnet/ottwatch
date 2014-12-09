@@ -1496,7 +1496,7 @@ class MeetingController {
 					<?php
 					if ($r['youtubestate'] == 'ready') {
 						if ($r['youtubestart'] > 0) {
-							print "<a target=\"_blank\" href=\"{$r['youtube']}?t={$r['youtubestart']}s\">Youtube</a>\n";
+							print "<a target=\"_blank\" href=\"{$r['youtube']}&t={$r['youtubestart']}s\">Youtube</a>\n";
 						} else {
 							print "<a target=\"_blank\" href=\"{$r['youtube']}\">Youtube</a>\n";
 						}
