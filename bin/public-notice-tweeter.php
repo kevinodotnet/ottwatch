@@ -17,8 +17,17 @@ require_once('include.php');
 require_once('twitteroauth.php');
 
 $url = "http://ottawa.ca/en/city-hall/accountability-and-transparency/public-meetings-and-notices/notices";
-$html = file_get_contents($url);
+@$html = file_get_contents($url);
+if (strlen($html) == 0) {
+	return;
+}
 $html = ConsultationController::getCityContent($html,'');
+$html = strip_tags($html);
+$html = preg_replace('/\r/',"",$html);
+$html = preg_replace('/\n/',"",$html);
+$html = preg_replace('/\t/',"",$html);
+$html = preg_replace('/ */',"",$html);
+$html = preg_replace('/[^0-9a-zA-Z]*/',"",$html);
 $md5 = md5($html);
 $prevMD5 = getvar('public-meetings-and-notices.md5');
 
