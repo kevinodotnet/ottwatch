@@ -163,6 +163,11 @@ class OpenDataController {
 						|| $r->url == 'http://biblioottawalibrary.ca/en/events-feed'
 						|| $r->url == 'http://app06.ottawa.ca/online_services/opendata/data/spotlight/events.xml'
 						|| $r->url == 'http://app06.ottawa.ca/online_services/opendata/data/spotlight/venues.xml'
+
+						|| $r->url == 'http://app01.ottawa.ca/inspections-opendata/yelp_ottawa_all_healthscores.zip'
+						|| $r->url == 'http://app01.ottawa.ca/inspections-opendata/yelp_ottawa_healthscores.zip'
+						|| $r->url == 'http://app06.ottawa.ca/online_services/opendata/classdata/available_courses.txt'
+
 						|| preg_match('/biblioottawalibrary/',$r->url)
 						) {
 						# these pages are always updated on every scan, for some reason, and are spammy on the update channel.
