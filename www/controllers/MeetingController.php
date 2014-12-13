@@ -955,7 +955,120 @@ class MeetingController {
 #    }
 #  }
 
+  static public function meetingDetails_new ($category,$meetid,$itemid) {
+
+    $m = getDatabase()->one(" 
+      select * 
+			from meeting 
+			where meetid = :meetid ",
+			array("meetid" => $meetid)
+		);
+    if (!$m['id']) {
+      self::doList($category);
+      return;
+    }
+
+    $title = meeting_category_to_title($m['category']);
+    $focusFrameSrc = self::getDocumentUrl($meetid,'AGENDA');
+		$focusFrameSrcBase = self::getDocumentUrl($meetid,'AGENDA');
+
+    $items = getDatabase()->all(" select * from item where meetingid = :meetingid order by id ",array("meetingid"=>$m['id']));
+
+    top3($title . " on " . substr($m['starttime'],0,10));
+
+		?>
+		<div class="row">
+		<?php
+		# generate item and file list
+		{
+		?>
+		<div class="col-sm-4">
+    <div id="agendanav" style="overflow:scroll; height: 620px;">
+
+		<h3 class="text-center"><?php print $title; ?></h3>
+
+		<div class="row" style="margin-bottom: 10px;">
+		<div class="col-sm-6 text-center"><?php print "".substr($m['starttime'],0,10); ?></div>
+		<div class="col-sm-6 text-center"><?php print "<a href=\"http://app05.ottawa.ca/sirepub/mtgviewer.aspx?meetid=".$meetid."&doctype=AGENDA\"> view on Ottawa.ca <small><i class=\"fa fa-external-link\"></i></small></a>"; ?></div>
+		</div>
+
+    <table id="itemTable" class="table table-bordered table-hover table-condensed" style="width: 95%;">
+		<tr>
+			<th>Item/File</th>
+			<th>Ext.</th>
+		</tr>
+		<?php
+		foreach ($items as $i) {
+			?>
+			<tr>
+			<td style="text-transform: capitalize;">
+      <?php print "<a href=\"javascript:focusOnItem({$i['itemid']})\">".strtolower($i['title'])."</a>"; ?>
+			</td>
+			<td><?php print " <a target=\"_blank\" href=\"http://app05.ottawa.ca/sirepub/item.aspx?itemid={$i['itemid']}\"><small><i class=\"fa fa-external-link \"></i></small></a>"; ?></td>
+			</tr>
+			<?php
+
+      $files = getDatabase()->all(" select * from ifile where itemid = :itemid order by id ",array("itemid"=>$i['id']));
+      if (count($files) > 0) {
+        foreach ($files as $f) {
+          $ft = self::trimFileTitle($i['title'],$f['title']);
+          $fileurl = OttWatchConfig::WWW . "/meetings/file/" . $f['fileid'];
+          print "
+					<tr>
+					<td style=\"padding-left: 20px;\">
+					<i class=\"fa fa-file-text\"></i>
+					{$ft}
+					</td>
+					<td>
+					<a target=\"_blank\" href=\"{$fileurl}\"><i class=\"fa fa-external-link\"></i></a>
+					</td>
+					</tr>
+					";
+        }
+      }
+			?>
+			<?php
+		}
+		?>
+		</table>
+		</div><!-- .scroll -->
+		</div>
+		<?php } ?><!-- .generate nav -->
+
+		<div class="col-sm-8">
+			<h3 id="agendaDiv" class="text-center">Agenda</h3>
+      <p class="hidden-sm hidden-md hidden-lg text-center"><a href="javascript:scrollToItems()">Back to Item Display</a></p>
+	    <iframe id="focusFrame" src="<?php print $focusFrameSrc; ?>" style="width: 100%; height: 600px; border: 2px solid #c0c0c0;"></iframe>
+		</div>
+
+		</div><!-- .row -->
+
+		<script>
+    function scrollToItems() {
+	    $('html, body').animate({
+				scrollTop: $("#itemTable").offset().top
+			}, 100);
+		}
+    function focusOnItem(id,title) {
+      $('#focusFrame').attr('src','<?php print $focusFrameSrcBase; ?>#Item' + id);
+	    $('html, body').animate({
+				scrollTop: $("#agendaDiv").offset().top
+			}, 100);
+      return;
+		}
+		</script>
+
+		<?php
+
+		bottom3();
+	}
+
   static public function meetingDetails ($category,$meetid,$itemid) {
+
+		if ($_GET['new'] == 1) {
+			self::meetingDetails_new($category,$meetid,$itemid);
+			return;
+		}
 
     $m = getDatabase()->one(" 
       select 
