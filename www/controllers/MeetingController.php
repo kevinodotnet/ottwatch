@@ -1165,6 +1165,8 @@ class MeetingController {
     <!-- column 1 -->
     <div class="span4">
 
+		<center><b><i><p><a href="?new=1" style="color: #ff3333;">(test out the new version of this page)</a></p></i></b></center>
+
     <div style="float:right; padding-right: 10px;">
     <?php
     renderShareLinks("City meeting: $title","/meetings/{$category}/{$meetid}");
