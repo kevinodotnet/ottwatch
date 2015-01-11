@@ -21,7 +21,7 @@ class MeetingController {
     <div class="span8">
     <p class="lead">
     This report shows votes cast at council or at a committee meeting. It is ordered from "closest vote" first to "uncontroversial" last.
-    Only votes cast since mid-2012 are included.
+    Only votes cast in the 2014-2018 term are shown here.
     </p>
     </div>
     </div>
@@ -40,9 +40,11 @@ class MeetingController {
     ";
 
     $sql .= " count(1) as count ";
-    $sql .= " from itemvotecast ";
+    $sql .= " from itemvotecast ivc ";
+		$sql .= "   join itemvote iv on iv.id = ivc.itemvoteid ";
+		$sql .= "   join item i on i.id = iv.itemid ";
+		$sql .= "   join meeting m on m.id = i.meetingid and m.starttime >= '2014-12-01' ";
     $sql .= " group by itemvoteid ";
-    # order by smallest difference between y/n
     $sql .= " order by 
       abs(
         (sum(case when vote = 'y' then 1 else 0 end)/count(1))
@@ -62,6 +64,9 @@ class MeetingController {
     </tr>
     <?php
     foreach ($rows as $r) {
+
+			if ($r['y'] == 0 || $r['n'] == 0) { continue; } // consensus
+
       $itemvote = getDatabase()->one(" select * from itemvote where id = {$r['itemvoteid']}");
       $item = getDatabase()->one(" select * from item where id = {$itemvote['itemid']}");
       $meeting = getDatabase()->one(" select * from meeting where id = {$item['meetingid']}");
