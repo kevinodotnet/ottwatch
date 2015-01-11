@@ -307,7 +307,7 @@ class MeetingController {
     <div class="span8">
     <p class="lead">
     <?php
-    print "Since mid-2012, out of ".$totalYesNo." votes of 'Yes' or 'No', $name voted against the majority $againstMajorityTotal times (".sprintf("%.2f",100*$againstMajorityTotal/$totalYesNo)."%)<br/>";
+    print "From <b>".$votes[count($votes)-1]['starttime']."</b> to <b>".$votes[0]['starttime']."</b>, out of ".$totalYesNo." votes of 'Yes' or 'No', $name voted against the majority $againstMajorityTotal times (".sprintf("%.2f",100*$againstMajorityTotal/$totalYesNo)."%)<br/>";
     print "</p>";
     print "<!-- \n AGAINST_REPORT,$name,$totalYesNo,$againstMajorityTotal,".sprintf("%.2f",100*$againstMajorityTotal/$totalYesNo)."% \n --> \n";
     if ($againstMajorityTotal > 0) {
