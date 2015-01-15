@@ -2089,6 +2089,7 @@ class MeetingController {
     # scope HTML to the voting results block.
     $html = preg_replace("/&nbsp;/"," ",$html);
     $html = preg_replace("/<br>/"," ",$html);
+    $html = preg_replace("/<BR>/"," ",$html);
     $html = preg_replace("/\r/","",$html);
     $html = preg_replace("/\n/"," ",$html);
     $html = preg_replace("/align=left/"," ",$html);
