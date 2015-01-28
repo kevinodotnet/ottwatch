@@ -1024,6 +1024,8 @@ class ElectionController {
 			top();
 			#
 			# Display list of returns...
+				# case when p.id is null then 0 else 1 end desc,
+				# left join ( select id from candidate where last in (select last from candidate where year = 2014) ) p on p.id = c.id
 			#
 			$rows = getDatabase()->all(" 
 			select 
@@ -1032,11 +1034,9 @@ class ElectionController {
 				candidate_return r 
 				join candidate c on c.id = r.candidateid 
 				left join ( select returnid, count(1) donations from candidate_donation group by returnid ) d on d.returnid = r.id
-				left join ( select id from candidate where last in (select last from candidate where year = 2014) ) p on p.id = c.id
 			where
-				c.year in (2003,2006)
+				c.year in (2014)
 			order by 
-				case when p.id is null then 0 else 1 end desc,
 				d.donations,
 				c.year desc,
 				rand()
