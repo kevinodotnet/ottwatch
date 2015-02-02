@@ -981,6 +981,7 @@ class MeetingController {
 
     top3($title . " on " . substr($m['starttime'],0,10));
 
+
 		?>
 		<div class="row">
 		<?php
@@ -994,8 +995,11 @@ class MeetingController {
 
 		<div class="row" style="margin-bottom: 10px;">
 		<div class="col-sm-6 text-center"><?php print "".substr($m['starttime'],0,10); ?></div>
-		<div class="col-sm-6 text-center"><?php print "<a href=\"http://app05.ottawa.ca/sirepub/mtgviewer.aspx?meetid=".$meetid."&doctype=AGENDA\"> view on Ottawa.ca <small><i class=\"fa fa-external-link\"></i></small></a>"; ?></div>
+		<div class="col-sm-6 text-center"><?php print "<a href=\"http://app05.ottawa.ca/sirepub/mtgviewer.aspx?meetid=".$meetid."&doctype=AGENDA\"> view on ottawa.ca <small><i class=\"fa fa-external-link\"></i></small></a>"; ?></div>
 		</div>
+
+		<p>If you have comments regarding items on this agenda, <a href="#contactDiv">see below for councillor and meeting coordinator contact information</a>.
+		It is important that you raise your voice between elections.</p>
 
     <table id="itemTable" class="table table-bordered table-hover table-condensed" style="width: 95%;">
 		<tr>
@@ -1031,8 +1035,6 @@ class MeetingController {
 					";
         }
       }
-			?>
-			<?php
 		}
 		?>
 		</table>
@@ -1047,6 +1049,71 @@ class MeetingController {
 		</div>
 
 		</div><!-- .row -->
+
+		<!-- /////////// Public Delegation Details -->
+
+		<?php
+    $members = $m['members'];
+    if ($m['category'] == 'City Council') {
+      $rows = getDatabase()->all(" select * from electedofficials ");
+    } else if ($members != '') {
+      $members = json_decode($members);
+      $rows = getDatabase()->all(" select * from electedofficials where id in (".implode(",",$members).") ");
+    } else {
+      $rows = array();
+    }
+    $emails = array();
+    if ($m['contactEmail'] != '') {
+      $emails[] = $m['contactEmail'];
+		}
+    foreach ($rows as $r) {
+      $emails[] = $r['email'];
+		}
+
+		$subject = "Comment on ".meeting_category_to_title($m['category'])." - ".substr($m['starttime'],0,10);
+		$body = "Please accept the following comments with regard to the ".meeting_category_to_title($m['category'])." meeting on ".substr($m['starttime'],0,10)."\n\n";
+    $cmtmailto = 
+      "mailto:".strtolower(implode(",",$emails)).
+      "?Subject=".urlencode($subject).
+      "&Body=".urlencode($body);
+		?>
+
+		<h3 id="contactDiv" class="text-center">Public Comment Contact Information</h3>
+    <p>
+    Everyone is entitled to attend committee meetings and provide a verbal statement (up to 5 minutes long)
+    before Councillors vote on each agenda item. If you are not able to attend a meeting, you can also email your comments to councillors.
+		Either way, your statements become part of the official record - and this
+    is the single most important step to shaping the outcome of your city.
+    </p>
+
+		<p><a target="_blank" href="<?php print $cmtmailto; ?>">Click this "mailto:" link</a>, or cut-and-paste the following email addresses to send your comments:
+		<blockquote><?php print strtolower(implode(", ",$emails)); ?>
+		</blockquote>
+		</p>
+
+    <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
+      <tr>
+      <th>Name</th>
+      <th>Last</th>
+      <th>Email</th>
+      <th>Phone</th>
+      </tr>
+    <?php
+    foreach ($rows as $r) {
+      ?>
+      <tr>
+      <td><?php print "{$r['first']}"; ?></td>
+      <td><?php print "{$r['last']}"; ?></td>
+      <td><?php print "{$r['email']}"; ?></td>
+      <td><?php print "{$r['phone']}"; ?></td>
+      </tr>
+      <?php
+    }
+    ?>
+    </table>
+
+
+		<!-- END /////////// Public Delegation Details -->
 
 		<script>
     function scrollToItems() {
