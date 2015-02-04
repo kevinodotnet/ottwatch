@@ -1037,14 +1037,16 @@ class ElectionController {
 			where
 				c.year in (2014)
 			order by 
+				c.winner desc,
 				d.donations,
+				c.ward,
 				c.year desc,
 				rand()
 			");
 			$returns = array();
 			foreach ($rows as $r) {
 				$dir = self::getReturnPagesDir($r['year'],$r['filename']);
-				if (!file_exists($dir)) { continue; }
+#				if (!file_exists($dir)) { continue; }
 				$returns[] = $r;
 			}
 			?>
@@ -1052,6 +1054,9 @@ class ElectionController {
 	    <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
 			<?php
 			foreach ($returns as $r) {
+				if ($r['filename'] == null) {
+					$r['filename'] = 'return not avail';
+				}
 				?>
 				<tr>
 				<td><?php print $r['year']; ?></td>
@@ -1087,7 +1092,7 @@ class ElectionController {
 		$ret = getDatabase()->one(" select c.*,r.filename from candidate_return r join candidate c on c.id = r.candidateid where r.id = $id ");
 		$pages = self::getReturnPages($ret['year'],$ret['filename']);
 
-    if ($_GET['saveA'] == 1) {	
+    if ($_GET['saveA'] == 1) {
 			# click in a <canvass> denoting location of a campaign donation
       $values = array();
 			$values['returnid'] = $id;
