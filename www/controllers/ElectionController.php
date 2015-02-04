@@ -1029,7 +1029,7 @@ class ElectionController {
 			#
 			$rows = getDatabase()->all(" 
 			select 
-				r.id retid,c.year,r.filename,d.donations,c.* 
+				r.done, r.id retid,c.year,r.filename,d.donations,c.* 
 			from 
 				candidate_return r 
 				join candidate c on c.id = r.candidateid 
@@ -1037,6 +1037,7 @@ class ElectionController {
 			where
 				c.year in (2014)
 			order by 
+				case when r.done is null or r.done = 0 then 0 else 1 end,
 				c.winner desc,
 				d.donations,
 				c.ward,
@@ -1618,6 +1619,7 @@ class ElectionController {
 					 <input type="text" id="inputPostal" class="input-medium" name="postal" placeholder="H0H 0H0" value="<?php print $postal; ?>"/>
 					 <select name="year">
 					 	<option value="">-- All Years--</option>
+					 	<option value="2014">2014</option>
 					 	<option value="2010">2010</option>
 					 	<option value="2006">2006</option>
 					 </select>
