@@ -38,7 +38,11 @@ class BudgetController {
 
 		top3("$year $type budget : $draft : search results");
 
+
 		?>
+
+		<p><i><a href="http://ottawa.ca/budget2015">For full budget details and to participate officially visit <b>ottawa.ca/budget2015</b></a></i></p>
+
 	  <table class="table table-bordered table-hover table-condensed">
 		<tr>
 		<th>details</th>
@@ -87,6 +91,7 @@ class BudgetController {
     top3($row['name']." ($type budget : year $year : $draft)");
 
 		?>
+		<p><i><a href="http://ottawa.ca/budget2015">For full budget details and to participate officially visit <b>ottawa.ca/budget2015</b></a></i></p>
 		<div class="row">
 		<div class="col-sm-6">
 		<h3><?php print $row['name']; ?></h3>
