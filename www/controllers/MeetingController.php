@@ -633,7 +633,7 @@ class MeetingController {
 		$youtube_url = preg_replace("/\n/","",$youtube_url);
 		$youtube_url = preg_replace("/\r/","",$youtube_url);
 		# dont need this now
-		# unlink($video_file);
+		unlink($video_file);
 
 		if ($youtube_url == '') {
 			# mark as ERROR so we don't keep trying over and over again on this video; something must be wrong.
