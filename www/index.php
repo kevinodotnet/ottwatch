@@ -21,6 +21,7 @@ include_once 'controllers/ElectionController.php';
 include_once 'controllers/OpenDataController.php';
 include_once 'controllers/StoryController.php';
 include_once 'controllers/MfippaController.php';
+include_once 'controllers/BudgetController.php';
 
 Epi::setPath('base', 'epiphany/src');
 Epi::init('route');
@@ -61,6 +62,10 @@ getApi()->get('/api/zoning/(-{0,1}[\d\.]+)/(-{0,1}[\d\.]+)', array('ApiControlle
 getApi()->post('/api/inbound/traffic-incident', 'traffic_incident', EpiApi::external);
 getRoute()->get('/api/widget/findward', array('ApiController', 'widgetFindWard'));
 getApi()->get('/api/election/results', array('ApiController','electionResults'), EpiApi::external);
+
+# Budget
+getRoute()->get('/budget/(\d+)/(capital)/(draft)/(\d+)', array('BudgetController', 'showEntry'));
+getRoute()->get('/budget/(\d+)/(capital)/(draft)/search', array('BudgetController', 'search'));
 
 # Scraper API
 getApi()->get('/api/scrape/item/(\d+)/votes', array('ScrapeApiController','itemVote'), EpiApi::external);
