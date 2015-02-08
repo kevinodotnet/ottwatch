@@ -64,8 +64,11 @@ getRoute()->get('/api/widget/findward', array('ApiController', 'widgetFindWard')
 getApi()->get('/api/election/results', array('ApiController','electionResults'), EpiApi::external);
 
 # Budget
+getRoute()->get('/budget/search', array('BudgetController', 'searchAll'));
 getRoute()->get('/budget/(\d+)/(capital)/(draft)/(\d+)', array('BudgetController', 'showEntry'));
 getRoute()->get('/budget/(\d+)/(capital)/(draft)/search', array('BudgetController', 'search'));
+getRoute()->get('/budget/(\d+)/(capital)/(adopted)/(\d+)', array('BudgetController', 'showEntry'));
+getRoute()->get('/budget/(\d+)/(capital)/(adopted)/search', array('BudgetController', 'search'));
 
 # Scraper API
 getApi()->get('/api/scrape/item/(\d+)/votes', array('ScrapeApiController','itemVote'), EpiApi::external);
