@@ -78,16 +78,18 @@ class BudgetController {
 			<th>details</th>
 			<?php
 			foreach ($rows[0] as $k=>$v) {
-				if ($k == 'id') { continue; }
+				if ($k == 'id') { 
+					$id = $v;
+					continue; 
+				}
 				print "<th>$k</th>\n";
 			}
 			?>
-			</tr>
 			<?php
 			foreach ($rows as $r) {
 				$url = "/budget/{$r['year']}/capital/".($r['adopted'] == 1 ? 'adopted' : 'draft')."/{$r['id']}";
 				print "<tr>";
-				print "<th class=\"text-center\"><a href=\"{$url}\"><i class=\"fa fa-external-link\"></i></a></th>\n";
+				print "<td class=\"text-center\"><a href=\"{$url}\"><i class=\"fa fa-external-link\"></i></a></td>\n";
 				foreach ($r as $k=>$v) {
 					if ($k == 'id') { continue; }
 					if ($k == 'program' || $k == 'description') {
@@ -107,7 +109,11 @@ class BudgetController {
 							$v = '';
 						}
 					}
-					print "<td>$v</td>\n";
+					if ($k == 'name') {
+						print "<td class=\"text-center\"><a href=\"{$url}\">$v</a></td>\n";
+					} else {
+						print "<td>$v</td>\n";
+					}
 				}
 				print "</tr>";
 			}
