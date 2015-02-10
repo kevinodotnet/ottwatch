@@ -226,8 +226,18 @@ class BudgetController {
 			<tr>
 				<th><?php print $k; ?></th>
 				<td>
-					<?php if ($k == 'amount') { print "$"; } ?>
-					<?php print $v; ?>
+					<?php 
+					if ($k == 'amount') { 
+						print '$'; 
+						print $v;
+					} else if ($k == 'listing') { 
+						$v = preg_replace('/^\*/','',$v);
+						$v = preg_replace('/\*/','<br/>',$v);
+						print "<small>$v</small>";
+					} else {
+						print "$v";
+					}
+					?>
 				</td>
 			</tr>
 			<?php
