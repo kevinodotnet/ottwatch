@@ -31,6 +31,7 @@ class BudgetController {
 					$sql .= "   program like '%".mysql_escape_string($_GET[$a])."%'";
 					$sql .= "   or description like '%".mysql_escape_string($_GET[$a])."%'";
 					$sql .= "   or name like '%".mysql_escape_string($_GET[$a])."%'";
+					$sql .= "   or listing like '%".mysql_escape_string($_GET[$a])."%'";
 					$sql .= " ) ";
 				} else {
 					$sql .= " and $a = '".mysql_escape_string($_GET[$a])."' ";
