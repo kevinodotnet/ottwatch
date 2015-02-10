@@ -97,12 +97,14 @@ class BudgetController {
 						if (isset($_GET['q']) && $_GET['q'] != '') {
 							$q = $_GET['q'];
 							$m = array();
-							if (preg_match("/(.*)$q(.*)/",$v,$m)) {
+							$v = preg_replace("/\n/"," ",$v);
+							if (preg_match("/(.*)($q)(.*)/i",$v,$m)) {
 								$bound = 50;
-								$s = $v;
 								$v = substr($m[1],strlen($m[1])-$bound,strlen($m[1]));;
-								$v .= "$q";
-								$v .= substr($m[2],0,$bound);
+								$v .= "<u><b>";
+								$v .= $m[2];
+								$v .= "</b></u>";
+								$v .= substr($m[3],0,$bound);
 							} else {
 								$v = '';
 							}
