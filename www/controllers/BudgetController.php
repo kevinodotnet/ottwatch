@@ -93,7 +93,7 @@ class BudgetController {
 				print "<td class=\"text-center\"><a href=\"{$url}\"><i class=\"fa fa-external-link\"></i></a></td>\n";
 				foreach ($r as $k=>$v) {
 					if ($k == 'id') { continue; }
-					if ($k == 'program' || $k == 'description') {
+					if ($k == 'listing' || $k == 'program' || $k == 'description') {
 						if (isset($_GET['q']) && $_GET['q'] != '') {
 							$q = $_GET['q'];
 							$m = array();
