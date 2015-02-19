@@ -1078,39 +1078,51 @@ class MeetingController {
       "&Body=".urlencode($body);
 		?>
 
-		<h3 id="contactDiv" class="text-center">Public Comment Contact Information</h3>
-    <p>
-    Everyone is entitled to attend committee meetings and provide a verbal statement (up to 5 minutes long)
-    before Councillors vote on each agenda item. If you are not able to attend a meeting, you can also email your comments to councillors.
-		Either way, your statements become part of the official record - and this
-    is the single most important step to shaping the outcome of your city.
-    </p>
 
-		<p><a target="_blank" href="<?php print $cmtmailto; ?>">Click this "mailto:" link</a>, or cut-and-paste the following email addresses to send your comments:
-		<blockquote><?php print strtolower(implode(", ",$emails)); ?>
-		</blockquote>
-		</p>
+		<div class="row">
+		<div class="col-sm-4">
+			<h3 id="contactDiv" class="text-center">Public Comment Contact Information</h3>
+		</div>
+		</div>
 
-    <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
-      <tr>
-      <th>Name</th>
-      <th>Last</th>
-      <th>Email</th>
-      <th>Phone</th>
-      </tr>
-    <?php
-    foreach ($rows as $r) {
-      ?>
-      <tr>
-      <td><?php print "{$r['first']}"; ?></td>
-      <td><?php print "{$r['last']}"; ?></td>
-      <td><?php print "{$r['email']}"; ?></td>
-      <td><?php print "{$r['phone']}"; ?></td>
-      </tr>
-      <?php
-    }
-    ?>
-    </table>
+		<div class="row">
+		<div class="col-sm-4">
+	    <p>
+	    Everyone is entitled to attend committee meetings and provide a verbal statement (up to 5 minutes long)
+	    before Councillors vote on each agenda item. If you are not able to attend a meeting, you can also email your comments to councillors.
+			Either way, your statements become part of the official record - and this
+	    is the single most important step to shaping the outcome of your city.
+	    </p>
+	
+			<p><a target="_blank" href="<?php print $cmtmailto; ?>">Click this "mailto:" link</a>, or cut-and-paste the following email addresses to send your comments:
+			<blockquote><?php print strtolower(implode(", ",$emails)); ?>
+			</blockquote>
+			</p>
+		</div>
+		<div class="col-sm-8">
+			<b>Committee Members:</b>
+	    <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
+	      <tr>
+	      <th>Name</th>
+	      <th>Last</th>
+	      <th>Email</th>
+	      <th>Phone</th>
+	      </tr>
+	    <?php
+	    foreach ($rows as $r) {
+	      ?>
+	      <tr>
+	      <td><?php print "{$r['first']}"; ?></td>
+	      <td><?php print "{$r['last']}"; ?></td>
+	      <td><?php print "{$r['email']}"; ?></td>
+	      <td><?php print "{$r['phone']}"; ?></td>
+	      </tr>
+	      <?php
+	    }
+	    ?>
+	    </table>
+		</div>
+		</div><!-- /row -->
 
 
 		<!-- END /////////// Public Delegation Details -->
