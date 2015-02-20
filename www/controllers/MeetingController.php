@@ -1055,10 +1055,10 @@ class MeetingController {
 		<?php
     $members = $m['members'];
     if ($m['category'] == 'City Council') {
-      $rows = getDatabase()->all(" select * from electedofficials ");
+      $rows = getDatabase()->all(" select * from electedofficials order by last, first ");
     } else if ($members != '') {
       $members = json_decode($members);
-      $rows = getDatabase()->all(" select * from electedofficials where id in (".implode(",",$members).") ");
+      $rows = getDatabase()->all(" select * from electedofficials where id in (".implode(",",$members).") order by last, first ");
     } else {
       $rows = array();
     }
