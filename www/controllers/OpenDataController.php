@@ -168,6 +168,8 @@ class OpenDataController {
 						|| $r->url == 'http://app01.ottawa.ca/inspections-opendata/yelp_ottawa_healthscores.zip'
 						|| $r->url == 'http://app06.ottawa.ca/online_services/opendata/classdata/available_courses.txt'
 
+						|| preg_match('/maps.google.ca/',$r->url)
+
 						|| preg_match('/biblioottawalibrary/',$r->url)
 						) {
 						# these pages are always updated on every scan, for some reason, and are spammy on the update channel.
