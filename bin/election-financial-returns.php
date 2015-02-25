@@ -13,6 +13,10 @@ $html = file_get_contents($url);
 $html = preg_replace("/\n/"," ",$html);
 $html = preg_replace("/\"/"," ",$html);
 
+# trim HTML to only include council races
+$html = preg_replace("/Ottawa Catholic School Board.*Mayor/"," ",$html);
+$html = preg_replace("/Ottawa Catholic School Board.*/"," ",$html);
+
 $urls = preg_grep("/documents.*ottawa.*\.pdf/i",explode(" ",$html));
 
 $year = 2014;
@@ -44,6 +48,9 @@ foreach ($urls as $u) {
 			# or is a Trustee PDF
 			# of PDF was downloaded and has been matched to a return
 			# print "$filename already matched to a return, or is a trustee\n";
+			if (preg_match('/Original/',$filename)) {
+#				print "$filename\n";
+			}
 			continue;
 		}
 		print "$filename downloaded; name match to ".count($rows)." candidates\n";
