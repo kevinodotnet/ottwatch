@@ -2,4 +2,5 @@
 lib/config.php
 *.mp2t
 *.swp
+*.pyc
 /build
