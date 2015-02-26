@@ -1833,6 +1833,12 @@ class MeetingController {
 		$tmp = preg_replace("/  /"," ",$tmp);
 		$tmp = preg_replace("/  /"," ",$tmp);
     $tmp = preg_replace("/target=pubright/",'',$tmp);
+    $tmp = preg_replace("/name=QuickMark/",'',$tmp);
+
+		foreach (array('vAlign', 'width', 'height', 'class', 'border', 'cellSpacing', 'cellPadding','lang','name') as $t) {
+			$tmp = preg_replace("/$t=[^\s>]*/i",'',$tmp);
+		}
+
 		#print $tmp; print "\n\n";
 		$xml = simplexml_load_string("<foo>{$tmp}</foo>");
 		$anchors = $xml->xpath("//a"); 
@@ -2023,8 +2029,10 @@ class MeetingController {
         }
       }
 
+
 	    $html = file_get_contents(self::getItemUrl($item['itemid']));
       self::parseVotingResults($item,$html);
+
 		  $lines = explode("\n",$html);
 	    $files = array();
 		  foreach ($lines as $line) {
@@ -2049,7 +2057,6 @@ class MeetingController {
 		    }
 		  }
 	  }
-
 
     # detect 'diff' in items/files
     $now_items = getDatabase()->all(" select * from item where meetingid = $id ");
@@ -2153,7 +2160,14 @@ class MeetingController {
 
   public function parseVotingResults($item,$html) {
 
+		if ($item['itemid'] == 0) {
+			// false item;
+			return;
+		}
+
 		# remove shit from the HTML
+		$html = preg_replace("/\r/",' ',$html);
+		$html = preg_replace("/\n/",' ',$html);
 		$html = preg_replace('/class=MsoPlaceholderText/','',$html);
 		$html = preg_replace('/<\?xml[^>]+>/','',$html);
 		$html = preg_replace('/<w:[^>]+>/','',$html);
@@ -2177,12 +2191,27 @@ class MeetingController {
     $html = preg_replace("/align=right/"," ",$html);
     $html = preg_replace("/align=centre/"," ",$html);
     $html = preg_replace("/align=center/"," ",$html);
+    $html = preg_replace("/class=Apple-converted-space/"," ",$html);
     $html = preg_replace('/.*<table id="MotionVotesResultsTable"/',"<table ",$html);
     $html = preg_replace('/<table id="Table1".*/','',$html);
+		$html = preg_replace('#<script(.*?)>(.*?)</script>#is', '', $html);
+		$html = preg_replace('/<meta[^>]*/','',$html);
+		$html = preg_replace('/<\/meta>/','',$html);
+		$html = preg_replace('/<font[^>]*/i','',$html);
+		$html = preg_replace('/<\/font>/i','',$html);
+		$html = preg_replace('/ & /',' and ',$html);
+
+		$html = preg_replace('/<TR>\s*<TD[^>]*>\s*<\/TR>/i','',$html); # fix <tr><td></tr> shit.
+
+		foreach (array('vAlign', 'width', 'height', 'class', 'border', 'cellSpacing', 'cellPadding','lang','name') as $t) {
+			$html = preg_replace("/$t=[^\s>]*/i",'',$html);
+		}
 
     $xml = simplexml_load_string($html);
     if (!is_object($xml)) {
       print "Error creating voting snippet\n";
+			pr($item);
+			print "\n\n$html\n\n";
       return;
     }
 
@@ -2235,8 +2264,6 @@ class MeetingController {
         else { $vote = 'u'; } // should never happen
         getDatabase()->execute('insert into itemvotecast (itemvoteid,vote,name) values (:itemvoteid,:vote,:name) ', array('itemvoteid'=>$voteid,'vote'=>$vote,'name'=>$v['name']));
       }
-      print "\n";
-
     }
 
   }
