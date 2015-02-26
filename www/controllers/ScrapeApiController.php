@@ -57,6 +57,7 @@ class ScrapeApiController {
 				$how = preg_replace('/Yes/','y',$how);
 				$how = preg_replace('/No/','n',$how);
 				$how = preg_replace('/Absent/','a',$how);
+				$how = preg_replace('/Recused/','r',$how);
 				$casts[$who] = $how;
 			}
 			unset($vote['rawvotes']);

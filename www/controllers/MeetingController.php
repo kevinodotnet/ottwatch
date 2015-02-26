@@ -141,11 +141,11 @@ class MeetingController {
     ?>
 		</td>
 		<td>
-		<h5>Absent/Recused/Other</h5>
+		<h5>Absent/Recused</h5>
     <?php
     foreach ($casts as $c) {
       if ($c['vote'] == 'y' || $c['vote'] == 'n') { continue; }
-      print "<a href=\"".OttWatchConfig::WWW."/meetings/votes/member/".urlencode($c['name'])."\">".$c['name']."</a><br/>";
+      print "<a href=\"".OttWatchConfig::WWW."/meetings/votes/member/".urlencode($c['name'])."\">".$c['name']."</a> (".$c['vote'].")<br/>";
     }
     ?>
 		</td>
@@ -337,7 +337,7 @@ class MeetingController {
         </td>
         </tr>
 	      <tr>
-	      <th style="width: 10%;">Yes/No/Absent</th>
+	      <th style="width: 10%;">Yes/No/Other</th>
 	      <th style="width: 10%;">Motion Passed</th>
 	      <th style="width: 45%;">Motion</th>
 	      <th style="width: 45%;">Meeting Item</th>
@@ -351,6 +351,7 @@ class MeetingController {
       if ($v['vote'] == 'y') { $v['vote'] = 'Yes'; }
       if ($v['vote'] == 'n') { $v['vote'] = 'No'; }
       if ($v['vote'] == 'a') { $v['vote'] = 'Absent'; }
+      if ($v['vote'] == 'r') { $v['vote'] = 'Recused'; }
       if ($v['passed'] == '0') { $v['passed'] = 'No'; }
       if ($v['passed'] == '1') { $v['passed'] = 'Yes'; }
 
@@ -1371,7 +1372,7 @@ class MeetingController {
 		    <th style="width: 40%;">Motion</th>
 		    <th style="width: 20%;">Yes</th>
 		    <th style="width: 20%;">No</th>
-		    <th style="width: 20%;">Absent</th>
+		    <th style="width: 20%;">Absent/Recused</th>
 		    </tr>
         <?php
       }
@@ -1402,8 +1403,9 @@ class MeetingController {
       <td style="vertical-align: top;">
       <?php
       foreach ($casts as $c) {
-        if ($c['vote'] != 'a') { continue; }
-        print "<a href=\"".OttWatchConfig::WWW."/meetings/votes/member/".urlencode($c['name'])."\">".$c['name']."</a><br/>";
+        if ($c['vote'] == 'a' || $c['vote'] == 'r') { 
+	        print "<a href=\"".OttWatchConfig::WWW."/meetings/votes/member/".urlencode($c['name'])."\">".$c['name']."</a> (".$c['vote'].")<br/>";
+				}
       }
       ?>
       </td>
@@ -2207,7 +2209,7 @@ class MeetingController {
 
       $votes = simplexml_load_string($votes->asXML()); # xpath doesn't scope to children or something? workaround by re-parsing
       $attendees = $votes->xpath("//td[@class='attendee']"); 
-      $votefors = $votes->xpath("//td[@class='votefor' or @class='voteabsent' or @class='voteagainst']");
+      $votefors = $votes->xpath("//td[@class='votefor' or @class='voterecused' or @class='voteabsent' or @class='voteagainst']");
       if (count($attendees) != count($votefors)) {
         # should not be possible.
         print "\n\nERROR: attendees/votefors does not match; should not happen\n\n";
@@ -2229,6 +2231,7 @@ class MeetingController {
         if ($v['voted'] == 'Yes') { $vote = 'y'; }
         else if ($v['voted'] == 'No') { $vote = 'n'; }
         else if ($v['voted'] == 'Absent') { $vote = 'a'; }
+        else if ($v['voted'] == 'Recused') { $vote = 'r'; }
         else { $vote = 'u'; } // should never happen
         getDatabase()->execute('insert into itemvotecast (itemvoteid,vote,name) values (:itemvoteid,:vote,:name) ', array('itemvoteid'=>$voteid,'vote'=>$vote,'name'=>$v['name']));
       }
