@@ -2,7 +2,7 @@
 
 class DevelopmentAppController {
 
-  static public function scrapeCommitteeOfAdjustment($file) {
+  static public function scrapeCommitteeOfAdjustment($date,$panel) {
 	  $text = '';
 	  while($f = fgets(STDIN)){
 	    $text .= "$f";
@@ -14,16 +14,29 @@ class DevelopmentAppController {
 	  $text = preg_replace("/  /"," ",$text);
 	  $text = preg_replace("/  /"," ",$text);
 	  $text = preg_replace("/  /"," ",$text);
+	  $text = preg_replace("/  /"," ",$text);
+	  $text = preg_replace("/  /"," ",$text);
+	  $text = preg_replace("/  /"," ",$text);
+	  $text = preg_replace("/  /"," ",$text);
+	  $text = preg_replace("/  /"," ",$text);
 	  $text = preg_replace("/ (\d+)-(\d+) /"," $1 $2 ",$text);
+	  $text = preg_replace("/\((\d+)\)/"," $1 ",$text);
+	  $text = preg_replace("/  /"," ",$text);
+	  $text = preg_replace("/  /"," ",$text);
+	  $text = preg_replace("/  /"," ",$text);
 	  $text = preg_replace("/  /"," ",$text);
 	  $text = preg_replace("/  /"," ",$text);
 	  $text = preg_replace("/  /"," ",$text);
 	
 	  $index = 0;
+
+		$items = array();
 	
 	  $item = array();
     $item['app'] = array();
     $item['addr'] = array();
+		$item['date'] = $date;
+		$item['panel'] = $panel;
 	
 	  $words = explode(" ",$text);
 	  for ($x = 0; $x < count($words); $x++) {
@@ -32,19 +45,23 @@ class DevelopmentAppController {
 	
 	    $matches = array();
 	
-	    if (preg_match("/^(\d+)\./",$word,$matches)) {
+	    if (preg_match("/^(\d+)/",$word,$matches) && $matches[1] == ($index+1) ) {
 	      $index = $matches[1];
 	      if ($index > 1) {
 	        self::dumpItem($item);
+					$items[] = $item;
 	      }
 	      $item = array();
 	      $item['app'] = array();
 	      $item['addr'] = array();
-	      print "\n\n----- START OF APPLICATION ($index) -----\n\n";
+				$item['date'] = $date;
+				$item['panel'] = $panel;
+	      # print "\n\n----- START OF APPLICATION ($index) -----\n\n";
+				continue;
 	    }
 	
 	    if (preg_match("/^(\d+)$/",$word,$matches)) {
-        print "----- $word -----\n";
+        #print "----- $word -----\n";
 	      $num = $matches[1];
 	      $street = $words[$x+1];
 	      array_push($item['addr'],array('num'=>$num,'street'=>$street));
@@ -52,27 +69,77 @@ class DevelopmentAppController {
 	
 	    if (preg_match("/^(D\d\d-\d\d-\d\d\/.-\d\d\d\d\d)/",$word,$matches)) {
 	      $app = $matches[1];
-	      print "\n  application number: '$app'\n";
+	      # print "\n  application number: '$app'\n";
 	      array_push($item['app'],$app);
 	    }
-	    print " {$words[$x]} ";
+	    # print " {$words[$x]} ";
 	
 	  }
 	
 	  # print "$text";
 		# DevelopmentAppController::injestApplication($r['appid'],'notweets');
+
+		# [{"lat":45.283326970038,"lon":-75.913048018637,"addr":"15 Huntmar Drive"}]
+
 	  self::dumpItem($item);
+		$items[] = $item;
+		foreach ($items as $i) {
+			#pr($i);
+			foreach ($i['app'] as $devid) {
+				#print "devid: $devid\n";
+
+				$addresses = array();
+				foreach ($i['addr'] as $a) {
+#						'lat'=>'',
+#						'lon'=>'',
+					$addresses[] = array(
+						'addr'=>"{$a['num']} {$a['street']}"
+					);
+				}
+		    $row = getDatabase()->one(" select * from devapp where devid = :devid ",array("devid"=>$devid));
+		    if ($row['id']) {
+					# exists?
+					#print "  skipping\n";
+				} else {
+			    $id = getDatabase()->execute(" 
+			      insert into devapp 
+			      (address,appid,devid,ward,apptype,receiveddate,created,updated,description)
+			      values
+			      (:address,:appid,:devid,:ward,:apptype,:receiveddate,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP,:description)",array(
+			        'devid'=> $devid,
+			        'address'=> json_encode($addresses),
+			        'appid'=> 'n/a',
+			        'ward' => 'tbd',
+			        'apptype' => 'coa', #$labels['Application'],
+			        'receiveddate' => $i['date'],
+			        'description' => "{$i['date']} panel {$i['panel']}"
+			    ));
+		      getDatabase()->execute(" insert into devappstatus (devappid,status,statusdate) values (:devappid,:status,:statusdate) ",array(
+		        'devappid' => $id,
+		        'status' => 'Appearance on CoA agenda, panel ' . $panel,
+		        'statusdate' => $i['date']
+		      ));
+				}
+				#pr($row);
+			}
+			#exit;
+		}
+		#print "\n\n";
+		#pr($items);
+		#print "\n\n";
 		return;
   }
 
   static public function dumpItem($item) {
+		return;
     print "\n\n";
     pr($item);
     print "\n\n";
   }
 
   static public function viewDevApp($devid) {
-    $a = getDatabase()->one(" select * from devapp where devid = :devid ",array("devid"=>$devid));
+		
+    $a = getDatabase()->one(" select * from devapp where id = :devid or devid = :devid ",array("devid"=>$devid));
     if (!$a['id']) {
       top();
       print "$devid not found in the database.\n";
@@ -96,7 +163,21 @@ class DevelopmentAppController {
     <b><?php print $a['apptype']; ?></b>: <?php print $a['description']; ?>
     </p>
     <p>
-    <a target="_new" href="<?php print self::getLinkToApp($a['appid']); ?>"><i class="icon-share-alt"></i> View application on ottawa.ca</a>
+		<?php
+		if ($a['apptype'] == 'coa') {
+			?>
+			Agendas for the <b>Committee of Adjustment</b> are not available directly from the City of Ottawa, but 
+			OttWatch makes them available as they are distributed to media via email. 
+			
+			<a href="/story/15/committee-of-adjustment-agendas">Use the 'panel' and 'dates' associated 
+			with this application to find relevant information from the index of CoA agendas</a>.
+			<?php
+		} else {
+			?>
+	    <a target="_new" href="<?php print self::getLinkToApp($a['appid']); ?>"><i class="icon-share-alt"></i> View application on ottawa.ca</a>
+			<?php
+		}
+		?>
     </p>
 
     <table class="table table-bordered table-condensed" style="width: 100%;">
@@ -143,7 +224,11 @@ class DevelopmentAppController {
       <tr><td>Possibly related devapp(s)</td><td>
       <?php
       foreach ($related as $dd) {
-        print "<a href=\"{$dd['devid']}\">{$dd['devid']} - {$dd['apptype']}</a><br/>";
+				if ($dd['apptype'] == 'coa') {
+	        print "<a href=\"{$dd['id']}\">{$dd['devid']} - {$dd['apptype']}</a><br/>";
+				} else {
+	        print "<a href=\"{$dd['devid']}\">{$dd['devid']} - {$dd['apptype']}</a><br/>";
+				}
       }
       ?>
       </td></tr>
@@ -325,7 +410,11 @@ class DevelopmentAppController {
     <?php
     foreach ($apps as $a) {
       # $url = self::getLinkToApp($a['appid']);
-      $url = OttWatchConfig::WWW . "/devapps/{$a['devid']}"; # self::getLinkToApp($a['appid']);
+			if ($a['apptype'] == 'coa') {
+	      $url = OttWatchConfig::WWW . "/devapps/" . urlencode($a['id']); # self::getLinkToApp($a['appid']);
+			} else {
+	      $url = OttWatchConfig::WWW . "/devapps/" . urlencode($a['devid']); # self::getLinkToApp($a['appid']);
+			}
 
       # double load for the status and date
       $status = getDatabase()->one(" select max(id) id from devappstatus where devappid = :id ",array('id'=>$a['id']));
