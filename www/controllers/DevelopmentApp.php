@@ -2,6 +2,75 @@
 
 class DevelopmentAppController {
 
+  static public function scrapeCommitteeOfAdjustment($file) {
+	  $text = '';
+	  while($f = fgets(STDIN)){
+	    $text .= "$f";
+	  }
+	
+	  $text = preg_replace("/\t/"," ",$text);
+	  $text = preg_replace("/\r/"," ",$text);
+	  $text = preg_replace("/\n/"," ",$text);
+	  $text = preg_replace("/  /"," ",$text);
+	  $text = preg_replace("/  /"," ",$text);
+	  $text = preg_replace("/  /"," ",$text);
+	  $text = preg_replace("/ (\d+)-(\d+) /"," $1 $2 ",$text);
+	  $text = preg_replace("/  /"," ",$text);
+	  $text = preg_replace("/  /"," ",$text);
+	  $text = preg_replace("/  /"," ",$text);
+	
+	  $index = 0;
+	
+	  $item = array();
+    $item['app'] = array();
+    $item['addr'] = array();
+	
+	  $words = explode(" ",$text);
+	  for ($x = 0; $x < count($words); $x++) {
+	
+	    $word = $words[$x];;
+	
+	    $matches = array();
+	
+	    if (preg_match("/^(\d+)\./",$word,$matches)) {
+	      $index = $matches[1];
+	      if ($index > 1) {
+	        self::dumpItem($item);
+	      }
+	      $item = array();
+	      $item['app'] = array();
+	      $item['addr'] = array();
+	      print "\n\n----- START OF APPLICATION ($index) -----\n\n";
+	    }
+	
+	    if (preg_match("/^(\d+)$/",$word,$matches)) {
+        print "----- $word -----\n";
+	      $num = $matches[1];
+	      $street = $words[$x+1];
+	      array_push($item['addr'],array('num'=>$num,'street'=>$street));
+	    }
+	
+	    if (preg_match("/^(D\d\d-\d\d-\d\d\/.-\d\d\d\d\d)/",$word,$matches)) {
+	      $app = $matches[1];
+	      print "\n  application number: '$app'\n";
+	      array_push($item['app'],$app);
+	    }
+	    print " {$words[$x]} ";
+	
+	  }
+	
+	  # print "$text";
+		# DevelopmentAppController::injestApplication($r['appid'],'notweets');
+	  self::dumpItem($item);
+		return;
+  }
+
+  static public function dumpItem($item) {
+    print "\n\n";
+    pr($item);
+    print "\n\n";
+  }
+
   static public function viewDevApp($devid) {
     $a = getDatabase()->one(" select * from devapp where devid = :devid ",array("devid"=>$devid));
     if (!$a['id']) {
