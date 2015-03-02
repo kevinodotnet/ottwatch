@@ -161,20 +161,24 @@ class DevelopmentAppController {
     <div class="pull-right"><?php renderShareLinks("{$a['devid']}","/devapps/{$a['devid']}"); ?></div>
     <p>
     <b><?php print $a['apptype']; ?></b>: <?php print $a['description']; ?>
-    </p>
-    <p>
 		<?php
 		if ($a['apptype'] == 'coa') {
 			?>
+	    <p>
 			Agendas for the <b>Committee of Adjustment</b> are not available directly from the City of Ottawa, but 
 			OttWatch makes them available as they are distributed to media via email. 
 			
-			<a href="/story/15/committee-of-adjustment-agendas">Use the 'panel' and 'dates' associated 
-			with this application to find relevant information from the index of CoA agendas</a>.
+			<a href="/story/15/committee-of-adjustment-agendas">Use the 'panel' and 'dates' associated with this application to find relevant information from the index of CoA agendas</a>.
+	    </p>
+			<p>
+			<i>(CoA applications on OttWatch are in beta; expect odd results for the next while; -ko 2015-Mar)</i>
+			</p>
 			<?php
 		} else {
 			?>
+			<p>
 	    <a target="_new" href="<?php print self::getLinkToApp($a['appid']); ?>"><i class="icon-share-alt"></i> View application on ottawa.ca</a>
+	    </p>
 			<?php
 		}
 		?>
