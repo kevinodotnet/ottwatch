@@ -122,7 +122,7 @@ getRoute()->get('/lobbyist/([^\/]*)', 'lobbyist'); # legacy REST location
 #getRoute()->get('/lobbyist/(.*)/link', 'lobbyistLink');
 
 getRoute()->get('/devapps', array('DevelopmentAppController','listAll'));
-getRoute()->get('/devapps/([^\/]+)', array('DevelopmentAppController','viewDevApp'));
+getRoute()->get('/devapps/(D.*)', array('DevelopmentAppController','viewDevApp'));
 
 getRoute()->get('/meetings/votes', array('MeetingController','votesIndex'));
 getRoute()->get('/meetings/votes/member/([^\/]*)', array('MeetingController','votesMember'));
