@@ -461,3 +461,56 @@ function formatMoney($number, $fractional=false) {
     return $number; 
 } 
 
+function address_latlon ($num, $street) {
+
+	$street = strtoupper($street);
+
+	$where = urlencode("ADDRNUM = $num and FULLNAME like '$street %'");
+	
+	$url = "http://maps.ottawa.ca/arcgis/rest/services/Property_Parcels/MapServer/0/query";
+	$url .= "?where=$where";
+	$url .= "&outFields=objectid";
+	$url .= "&f=pjson";
+	
+	if (false) {
+		# empty defaults, so skip
+		$url .= "&text=";
+		$url .= "&objectIds=";
+		$url .= "&time=";
+		$url .= "&geometry=";
+		$url .= "&geometryType=esriGeometryEnvelope";
+		$url .= "&inSR=";
+		$url .= "&spatialRel=esriSpatialRelIntersects";
+		$url .= "&relationParam=";
+		$url .= "&returnGeometry=true";
+		$url .= "&maxAllowableOffset=";
+		$url .= "&geometryPrecision=";
+		$url .= "&outSR=";
+		$url .= "&returnIdsOnly=false";
+		$url .= "&returnCountOnly=false";
+		$url .= "&orderByFields=";
+		$url .= "&groupByFieldsForStatistics=";
+		$url .= "&outStatistics=";
+		$url .= "&returnZ=false";
+		$url .= "&returnM=false";
+		$url .= "&gdbVersion=";
+		$url .= "&returnDistinctValues=false";
+	}
+
+	$json = file_get_contents($url);
+
+	$o = json_decode($json);
+	
+	if (count($o->features) > 0) {
+		$x = $o->features[0]->geometry->x;
+		$y = $o->features[0]->geometry->y;
+		$m = mercatorToLatLon($x,$y);
+		return $m;
+	}
+
+	$m = array();
+	$m['lat'] = '';
+	$m['lon'] = '';
+	return $m;
+
+}
