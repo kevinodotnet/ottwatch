@@ -228,11 +228,7 @@ class DevelopmentAppController {
       <tr><td>Possibly related devapp(s)</td><td>
       <?php
       foreach ($related as $dd) {
-				if ($dd['apptype'] == 'coa') {
-	        print "<a href=\"{$dd['id']}\">{$dd['devid']} - {$dd['apptype']}</a><br/>";
-				} else {
-	        print "<a href=\"{$dd['devid']}\">{$dd['devid']} - {$dd['apptype']}</a><br/>";
-				}
+        print "<a href=\"{$dd['devid']}\">{$dd['devid']} - {$dd['apptype']}</a><br/>";
       }
       ?>
       </td></tr>
@@ -414,12 +410,7 @@ class DevelopmentAppController {
     <?php
     foreach ($apps as $a) {
       # $url = self::getLinkToApp($a['appid']);
-			if ($a['apptype'] == 'coa') {
-	      $url = OttWatchConfig::WWW . "/devapps/" . urlencode($a['id']); # self::getLinkToApp($a['appid']);
-			} else {
-	      $url = OttWatchConfig::WWW . "/devapps/" . urlencode($a['devid']); # self::getLinkToApp($a['appid']);
-			}
-
+      $url = OttWatchConfig::WWW . "/devapps/" . urlencode($a['devid']); # self::getLinkToApp($a['appid']);
       # double load for the status and date
       $status = getDatabase()->one(" select max(id) id from devappstatus where devappid = :id ",array('id'=>$a['id']));
       $status = getDatabase()->one(" select * from devappstatus where id = :id ",array('id'=>$status['id']));
