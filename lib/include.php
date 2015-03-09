@@ -469,7 +469,7 @@ function address_latlon ($num, $street) {
 	
 	$url = "http://maps.ottawa.ca/arcgis/rest/services/Property_Parcels/MapServer/0/query";
 	$url .= "?where=$where";
-	$url .= "&outFields=objectid";
+	$url .= "&outFields=objectid,ward";
 	$url .= "&f=pjson";
 	
 	if (false) {
@@ -505,12 +505,14 @@ function address_latlon ($num, $street) {
 		$x = $o->features[0]->geometry->x;
 		$y = $o->features[0]->geometry->y;
 		$m = mercatorToLatLon($x,$y);
+		$m['ward'] = $o->features[0]->attributes->WARD;
 		return $m;
 	}
 
 	$m = array();
 	$m['lat'] = '';
 	$m['lon'] = '';
+	$m['ward'] = '';
 	return $m;
 
 }

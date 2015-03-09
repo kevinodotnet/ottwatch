@@ -21,6 +21,8 @@ class DevelopmentAppController {
 	  $text = preg_replace("/  /"," ",$text);
 	  $text = preg_replace("/ (\d+)-(\d+) /"," $1 $2 ",$text);
 	  $text = preg_replace("/\((\d+)\)/"," $1 ",$text);
+	  $text = preg_replace("/\((\d+) /"," $1 ",$text);
+	  $text = preg_replace("/ (\d+)\)/"," $1 ",$text);
 	  $text = preg_replace("/  /"," ",$text);
 	  $text = preg_replace("/  /"," ",$text);
 	  $text = preg_replace("/  /"," ",$text);
@@ -37,7 +39,7 @@ class DevelopmentAppController {
     $item['addr'] = array();
 		$item['date'] = $date;
 		$item['panel'] = $panel;
-	
+
 	  $words = explode(" ",$text);
 	  for ($x = 0; $x < count($words); $x++) {
 	
@@ -86,21 +88,25 @@ class DevelopmentAppController {
 		foreach ($items as $i) {
 			#pr($i);
 			foreach ($i['app'] as $devid) {
-				#print "devid: $devid\n";
-
-				$addresses = array();
-				foreach ($i['addr'] as $a) {
-#						'lat'=>'',
-#						'lon'=>'',
-					$addresses[] = array(
-						'addr'=>"{$a['num']} {$a['street']}"
-					);
-				}
+				print "devid: $devid\n";
 		    $row = getDatabase()->one(" select * from devapp where devid = :devid ",array("devid"=>$devid));
 		    if ($row['id']) {
 					# exists?
-					#print "  skipping\n";
+					print "  skipping \n";
 				} else {
+					$ward = '';
+					$addresses = array();
+					foreach ($i['addr'] as $a) {
+						pr($a);
+						$mm = address_latlon($a['num'],$a['street']);
+						if ($mm['lat'] != '') {
+							$ward = $mm['ward'];
+						} else {
+							$addresses[] = array(
+								'addr'=>"{$a['num']} {$a['street']}"
+							);
+						}
+					}
 			    $id = getDatabase()->execute(" 
 			      insert into devapp 
 			      (address,appid,devid,ward,apptype,receiveddate,created,updated,description)
@@ -109,10 +115,10 @@ class DevelopmentAppController {
 			        'devid'=> $devid,
 			        'address'=> json_encode($addresses),
 			        'appid'=> 'n/a',
-			        'ward' => 'tbd',
+			        'ward' => $ward,
 			        'apptype' => 'coa', #$labels['Application'],
 			        'receiveddate' => $i['date'],
-			        'description' => "{$i['date']} panel {$i['panel']}"
+			        'description' => "CoA {$i['date']} panel {$i['panel']}"
 			    ));
 		      getDatabase()->execute(" insert into devappstatus (devappid,status,statusdate) values (:devappid,:status,:statusdate) ",array(
 		        'devappid' => $id,
@@ -192,7 +198,7 @@ class DevelopmentAppController {
     <?php 
     foreach ($a['address'] as $addr) {
       print $addr->addr;
-			if (isset($addr->lat)) {
+			if (isset($addr->lat) && $addr->lat != '') {
 	      $zoning = getApi()->invoke("/api/zoning/{$addr->lat}/{$addr->lon}");
 	      print " (";
 	      if ($zoning['ZONE_CODE'] != '') {
