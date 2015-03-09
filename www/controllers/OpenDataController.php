@@ -170,6 +170,8 @@ class OpenDataController {
 
 						|| preg_match('/maps.google.ca/',$r->url)
 
+						|| preg_match('/ottawacityjobs/',$r->url)
+
 						|| preg_match('/biblioottawalibrary/',$r->url)
 						) {
 						# these pages are always updated on every scan, for some reason, and are spammy on the update channel.
