@@ -172,8 +172,8 @@ class MfippaController {
     </div>
 
 		<?php
-		if ($row['created'] < '2014-07-01') {
-			# after July 2014 we are not doing OCR anymore, so no image to display
+		if ($row['created'] < '2014-07-01' || $row['created'] >= '2015-01-01') {
+			# small window where we didn't do OCR
 			?>
 	    <img style="border-top: solid 1px #000000; border-bottom: 1px solid #000000;" src="<?php print $src; ?>"/><br/>
 			<?php
