@@ -332,15 +332,6 @@ class MfippaController {
 
 		$onlyGranted = ($_GET['granted'] == 1);
 
-    if (LoginController::isAdmin()) {
-      print "<b>Process MFIPPA results</b>\n";
-      $req = self::getOttWatchMfippa();
-      foreach ($req as $r) {
-        print "<a href=\"process/{$r}\">{$r}</a><br/>";
-      }
-      print "<hr/>";
-    }
-
     ?>
     <div class="row-fluid">
     <div class="span4">
