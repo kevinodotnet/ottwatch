@@ -435,8 +435,6 @@ class MfippaController {
 
     $pdffile = OttWatchConfig::FILE_DIR."/mfippa/{$mfippa_id}.pdf";
     $pagesdir = OttWatchConfig::FILE_DIR."/mfippa/{$mfippa_id}";
-    $pageFiles = self::getPageFiles($mfippa_id);
-    $size = getimagesize($pageFiles[$page]);
 
     if (! file_exists($pagesdir)) {
       top();
@@ -444,6 +442,9 @@ class MfippaController {
       bottom();
       return;
     }
+
+    $pageFiles = self::getPageFiles($mfippa_id);
+    $size = getimagesize($pageFiles[$page]);
 
     if (preg_match('/\d+/',$page)) {
 
