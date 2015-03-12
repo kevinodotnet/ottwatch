@@ -18,6 +18,8 @@ class MfippaController {
     }
     $id = $row['id'];
 
+		self::createImg($id);
+
     # crop the thumbnail again, so we only have the summary
 
     $pagesdir = OttWatchConfig::FILE_DIR."/mfippa/{$row['source']}";
@@ -28,11 +30,13 @@ class MfippaController {
     $summary = "$pagesdir/mfippa_summary_{$row['id']}.png";
     $ocr = "$pagesdir/mfippa_ocr_{$row['id']}";
 
-    $x = round($size[0]*.375);
-    $x1 = round($size[0]*.468);
-    $y = 0;
+    $x = round($size[0]*.22);
+    $x1 = round($size[0]*.10);
+    $y = 35;
     $width = $size[0]-$x-$x1;
     $height = $size[1]-$y;
+		if ($height > 190) { $height = 190; }
+
     $cmd = self::CONVERT . " '{$thumb}' +repage -crop {$width}x{$height}+{$x}+{$y} {$summary}";
     system($cmd);
     system(" tesseract '{$summary}' '{$ocr}' 2>/dev/null");
@@ -44,7 +48,7 @@ class MfippaController {
 
     db_update('mfippa',array('id'=>$id,'summary'=>$text),'id');
 
-		print "{$row['tag']} >>> $text >>> $summary\n";
+		print "$id :: {$row['tag']} :: $text\n";
   }
 
   /* display a single mfippa */
@@ -113,7 +117,12 @@ class MfippaController {
           $values['closed'] = $matches[3].'-'.$matches[2].'-'.$matches[1];
 	      }
       }
-      db_update('mfippa',$values);
+			try {
+	      db_update('mfippa',$values);
+			} catch (Exception $e) {
+				print $e;
+				return;
+			}
       header("Location: {$next['id']}");
       return;
     }
@@ -135,7 +144,7 @@ class MfippaController {
     <form>
     <div style="float: left; text-align: left; padding-top: 25px; ">
     <span style="padding-left: 130px;">
-    <input style="font-size: 14pt;" type="text" name="tag" value="<?php print $row['tag']; ?>"/>
+    <input style="font-size: 14pt;" type="text" name="tag" value="<?php print $row['tag']; ?>" autofocus="1"/>
     </span>
     </div>
     <div style="text-align: right; padding-right: 120px;">
@@ -256,6 +265,8 @@ class MfippaController {
 
     $convert = self::CONVERT;
 
+		$y_offset = 10;
+
     # calcualte the box/extend for this id, based on its start position and the
     # start position of the next mfippa. 'SCALE' is used because database x/y
     # were based on WIDTH=1000
@@ -263,7 +274,7 @@ class MfippaController {
     if ($next['id']) {
       if ($row['page'] == $next['page']) {
 	      # majority case
-		    $y = round(($row['y']-10)/$scale);
+		    $y = round(($row['y']-$y_offset)/$scale);
 		    $x = 0;
 		    $height = round(($next['y']-$row['y'])/$scale);
 		    $width = $size[0];
@@ -273,7 +284,7 @@ class MfippaController {
         $thumbb = "$pagesdir/mfippa_crop_{$row['id']}-b.png";
 
 		    $x = 0;
-		    $y = round(($row['y']-10)/$scale);
+		    $y = round(($row['y']-$y_offset)/$scale);
 		    $width = $size[0];
 		    $height = $size[1]-$y;
 		    $cmd = "$convert '{$pagefile}' -crop {$width}x{$height}+{$x}+{$y} {$thumba}";
@@ -283,7 +294,7 @@ class MfippaController {
 		    $x = 0;
         $y = 0;
 		    $width = $size[0];
-		    $height = round(($next['y']-10)/$scale);
+		    $height = round(($next['y']-$y_offset)/$scale);
         $pagefile = $pageFiles[$next['page']];
 		    $cmd = "$convert '{$pagefile}' -crop {$width}x{$height}+{$x}+{$y} {$thumbb}";
 		    system($cmd);
@@ -294,7 +305,7 @@ class MfippaController {
         return;
       }
     } else {
-	    $y = round(($row['y']-10)/$scale);
+	    $y = round(($row['y']-$y_offset)/$scale);
 	    $x = 0;
 	    $height = $size[1]-$y;
 	    $width = $size[0];
