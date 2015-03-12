@@ -391,6 +391,7 @@ class MfippaController {
 		<tr>
 		<th>Tag</th>
 		<th>Summary</th>
+		<th>Obtained</th>
 		</tr>
 				<?php
 			}
@@ -414,6 +415,7 @@ class MfippaController {
       <tr>
       <td><nobr><a href="<?php print $href; ?>"><?php print $href; ?></a></nobr></td>
       <td><?php print $summary; ?></td>
+      <td><nobr><?php print substr($r['created'],0,10); ?></nobr></td>
       </tr>
       <?php
     }
