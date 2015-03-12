@@ -372,24 +372,24 @@ class MfippaController {
 		?>
 		<p>
 		<?php print count($rows); ?> records found.
+		<!--
 		Filter: 
 		(<a href="/mfippa/">all</a>)
 		(<a href="/mfippa/?granted=1">full/partly granted</a>)
+		-->
 		</p>
 		<?php
 
     $prevmonthyear = '';
     foreach ($rows as $r) {
       $monthyear = date('F, Y',strtotime($r['created']));
-			if ($prevmonthyear != $monthyear) {
+			if (false && $prevmonthyear != $monthyear) {
 				?>
     <tr>
     <th colspan="4"><h2><?php print $monthyear; ?></h2></th>
     </tr>
 		<tr>
 		<th>Tag</th>
-		<th>Proactively Disclosed</th>
-		<th>Disposition</th>
 		<th>Summary</th>
 		</tr>
 				<?php
@@ -413,8 +413,6 @@ class MfippaController {
       ?>
       <tr>
       <td><nobr><a href="<?php print $href; ?>"><?php print $href; ?></a></nobr></td>
-      <td><?php print $disclosed; ?></td>
-      <td><nobr><?php print $disposition; ?></nobr></td>
       <td><?php print $summary; ?></td>
       </tr>
       <?php
