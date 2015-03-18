@@ -500,12 +500,13 @@ function address_latlon ($num, $street) {
 	$json = file_get_contents($url);
 
 	$o = json_decode($json);
-	
+
 	if (count($o->features) > 0) {
 		$x = $o->features[0]->geometry->x;
 		$y = $o->features[0]->geometry->y;
 		$m = mercatorToLatLon($x,$y);
 		$m['ward'] = $o->features[0]->attributes->WARD;
+		pr($m);
 		return $m;
 	}
 

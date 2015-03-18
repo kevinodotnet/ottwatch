@@ -97,10 +97,14 @@ class DevelopmentAppController {
 					$ward = '';
 					$addresses = array();
 					foreach ($i['addr'] as $a) {
-						pr($a);
 						$mm = address_latlon($a['num'],$a['street']);
 						if ($mm['lat'] != '') {
 							$ward = $mm['ward'];
+							$addresses[] = array(
+								'lat' => $mm['lat'],
+								'lon' => $mm['lon'],
+								'addr'=>"{$a['num']} {$a['street']}"
+							);
 						} else {
 							$addresses[] = array(
 								'addr'=>"{$a['num']} {$a['street']}"
