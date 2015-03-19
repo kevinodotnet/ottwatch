@@ -32,7 +32,6 @@ function parseCoaTxt($file) {
     #print_r($a);
     $head = "";
     foreach ($a['lines'] as $l) {
-      $l = substr($l,0,150);
       if (preg_match('/PURPOSE OF THE APPLICATION/',$l)) {
         break;
       }
