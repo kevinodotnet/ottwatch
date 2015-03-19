@@ -238,7 +238,7 @@ class DevelopmentAppController {
       <tr><td>Possibly related devapp(s)</td><td>
       <?php
       foreach ($related as $dd) {
-        print "<a href=\"{$dd['devid']}\">{$dd['devid']} - {$dd['apptype']}</a><br/>";
+        print "<a href=\"/devapps/{$dd['devid']}\">{$dd['devid']} - {$dd['apptype']}</a><br/>";
       }
       ?>
       </td></tr>
