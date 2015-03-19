@@ -9,7 +9,7 @@ function parseCoaTxt($file) {
   $apps = array();
   $a = array();
 
-  $pages = explode("",$txt);
+  $pages = explode(chr(12),$txt); # split on CTRL-L, which PDF2TEXT puts between pages
   foreach ($pages as $p) {
     $p = preg_replace("/\r/","",$p);
     $o = preg_replace("/\n/"," ",$p);
