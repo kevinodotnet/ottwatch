@@ -45,18 +45,6 @@ function parseCoaTxt($file) {
       print " update devapp set coadesc = '".preg_replace("/'/","''",implode("<br/>",$a['lines']))."' where devid = '$d'; \n";
       #print " update devapp set coadesc = 'foo' where devid = '$d'; \n";
     }
-    continue;
-
-    print "\n\n$text\n\n";
-    print_r($matches);
-    exit;
-
-    $lines = explode(" ",implode(" ",$a['lines']));
-    $devids = preg_grep("/D\d\d-\d\d-\d\d\/.-\d\d\d\d/",$lines);
-    # print "$text\n\n";
-    #print_r($devids);
-    foreach ($devids as $d) {
-    }
   }
 
 }
