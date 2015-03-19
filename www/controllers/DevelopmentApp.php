@@ -238,13 +238,14 @@ class DevelopmentAppController {
       <tr><td>Possibly related devapp(s)</td><td>
       <?php
       foreach ($related as $dd) {
-        print "<a href=\"{$dd['devid']}\">{$dd['devid']} - {$dd['apptype']}</a><br/>";
+        print "<a href=\"/devapps/{$dd['devid']}\">{$dd['devid']} - {$dd['apptype']}</a><br/>";
       }
       ?>
       </td></tr>
       <?php
     }
     ?>
+		<?php if ($a['apptype'] != 'coa') { ?>
     <tr><td>Documents</td><td>
     <?php
     $docs = getDatabase()->all(" select * from devappfile where devappid = :id order by updated desc,title ",array('id'=>$a['id']));
@@ -272,6 +273,14 @@ class DevelopmentAppController {
     ?>
     </table>
     </td></tr>
+		<?php } else { ?>
+		<tr>
+			<td colspan="2">
+			<center><b>Agenda Excerpt</b></center>
+			<p><?php print $a['coadesc']; ?></p>
+			</td>
+		</tr>
+		<?php } ?>
     <tr>
     <th style="text-align: center;">Date</th>
     <th style="text-align: center;">Status</th>
@@ -351,6 +360,7 @@ class DevelopmentAppController {
 #      $matchWhere .= " or status like '%$safe%' ";
       $matchWhere .= " or address like '%$safe%' ";
       $matchWhere .= " or description like '%$safe%' ";
+      $matchWhere .= " or coadesc like '%$safe%' ";
       $matchWhere .= " ) and ";
     }
 
