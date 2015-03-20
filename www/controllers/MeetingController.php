@@ -995,12 +995,31 @@ class MeetingController {
 		<h3 class="text-center"><?php print $title; ?></h3>
 
 		<div class="row" style="margin-bottom: 10px;">
-		<div class="col-sm-6 text-center"><?php print "".substr($m['starttime'],0,10); ?></div>
-		<div class="col-sm-6 text-center"><?php print "<a href=\"http://app05.ottawa.ca/sirepub/mtgviewer.aspx?meetid=".$meetid."&doctype=AGENDA\"> view on ottawa.ca <small><i class=\"fa fa-external-link\"></i></small></a>"; ?></div>
+		<div class="col-sm-4 text-left"><?php print "".substr($m['starttime'],0,10); ?></div>
+		<div class="col-sm-4 text-center">
+			<?php print "<a href=\"".$m['meetid']."?new=0\">old layout</a>"; ?>
+		</div>
+		<div class="col-sm-4 text-right">
+			<?php print "<a href=\"http://app05.ottawa.ca/sirepub/mtgviewer.aspx?meetid=".$meetid."&doctype=AGENDA\"> view on ottawa.ca <small><i class=\"fa fa-external-link\"></i></small></a>"; ?><br/>
+		</div>
 		</div>
 
-		<p>If you have comments regarding items on this agenda, <a href="#contactDiv">see below for councillor and meeting coordinator contact information</a>.
-		It is important that you raise your voice between elections.</p>
+		<p>
+		<?php
+		if (preg_match('/http/',$m['youtube'])) { 
+			?>
+			<a class="btn btn-primary" href="#video">Video</a>
+			<?php
+		}
+    $votes = getDatabase()->all(" select * from itemvote where itemid in (select id from item where meetingid = :meetingid) order by id ",array("meetingid"=>$m['id']));
+    if (count($votes) > 0) {
+			?>
+			<a class="btn btn-primary" href="#votes">Votes</a>
+			<?php
+    }
+		?>
+		<a class="btn btn-primary" href="#contactDiv">Send Comments</a>
+		</p>
 
     <table id="itemTable" class="table table-bordered table-hover table-condensed" style="width: 95%;">
 		<tr>
@@ -1050,6 +1069,107 @@ class MeetingController {
 		</div>
 
 		</div><!-- .row -->
+
+		<!--
+		VIDEO
+		-->
+
+
+    <?php 
+		if (preg_match('/http/',$m['youtube'])) { 
+			?>
+			<div class="row">
+			<div class="col-sm-4">
+				<h3 id="video" class="text-center">Meeting Video</h3>
+				<p>
+				City Council meetings have full video and audio. Committee meetings (including the Police Services and Library boards) are audio only, so 
+				ignore the <i>test pattern</i>. Those videos are still playable.
+				</p>
+				<p><a class="btn btn-primary" href="<?php print $m['youtube']; ?>">Open in Youtube</a>.</p>
+			</div>
+			<div class="col-sm-8">
+				<?php
+			    print self::getYoutubeEmbedCode($m['youtube']);
+				?>
+			</div>
+			</div>
+			<?php 
+		}
+		?>
+
+		<!--
+		VOTES
+		-->
+
+		<div class="row">
+		<div class="col-sm-4">
+		<h3 id="votes" class="text-center">Votes</h3>
+		</div>
+		</div>
+
+    <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
+    <?php
+    $lastitemtitle = '';
+    foreach ($votes as $vote) {
+      $itemtitle = '';
+      foreach ($items as $i) {
+        if ($i['id'] == $vote['itemid']) {
+          $itemtitle = $i['title'];
+        }
+      }
+      if ($lastitemtitle != $itemtitle) {
+        // http://app05.ottawa.ca/sirepub/agdocs.aspx?doctype=minutes&itemid=301229
+        ?>
+        <tr>
+        <td colspan="4"><h4>ITEM: <?php print "$itemtitle"; ?><h4></td>
+        </tr>
+		    <tr>
+		    <th style="width: 40%;">Motion</th>
+		    <th style="width: 20%;">Yes</th>
+		    <th style="width: 20%;">No</th>
+		    <th style="width: 20%;">Absent/Recused</th>
+		    </tr>
+        <?php
+      }
+
+      $casts = getDatabase()->all(" select * from itemvotecast where itemvoteid = :id order by itemvoteid,vote,id ",array('id'=>$vote['id']));
+      ?>
+      <tr>
+      <td style="vertical-align: top;">
+			<?php print self::formatMotion($vote['motion']); ?><br/>
+			<a href="<?php print OttWatchConfig::WWW."/meetings/votes/{$vote['id']}"; ?>"><i class="icon-share"></i> pop-out</a>
+			</td>
+      <td style="vertical-align: top;">
+      <?php
+      foreach ($casts as $c) {
+        if ($c['vote'] != 'y') { continue; }
+        print "<a href=\"".OttWatchConfig::WWW."/meetings/votes/member/".urlencode($c['name'])."\">".$c['name']."</a><br/>";
+      }
+      ?>
+      </td>
+      <td style="vertical-align: top;">
+      <?php
+      foreach ($casts as $c) {
+        if ($c['vote'] != 'n') { continue; }
+        print "<a href=\"".OttWatchConfig::WWW."/meetings/votes/member/".urlencode($c['name'])."\">".$c['name']."</a><br/>";
+      }
+      ?>
+      </td>
+      <td style="vertical-align: top;">
+      <?php
+      foreach ($casts as $c) {
+        if ($c['vote'] == 'a' || $c['vote'] == 'r') { 
+	        print "<a href=\"".OttWatchConfig::WWW."/meetings/votes/member/".urlencode($c['name'])."\">".$c['name']."</a> (".$c['vote'].")<br/>";
+				}
+      }
+      ?>
+      </td>
+      </tr>
+      <?php
+      $lastitemtitle = $itemtitle;
+    }
+    ?>
+    </table>
 
 		<!-- /////////// Public Delegation Details -->
 
@@ -1142,15 +1262,15 @@ class MeetingController {
       return;
 		}
 		</script>
-
 		<?php
+
 
 		bottom3();
 	}
 
   static public function meetingDetails ($category,$meetid,$itemid) {
 
-		if ($_GET['new'] == 1) {
+		if (!isset($_GET['new']) || $_GET['new'] != 0) {
 			self::meetingDetails_new($category,$meetid,$itemid);
 			return;
 		}
@@ -1250,7 +1370,6 @@ class MeetingController {
     <!-- column 1 -->
     <div class="span4">
 
-		<center><b><i><p><a href="?new=1" style="color: #ff3333;">(test out the new version of this page)</a></p></i></b></center>
 
     <div style="float:right; padding-right: 10px;">
     <?php
@@ -1261,7 +1380,8 @@ class MeetingController {
     <?php
     print "<b>$title</b><br/>";
     print "<small>".substr($m['starttime'],0,10)." ";
-    print "<a href=\"http://app05.ottawa.ca/sirepub/mtgviewer.aspx?meetid=".$meetid."&doctype=AGENDA\"><i class=\"icon-share\"></i> View on Ottawa.ca</a>";
+    print "<a href=\"http://app05.ottawa.ca/sirepub/mtgviewer.aspx?meetid=".$meetid."&doctype=AGENDA\"><i class=\"icon-share\"></i> View on Ottawa.ca</a><br/>";
+		print "<a href=\"?new=1\" style=\"color: #ff3333;\">(test out the new version of this page)</a>";
     print "</small>";
     ?>
 
