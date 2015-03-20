@@ -1101,6 +1101,7 @@ class MeetingController {
 		VOTES
 		-->
 
+    <?php if (count($votes) > 0) { ?>
 		<div class="row">
 		<div class="col-sm-4">
 		<h3 id="votes" class="text-center">Votes</h3>
@@ -1170,6 +1171,7 @@ class MeetingController {
     }
     ?>
     </table>
+		<?php } ?>
 
 		<!-- /////////// Public Delegation Details -->
 
