@@ -128,6 +128,7 @@ getRoute()->get('/meetings/votes', array('MeetingController','votesIndex'));
 getRoute()->get('/meetings/votes/member/([^\/]*)', array('MeetingController','votesMember'));
 getRoute()->get('/meetings/votes/(\d+)', array('MeetingController','voteDisplay'));
 getRoute()->get('/meetings/votes/report/closeVotes', array('MeetingController','reportCloseVotes'));
+getRoute()->get('/meetings/votes/report/likeness', array('MeetingController','reportLikeness'));
 
 getRoute()->get('/meetings/dump/all', array('MeetingController','dump'));
 getRoute()->get('/meetings/calendar', array('MeetingController','calendarView'));
@@ -589,6 +590,14 @@ if ($v3) {
 	.top-action-alert a {
 		color: #ffffff;
 	}
+
+	.rotate {
+		-webkit-transform: rotate(-90deg);
+		-ms-transform: rotate(-90deg);
+		transform: rotate(-90deg);
+		height: 200px;
+	}
+
 </style>
 <script>
 function copyToClipboard (text) {
