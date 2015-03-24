@@ -2287,6 +2287,7 @@ class MeetingController {
 			return;
 		}
 
+
 		# remove shit from the HTML
 		$html = preg_replace("/\r/",' ',$html);
 		$html = preg_replace("/\n/",' ',$html);
@@ -2325,7 +2326,7 @@ class MeetingController {
 
 		$html = preg_replace('/<TR>\s*<TD[^>]*>\s*<\/TR>/i','',$html); # fix <tr><td></tr> shit.
 
-		foreach (array('vAlign', 'width', 'height', 'class', 'border', 'cellSpacing', 'cellPadding','lang','name') as $t) {
+		foreach (array('vAlign', 'width', 'height', 'border', 'cellSpacing', 'cellPadding','lang','name') as $t) {
 			$html = preg_replace("/$t=[^\s>]*/i",'',$html);
 		}
 
