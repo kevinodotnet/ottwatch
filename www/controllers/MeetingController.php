@@ -45,6 +45,7 @@ class MeetingController {
 		print "</tr>";
 
 		foreach ($pairs as $n1 => $r) {
+			if ($n1 == 'minperc' || $n1 == 'maxperc') { continue; }
 			print "<tr>\n";
 			print "<th>$n1</th>";
 			foreach ($r as $n2 => $v) {
