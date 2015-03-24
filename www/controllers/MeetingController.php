@@ -23,7 +23,7 @@ class MeetingController {
 		foreach ($pairs as $n1 => $r) {
 			foreach ($r as $n2 => $ignore) {
 				#print "<th class=\"rotate\">$n2</th>\n";
-				print "<th >$n2</th>\n";
+				print "<th>".substr($n2,0,6)."</th>\n";
 			}
 			break;
 		}
@@ -33,19 +33,20 @@ class MeetingController {
 			print "<tr>\n";
 			print "<th>$n1</th>";
 			foreach ($r as $n2 => $v) {
+				$p = $v['percnorm'];
 				if ($n1 == $n2) {
-					print "<td></td>";
-					continue;
-				}
-				$styles = '';
-				if ($v['agree'] == $v['pairs']) {
-					$styles = " background: #00ff00; ";
+					$styles = "background: #505050;";
+				} else if ($v['percnorm'] >= .5) {
+					$styles = "background: #00".dechex($v['percnorm'] * 255)."00;";
+				} else {
+					$styles = "color: #ffffff; background: #00".dechex($v['percnorm'] * 255)."00;";
 				}
 				print "<td class=\"$classes\" style=\"$styles\">";
 				if ($v['pairs'] > 0) {
-					print sprintf("%.1f%%", $v['perc'] * 100);
+					#print sprintf("%.1f%%", $p * 100);
+					print "";
 				} else {
-					print "-";
+					print "";
 				}
 				print "</td>";
 			}
@@ -89,16 +90,22 @@ class MeetingController {
 		$rows = getDatabase()->all($sql);
 	
 		# initialize a full pairing between all members (even if they have never voted)
-		foreach ($rows as $r) { 
+		$maxperc = 0;
+		$minperc = 1;
+		foreach ($rows as $r) {
 			$pairs[$r['n1']] = array(); 
+			if ($r['perc'] > $maxperc) { $maxperc = $r['perc']; }
+			if ($r['perc'] < $minperc) { $minperc = $r['perc']; }
 		}
+		$percdiff = ($maxperc-$minperc);
 		foreach ($pairs as &$p) {
 			foreach ($pairs as $k => $v) {
-				$p[$k] = array('agree' => 0, 'pairs' => 0, 'perc' => 0);
+				$p[$k] = array('agree' => 0, 'pairs' => 0, 'perc' => 0, 'percnorm' => 0);
 			}
 		}
 		# now fill in pairings with actual data
 		foreach ($rows as $r) { 
+			$r['percnorm'] = ($r['perc'] - $minperc) / $percdiff;
 			$pairs[$r['n1']][$r['n2']] = $r;
 		}
 	
