@@ -11,8 +11,10 @@ MeetingController::formatMotion("foo");
 class MeetingController {
 
 	static public function reportLikeness() {
-		top3("Council Likeness Report");
 		$pairs = self::getMemberLikeness();
+		#pr($pairs);
+		#return;
+		top3("Council Likeness Report");
 
 		?>
     <table class="table table-bordered table-hover table-condensed" style="width: 100%; font-size: 75%;">
@@ -49,21 +51,13 @@ class MeetingController {
 			print "<tr>\n";
 			print "<th>$n1</th>";
 			foreach ($r as $n2 => $v) {
-				$p = $v['percnorm'];
-				if ($n1 == $n2) {
-					$styles = "background: #505050;";
-				} else if ($v['percnorm'] >= .5) {
-					$styles = "background: #00".dechex($v['percnorm'] * 255)."00;";
-				} else {
-					$styles = "color: #ffffff; background: #00".dechex($v['percnorm'] * 255)."00;";
+				# print "<td>"; pr($v['perc']); print "</td>";
+				$g = dechex($v['percnorm'] * 255);
+				if (strlen($g) == 1) {
+					$g = "0{$g}";
 				}
+				$styles = "background: #00{$g}00;";
 				print "<td class=\"$classes\" style=\"$styles\">";
-				if ($v['pairs'] > 0) {
-					#print sprintf("%.1f%%", $p * 100);
-					print "";
-				} else {
-					print "";
-				}
 				print "</td>";
 			}
 			print "</tr>\n";
