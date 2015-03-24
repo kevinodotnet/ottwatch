@@ -11,13 +11,28 @@ MeetingController::formatMotion("foo");
 class MeetingController {
 
 	static public function reportLikeness() {
-		top3();
+		top3("Council Likeness Report");
+		$pairs = self::getMemberLikeness();
 
 		?>
     <table class="table table-bordered table-hover table-condensed" style="width: 100%; font-size: 75%;">
+
+		<div class="row">
+		<div class="col-sm-6">
+		<h3>Council Likeness Report <small>Visualize level of agreement between councillors.</small></h3>
+		</div>
+		<div class="col-sm-3">
+			<div style="background: #00ff00; width: 20px; height: 20px;"></div>
+			<?php print sprintf("%.1f%%", $pairs['maxperc'] * 100); ?> agreement.
+		</div>
+		<div class="col-sm-3">
+			<div style="background: #000000; width: 20px; height: 20px;"></div>
+			<?php print sprintf("%.1f%%", $pairs['minperc'] * 100); ?> agreement.
+		</div>
+		</div>
+
 		<?php
 
-		$pairs = self::getMemberLikeness();
 		print "<tr >";
 		print "<th>---</th>\n";
 		foreach ($pairs as $n1 => $r) {
@@ -108,6 +123,9 @@ class MeetingController {
 			$r['percnorm'] = ($r['perc'] - $minperc) / $percdiff;
 			$pairs[$r['n1']][$r['n2']] = $r;
 		}
+
+		$pairs['minperc'] = $minperc;
+		$pairs['maxperc'] = $maxperc;
 	
 		return $pairs;
 		
