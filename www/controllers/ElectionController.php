@@ -1481,7 +1481,8 @@ class ElectionController {
 		$postal = strtoupper($postal);
 		$postal = preg_replace('/ /','',$postal);
 		$postalE = mysql_escape_string($postal);
-		$year = mysql_escape_string($_GET['year']);
+		$year = $_GET['year'];
+		$ward = $_GET['ward'];
 		$donor = $_GET['donor'];
 		$donorE = mysql_escape_string($donor);
 		$candidate = $_GET['candidate'];
@@ -1489,6 +1490,7 @@ class ElectionController {
 		$where = '';
 
 		$filtered = 0;
+
 		if ($donor != '') {
 			$toptitle = "Campaign Donations Report for donor $donorE";
 			$where .= " and d.name like '%$donorE%' ";
@@ -1499,14 +1501,42 @@ class ElectionController {
 			$toptitle = "Campaign Donations Report for postal code $postalE";
 			$filtered = 1;
 		}
-		if ($candidate != '') {
-			$toptitle = "Campaign Donations Report for candidate $candidateE";
-			$where .= " and (c.first like '%$candidateE%' or c.last like '%$candidateE%' ) ";
+		if (count($candidate) > 0) {
+			$toptitle = "Campaign Donations Report for candidates"; # $candidateE";
+			$where .= " and c.id in (-999 ";
+			foreach ($candidate as $c) {
+				if (!preg_match('/^\d+$/',$c)) { continue; }
+				$where .= ",{$c}";
+			}
+			$where .= " ) ";
 			$filtered = 1;
 		}
-		if ($year != '') {
-			$where .= " and c.year = $year ";
+		if (count($year) > 0) {
+			$ok = 1;
+			foreach ($year as $w) {
+				if (!preg_match('/^\d+$/',$w)) {
+					$ok = 0;
+				}
+			}
+			if ($ok) {
+				$filtered = 1;
+				$where .= " and c.year in ( ".implode(",",$year).")";
+			}
 		}
+		if (count($ward) > 0) {
+			$ok = 1;
+			foreach ($ward as $w) {
+				if (!preg_match('/^\d+$/',$w)) {
+					$ok = 0;
+				}
+			}
+			if ($ok) {
+				$filtered = 1;
+				$where .= " and c.ward in ( ".implode(",",$ward).")";
+			}
+		}
+
+		#print "where $where \n"; return;
 
 		$orderby = " c.year desc, c.ward, c.last, c.first, case when d.type = 1 then 0 else 1 end, d.type, d.name ";
 		if ($_GET['format'] == 'json') {
@@ -1589,56 +1619,113 @@ class ElectionController {
 
     $mapMode = $_GET['map'];
 
-		top($toptitle);
+		top3($toptitle);
 		?>
-		<div class="row-fluid">
-		<div class="span6">
-		<h1>Campaign Donations Report</h1>
+		<div class="row">
+		<div class="col-sm-6">
+		<h1>Campaign Donations</h1>
     </div>
-		<div class="span6">
+		<div class="col-sm-6">
 		<!--
 		<p class="lead">Like this data? <a href="/election/processDonation/">Help create more of it</a> - 10 seconds at a time.</p>
 		-->
-		<p><i>Note: this report may not include all donations. The digitization of PDF documents is ongoing.</i></p>
-		<p>
-			Download all donations: 
-			<a href="?format=csv">CSV</a>
-			<a href="?format=json">JSON</a>
-		</p>
 		</div><!-- /span -->
 		</div><!-- /row -->
 
-    <h3>Search <small>Search by donor and/or candidate and/or postal code</small></h3>
+		<?php
+		$candidates = getDatabase()->all(" 
+			select id,year,ward,first,last from candidate order by last,first,year desc,ward 
+		");
+		$years = getDatabase()->all(" 
+			select distinct(year) year from candidate order by year desc
+		");
+		$wards = getDatabase()->all(" 
+			select * from (
+			select 0 ward ,'Mayor'  ward_en
+			union
+			select ward_num ward , ward_en from wards_2010 )
+			s order by ward+0
+		");
 
-			<form class="form-inline" action="/election/listDonations">
-					<!-- <label class="control-label" for="inputDonor">by donor</label> -->
-					 <input type="text" id="inputDonor" class="input-medium" name="donor" placeholder="Donor Name" value="<?php print $donor; ?>"/> 
-					<!-- <label class="control-label" for="inputCandidate">by candidate</label> -->
-					 <input type="text" id="inputCandidate" class="input-medium" name="candidate" placeholder="(first or last)" value="<?php print $candidate; ?>"/> 
-					<!-- <label class="control-label" for="inputPostal">by postal code</label> -->
-					 <input type="text" id="inputPostal" class="input-medium" name="postal" placeholder="H0H 0H0" value="<?php print $postal; ?>"/>
-					 <select name="year">
-					 	<option value="">-- All Years--</option>
-					 	<option value="2014">2014</option>
-					 	<option value="2010">2010</option>
-					 	<option value="2006">2006</option>
-					 </select>
-					<!-- <label class="control-label" for="inputFormat">Format</label> -->
-          Output as:
-					<select name="format">
-						<option value="" selected="1">HTML page</option>
-						<option value="csv" >CSV</option>
-						<option value="json" >JSON</option>
-					</select>
-					<!-- <label class="control-label" for="inputFormat">Map</label> -->
-          Map: 
-					<select name="map">
-						<option <?php print ($mapMode == 0 ? ' selected="1" ' : ''); ?> value="0">No</option>
-						<option <?php print ($mapMode == 1 ? ' selected="1" ' : ''); ?> value="1">Heatmap</option>
-						<option <?php print ($mapMode == 2 ? ' selected="1" ' : ''); ?> value="2">Placemarks</option>
-					</select>
-					 <button type="submit" class="btn">Filter</button> 
-			</form>
+		?>
+
+<form action="/election/listDonations" class="form-horizontal">
+
+<div class="form-group">
+	<label class="col-sm-2 control-label" for="inputDonor">Donor Name</label>
+	<div class="col-sm-9">
+		<input type="text" id="inputDonor" class="form-control" name="donor" placeholder="optional" value="<?php print $donor; ?>"/> 
+	</div>
+</div>
+
+<div class="form-group">
+	<label class="col-sm-2 control-label" for="inputCandidate">Candidate(s)</label>
+	<div class="col-sm-3">
+		<select id="inputCandidate" class="form-control" name="candidate[]" multiple="yes" size="5">
+		<?php
+		foreach ($candidates as $c) {
+			print "<option value=\"{$c['id']}\">{$c['last']}, {$c['first']} ({$c['year']} ward:{$c['ward']})</option>";
+		}
+		?>
+		</select>
+	</div>
+
+	<label class="col-sm-1 control-label" for="inputYear">Year(s)</label>
+	<div class="col-sm-2">
+		<select id="inputYear" class="form-control" name="year[]" multiple="yes" size="5">
+		<?php
+		foreach ($years as $y) {
+			print "<option value=\"{$y['year']}\">{$y['year']}</option>\n";
+		}
+		?>
+		</select>
+	</div>
+
+	<label class="col-sm-1 control-label" for="inputWard">Ward(s)</label>
+	<div class="col-sm-2">
+		<select id="inputWard" class="form-control" name="ward[]" multiple="yes" size="5">
+		<?php
+		foreach ($wards as $y) {
+			print "<option value=\"{$y['ward']}\">{$y['ward']} - {$y['ward_en']}</option>\n";
+		}
+		?>
+		</select>
+	</div>
+</div>
+
+<div class="form-group">
+	<label class="col-sm-2 control-label" for="inputPostalCode">Postal Code</label>
+	<div class="col-sm-3">
+		<input type="text" id="inputPostalCode" class="form-control" name="postal" placeholder="optional" value="<?php print $postal; ?>"/> 
+	</div>
+	<label class="col-sm-1 control-label" for="inputFormat">Output</label>
+	<div class="col-sm-2">
+		<select id="inputFormat" class="form-control" name="format">
+			<option value="" selected="1">HTML page</option>
+			<option value="csv" >CSV</option>
+			<option value="json" >JSON</option>
+		</select>
+	</div>
+	<label class="col-sm-1 control-label" for="inputMap">Map</label>
+	<div class="col-sm-2">
+		<select id="inputMap" class="form-control" name="map">
+			<option <?php print ($mapMode == 0 ? ' selected="1" ' : ''); ?> value="0">No</option>
+			<option <?php print ($mapMode == 1 ? ' selected="1" ' : ''); ?> value="1">Heatmap</option>
+			<option <?php print ($mapMode == 2 ? ' selected="1" ' : ''); ?> value="2">Placemarks</option>
+		</select>
+	</div>
+</div>
+
+<div class="form-group">
+	<div class="col-sm-8 col-sm-offset-2">
+		<button type="submit" class="btn btn-primary">Search</button> 
+		<a class="btn btn-primary" href="?format=csv">Download all: CSV</a>
+		<a class="btn btn-primary" href="?format=json">Download all: JSON</a>
+	</div>
+</div>
+
+<!-- <label class="control-label" for="inputFormat">Map</label> -->
+</form>
 
 		<?php 
     if (count($rows) > 0) { 
@@ -1810,7 +1897,7 @@ class ElectionController {
 				print "<tr>";
 				print "<td>{$r['year']}</td>";
 				print "<td>{$r['ward']}</td>";
-				print "<td><nobr><a href=\"/election/listDonations?candidate={$r['last']}\">{$r['last']}</a>, {$r['first']}<nobr></td>";
+				print "<td><nobr><a href=\"/election/listDonations?candidate[]={$r['candidateid']}\">{$r['last']}, {$r['first']}</a><nobr></td>";
 				print "<td>{$r['donor']}</td>";
 				print "<td><a href=\"/election/donation/{$r['id']}\">\$".formatMoney($r['amount'],true)."</a></td>";
 				print "<td>{$r['address']}</td>";
@@ -1917,7 +2004,7 @@ class ElectionController {
   		<?php 
     } 
 
-		bottom();
+		bottom3();
 	}
 
 	public static function showDonation($id) {
