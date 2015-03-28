@@ -5,6 +5,33 @@ class ElectionController {
   const year = 2014;
   const prevyear = 2010;
 
+	public static function processDonationScoreboard() {
+		top3();
+		$sql = "
+			select 
+				case when name is null then 'Anonymous' else name end Name,
+				Entries
+			from (
+				select 
+					p.id,
+					p.name,
+					count(1) entries
+				from 
+					candidate_donation d
+					left join people p on p.id = d.peopleid
+				where
+					d.created > '2015-01-01' 
+				group by 
+					p.id, 
+					p.name
+				order by
+					count(1) desc
+			) t ";
+		$rows = getDatabase()->all($sql);
+		rowsToTable($rows);
+		bottom3();
+	}
+
 	public static function raceResults ($electionid,$race) {
 
 		$totalVotes = getDatabase()->one(" 
@@ -1225,12 +1252,12 @@ class ElectionController {
 			$id = $_GET['id'];
 		}
 
-		$done = getDatabase()->one(" select count(1) c from candidate_donation where amount is not null ");
+		$done = getDatabase()->one(" select count(1) c from candidate_donation where created > '2015-01-01' and amount is not null ");
 		$done = $done['c'];
-		$total = getDatabase()->one(" select count(1) c from candidate_donation ");
+		$total = getDatabase()->one(" select count(1) c from candidate_donation where created > '2015-01-01' ");
 		$total = $total['c'];
 
-		$remaining = getDatabase()->one(" select count(1) c from candidate_donation where amount is null ");
+		$remaining = getDatabase()->one(" select count(1) c from candidate_donation where created > '2015-01-01' and amount is null ");
 		if ($id == '' && $remaining['c'] == 0) {
 			?>
 			<center>
@@ -1323,7 +1350,7 @@ class ElectionController {
 		?>
 
 		<center>
-    <canvas id="canvas" width="<?php print $imgW; ?>" height="<?php print $imgH; ?>" style="border: solid 1px #c0c0c0; margin-bottom: 20px;">
+    <canvas id="canvas" width="<?php print $imgW; ?>" height="<?php print $imgH; ?>" style="border: solid 1px #c0c0c0; margin-bottom: 10px;">
     </canvas>
 		</center>
 
@@ -1349,7 +1376,7 @@ class ElectionController {
 		imageObj.src = '/election/processReturn/<?php print "{$row['returnid']}?png=1&page=$page"; ?>';
 		</script>
 
-		<b>Look for the blue dot - the record you should copy is below it (or right at it) but never above it</b>
+		<div style="text-align: center; margin-bottom: 10px;"><b>Look for the blue dot - the record you should copy is below it (or right at it) but never above it.</b></div>
 
 		<form method="post" action="/election/processDonation/" class="form-horizontal">
 		<input type="hidden" name="id" value="<?php print $row['id']; ?>"/>
@@ -1434,7 +1461,9 @@ class ElectionController {
 					");
 					print getSession()->get("user_name");
 					print ", you've processed {$rows['c']} records!";
+
 					?>
+					<a href="/election/processDonation/scoreboard">View the Scoreboard!</a>
 					</div>
 					<?php
 				} else {
@@ -1443,8 +1472,13 @@ class ElectionController {
 					<a class="btn btn-primary" href="<?php print LoginController::getLoginUrl(); ?>">Twitter/Facebook Login</a>
 					</div>
 					<div class="col-sm-4">
+					<p>
 					You are doing data-entry anonymously, which is totally cool. But if you log in, you can compete for bragging rights for doing data-entry!<br/>
-					<b>NOTE: Your twitter/facebook name will be made public on a scoreboard. If that's a problem, stay anonymous.</b>
+					<b>NOTE: Your twitter/facebook name will be made public on a scoreboard. If that's a problem, stay anonymous.</b>.
+					</p>
+					<p>
+					<a href="/election/processDonation/scoreboard">View the Scoreboard!</a>
+					<p>
 					</div>
 					<?php
 				}

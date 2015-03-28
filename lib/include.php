@@ -48,6 +48,40 @@ $OTT_LOBBY_SEARCH_URL="https://apps107.ottawa.ca/LobbyistRegistry/search/searchl
 # HTTP address of OttWatch itself.
 $OTT_WWW = OttWatchConfig::WWW;
 
+function rowsToTable($rows) {
+	$cols = array();
+	foreach ($rows as $r) {
+		foreach ($r as $k => $v) {
+			if (!in_array($k,$cols)) {
+				$cols[] = $k;
+			}
+		}
+	}
+	?>
+	<table class="table table-bordered table-hover table-condensed">
+	<tr>
+		<th>#</th>
+		<?php
+		foreach ($cols as $c) {
+			print "<th>$c</th>\n";
+		}
+		?>
+	</tr>
+	<?php
+	$x = 0;
+	foreach ($rows as $r) {
+		print "<tr><td>$x</td>\n";
+		foreach ($cols as $c) {
+			print "<td>{$r[$c]}</td>";
+		}
+		print "</tr>";
+		$x++;
+	}
+	?>
+	</table>
+	<?php
+}
+
 function meeting_category_to_title($category) {
   $row = getDatabase()->one(" select * from category where category = :category ",array('category' => $category));
   if ($row['title']) {
