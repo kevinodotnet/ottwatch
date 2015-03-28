@@ -21,6 +21,7 @@ class ElectionController {
 					left join people p on p.id = d.peopleid
 				where
 					d.created > '2015-01-01' 
+					and d.amount is not null
 				group by 
 					p.id, 
 					p.name
