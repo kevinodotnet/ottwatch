@@ -278,6 +278,19 @@ function dashboard() {
   </a>
   </div>
 
+  <div style="margin-top: 10px; background: #08c; color: #ffffff; padding: 20px; font-size: 125%; border-radius: 4px;">
+  <center>
+	<?php
+  $row = getDatabase()->one(" select * from story where deleted = 0 and published = 1 order by updated desc limit 1 ");
+	$row['body'] = '';
+	print "<a style=\"color: #ffffff;\" href=\"/election/listDonations\">";
+	print "Campaign Donation Database";
+	print "</a>";
+	?>
+  </center>
+  </a>
+  </div>
+
   <table class="table table-bordered table-hover table-condensed" style="width: 100%; margin-top: 20px;">
   <?php 
   $meetings = getDatabase()->all(" select id,meetid,category,date(starttime) starttime from meeting where date(starttime) = date(CURRENT_TIMESTAMP) order by starttime ");
