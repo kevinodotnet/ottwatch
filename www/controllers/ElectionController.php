@@ -1103,9 +1103,9 @@ class ElectionController {
       $values['x'] = $_GET['x'];
       $values['y'] = $_GET['y'];
       $values['page'] = $page;
-			if (LoginController::isLoggedIn()) {
-	      $values['peopleid'] = getSession()->get("user_id");
-			}
+#			if (LoginController::isLoggedIn()) {
+#	      $values['peopleid'] = getSession()->get("user_id");
+#			}
       $id = db_insert('candidate_donation',$values);
 			return;
 		}
@@ -1417,9 +1417,24 @@ class ElectionController {
 				<?php
 				if (LoginController::isLoggedIn()) {
 					?>
-					<div class="col-sm-6 processDonation-help">
-					You are logged in!
-					Logged in!
+					<div class="col-sm-6 processDonation-help" style="font-size: 150%">
+
+					<?php
+					$rows = getDatabase()->one("
+						select 
+							count(1) c 
+						from candidate_donation 
+						where 
+							peopleid = ".getSession()->get("user_id")."
+							and returnid in (
+								select id from candidate_return where candidateid in ( 
+									select id from candidate where year = 2014 
+								)
+							)
+					");
+					print getSession()->get("user_name");
+					print ", you've processed {$rows['c']} records!";
+					?>
 					</div>
 					<?php
 				} else {
@@ -1484,6 +1499,8 @@ class ElectionController {
 		if (LoginController::isLoggedIn()) {
 			# put editor id into the database
 			$_POST['peopleid'] = getSession()->get("user_id");
+		} else {
+			$_POST['peopleid'] = null;
 		}
 		
 		// update in bulk
