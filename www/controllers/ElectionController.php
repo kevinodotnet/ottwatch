@@ -1443,7 +1443,8 @@ class ElectionController {
 					<a class="btn btn-primary" href="<?php print LoginController::getLoginUrl(); ?>">Twitter/Facebook Login</a>
 					</div>
 					<div class="col-sm-4">
-					You are doing data-entry anonymously, which is totally cool. But if you log in, you can compete for bragging rights for doing data-entry!
+					You are doing data-entry anonymously, which is totally cool. But if you log in, you can compete for bragging rights for doing data-entry!<br/>
+					<b>NOTE: Your twitter/facebook name will be made public on a scoreboard. If that's a problem, stay anonymous.</b>
 					</div>
 					<?php
 				}
