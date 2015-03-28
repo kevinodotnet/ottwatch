@@ -746,12 +746,14 @@ class ElectionController {
 		    ?>
       </td>
     </tr>
+		<!--
     <tr>
       <th>Donations</th>
       <td>
-      <a href="/election/listDonations?candidate=<?php print $incumbent['last']; ?>">View past donations</a>
+      <a href="/election/listDonations?candidate[]=<?php print $incumbent['t']; ?>">View past donations</a>
       </td>
     </tr>
+		-->
     <tr>
       <th>Record</th>
       <td>
@@ -1038,6 +1040,7 @@ class ElectionController {
 				c.year in (2014)
 			order by 
 				case when r.done is null or r.done = 0 then 0 else 1 end,
+				case when filename is null then 1 else 0 end,
 				c.winner desc,
 				d.donations,
 				c.ward,
