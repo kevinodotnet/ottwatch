@@ -1218,7 +1218,7 @@ class ElectionController {
 	}
 
 	public static function processDonation() {
-		top("Process a donation record");
+		top3("Process a Campaign Donation");
 
 		$id = '';
 		if (LoginController::isLoggedIn()) {
@@ -1239,29 +1239,27 @@ class ElectionController {
 			<p class="lead"><a href="/election/listDonations">Browse them here!</a></p>
 			</center>
 			<?php
-			bottom();
+			bottom3();
 			return;
 		}
 
-		$donePerc = round($done/$total*100);
+		$donePerc = sprintf('%0.2f',$done/$total*100);
 
 		$sql = "select timestampdiff(MINUTE,max(updated),now()) minutes, max(updated) latest,count(1) count from candidate_donation where timediff(now(),updated) < '02:00:00' ";
 		$stats = getDatabase()->one($sql);
 
 			?>
-			<center>
-			<h1>Campaign Donation Data-Entry</h1>
-			<!--
-			<p class="lead">
-			<b>Take 10 seconds ... bring more transparency to Ottawa's election.</b><br/>
-			Below is one donation image from the 2010 election. Please type in the details. <br/>
-			<b>
-			<a href="/election/listDonations"><span style="color: #f00;"><?php print $done; ?></span></b> done (<?php print $donePerc; ?>%)</a> out of <?php print $total; ?>.
-			Only <b><span style="color: #f00;"><?php print ($remaining['c']); ?></span></b> more to go!<br/>
-			<small>It has been <?php print $stats['minutes']; ?> minute(s) since the last data entry, with <?php print $stats['count']; ?> done in the last 2 hours!</small>
-			</p>
-			-->
-			</center>
+			<div class="row" style="margin-bottom: 10px;">
+				<div class="col-sm-4">
+				Please type in the details of this donation record.
+				</div>
+				<div class="col-sm-4 text-center">
+				We've finished data entry on <?php print $done; ?> of <?php print $total; ?> (<?php print $donePerc; ?>%) donations.<br/>
+				</div>
+				<div class="col-sm-4 text-right">
+				It's been <b><span style="color: #ff0000;"><?php print $stats['minutes']; ?> minutes</span></b> since the last data-entry.
+				</div>
+			</div>
 			<?php
 
 		# select a random unprocessed donation, along with the X/Y of the next donation on the same
@@ -1292,14 +1290,17 @@ class ElectionController {
 				limit 1
 			");
 		}
+
 		if (!isset($row['id'])) {
+			# should not happen
 			?>
 			Um, looks like you're done?
 			<a href="/election/processDonation/">Maybe click here to refresh and double-check.</a>
 			<?php
-			bottom();
+			bottom3();
 			return;
 		}
+
 		$next = getDatabase()->one(" select min(y) y from candidate_donation where returnid = {$row['returnid']} and page = {$row['page']} and y > {$row['y']} ");
 
 		$ret = getDatabase()->one(" select c.*,r.filename from candidate_return r join candidate c on c.id = r.candidateid where r.id = {$row['returnid']} ");
@@ -1316,16 +1317,16 @@ class ElectionController {
 	    $imgH = 200;
 		}
 
-		# use canvas to display the image
-		?>
-		<center>
-		<?php
 		$next = $row['id']+1;
 		$prev = $row['id']-1;
 		if (false) { ?> <a href="?id=<?php print $prev; ?>">PREV</a> | <a href="?id=<?php print $next; ?>">NEXT</a><br/> <?php }
 		?>
+
+		<center>
     <canvas id="canvas" width="<?php print $imgW; ?>" height="<?php print $imgH; ?>" style="border: solid 1px #c0c0c0; margin-bottom: 20px;">
-    </canvas><br/>
+    </canvas>
+		</center>
+
     <script>
 		var canvas = document.getElementById('canvas');
 		var context = canvas.getContext('2d');
@@ -1347,60 +1348,96 @@ class ElectionController {
 		};
 		imageObj.src = '/election/processReturn/<?php print "{$row['returnid']}?png=1&page=$page"; ?>';
 		</script>
-		</center>
+
 		<b>Look for the blue dot - the record you should copy is below it (or right at it) but never above it</b>
-		<center>
-		<form method="post" action="/election/processDonation/">
+
+		<form method="post" action="/election/processDonation/" class="form-horizontal">
 		<input type="hidden" name="id" value="<?php print $row['id']; ?>"/>
 		<input type="hidden" name="returnid" value="<?php print $_GET['returnid']; ?>"/>
-    <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
-		<tr>
-		<td style="vertical-align: top; width: 400px;">
-		<input value="<?php print $row['name']; ?>"  style="width: 90%;" type="text" placeholder="name" name="name" autofocus='1'/><br/>
-		<!--
-		choose: <select size="2" name="type">
-		<option value="0">Individual</option>
-		<option value="1">Business/Union</option>
-		</select><br/>
-		-->
-		
-		If a corporation or union is shown, put that in the <b>NAME</b> field and ignore any personal names shown.<br/><br/>
-		For people, please do "Last, First" if you can. Some of the records are shown as "First Last". No biggie either way.
-		</td>
-		<td style="vertical-align: top; width: 350px;"><input  value="<?php print $row['address']; ?>" style="width: 90%;" type="text" placeholder="address" name="address" />
-		Just street address (and unit/apt).<br/><br/>
-		example: 2140 Oakmount St, Apt 1<br/><br/>
-		</td>
+
+		<div class="form-group">
+			<label class="col-sm-1 control-label" for="name">Donor</label>
+			<div class="col-sm-5">
+				<input class="form-control" id="name" value="<?php print $row['name']; ?>" type="text" placeholder="name" name="name" autofocus="1"/>
+			</div>
+			<div class="col-sm-6 processDonation-help">
+				If a corporation or union is shown, put that in the <b>NAME</b> field and ignore any personal names shown.
+				For people, please do "Last, First" if you can. Some of the records are shown as "First Last". No biggie either way.
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label class="col-sm-1 control-label" for="address">Address</label>
+			<div class="col-sm-5">
+				<input id="address" class="form-control" value="<?php print $row['address']; ?>" type="text" placeholder="address" name="address" />
+			</div>
+			<div class="col-sm-6 processDonation-help">
+				Just street number, name and apt/unit/PO box.
+				Convert to "345 Example Street, Apt 34" format if possible.
+			</div>
+		</div>
+
 		<?php if ($row['city'] == '') { $row['city'] = 'Ottawa'; } ?>
-		<td style="vertical-align: top; width: 100px;"><input  value="<?php print $row['city']; ?>" style="width: 90%;" type="text" placeholder="city" name="city" />
-		Leave as Ottawa if it's "Kanata", "Orleans", etc. Only change if it's outside the amalgamated city.
-		When in doubt, just make sure postal code is right.
-		</td>
-		<!--
-		<td style="vertical-align: top; width: 50px;"><input  style="width: 90%;" type="text" value="ON" placeholder="prov" name="prov" />
-		Nothing should come in from out-of-province
-		</td>
-		-->
-		<td style="vertical-align: top; width: 100px;"><input  value="<?php print $row['postal']; ?>" style="width: 90%;" type="text" placeholder="postal" name="postal" />
-		<p>Lowercase and no-space is fine, easier to type. ex: k1c3e5</p>
-		<p>Postal code is really important for later geo-location reports!</p>
-		</td>
-		<td style="vertical-align: top; width: 100px;">
-		<input  value="<?php print $row['amount']; ?>" style="width: 90%;" type="text" placeholder="$" name="amount" /><br/>
-		<center>
-		<input class="btn btn-large btn-success" type="submit" value="Save" style="margin-top: 20px;"/><br/>
-		<input name="report" class="btn btn-large btn-danger" type="submit" value="(Unreadable)" style="margin-top: 20px;"/>
-		</center>
-		</td>
-		</tr>
-		</table>
+		<div class="form-group">
+			<label class="col-sm-1 control-label" for="city">City</label>
+			<div class="col-sm-5">
+				<input id="city" class="form-control" value="<?php print $row['city']; ?>" type="text" placeholder="city" name="city" />
+			</div>
+			<div class="col-sm-6 processDonation-help">
+				Leave as Ottawa if it's "Kanata", "Orleans", etc. Only change if it's outside the amalgamated city.
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label class="col-sm-1 control-label" for="postal">Postal</label>
+			<div class="col-sm-5">
+			<input id="postal" class="form-control" value="<?php print $row['postal']; ?>" type="text" placeholder="postal" name="postal" />
+			</div>
+			<div class="col-sm-6 processDonation-help">
+				Lowercase and no-space is fine, easier to type. ex: k1c3e5
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label class="col-sm-1 control-label" for="amount">Amount</label>
+			<div class="col-sm-5">
+			<input id="amount" class="form-control" value="<?php print $row['amount']; ?>" type="text" placeholder="$" name="amount" />
+			</div>
+		</div>
+
+		<div class="form-group">
+			<div class="col-sm-5 col-sm-offset-1">
+				<input class="btn btn-large btn-success" type="submit" value="Save" />
+				&nbsp;
+				&nbsp;
+				&nbsp;
+				&nbsp;
+				<input name="report" class="btn btn-large btn-danger" type="submit" value="(Unreadable)" />
+			</div>
+				<?php
+				if (LoginController::isLoggedIn()) {
+					?>
+					<div class="col-sm-6 processDonation-help">
+					You are logged in!
+					Logged in!
+					</div>
+					<?php
+				} else {
+					?>
+					<div class="col-sm-2 processDonation-help">
+					<a class="btn btn-primary" href="<?php print LoginController::getLoginUrl(); ?>">Twitter/Facebook Login</a>
+					</div>
+					<div class="col-sm-4">
+					You are doing data-entry anonymously, which is totally cool. But if you log in, you can compete for bragging rights for doing data-entry!
+					</div>
+					<?php
+				}
+				?>
+		</div>
+
 		</form>
-		<br/>
-
-
-		</center>
 		<?php
-		bottom();
+		bottom3();
 	}
 
 	public static function processDonationSave() {

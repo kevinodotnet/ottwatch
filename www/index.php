@@ -598,6 +598,11 @@ if ($v3) {
 		height: 200px;
 	}
 
+	.processDonation-help {
+		padding-left: 40px;
+		font-size: 90%;
+	}
+
 </style>
 <script>
 function copyToClipboard (text) {
