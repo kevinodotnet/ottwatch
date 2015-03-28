@@ -28,6 +28,17 @@ class ElectionController {
 					count(1) desc
 			) t ";
 		$rows = getDatabase()->all($sql);
+		?>
+		<div class="row">
+			<div class="col-sm-6">
+				<h2>Campaign Donation Data-Entry Scoreboard!</h2>
+			</div>
+			<div class="col-sm-6">
+				<p>As PDFs of the 2014 campaign finance documents become available, awesome people in Ottawa donate their time to <a href="/election/listDonations">digitize them into the OttWatch database</a>.
+				Here's the scoreboard! Many thanks to everyone on the list, and those Anonymous people who would like to remain anonymous!</p>
+			</div>
+		</div>
+		<?php
 		rowsToTable($rows);
 		bottom3();
 	}
