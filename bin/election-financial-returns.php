@@ -25,8 +25,12 @@ foreach ($urls as $u) {
 	$filename = preg_replace("/.*\//","",$u);
 	$file = OttWatchConfig::FILE_DIR."/election/$year/financial_returns/$filename";
 	if (file_exists($file)) {
-		$rows = getDatabase()->all("
+		if (!preg_match('/Original/',$file)) {
+			continue;
+		}
+		$sql = "
 			select
+				r.id crid,
 				c.id,
 				c.first,
 				c.last,
@@ -40,22 +44,28 @@ foreach ($urls as $u) {
 				c.year = 2014
 				and instr('$filename',c.first) > 0
 				and instr('$filename',c.last) > 0
-				and instr('$filename','_Original') > 0
-				and r.filename != '$filename'
-		");
+				and r.filename is null
+		";
+		$rows = getDatabase()->all($sql);
+		/*
 		if (count($rows) == 0) {
 			# not "_Original.pdf", 
 			# or is a Trustee PDF
 			# of PDF was downloaded and has been matched to a return
 			# print "$filename already matched to a return, or is a trustee\n";
 			if (preg_match('/Original/',$filename)) {
-#				print "$filename\n";
+				print "IGNORING $filename\n";
 			}
-			continue;
 		}
-		print "$filename downloaded; name match to ".count($rows)." candidates\n";
-		pr($rows);
+		*/
+		foreach ($rows as $r) {
+			print "\n# ".implode(",",$r)."\n";
+			print " update candidate_return set filename = '$filename' where id = {$r['crid']}; \n";
+		}
+		# print "$filename downloaded; name match to ".count($rows)." candidates\n";
 		continue;
 	}
-	print "need to download $u ($file)\n";
+	$file = OttWatchConfig::FILE_DIR."/election/$year/financial_returns/$filename";
+	print "wget -O $file $u\n";
+	# print "need to download $u ($file)\n";
 }
