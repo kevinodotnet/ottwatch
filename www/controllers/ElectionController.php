@@ -1369,7 +1369,7 @@ class ElectionController {
 		</td>
 		<td style="vertical-align: top; width: 350px;"><input  value="<?php print $row['address']; ?>" style="width: 90%;" type="text" placeholder="address" name="address" />
 		Just street address (and unit/apt).<br/><br/>
-		example: 2140 Oakmount St.<br/>
+		example: 2140 Oakmount St, Apt 1<br/><br/>
 		</td>
 		<?php if ($row['city'] == '') { $row['city'] = 'Ottawa'; } ?>
 		<td style="vertical-align: top; width: 100px;"><input  value="<?php print $row['city']; ?>" style="width: 90%;" type="text" placeholder="city" name="city" />
@@ -1382,7 +1382,8 @@ class ElectionController {
 		</td>
 		-->
 		<td style="vertical-align: top; width: 100px;"><input  value="<?php print $row['postal']; ?>" style="width: 90%;" type="text" placeholder="postal" name="postal" />
-		Postal code is really important for later geo-location reports!
+		<p>Lowercase and no-space is fine, easier to type. ex: k1c3e5</p>
+		<p>Postal code is really important for later geo-location reports!</p>
 		</td>
 		<td style="vertical-align: top; width: 100px;">
 		<input  value="<?php print $row['amount']; ?>" style="width: 90%;" type="text" placeholder="$" name="amount" /><br/>
