@@ -45,7 +45,6 @@ foreach ($urls as $u) {
 				and instr('$filename',c.first) > 0
 				and instr('$filename',c.last) > 0
 				and r.filename is null
-				and last !+ 'Lougheed'
 		";
 		$rows = getDatabase()->all($sql);
 		/*
