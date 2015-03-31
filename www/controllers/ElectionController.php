@@ -1201,9 +1201,9 @@ class ElectionController {
 		top();
 		print "<center>";
 		print "<a href=\"?page=".($page-1)."\">PREV</a>";
+		print " | <a href=\"?rotate=1&page=".($page)."\">ROTATE</a> ";
 		if (isset($pages[($page+1)])) {
 		print " | <a href=\"?page=".($page+1)."\">NEXT</a> ";
-		print " | <a href=\"?rotate=1&page=".($page)."\">ROTATE</a> ";
 		}
 		print "<br/>";
     $imgW = $size[0];
