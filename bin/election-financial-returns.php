@@ -24,6 +24,9 @@ $year = 2014;
 foreach ($urls as $u) {
 	$filename = preg_replace("/.*\//","",$u);
 	$file = OttWatchConfig::FILE_DIR."/election/$year/financial_returns/$filename";
+	if (preg_match('/Lougheed/',$file)) {
+		continue;
+	}
 	if (file_exists($file)) {
 		if (!preg_match('/Original/',$file)) {
 			continue;
