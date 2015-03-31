@@ -1284,7 +1284,7 @@ class ElectionController {
 
 		$donePerc = sprintf('%0.2f',$done/$total*100);
 
-		$sql = "select timestampdiff(MINUTE,max(updated),now()) minutes, max(updated) latest,count(1) count from candidate_donation where timediff(now(),updated) < '02:00:00' ";
+		$sql = "select timestampdiff(MINUTE,max(updated),now()) minutes, max(updated) latest,count(1) count from candidate_donation "; # where timediff(now(),updated) < '02:00:00' ";
 		$stats = getDatabase()->one($sql);
 
 			?>
