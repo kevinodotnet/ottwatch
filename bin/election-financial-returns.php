@@ -45,6 +45,7 @@ foreach ($urls as $u) {
 				and instr('$filename',c.first) > 0
 				and instr('$filename',c.last) > 0
 				and r.filename is null
+				and last !+ 'Lougheed'
 		";
 		$rows = getDatabase()->all($sql);
 		/*
@@ -59,7 +60,7 @@ foreach ($urls as $u) {
 		}
 		*/
 		foreach ($rows as $r) {
-			print "\n# ".implode(",",$r)."\n";
+			print " /* ".implode(",",$r)." */ \n";
 			print " update candidate_return set filename = '$filename' where id = {$r['crid']}; \n";
 		}
 		# print "$filename downloaded; name match to ".count($rows)." candidates\n";
