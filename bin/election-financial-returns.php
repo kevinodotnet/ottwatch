@@ -70,5 +70,6 @@ foreach ($urls as $u) {
 	}
 	$file = OttWatchConfig::FILE_DIR."/election/$year/financial_returns/$filename";
 	print "wget -O $file $u\n";
+	print "cd ~/ottwatchvar/election/2014/financial_returns/; ./k.sh $filename\n";
 	# print "need to download $u ($file)\n";
 }
