@@ -10,24 +10,12 @@ require_once('include.php');
 $gtfs_dir = $argv[1];
 $tableprefix = $argv[2];
 
-import_gtfs($gtfs_dir,$tableprefix);
+gtfs_import($gtfs_dir,$tableprefix);
 
-function import_gtfs($gtfs_dir,$tableprefix) {
+function gtfs_import($gtfs_dir,$tableprefix) {
 
 	$d = opendir($gtfs_dir);
 	while (($f = readdir($d)) !== false) {
-
-/*
-agency
-calendar
-calendar_dates
-edges
-routes
-stop_times
-stops
-trips
-*/
-
 
 		$file = "$gtfs_dir/$f";
 		if (!is_file($file)) { continue; }
@@ -69,7 +57,7 @@ trips
 			}
 			$sql .= " ); \n ";
 			print $sql;
-			# if ($c++ > 10) { break; }
+			#if ($c++ > 10) { break; }
 		}
 		fclose($f);
 
