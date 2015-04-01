@@ -1911,7 +1911,7 @@ class ElectionController {
           $pinColor = '0000ff';
         }
 				if (!isset($r['type'])) {
-					$r['type'] = 'Unknown';
+					$r['type'] = 'Unclassified';
 				} elseif ($r['type'] == 0) {
 					$r['type'] = 'Individual over $100';
 				} elseif ($r['type'] == 1) {
@@ -1986,7 +1986,7 @@ class ElectionController {
 			$candidates = array();
 			foreach ($rows as $r) {
 				if (!isset($r['type'])) {
-					$r['type'] = 'Unknown';
+					$r['type'] = 'Unclassified';
 				} elseif ($r['type'] == 0) {
 					$r['type'] = 'Individual over $100';
 				} elseif ($r['type'] == 1) {
@@ -2195,7 +2195,7 @@ class ElectionController {
 			<?php
 
 			if (!isset($r['type'])) {
-				$r['type'] = 'Unknown';
+				$r['type'] = 'Unclassified';
 			} elseif ($r['type'] == 0) {
 					$r['type'] = 'Individual over $100';
 				} elseif ($r['type'] == 1) {
@@ -2615,7 +2615,7 @@ class ElectionController {
 					when eq.ward > 0 then eo.ward
 					when eq.ward = 0 then 'Mayor'
 					when eq.ward = -1 then 'City Wide'
-					else 'Unknown'
+					else 'Unclassified'
 				end wardname,
 				case when a.count is null then 0 else a.count end count,
 				case when a.count is null then 'never' else a.latest end latest,
