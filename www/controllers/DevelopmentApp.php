@@ -2,12 +2,56 @@
 
 class DevelopmentAppController {
 
-  static public function scrapeCommitteeOfAdjustment($date,$panel) {
-	  $text = '';
-	  while($f = fgets(STDIN)){
-	    $text .= "$f";
+  static public function scrapeCommitteeOfAdjustment($date,$panel,$file) {
+	  $txt = file_get_contents($file);
+
+		# split by PAGE_BREAK
+
+	  $apps = array();
+	  $a = array();
+	  $pages = explode(chr(12),$txt); # split on CTRL-L, which PDF2TEXT puts between pages
+	  foreach ($pages as $p) {
+	    $p = preg_replace("/\r/","",$p);
+	    $o = preg_replace("/\n/"," ",$p);
+	    if (preg_match('/File No\.:/',$o) || preg_match('/File Nos\.:/',$o)) {
+	      if (count($a) > 0) {
+	        $apps[] = array('lines'=>$a);
+	        $a = array();
+	      }
+	    }
+	    $lines = explode("\n",$p);
+	    foreach ($lines as $l) {
+	      $a[] = $l;
+	    }
 	  }
-	
+		# last page
+    $apps[] = array('lines'=>$a);
+
+		# first one is always the agenda
+		$a = array_shift($apps);
+		$headtext = implode(" ",$a['lines']);
+		self::scrapeCommitteeOfAdjustmentHeader($date,$panel,$headtext);
+
+	  foreach ($apps as $a) {
+	    $head = "";
+	    foreach ($a['lines'] as $l) {
+	      if (preg_match('/PURPOSE OF THE APPLICATION/',$l)) {
+	        break;
+	      }
+	      $head .= $l;
+	    }
+	    $text =  implode(" ",$a['lines']);
+	    $matches = array();
+	    preg_match_all("/D\d\d-\d\d-\d\d\/.-\d\d\d\d\d/",$head,$matches);
+	    foreach ($matches[0] as $d) {
+				getDatabase()->execute(" update devapp set coadesc = '".preg_replace("/'/","''",implode("<br/>",$a['lines']))."' where devid = '$d' ");
+	    }
+	  }
+
+
+	}
+
+  static public function scrapeCommitteeOfAdjustmentHeader($date,$panel,$text) {
 	  $text = preg_replace("/\t/"," ",$text);
 	  $text = preg_replace("/\r/"," ",$text);
 	  $text = preg_replace("/\n/"," ",$text);
@@ -29,7 +73,7 @@ class DevelopmentAppController {
 	  $text = preg_replace("/  /"," ",$text);
 	  $text = preg_replace("/  /"," ",$text);
 	  $text = preg_replace("/  /"," ",$text);
-	
+
 	  $index = 0;
 
 		$items = array();
@@ -85,18 +129,41 @@ class DevelopmentAppController {
 
 	  self::dumpItem($item);
 		$items[] = $item;
+
 		foreach ($items as $i) {
 			#pr($i);
 			foreach ($i['app'] as $devid) {
 				print "devid: $devid\n";
 		    $row = getDatabase()->one(" select * from devapp where devid = :devid ",array("devid"=>$devid));
 		    if ($row['id']) {
-					# exists?
-					print "  skipping \n";
+					# exists, so update description
+					$id = $row['id'];
+					/*
+			    $row = getDatabase()->one(" select * from devappstatus where devappid = $id and statusdate = {$i['date']} and status = 'Appearance on CoA agenda, panel $panel' ");
+			    if (! $row['id']) {
+			      getDatabase()->execute(" 
+								insert into devappstatus (devappid,status,statusdate) values (:devappid,:status,:statusdate) 
+							",array(
+			        'devappid' => $id,
+			        'status' => 'Appearance on CoA agenda, panel ' . $panel,
+			        'statusdate' => $i['date']
+			      ));
+					}
+					*/
+					/*
+			    $id = getDatabase()->execute(" update devapp set address = :address, description = :description where id = :id ",array(
+		        'address'=> json_encode($addresses),
+		        'description' => "CoA {$i['date']} panel {$i['panel']}",
+						'id' => $id
+					));
+					*/
 				} else {
-					$ward = '';
-					$addresses = array();
-					foreach ($i['addr'] as $a) {
+
+				$addresses = array();
+				foreach ($i['addr'] as $a) {
+					if (preg_match('/[a-z]/',$a['street'])
+						&& !in_array($a['street'],array('January','February','March','April','May','June','July','August','September','October','November','December'))
+						) {
 						$mm = address_latlon($a['num'],$a['street']);
 						if ($mm['lat'] != '') {
 							$ward = $mm['ward'];
@@ -111,6 +178,9 @@ class DevelopmentAppController {
 							);
 						}
 					}
+				}
+
+					$ward = '';
 			    $id = getDatabase()->execute(" 
 			      insert into devapp 
 			      (address,appid,devid,ward,apptype,receiveddate,created,updated,description)
@@ -124,20 +194,16 @@ class DevelopmentAppController {
 			        'receiveddate' => $i['date'],
 			        'description' => "CoA {$i['date']} panel {$i['panel']}"
 			    ));
-		      getDatabase()->execute(" insert into devappstatus (devappid,status,statusdate) values (:devappid,:status,:statusdate) ",array(
+		      getDatabase()->execute(" 
+							insert into devappstatus (devappid,status,statusdate) values (:devappid,:status,:statusdate) 
+						",array(
 		        'devappid' => $id,
 		        'status' => 'Appearance on CoA agenda, panel ' . $panel,
 		        'statusdate' => $i['date']
 		      ));
 				}
-				#pr($row);
 			}
-			#exit;
 		}
-		#print "\n\n";
-		#pr($items);
-		#print "\n\n";
-		return;
   }
 
   static public function dumpItem($item) {
