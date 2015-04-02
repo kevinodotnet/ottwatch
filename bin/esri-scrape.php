@@ -60,6 +60,8 @@ function scrapeLayer($metaurl,$table) {
 			$createTable .= "geometry";
 		} else if ($f->type == 'esriFieldTypeDate') {
 			$createTable .= "datetime";
+		} else if ($f->type == 'esriFieldTypeSmallInteger') {
+			$createTable .= "bigint";
 		} else if ($f->type == 'esriFieldTypeInteger') {
 			$createTable .= "bigint";
 		} else if ($f->type == 'esriFieldTypeOID') {
@@ -71,6 +73,8 @@ function scrapeLayer($metaurl,$table) {
 			pr($f);
 			exit;
 		}
+
+		# esriFieldTypeSmallInteger
 
 		$createTable .= ",\n";
 
@@ -86,11 +90,10 @@ function scrapeLayer($metaurl,$table) {
 
 	while (true) {
 
-		print "maxid: $maxid\n";
+		print "query: $maxid";
 
 		$url = "{$metaurl}/query";
 		$url .= "?where=".urlencode("OBJECTID > $maxid");
-
 		$url .= "&outFields=".urlencode(implode(",",$allfields));
 		$url .= "&returnGeometry=false";
 		$url .= "&orderByFields=OBJECTID";
@@ -98,23 +101,24 @@ function scrapeLayer($metaurl,$table) {
 		$url .= "&returnM=false";
 		$url .= "&returnDistinctValues=false";
 		$url .= "&f=pjson";
-	
 		$data = json_decode(c_file_get_contents($url));
 
+		print " count: ".count($data->features)."\n";
+
 		if (count($data->features) == 0) {
-			print "no data!\n";
+			# done, no data
 			break;
 		}
 
 		foreach ($data->features as $f) {
-			
+
 			$attr = (array) $f->attributes;
 
-			foreach ($meta->fields as $f) {
-				if ($f->type == 'esriFieldTypeDate') {
-					$v = $attr[$f->name];
+			foreach ($meta->fields as $fi) {
+				if ($fi->type == 'esriFieldTypeDate') {
+					$v = $attr[$fi->name];
 					$datetime = date("Y-m-d H:i:s",($v/1000));
-					$attr[$f->name] = $datetime;
+					$attr[$fi->name] = $datetime;
 					# milliseconds epoch
 				}
 			}
@@ -124,6 +128,10 @@ function scrapeLayer($metaurl,$table) {
 			}
 
 			$id = db_insert($table,$attr);
+
+			if (isset($f->geometry->x)) {
+				getDatabase()->execute(" update $table set $shapeField = GeomFromText(' POINT( {$f->geometry->x} {$f->geometry->y} ) ') where ottwatchid = $id ");
+			}
 
 			if (isset($f->geometry->rings)) {
 				$points = array();
@@ -149,7 +157,6 @@ function scrapeLayer($metaurl,$table) {
 				$shapeValue .= " ) ') ";
 
 				$update = " update $table set $shapeField = $shapeValue where ottwatchid = $id; \n";
-				print "$update\n";
 				getDatabase()->execute($update);
 			}
 
