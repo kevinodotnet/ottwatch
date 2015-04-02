@@ -1587,6 +1587,7 @@ class ElectionController {
 		$postal = preg_replace('/ /','',$postal);
 		$postalE = mysql_escape_string($postal);
 		$year = $_GET['year'];
+		$pinid = $_GET['pinid'];
 		$ward = $_GET['ward'];
 		$donor = $_GET['donor'];
 		$donorE = mysql_escape_string($donor);
@@ -1615,6 +1616,18 @@ class ElectionController {
 			}
 			$where .= " ) ";
 			$filtered = 1;
+		}
+		$pinidwhere = '';
+		if (count($pinid) > 0) {
+			$ok = 1;
+			foreach ($pinid as $w) {
+				if (!preg_match('/^\d+$/',$w)) {
+					$ok = 0;
+				}
+			}
+			if ($ok) {
+				$pinidwhere .= " d.id in ( ".implode(",",$pinid).")";
+			}
 		}
 		if (count($year) > 0) {
 			$ok = 1;
@@ -1655,6 +1668,29 @@ class ElectionController {
 			$orderby = " c.id, r.id, d.page, d.y ";
 		}
 
+		$where_master = "
+			d.amount is not null 
+			and d.amount != ''
+			$where
+		";
+		if (strlen($pinidwhere) > 0) {
+			if ($filtered == 1) {
+				$where_master = "
+					(
+					d.amount is not null 
+					and d.amount != ''
+					$where
+					) or
+					$pinidwhere
+				";
+			} else {
+				$filtered = 1;
+				$where_master = "
+					$pinidwhere
+				";
+			}
+		}
+
 		$sql = "
 			select 
 				d.id,
@@ -1680,9 +1716,7 @@ class ElectionController {
 				join candidate_return r on d.returnid = r.id
 				join candidate c on r.candidateid = c.id
 			where 
-				d.amount is not null 
-				and d.amount != ''
-				$where
+				$where_master
 			order by 
 				$orderby
 		";
@@ -1829,8 +1863,6 @@ class ElectionController {
 	</div>
 </div>
 
-<!-- <label class="control-label" for="inputFormat">Map</label> -->
-</form>
 
 		<?php 
     if (count($rows) > 0) { 
@@ -1979,6 +2011,7 @@ class ElectionController {
 					<th>city</th>
 					<th>postal</th>
 					<th>type</th>
+					<th>pin</th>
 			</tr>
 			<?php
 			$total = 0;
@@ -2009,6 +2042,7 @@ class ElectionController {
 				print "<td>{$r['city']}</td>";
 				print "<td><a href=\"/election/listDonations?postal={$r['postal']}\">{$r['postal']}</a></td>";
 				print "<td>{$r['type']}</td>";
+				print "<td><input ".(in_array($r['id'],$pinid) ? ' checked="1" ' : '')." type=\"checkbox\" name=\"pinid[]\" value=\"{$r['id']}\"</td>";
 				print "</tr>";
 				$total += $r['amount'];
 				$candidates[$r['candidateid']] = 1;
@@ -2108,6 +2142,10 @@ class ElectionController {
 
   		<?php 
     } 
+
+		?>
+		</form>
+		<?php
 
 		bottom3();
 	}
