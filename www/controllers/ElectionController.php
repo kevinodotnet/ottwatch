@@ -2000,6 +2000,14 @@ class ElectionController {
       } // mapMode
       ?>
 
+			<script>
+			function clearPinIds() {
+				$( "input[name='pinid[]']" ).each(function(){
+					this.checked = false;
+				});
+			}
+			</script>
+
 		  <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
 			<tr>
 					<th>year</th>
@@ -2011,7 +2019,7 @@ class ElectionController {
 					<th>city</th>
 					<th>postal</th>
 					<th>type</th>
-					<th>pin</th>
+					<th>pin<br/>(<a href="javascript:clearPinIds()">clear</a>)</th>
 			</tr>
 			<?php
 			$total = 0;
