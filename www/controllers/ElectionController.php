@@ -2177,7 +2177,8 @@ class ElectionController {
 				c.first,
 				c.last,
 				r.filename,
-				r.id retid
+				r.id retid,
+				c.id candid
 			from
 				candidate_donation d
 				join candidate_return r on d.returnid = r.id
@@ -2257,7 +2258,7 @@ class ElectionController {
 			print "<tr><th>City</th><td>{$r['city']}</td></tr>";
 			print "<tr><th>Province</th><td>{$r['prov']}</td></tr>";
 			print "<tr><th>Postal</th><td><a href=\"/election/listDonations?postal={$r['postal']}\">{$r['postal']}</a></td></tr>";
-			print "<tr><th>Candidate</th><td><a href=\"/election/listDonations?candidate={$r['last']}\">{$r['last']}</a>, {$r['first']} ({$r['year']})</td></tr>";
+			print "<tr><th>Candidate</th><td><a href=\"/election/listDonations?candidate[]={$r['candid']}\">{$r['last']}, {$r['first']} ({$r['year']})</a></td></tr>";
 			print "<tr><th>Ward</th><td>{$r['ward']}</td></tr>";
 			?>
 			<tr><th>Location</th>
