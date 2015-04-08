@@ -1408,7 +1408,7 @@ class ElectionController {
 		<div class="form-group">
 			<label class="col-sm-1 control-label" for="address">Address</label>
 			<div class="col-sm-5">
-				<input id="address" class="form-control typeahead" value="<?php print $row['address']; ?>" type="text" placeholder="address" name="address" />
+				<input id="address" class="form-control typeahead" autocomplete="off" value="<?php print $row['address']; ?>" type="text" placeholder="address" name="address" />
 			</div>
 			<div class="col-sm-6 processDonation-help">
 				Just street number, name and apt/unit/PO box.
