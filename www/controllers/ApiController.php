@@ -2,6 +2,32 @@
 
 class ApiController {
 
+	public static function typeaheadAddress() {
+		$query = $_GET['query'];
+
+		$parts = explode(' ',$query);
+		if (count($parts) == 1) {
+			return array();
+		}
+		if (count($parts) == 2) {
+			$p1 = $parts[0];
+			$p2 = $parts[1];
+			if (preg_match('/^\d+$/',$p1)) {
+				$res = array();
+				$sql = " select concat(ADDRESS_NUMBER,' ',ROAD_NAME,' ',SUFFIX) r from geo_property where ADDRESS_NUMBER = '$p1' and ROAD_NAME like '$p2%' ";
+				$rows = getDatabase()->all($sql);
+				foreach ($rows as $r) {
+					$addr = $r['r'];
+					$addr = preg_replace('/  */',' ',$addr);
+					$res[] = $addr;
+				}
+				return $res;
+			}
+		}
+
+		return array();
+	}
+
 	public static function electionResults() {
 		$elections = array();
 

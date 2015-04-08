@@ -63,6 +63,9 @@ getApi()->post('/api/inbound/traffic-incident', 'traffic_incident', EpiApi::exte
 getRoute()->get('/api/widget/findward', array('ApiController', 'widgetFindWard'));
 getApi()->get('/api/election/results', array('ApiController','electionResults'), EpiApi::external);
 
+# Typeahead
+getApi()->get('/api/typeahead/address', array('ApiController','typeaheadAddress'), EpiApi::external);
+
 # Budget
 getRoute()->get('/budget/search', array('BudgetController', 'searchAll'));
 getRoute()->get('/budget/(\d+)/(capital)/(draft)/(\d+)', array('BudgetController', 'showEntry'));
@@ -549,6 +552,7 @@ if ($v3) {
 	<?php
 }
 ?>
+<script src="<?php print $OTT_WWW; ?>/bootstrap-ajax-typeahead/js/bootstrap-typeahead.js" type="text/javascript"></script>
 <style type="text/css">
 	<?php 
 	if ($v3) {

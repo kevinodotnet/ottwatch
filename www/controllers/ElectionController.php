@@ -1408,13 +1408,19 @@ class ElectionController {
 		<div class="form-group">
 			<label class="col-sm-1 control-label" for="address">Address</label>
 			<div class="col-sm-5">
-				<input id="address" class="form-control" value="<?php print $row['address']; ?>" type="text" placeholder="address" name="address" />
+				<input id="address" class="form-control typeahead" value="<?php print $row['address']; ?>" type="text" placeholder="address" name="address" />
 			</div>
 			<div class="col-sm-6 processDonation-help">
 				Just street number, name and apt/unit/PO box.
 				Convert to "345 Example Street, Apt 34" format if possible.
 			</div>
 		</div>
+
+		<script>
+		$('input.typeahead').typeahead({
+			ajax: '/api/typeahead/address'
+		});
+		</script>
 
 		<?php if ($row['city'] == '') { $row['city'] = 'Ottawa'; } ?>
 		<div class="form-group">
