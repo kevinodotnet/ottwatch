@@ -428,7 +428,12 @@ function db_save($table, $values, $key) {
 
 function db_insert($table, $values) {
 	$sql = db_generate_insert($table, $values);
-	return getDatabase()->execute($sql, $values);
+	$new = array();
+	foreach ($values as $k => $v) {
+		$n = preg_replace('/\./','_',$k);
+		$new[$n] = $values[$k];
+	}
+	return getDatabase()->execute($sql, $new);
 }
 
 function db_update($table,$values,$key) {
@@ -448,11 +453,13 @@ function db_update($table,$values,$key) {
 function db_generate_insert($table, $values) {
   $sql = "insert into $table (";
   foreach ( $values as $k => $v ) {
+		$k = preg_replace('/\./','_',$k);
     $sql .= "`{$k}`,";
   }
   $sql = rtrim($sql, ',');
   $sql .= ") values (";
   foreach ( $values as $k => $v ) {
+		$k = preg_replace('/\./','_',$k);
     $sql .= ":{$k},";
   }
   $sql = rtrim($sql, ',');
