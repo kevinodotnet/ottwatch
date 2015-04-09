@@ -1438,17 +1438,19 @@ class ElectionController {
 		</div>
 
 		<script>
+		var typeahead_buffer = [];
 		$('input.typeahead').typeahead({
-			ajax: '/api/typeahead/address'
-		});
-		$('input.typeaheadpostal').typeahead({
 			ajax: {
-				url: '/api/typeahead/postal',
-				preDispatch: function (query) {
-					addr = $('#address').val();
-					return {
-						search: addr
-					}
+				triggerLength: 3,
+				url: '/api/typeahead/address',
+				displayField: 'address',
+				preProcess: function (data) {
+					typeahead_buffer = data;
+					$('input.typeaheadpostal').typeahead({
+						source: typeahead_buffer,
+						displayField: 'postal'
+					});
+					return data;
 				}
 			}
 		});

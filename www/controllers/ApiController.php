@@ -37,12 +37,12 @@ class ApiController {
 			$p2 = mysql_real_escape_string($parts[1]);
 			if (preg_match('/^\d+$/',$p1)) {
 				$res = array();
-				$sql = " select concat(ADDRESS_NUMBER,' ',ROAD_NAME,' ',SUFFIX) r from geo_property where ADDRESS_NUMBER = '$p1' and ROAD_NAME like '$p2%' ";
+				$sql = " select concat(ADDRESS_NUMBER,' ',ROAD_NAME,' ',SUFFIX) address, POSTAL_CODE postal from geo_property where ADDRESS_NUMBER = '$p1' and ROAD_NAME like '$p2%' ";
 				$rows = getDatabase()->all($sql);
 				foreach ($rows as $r) {
-					$addr = $r['r'];
+					$addr = $r['address'];
 					$addr = preg_replace('/  */',' ',$addr);
-					$res[] = $addr;
+					$res[] = array('address'=>$addr,'postal'=>$r['postal']);
 				}
 				return $res;
 			}
