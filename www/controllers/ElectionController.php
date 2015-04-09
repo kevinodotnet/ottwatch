@@ -1416,12 +1416,6 @@ class ElectionController {
 			</div>
 		</div>
 
-		<script>
-		$('input.typeahead').typeahead({
-			ajax: '/api/typeahead/address'
-		});
-		</script>
-
 		<?php if ($row['city'] == '') { $row['city'] = 'Ottawa'; } ?>
 		<div class="form-group">
 			<label class="col-sm-1 control-label" for="city">City</label>
@@ -1436,12 +1430,29 @@ class ElectionController {
 		<div class="form-group">
 			<label class="col-sm-1 control-label" for="postal">Postal</label>
 			<div class="col-sm-5">
-			<input id="postal" class="form-control" value="<?php print $row['postal']; ?>" type="text" placeholder="postal" name="postal" />
+			<input id="postal" class="form-control typeaheadpostal" autocomplete="off" value="<?php print $row['postal']; ?>" type="text" placeholder="postal" name="postal" />
 			</div>
 			<div class="col-sm-6 processDonation-help">
 				Lowercase and no-space is fine, easier to type. ex: k1c3e5
 			</div>
 		</div>
+
+		<script>
+		$('input.typeahead').typeahead({
+			ajax: '/api/typeahead/address'
+		});
+		$('input.typeaheadpostal').typeahead({
+			ajax: {
+				url: '/api/typeahead/postal',
+				preDispatch: function (query) {
+					addr = $('#address').val();
+					return {
+						search: addr
+					}
+				}
+			}
+		});
+		</script>
 
 		<div class="form-group">
 			<label class="col-sm-1 control-label" for="amount">Amount</label>

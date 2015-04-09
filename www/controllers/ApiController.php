@@ -2,6 +2,29 @@
 
 class ApiController {
 
+	public static function typeaheadPostal() {
+		$search = $_GET['search'];
+		$parts = explode(' ',$search);
+		if (count($parts) == 1) {
+			return array();
+		}
+		if (count($parts) >= 2) {
+			$p1 = $parts[0];
+			$p2 = mysql_real_escape_string($parts[1]);
+			if (preg_match('/^\d+$/',$p1)) {
+				$res = array();
+				$sql = " select POSTAL_CODE r from geo_property where ADDRESS_NUMBER = '$p1' and ROAD_NAME like '$p2%' order by POSTAL_CODE ";
+				$rows = getDatabase()->all($sql);
+				foreach ($rows as $r) {
+					$addr = $r['r'];
+					$addr = preg_replace('/  */',' ',$addr);
+					$res[] = $addr;
+				}
+				return $res;
+			}
+		}
+	}
+
 	public static function typeaheadAddress() {
 		$query = $_GET['query'];
 

@@ -65,6 +65,7 @@ getApi()->get('/api/election/results', array('ApiController','electionResults'),
 
 # Typeahead
 getApi()->get('/api/typeahead/address', array('ApiController','typeaheadAddress'), EpiApi::external);
+getApi()->get('/api/typeahead/postal', array('ApiController','typeaheadPostal'), EpiApi::external);
 
 # Budget
 getRoute()->get('/budget/search', array('BudgetController', 'searchAll'));
