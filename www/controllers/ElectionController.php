@@ -2032,17 +2032,6 @@ class ElectionController {
 			}
 			</script>
 
-			<p>
-			<small>
-			(NOTE: some donations appear doubled because they were listed a second time in some candidate's SUPPLEMENTAL returns.
-			Some candidates only list NEW donations in the supplental, other candidates are restating all contributions a second time.
-			To be honest I have no idea which is correct, and I'm still cleaning up the conflicts. Drop me an email kevino@kevino.net
-			if you have suggestions on which one should be removed, if any. Until then, don't get excited if it looks like a contributor
-			has exceeded the maximum donation to a single candidate. See the "type" field in the table below; supplemental contributions
-			are marked with, well, "supplemental")
-			</small>
-			</p>
-
 		  <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
 			<tr>
 					<th>year</th>
