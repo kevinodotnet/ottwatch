@@ -1733,7 +1733,8 @@ class ElectionController {
 				d.x,
 				d.y,
         astext(d.location) location,
-				r.id retid
+				r.id retid,
+				r.supplemental
 			from
 				candidate_donation d
 				join candidate_return r on d.returnid = r.id
@@ -1765,7 +1766,7 @@ class ElectionController {
 			header("Content-Type: application/octet-stream");
 			header("Content-Type: application/download");
 			header("Content-Description: File Transfer");             
-			$cols = array( 'id', 'type', 'donor', 'address', 'city', 'postal', 'amount', 'year', 'ward', 'first', 'last', 'incumbent', 'page','x','y','retid');
+			$cols = array( 'id', 'type', 'donor', 'address', 'city', 'postal', 'amount', 'year', 'ward', 'first', 'last', 'incumbent', 'page','x','y','retid','supplemental');
 			foreach ($cols as $c) {
 				print "{$c}\t";
 			}
@@ -2031,6 +2032,17 @@ class ElectionController {
 			}
 			</script>
 
+			<p>
+			<small>
+			(NOTE: some donations appear doubled because they were listed a second time in some candidate's SUPPLEMENTAL returns.
+			Some candidates only list NEW donations in the supplental, other candidates are restating all contributions a second time.
+			To be honest I have no idea which is correct, and I'm still cleaning up the conflicts. Drop me an email kevino@kevino.net
+			if you have suggestions on which one should be removed, if any. Until then, don't get excited if it looks like a contributor
+			has exceeded the maximum donation to a single candidate. See the "type" field in the table below; supplemental contributions
+			are marked with, well, "supplemental")
+			</small>
+			</p>
+
 		  <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
 			<tr>
 					<th>year</th>
@@ -2072,7 +2084,13 @@ class ElectionController {
 				print "<td>{$r['address']}</td>";
 				print "<td>{$r['city']}</td>";
 				print "<td><a href=\"/election/listDonations?postal={$r['postal']}\">{$r['postal']}</a></td>";
-				print "<td>{$r['type']}</td>";
+				print "<td>";
+				print "{$r['type']}";
+				if ($r['supplemental'] == 1) {
+					print " (supplemental)";
+				}
+
+				print "</td>";
 				print "<td><input ".(in_array($r['id'],$pinid) ? ' checked="1" ' : '')." type=\"checkbox\" name=\"pinid[]\" value=\"{$r['id']}\"</td>";
 				print "</tr>";
 				$total += $r['amount'];
@@ -2145,15 +2163,15 @@ class ElectionController {
 			</tr>
 			<?php
 			$sql = " 
-				select c.last, c.first, min(c.year) minyear, max(c.year) maxyear, sum(case when d.id is null then 0 else 1 end) as donations, sum(amount) as total
+				select c.id, c.last, c.first, min(c.year) minyear, max(c.year) maxyear, sum(case when d.id is null then 0 else 1 end) as donations, sum(amount) as total
 				from candidate c
 					left join candidate_return r on r.candidateid = c.id
 					left join candidate_donation d on d.returnid = r.id
-				group by c.last, c.first ";
+				group by c.id, c.last, c.first ";
 			$rows = getDatabase()->all($sql);
 			foreach ($rows as $r) {
 				print "<tr>
-				<td><a href=\"/election/listDonations?candidate={$r['last']}\">{$r['last']}</a></td>
+				<td><a href=\"/election/listDonations?candidate[]={$r['id']}\">{$r['last']}</a></td>
 				<td>{$r['first']}</td>
 				<td>{$r['donations']}</td>
 				<td>\$".formatMoney($r['total'])."</td>
