@@ -2141,14 +2141,14 @@ class ElectionController {
 	
 			<div class="row-fluid">
 			<div class="span12">
-			<h3>Browse by candidate lastname</h3>
+			<h3>Browse by Candidate</h3>
 	    <table class="table table-bordered table-hover table-condensed">
 			<tr>
 				<th>Last</th>
 				<th>First</th>
 				<th>Donations*</th>
 				<th>Amount*</th>
-				<th>Year(s)</th>
+				<th>Year</th>
 			</tr>
 			<?php
 			$sql = " 
@@ -2156,7 +2156,9 @@ class ElectionController {
 				from candidate c
 					left join candidate_return r on r.candidateid = c.id
 					left join candidate_donation d on d.returnid = r.id
-				group by c.id, c.last, c.first ";
+				group by c.id, c.last, c.first 
+				having sum(case when d.id is null then 0 else 1 end) > 0
+				order by max(c.year) desc, c.last, c.first ";
 			$rows = getDatabase()->all($sql);
 			foreach ($rows as $r) {
 				print "<tr>
