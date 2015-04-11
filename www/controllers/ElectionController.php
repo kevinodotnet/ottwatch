@@ -2097,17 +2097,26 @@ class ElectionController {
 				print "<td></td>";
 				print "</tr>";
 				foreach ($totalType as $k => $v) {
-				print "<tr>";
-				print "<td></td>";
-				print "<td></td>";
-				print "<td></td>";
-				print "<td><b>Total from {$k}</b></td>";
-				print "<td><b>\$".formatMoney($v,true)." (".round($v/$total*100)."%)</b></td>";
-				print "<td></td>";
-				print "<td></td>";
-				print "<td></td>";
-				print "<td></td>";
-				print "</tr>";
+					print "<tr>";
+					print "<td></td>";
+					print "<td></td>";
+					print "<td></td>";
+					print "<td><b>Total from {$k}</b></td>";
+					print "<td><b>\$".formatMoney($v,true)." (".round($v/$total*100)."%)</b></td>";
+					if ($k == 'Individuals $100 or less') {
+						$totalIndividualU100 = $v;
+						print "<td colspan=\"4\">
+						Minimum of ".round($totalIndividualU100/100)." additional donors, assuming each contributed $100.<br/>
+						The actual number of donors in this class is likely much higher.<br/>
+						It's probable the average donation ranged between $20 and $100.
+						</td>";
+					} else {
+						print "<td></td>";
+						print "<td></td>";
+						print "<td></td>";
+						print "<td></td>";
+					}
+					print "</tr>";
 				}
 				print "<tr>";
 				print "<td></td>";
@@ -2116,8 +2125,7 @@ class ElectionController {
 				print "<td><b>Total Donations</b></td>";
 				print "<td><b>".count($rows)."</b></td>";
 				print "<td colspan=\"4\">";
-				print "<i>Does not include the number of donations of $100 or less.<br/>
-				The names of those donors are not listed in candidates' returns.</i>";
+				print "<i>Does not include the number of donations of $100 or less, if any.</i>";
 				print "</td>";
 				print "</tr>";
 				print "<tr>";
