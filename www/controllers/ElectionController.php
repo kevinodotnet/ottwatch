@@ -2115,10 +2115,10 @@ class ElectionController {
 				print "<td></td>";
 				print "<td><b>Total Donations</b></td>";
 				print "<td><b>".count($rows)."</b></td>";
-				print "<td></td>";
-				print "<td></td>";
-				print "<td></td>";
-				print "<td></td>";
+				print "<td colspan=\"4\">";
+				print "<i>Does not include the number of donations of $100 or less.<br/>
+				The names of those donors are not listed in candidates' returns.</i>";
+				print "</td>";
 				print "</tr>";
 				print "<tr>";
 				print "<td></td>";
