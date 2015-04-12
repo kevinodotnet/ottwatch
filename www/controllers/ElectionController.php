@@ -23,6 +23,26 @@ class ElectionController {
 		$parts = explode(" ",$donor['name']);
 		$keeps = array();
 		$ignores = array('ontario','corp','canada','inc','ltd','limited','incorporated','development','property','properties');
+		$ignores[] = 'Group';
+		$ignores[] = 'Management';
+		$ignores[] = 'Homes';
+		$ignores[] = 'Developments';
+		$ignores[] = 'Construction';
+		$ignores[] = 'Associates';
+		$ignores[] = 'Holdings';
+		$ignores[] = 'Ottawa';
+		$ignores[] = 'Consultants';
+		$ignores[] = 'Professional';
+		$ignores[] = 'Consulting';
+		$ignores[] = 'Restaurant';
+		$ignores[] = 'Investments';
+		$ignores[] = 'Association';
+		$ignores[] = 'financial';
+		$ignores[] = 'Sales';
+		$ignores[] = 'International';
+		$ignores[] = 'partnership';
+		$ignores[] = 'land';
+		$ignores[] = 'llp';
 		foreach ($parts as $p) {
 			$keep = 1;
 			if (strlen($p) == 1) { $keep = 0; }
