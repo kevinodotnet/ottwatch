@@ -554,6 +554,7 @@ if ($v3) {
 }
 ?>
 <script src="<?php print $OTT_WWW; ?>/bootstrap-ajax-typeahead/js/bootstrap-typeahead.js" type="text/javascript"></script>
+<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
 <style type="text/css">
 	<?php 
 	if ($v3) {

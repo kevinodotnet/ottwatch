@@ -486,6 +486,13 @@ function sendEmail($to,$subject,$body) {
 	return '';
 }
 
+function formatPercent($number, $by100=false) { 
+	if ($by100) {
+		$number = $number * 100;
+	}
+  return sprintf('%.2f', $number).'%';
+} 
+
 function formatMoney($number, $fractional=false) { 
 		if ($number == '') { $number = 0; }
     if ($fractional) { 

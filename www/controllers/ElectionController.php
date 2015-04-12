@@ -273,6 +273,7 @@ class ElectionController {
 		$title = "{$row['first']} {$row['last']}: {$row['year']} Election Candidate Information";
 		top($title);
 		print "<h1>$title</h1>";
+		print "<a href=\"/election/listDonations?candidate[]={$row['id']}\">List Campaign Donations</a>";
 		mapToTable($row);
 		bottom();
 	}
@@ -557,7 +558,7 @@ class ElectionController {
       $title = "$wardname";
     }
 
-		top($title);
+		top3($title);
 		print "<h1>$title <small>(<a href=\"/election/\">main election page</a>)</small></h1>\n";
 
     $summ = getDatabase()->one("
@@ -572,16 +573,23 @@ class ElectionController {
       from candidate 
       where ward = :ward and year = :year and nominated is not null 
       order by votes desc, rand() ",array('ward'=>$race,'year'=>self::year));
+
     ?>
-    <div class="row-fluid">
-    <div class="span6">
     <h2><?php print self::year; ?> Results</h2>
 		<a href="/election/<?php print $rows[0]['electionid']; ?>/race/<?php print $race; ?>/results/">Full Results for this race</a>.
     <table class="table table-bordered table-hover table-condensed">
     <tr>
-      <th>Name</th>
-      <th>Votes</th>
-      <th>%</th>
+      <th rowspan="2">Name</th>
+			<th class="text-center" colspan="2">Election Result</th>
+			<th class="text-center" colspan="4">Campaign Donations</th>
+    </tr>
+    <tr>
+      <th class="text-center">Votes</th>
+      <th class="text-center">%</th>
+      <th class="text-center">Individuals $100 or less</th>
+      <th class="text-center">Over $100</th>
+      <th class="text-center">Corporate/Union</th>
+      <th class="text-center">(link)</th>
     </tr>
 		<?php
     foreach ($rows as $r) {
@@ -601,11 +609,38 @@ class ElectionController {
 					<td <?php print $style; ?> >
 						<?php print $r['perc']; ?>
 					</td>
+						<?php
+							$donationsSQL = "
+						  select
+								c.id,
+						    c.last,
+						    c.first,
+						    sum(case when d.type = 0 then d.amount else 0 end) individual,
+						    sum(case when d.type = 1 then d.amount else 0 end) corpunion,
+						    sum(case when d.type = 2 then d.amount else 0 end) individualSmall,
+						    sum(d.amount) total,
+						    sum(case when d.type = 0 then d.amount else 0 end)/sum(d.amount)*100 perc_individual,
+						    sum(case when d.type = 1 then d.amount else 0 end)/sum(d.amount)*100 perc_corpunion,
+						    sum(case when d.type = 2 then d.amount else 0 end)/sum(d.amount)*100 perc_individualSmall
+						  from
+						    candidate_donation d
+						    join candidate_return r on r.id = d.returnid
+						    join candidate c on c.id = r.candidateid
+						  where
+								c.id = {$r['id']} ";
+						$d = getDatabase()->one($donationsSQL);
+						print "<td>$".formatMoney($d['individualSmall'],true)." (".formatPercent($d['perc_individualSmall']).")</td>";
+						print "<td>$".formatMoney($d['individual'],true)." (".formatPercent($d['perc_individual']).")</td>";
+						print "<td>$".formatMoney($d['corpunion'],true)." (".formatPercent($d['perc_corpunion']).")</td>";
+						print "<td><a href=\"/election/listDonations?candidate[]=".$r['id']."\">see all</a></td>";
+						// pr($row);
+						?>
 	      </tr>
 			<?php
 		}
 		?>
 		</table>
+
 		<?php if (false) { ?>
     <h2>Candidates</h2>
     <?php
@@ -683,9 +718,11 @@ class ElectionController {
 	      <?php
 	    }
     }
-		} // if false
     ?>
     </table>
+		<?php
+		} // if false
+		?>
 
     <?php
     $incumbent = getDatabase()->one("select * from candidate where ward = :ward and year = :year and incumbent = 1 ",array('ward'=>$race,'year'=>self::year));
@@ -704,6 +741,7 @@ class ElectionController {
 			));
     ?>
 
+		<?php if (false) { ?>
     <h2>Questions to Candidates</h2>
 		<?php
 		$qs = getDatabase()->all("
@@ -738,7 +776,9 @@ class ElectionController {
 		Ask your own question!
 		</a>
 		-->
+		<?php } ?>
 
+		<?php if (false) { ?>
     <h2>Incumbent</h2>
     <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
     <tr>
@@ -829,8 +869,12 @@ class ElectionController {
       </td>
     </tr>
     </table>
+		<?php 
+		} // incumbent 
+		?>
+
     <?php 
-    if ($race > 0) { 
+    if ($race > 0) {
       ?>
 	    <h2>Map <small>(<a href="/election/ward/<?php print $race; ?>/map">fullsize</a>)</small></h2>
 	    <?php
@@ -838,17 +882,8 @@ class ElectionController {
     }
     ?>
 
-    </div>
-
-    <div class="span6">
-    <p style="text-align: center;">The discussion thread will remain open for the entire 2014 year. Be civil.</p>
-    <?php disqus(); ?>
-    </div>
-    </div><!-- / row -->
-
     <?php
-
-    bottom();
+    bottom3();
   }
 
   public static function showMain() {
