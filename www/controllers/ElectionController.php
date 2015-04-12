@@ -1612,6 +1612,7 @@ class ElectionController {
 		$year = $_GET['year'];
 		$pinid = $_GET['pinid'];
 		$ward = $_GET['ward'];
+		$type = $_GET['type'];
 		$donor = $_GET['donor'];
 		$donorE = mysql_escape_string($donor);
 		$candidate = $_GET['candidate'];
@@ -1619,6 +1620,11 @@ class ElectionController {
 		$where = '';
 
 		$filtered = 0;
+
+		if (preg_match('/^\d$/',$type)) {
+			$where .= " and d.type = $type ";
+			$filtered = 1;
+		}
 
 		if ($donor != '') {
 			$toptitle = "Campaign Donations Report for donor $donorE";
@@ -1880,7 +1886,18 @@ class ElectionController {
 </div>
 
 <div class="form-group">
-	<div class="col-sm-8 col-sm-offset-2">
+	<div class="col-sm-1 col-sm-offset-1">
+	<label class="col-sm-2 control-label" for="inputType">Type</label>
+	</div>
+	<div class="col-sm-3">
+		<select id="inputType" class="form-control" name="type">
+			<option value="">All</option>
+			<option value="0">Individuals over $100</option>
+			<option value="1">Corporate/Union</option>
+			<option value="2">Individuals $100 or less</option>
+		</select>
+	</div>
+	<div class="col-sm-4">
 		<button type="submit" class="btn btn-primary">Search</button> 
 		<a class="btn btn-primary" href="?format=csv">Download all: CSV</a>
 		<a class="btn btn-primary" href="?format=json">Download all: JSON</a>
