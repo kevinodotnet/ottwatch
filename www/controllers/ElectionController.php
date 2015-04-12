@@ -5,6 +5,186 @@ class ElectionController {
   const year = 2014;
   const prevyear = 2010;
 
+	public static function showDonor($id) {
+
+		$donor = getDatabase()->one(" select * from election_donor where id = :id ",array('id'=>$id));
+		if (!$donor['id']) {
+			top3();
+			print "Donor $id not found";
+			bottom3();
+			return;
+		}
+
+		top3("{$donor['name']} - Election Donations");
+
+		##
+		## Find related donors
+		##
+		$parts = explode(" ",$donor['name']);
+		$keeps = array();
+		$ignores = array('ontario','corp','canada','inc','ltd','limited','incorporated','development','property','properties');
+		foreach ($parts as $p) {
+			$keep = 1;
+			if (strlen($p) == 1) { $keep = 0; }
+			if (strlen($p) == 2 && preg_match('/\.$/',$p)) { $keep = 0; }
+			foreach ($ignores as $i) {
+				if (preg_match("/^$i$/i",$p)) { $keep = 0; }
+				if (preg_match("/^$i\.$/i",$p)) { $keep = 0; }
+			}
+			if ($keep) {
+				$keeps[] = $p;
+			}
+		}
+		$sql = " 
+			select 
+				e.id,
+				e.name,
+				count(1) c ,
+				min(c.year) minyear,
+				max(c.year) maxyear
+			from election_donor e 
+				join candidate_donation d on d.donorid = e.id 
+				join candidate_return r on r.id = d.returnid
+				join candidate c on c.id = r.candidateid
+			where 
+				e.id != :id and 
+				d.type = 1 and (";
+		$first = 1;
+		foreach ($keeps as $k) {
+			if ($first == 0) {
+				$sql .= " or ";
+			}
+			$sql .= " e.name like '%".mysql_escape_string($k)."%' ";
+			$first = 0;
+		}
+		$sql .= " ) ";
+		$sql .= " group by e.id, e.name ";
+		$sql .= " order by max(c.year) desc, count(1), e.name ";
+		$related = getDatabase()->all($sql,array('id'=>$id));
+		##
+		## /relatd
+		##
+
+		$rows = getDatabase()->all("
+			select
+				c.id cid,
+				c.year,
+				c.ward,
+				c.last,
+				c.first,
+				case when c.incumbent = 0 then 'No' when c.incumbent = 1 then 'Yes' else 'Unk' end incumbent,
+				case when c.winner = 0 then 'No' when c.winner = 1 then 'Yes' else 'Unk' end winner,
+				case when r.supplemental = 0 then 'No' when r.supplemental = 1 then 'Yes' else 'Unk' end supplemental,
+				e.name,
+				d.id did,
+				d.type,
+				d.address,
+				d.city,
+				d.postal,
+				d.amount
+			from
+				election_donor e
+				join candidate_donation d on d.donorid = e.id
+				join candidate_return r on r.id = d.returnid
+				join candidate c on c.id = r.candidateid
+			where
+				e.id = :id
+			order by
+				c.year desc,
+				c.ward,
+				c.last,
+				c.first
+		",array('id'=>$id));
+
+		?>
+		<div class="row">
+			<div class="col-sm-8">
+				<?php print "<h1>{$donor['name']} - Election Donations</h1>"; ?>
+			</div>
+			<div class="col-sm-4">
+				<b>
+				<?php print "Number of donations: ".count($rows); ?>
+				</b>
+				<br/>
+				<a href="/election/listDonations" class="btn btn-primary">Return to Donation Search Page</a>
+			</div>
+		</div>
+		<?php
+
+
+		?>
+    <table class="table table-bordered table-hover table-condensed">
+		<tr>
+		<th>year</th>
+		<th>ward</th>
+		<th>amount</th>
+		<th>candidate</th>
+		<th>incumbent</th>
+		<th>winner</th>
+		<th>supplemental</th>
+		<th>address</th>
+		<th>city</th>
+		<th>postal</th>
+		</tr>
+		<?php
+
+		foreach ($rows as $r) {
+			print "<tr>";
+			print "<td>{$r['year']}</td>";
+			print "<td>{$r['ward']}</td>";
+			print "<td><a href=\"/election/donation/{$r['did']}\">$".formatMoney($r['amount'],true)."</a></td>";
+			print "<td><a href=\"/election/listDonations?candidate[]={$r['cid']}\">{$r['last']}, {$r['first']}</a></td>";
+			print "<td>{$r['incumbent']}</td>";
+			print "<td>{$r['winner']}</td>";
+			print "<td>{$r['supplemental']}</td>";
+			print "<td>{$r['address']}</td>";
+			print "<td>{$r['city']}</td>";
+			print "<td><a href=\"/election/listDonations?postal={$r['postal']}\">{$r['postal']}</a></td>";
+			print "</tr>\n";
+		}
+
+		?>
+		</table>
+
+		<?php
+		if (count($related) > 0) {
+			?>
+				<h2>Possibly Related Corporate/Union Donors</h2>
+				There are <?php print count($related); ?> corporate donors with similar names.
+				Donations from regular people with similar names are not shown.
+				<br/>
+				<?php
+				print "<ul>";
+				foreach ($related as $rel) {
+					print "<li><a href=\"/election/donor/{$rel['id']}\">{$rel['name']}</a>, {$rel['c']} donations in years {$rel['minyear']} to {$rel['maxyear']}</li>";
+				}
+				print "</ul>";
+				
+		}
+		?>
+		<?php
+
+		bottom3();
+		return;
+
+		//
+		// OLD
+		//
+
+		$url = "/election/listDonations";
+		$rows = getDatabase()->all(" select distinct(id) id from candidate_donation where donorid = :id ",array('id'=>$id));
+		$sep = '?';
+		foreach ($rows as $r) {
+			$url .= "$sep";
+			$url .= urlencode("pinid[]");
+			$url .= "=";
+			$url .= $r['id'];
+			$sep = '&';
+		}
+		header("Location: $url");
+		return;
+	}
+
 	public static function processDonationScoreboard() {
 		top3();
 		$sql = "
@@ -1775,7 +1955,8 @@ class ElectionController {
 				d.y,
         astext(d.location) location,
 				r.id retid,
-				r.supplemental
+				r.supplemental,
+				d.donorid
 			from
 				candidate_donation d
 				join candidate_return r on d.returnid = r.id
@@ -1941,7 +2122,7 @@ class ElectionController {
 
 
 		<?php 
-    if (count($rows) > 0) { 
+    if (count($rows) > 0) {
 
       if ($mapMode > 0) {
 
@@ -2120,7 +2301,7 @@ class ElectionController {
 				print "<td>{$r['year']}</td>";
 				print "<td>{$r['ward']}</td>";
 				print "<td><nobr><a href=\"/election/listDonations?candidate[]={$r['candidateid']}\">{$r['last']}, {$r['first']}</a><nobr></td>";
-				print "<td>{$r['donor']}</td>";
+				print "<td><a href=\"/election/donor/{$r['donorid']}\">{$r['donor']}</a></td>";
 				print "<td><a href=\"/election/donation/{$r['id']}\">\$".formatMoney($r['amount'],true)."</a></td>";
 				print "<td>{$r['address']}</td>";
 				print "<td>{$r['city']}</td>";
@@ -2194,7 +2375,7 @@ class ElectionController {
 			?>
 			</table>
   		<?php 
-    } else { 
+    } else {
       # serach returned nothing, so prompt the user with some useful candidate based queries.
       ?>
 			<center><h3>No records found for this search</h3></center>
@@ -2270,7 +2451,8 @@ class ElectionController {
 				c.last,
 				r.filename,
 				r.id retid,
-				c.id candid
+				c.id candid,
+				d.donorid
 			from
 				candidate_donation d
 				join candidate_return r on d.returnid = r.id
@@ -2343,7 +2525,7 @@ class ElectionController {
 					$r['type'] = 'Individuals $100 or less';
 			}
 
-			print "<tr><th>Donor Name</th><td>{$r['donor']}</td></tr>";
+			print "<tr><th>Donor Name</th><td><a href=\"/election/donor/{$r['donorid']}\">{$r['donor']}</a></td></tr>";
 			print "<tr><th>Donor Type</th><td>{$r['type']}</td></tr>";
 			print "<tr><th>Amount</th><td>{$r['amount']}</td></tr>";
 			print "<tr><th>Address</th><td>{$r['address']}</td></tr>";

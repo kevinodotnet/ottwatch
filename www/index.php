@@ -170,6 +170,7 @@ getRoute()->get('/election/processDonation/scoreboard', array('ElectionControlle
 getRoute()->get('/election/processDonation/*', array('ElectionController','processDonation'));
 getRoute()->post('/election/processDonation/*', array('ElectionController','processDonationSave'));
 getRoute()->get('/election/listDonations', array('ElectionController','listDonations'));
+getRoute()->get('/election/donor/(\d+)', array('ElectionController','showDonor'));
 getRoute()->get('/election/donation/(\d+)', array('ElectionController','showDonation'));
 getRoute()->get('/election/tmp', array('ElectionController','tmp'));
 
