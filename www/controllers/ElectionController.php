@@ -589,7 +589,7 @@ class ElectionController {
       <th class="text-center">Individuals $100 or less</th>
       <th class="text-center">Over $100</th>
       <th class="text-center">Corporate/Union</th>
-      <th class="text-center">(link)</th>
+      <th class="text-center">Total</th>
     </tr>
 		<?php
     foreach ($rows as $r) {
@@ -632,7 +632,7 @@ class ElectionController {
 						print "<td>$".formatMoney($d['individualSmall'],true)." (".formatPercent($d['perc_individualSmall']).")</td>";
 						print "<td>$".formatMoney($d['individual'],true)." (".formatPercent($d['perc_individual']).")</td>";
 						print "<td>$".formatMoney($d['corpunion'],true)." (".formatPercent($d['perc_corpunion']).")</td>";
-						print "<td><a href=\"/election/listDonations?candidate[]=".$r['id']."\">see all</a></td>";
+						print "<td><a href=\"/election/listDonations?candidate[]=".$r['id']."\">$".formatMoney($d['total'],true)."</a></td>";
 						// pr($row);
 						?>
 	      </tr>
