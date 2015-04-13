@@ -43,6 +43,7 @@ class ElectionController {
 		$ignores[] = 'partnership';
 		$ignores[] = 'land';
 		$ignores[] = 'llp';
+		$ignores[] = 'and';
 		foreach ($parts as $p) {
 			$keep = 1;
 			if (strlen($p) == 1) { $keep = 0; }
@@ -181,9 +182,8 @@ class ElectionController {
 				print "</ul>";
 				
 		}
-		?>
-		<?php
 
+		disqus();
 		bottom3();
 		return;
 
