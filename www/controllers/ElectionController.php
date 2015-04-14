@@ -2069,7 +2069,11 @@ class ElectionController {
 		<select id="inputCandidate" class="form-control" name="candidate[]" multiple="yes" size="5">
 		<?php
 		foreach ($candidates as $c) {
-			print "<option value=\"{$c['id']}\">{$c['last']}, {$c['first']} ({$c['year']} ward:{$c['ward']})</option>";
+			$selected = '';
+			if (in_array($c['id'],$candidate)) {
+				$selected = ' selected="1" ';
+			}
+			print "<option $selected value=\"{$c['id']}\">{$c['last']}, {$c['first']} ({$c['year']} ward:{$c['ward']})</option>";
 		}
 		?>
 		</select>
@@ -2080,7 +2084,11 @@ class ElectionController {
 		<select id="inputYear" class="form-control" name="year[]" multiple="yes" size="5">
 		<?php
 		foreach ($years as $y) {
-			print "<option value=\"{$y['year']}\">{$y['year']}</option>\n";
+			$selected = '';
+			if (in_array($y['year'],$year)) {
+				$selected = ' selected="1" ';
+			}
+			print "<option $selected value=\"{$y['year']}\">{$y['year']}</option>\n";
 		}
 		?>
 		</select>
@@ -2091,7 +2099,11 @@ class ElectionController {
 		<select id="inputWard" class="form-control" name="ward[]" multiple="yes" size="5">
 		<?php
 		foreach ($wards as $y) {
-			print "<option value=\"{$y['ward']}\">{$y['ward']} - {$y['ward_en']}</option>\n";
+			$selected = '';
+			if (in_array($y['ward'],$ward)) {
+				$selected = ' selected="1" ';
+			}
+			print "<option $selected value=\"{$y['ward']}\">{$y['ward']} - {$y['ward_en']}</option>\n";
 		}
 		?>
 		</select>
@@ -2126,11 +2138,12 @@ class ElectionController {
 	<label class="col-sm-2 control-label" for="inputType">Type</label>
 	</div>
 	<div class="col-sm-3">
+		<?php if ($type == '') { $type = -1; } ?>
 		<select id="inputType" class="form-control" name="type">
 			<option value="">All</option>
-			<option value="0">Individuals over $100</option>
-			<option value="1">Corporate/Union</option>
-			<option value="2">Individuals $100 or less</option>
+			<option <?php if ($type == 0) { print ' selected="1" '; } ?> value="0">Individuals over $100</option>
+			<option <?php if ($type == 1) { print ' selected="1" '; } ?> value="1">Corporate/Union</option>
+			<option <?php if ($type == 2) { print ' selected="1" '; } ?> value="2">Individuals $100 or less</option>
 		</select>
 	</div>
 	<div class="col-sm-4">
