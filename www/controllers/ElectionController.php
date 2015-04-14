@@ -2146,10 +2146,11 @@ class ElectionController {
 			<option <?php if ($type == 2) { print ' selected="1" '; } ?> value="2">Individuals $100 or less</option>
 		</select>
 	</div>
-	<div class="col-sm-4">
+	<div class="col-sm-6 col-sm-offset-1">
 		<button type="submit" class="btn btn-primary">Search</button> 
 		<a class="btn btn-primary" href="?format=csv">Download all: CSV</a>
 		<a class="btn btn-primary" href="?format=json">Download all: JSON</a>
+		<a class="btn btn-primary" href="/election/listDonations">Reset (New Search)</a>
 	</div>
 </div>
 
