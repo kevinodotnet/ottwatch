@@ -1974,7 +1974,7 @@ class ElectionController {
 				d.page,
 				d.x,
 				d.y,
-				c.gender
+				c.gender,
         astext(d.location) location,
 				r.id retid,
 				r.supplemental,
