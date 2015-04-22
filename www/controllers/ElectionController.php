@@ -1975,6 +1975,7 @@ class ElectionController {
 				d.x,
 				d.y,
 				c.gender,
+				d.donor_gender,
         astext(d.location) location,
 				r.id retid,
 				r.supplemental,
@@ -2010,7 +2011,7 @@ class ElectionController {
 			header("Content-Type: application/octet-stream");
 			header("Content-Type: application/download");
 			header("Content-Description: File Transfer");             
-			$cols = array( 'id', 'type', 'donor', 'address', 'city', 'postal', 'amount', 'year', 'ward', 'first', 'last', 'incumbent', 'winner', 'page','x','y','retid','supplemental','gender');
+			$cols = array( 'id', 'type', 'donor', 'address', 'city', 'postal', 'amount', 'year', 'ward', 'first', 'last', 'incumbent', 'winner', 'page','x','y','retid','supplemental','gender','donor_gender');
 			foreach ($cols as $c) {
 				print "{$c}\t";
 			}
