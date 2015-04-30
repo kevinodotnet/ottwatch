@@ -524,7 +524,7 @@ class ElectionController {
 			return;
 		}
 
-		$rows = getDatabase()->all(" select * from candidate_donation where address != '' and (prov is null or prov != 'BROKEN') and location is null and created > '2015-01-01' order by rand() ");
+		$rows = getDatabase()->all(" select * from candidate_donation where location is null and postal != '' and created > '2015-01-01' order by rand() ");
 		if (count($rows) == 0) {
 			print "No coding to do\n";
 			bottom();
@@ -559,6 +559,7 @@ class ElectionController {
 		<script>
       var geocoder = new google.maps.Geocoder();
       var addr = "<?php print "{$r['address']}, {$r['city']}, {$r['prov']}"; ?>";
+      addr = "<?php print "{$r['postal']}, Canada"; ?>";
       geocoder.geocode({address: addr},
         function(results, status) { 
           if (status != 'OK') {
@@ -2283,10 +2284,12 @@ class ElectionController {
         });
         google.maps.event.addListener(marker<?php print $r['id'] ?>, 'click', function() {
           infowindow.setContent(
-            '<p>Amount: <?php print $r['amount']; ?> ' + 
-						'<a target="_blank" href="/election/donation/<?php print $r['id']; ?>">Details</a></p> ' +
-            '<p>Type: <?php print $r['type']; ?><br/>' +
-            '<a target="_blank" href="/election/listDonations?postal=<?php print $r['postal']; ?>&map=0"><?php print $r['postal']; ?></a></p>' 
+            '<p>' + 
+						'Amount: <?php print $r['amount']; ?><br/>' + 
+            'Type: <?php print $r['type']; ?><br/>' +
+						'<a target="_blank" href="/election/donation/<?php print $r['id']; ?>">Details</a><br/>' +
+            '<a target="_blank" href="/election/listDonations?postal=<?php print $r['postal']; ?>&map=0"><?php print $r['postal']; ?></a>' + 
+						'</p>' 
           );
           infowindow.open(map,marker<?php print $r['id'] ?>);
         });
