@@ -219,6 +219,9 @@ class ConsultationController {
 		# use this to find consultations that have been removed (because they won't be updated)
 		getDatabase()->execute(" update consultation set category = 'DELETED'; ");
 
+		# manually missing...
+		self::crawlCategory('Transportation',"http://ottawa.ca/en/city-hall/public-consultations/transportation");
+
     # start at the stop level consultation listing.
     $html = file_get_contents("http://ottawa.ca/en/city-hall/public-consultations");
     $html = strip_tags($html,"<a>");
@@ -240,7 +243,6 @@ class ConsultationController {
   // crawl a category for its consultations
 
   public static function crawlCategory ($category, $url) {
-    #print "CATEGORY: $category\n";
     $html = file_get_contents($url);
 		$html = self::getCityContent($html,'');
 
