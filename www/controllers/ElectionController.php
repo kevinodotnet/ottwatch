@@ -1995,6 +1995,16 @@ class ElectionController {
 			$rows = getDatabase()->all($sql);
 		}
 
+		foreach ($rows as &$r) {
+			$m = array();
+			# POINT(-75.743323639372 45.388638525446)
+			if (preg_match('/POINT\(([^ ]+) ([^\)]+)\)/',$r['location'],$m)) {
+				$r['lat'] = $m[2];
+				$r['lon'] = $m[1];
+			}
+			unset($r['location']);
+		}
+
 		if ($_GET['format'] == 'json') {
 			$data = json_encode($rows);
 			header("Content-Disposition: attachment; filename=ottawa_election_donations.json");
@@ -2011,7 +2021,7 @@ class ElectionController {
 			header("Content-Type: application/octet-stream");
 			header("Content-Type: application/download");
 			header("Content-Description: File Transfer");             
-			$cols = array( 'id', 'type', 'donor', 'address', 'city', 'postal', 'amount', 'year', 'ward', 'first', 'last', 'incumbent', 'winner', 'page','x','y','retid','supplemental','gender','donor_gender');
+			$cols = array( 'id', 'type', 'donor', 'address', 'city', 'postal', 'amount', 'year', 'ward', 'first', 'last', 'incumbent', 'winner', 'page','x','y','retid','supplemental','gender','donor_gender','lat','lon');
 			foreach ($cols as $c) {
 				print "{$c}\t";
 			}
@@ -2165,7 +2175,7 @@ class ElectionController {
 
       $noLocationCount = 0;
       foreach ($rows as $r) { 
-        if ($r['location'] == '') { 
+        if ($r['lat'] == '') { 
           $noLocationCount ++;
           continue; 
         }
@@ -2180,13 +2190,12 @@ class ElectionController {
       var map, pointarray, heatmap;
       var heatpoints = [
       <?php 
-      foreach ($rows as $r) { 
-        if ($r['location'] == '') { 
+      foreach ($rows as $r) {
+        if ($r['lat'] == '') { 
           continue; 
         }
-        $ll = getLatLonFromPoint($r['location']);
-        $lat = $ll['lat'];
-        $lon = $ll['lon'];
+        $lat = $r['lat'];
+        $lon = $r['lon'];
         ?>
         {location: new google.maps.LatLng(<?php print $lat; ?>, <?php print $lon; ?>), weight: <?php print $r['amount']; ?>},
         <?php 
@@ -2200,12 +2209,11 @@ class ElectionController {
 			var bounds = new google.maps.LatLngBounds();
 			<?php
       foreach ($rows as $r) {
-        if ($r['location'] == '') { 
+        if ($r['lat'] == '') { 
           continue; 
         }
-        $ll = getLatLonFromPoint($r['location']);
-        $lat = $ll['lat'];
-        $lon = $ll['lon'];
+        $lat = $r['lat'];
+        $lon = $r['lon'];
 				?>
 				bounds.extend(new google.maps.LatLng(<?php print $lat; ?>, <?php print $lon; ?>));
         <?php 
@@ -2247,12 +2255,11 @@ class ElectionController {
 				} else {
           $r['type'] = 'Huh?';
         }
-        if ($r['location'] == '') { 
+        if ($r['lat'] == '') { 
           continue; 
         }
-        $ll = getLatLonFromPoint($r['location']);
-        $lat = $ll['lat'];
-        $lon = $ll['lon'];
+        $lat = $r['lat'];
+        $lon = $r['lon'];
 
 				$randShift = rand(0,10000);
 				if ($randShift % 2 == 0) { $randShift = $randShift * -1; }
