@@ -518,13 +518,13 @@ class ElectionController {
 	public static function tmp() {
 		top();
 
-		if (!LoginController::isLoggedIn()) { 
-			print "Not logged in!";
+		if (!LoginController::isAdmin()) { 
+			print "Not an administrator!";
 			bottom();
 			return;
 		}
 
-		$rows = getDatabase()->all(" select * from candidate_donation where address != '' and prov != 'BROKEN' and returnid != 18 and location is null order by rand() ");
+		$rows = getDatabase()->all(" select * from candidate_donation where address != '' and (prov is null or prov != 'BROKEN') and location is null and created > '2015-01-01' order by rand() ");
 		if (count($rows) == 0) {
 			print "No coding to do\n";
 			bottom();
@@ -589,7 +589,7 @@ class ElectionController {
       );
 
 			$(document).ready( function() { 
-				setTimeout(function() { location.reload(); }, 2000); 
+				// setTimeout(function() { location.reload(); }, 2000); 
 			}); 
 		</script>
 		<?php
