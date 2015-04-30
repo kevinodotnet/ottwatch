@@ -220,7 +220,9 @@ class ConsultationController {
 		getDatabase()->execute(" update consultation set category = 'DELETED'; ");
 
 		# manually missing...
-		self::crawlCategory('Transportation',"http://ottawa.ca/en/city-hall/public-consultations/transportation");
+		self::crawlCategory('Transportation','http://ottawa.ca/en/city-hall/public-consultations/transportation');
+		self::crawlCategory('Municipal Addressing','http://ottawa.ca/en/municipal-addressing-0');
+		self::crawlCategory('Public Engagement','http://ottawa.ca/en/city-hall/public-consultations/public-engagement/public-engagement-strategy-and-consultations');
 
     # start at the stop level consultation listing.
     $html = file_get_contents("http://ottawa.ca/en/city-hall/public-consultations");
