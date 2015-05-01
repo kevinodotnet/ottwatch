@@ -2027,7 +2027,7 @@ class ElectionController {
 				print "{$c}\t";
 			}
 			print "\n";
-			foreach ($rows as $r) {
+			foreach ($rows as &$r) {
 				foreach ($cols as $c) {
 					print "{$r[$c]}\t";
 				}
@@ -2175,7 +2175,7 @@ class ElectionController {
       if ($mapMode > 0) {
 
       $noLocationCount = 0;
-      foreach ($rows as $r) { 
+      foreach ($rows as &$r) { 
         if ($r['lat'] == '') { 
           $noLocationCount ++;
           continue; 
@@ -2191,7 +2191,7 @@ class ElectionController {
       var map, pointarray, heatmap;
       var heatpoints = [
       <?php 
-      foreach ($rows as $r) {
+      foreach ($rows as &$r) {
         if ($r['lat'] == '') { 
           continue; 
         }
@@ -2209,7 +2209,7 @@ class ElectionController {
 
 			var bounds = new google.maps.LatLngBounds();
 			<?php
-      foreach ($rows as $r) {
+      foreach ($rows as &$r) {
         if ($r['lat'] == '') { 
           continue; 
         }
@@ -2236,7 +2236,7 @@ class ElectionController {
       var infowindow = new google.maps.InfoWindow();
       <?php 
       if ($mapMode == 2) {
-      foreach ($rows as $r) { 
+      foreach ($rows as &$r) { 
         $pinColor = '';
         if ($r['type'] == 0) {
           $pinColor = '00ff00';
@@ -2329,7 +2329,7 @@ class ElectionController {
 			$total = 0;
 			$totalType = array();
 			$candidates = array();
-			foreach ($rows as $r) {
+			foreach ($rows as &$r) {
 				if (!isset($r['type'])) {
 					$r['type'] = 'Unclassified';
 				} elseif ($r['type'] == 0) {
@@ -2448,7 +2448,7 @@ class ElectionController {
 				having sum(case when d.id is null then 0 else 1 end) > 0
 				order by max(c.year) desc, c.last, c.first ";
 			$rows = getDatabase()->all($sql);
-			foreach ($rows as $r) {
+			foreach ($rows as &$r) {
 				print "<tr>
 				<td><a href=\"/election/listDonations?candidate[]={$r['id']}\">{$r['last']}</a></td>
 				<td>{$r['first']}</td>
