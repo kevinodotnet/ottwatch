@@ -12,7 +12,7 @@ require_once('vendor/autoload.php');
 /* Monitory an ottawa.ca drupal page for md5 hash changes. */
 
 $url = "http://www.canlii.org/en/search/rssSearch.do?rssExpiryDate=2026-04-30&type=decision&ccId=onmb&sort=decisionDate&all=Ottawa&origType=decision&origCcId=onmb"; // $argv[1];
-$var = "page.monitor.".md5($url);
+$var = "omb.monitor.".md5($url);
 
 $dirname = `dirname $argv[0]`;
 $dirname = preg_replace("/\n/","",$dirname);
@@ -31,7 +31,6 @@ $html = ConsultationController::getCityContent($html,'');
 $md5 = md5($html);
 
 $prevMD5 = getvar($var);
-$prevMD5 = "";
 
 if ($md5 == $prevMD5) {
   # no change, no do anything
