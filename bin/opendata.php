@@ -32,9 +32,8 @@ OpenDataController::scanOpenData();
     from 
       opendatafile f
       join opendata d on d.id = f.dataid
-    where
-      f.updated > from_unixtime(:last)
     order by f.updated desc
+    where f.updated > from_unixtime(:last)
     ",array('last'=>$last));
 
   if (count($rows) > 5) {
@@ -46,7 +45,12 @@ OpenDataController::scanOpenData();
 
   # syndicate each file since it's not too many
   foreach ($rows as $r) {
-    $message = "#Opendata: {$r['title']} - {$r['name']} ({$r['format']}) updated";
+		$d = json_decode($r['title']);
+		if (isset($d->en)) {
+	    $message = "#Opendata: {$d->en} - {$r['name']} ({$r['format']}) updated";
+		} else {
+	    $message = "#Opendata: {$r['title']} - {$r['name']} ({$r['format']}) updated";
+		}
     if ($r['title'] == $r['name']) {
       $message = "#Opendata: {$r['name']} ({$r['format']}) updated";
     }

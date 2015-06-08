@@ -17,7 +17,9 @@ $total = 0;
 $matched = 0;
 
 #$rows = getDatabase()->all(" select * from candidate_donation where city = 'Ottawa' and location is null order by updated desc ");
-$rows = getDatabase()->all(" select * from candidate_donation where returnid = 18 and location is null order by rand() limit 10  ");
+#$rows = getDatabase()->all(" select * from candidate_donation where returnid = 18 and location is null order by rand() limit 10  ");
+#$rows = getDatabase()->all(" select * from candidate_donation where created > '2015-01-01' and location is null order by rand() limit 10  ");
+$rows = getDatabase()->all(" select * from candidate_donation where created > '2015-01-01' and location is null order by rand() ");
 foreach ($rows as $row) {
 	$total ++;
 	if (setDonorLocation($row)) {

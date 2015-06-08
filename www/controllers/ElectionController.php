@@ -5,6 +5,206 @@ class ElectionController {
   const year = 2014;
   const prevyear = 2010;
 
+	public static function showDonor($id) {
+
+		$donor = getDatabase()->one(" select * from election_donor where id = :id ",array('id'=>$id));
+		if (!$donor['id']) {
+			top3();
+			print "Donor $id not found";
+			bottom3();
+			return;
+		}
+
+		top3("{$donor['name']} - Election Donations");
+
+		##
+		## Find related donors
+		##
+		$parts = explode(" ",$donor['name']);
+		$keeps = array();
+		$ignores = array('ontario','corp','canada','inc','ltd','limited','incorporated','development','property','properties');
+		$ignores[] = 'Group';
+		$ignores[] = 'Management';
+		$ignores[] = 'Homes';
+		$ignores[] = 'Developments';
+		$ignores[] = 'Construction';
+		$ignores[] = 'Associates';
+		$ignores[] = 'Holdings';
+		$ignores[] = 'Ottawa';
+		$ignores[] = 'Consultants';
+		$ignores[] = 'Professional';
+		$ignores[] = 'Consulting';
+		$ignores[] = 'Restaurant';
+		$ignores[] = 'Investments';
+		$ignores[] = 'Association';
+		$ignores[] = 'financial';
+		$ignores[] = 'Sales';
+		$ignores[] = 'International';
+		$ignores[] = 'partnership';
+		$ignores[] = 'land';
+		$ignores[] = 'llp';
+		$ignores[] = 'and';
+		foreach ($parts as $p) {
+			$keep = 1;
+			if (strlen($p) == 1) { $keep = 0; }
+			if (strlen($p) == 2 && preg_match('/\.$/',$p)) { $keep = 0; }
+			foreach ($ignores as $i) {
+				if (preg_match("/^$i$/i",$p)) { $keep = 0; }
+				if (preg_match("/^$i\.$/i",$p)) { $keep = 0; }
+			}
+			if ($keep) {
+				$keeps[] = $p;
+			}
+		}
+		$sql = " 
+			select 
+				e.id,
+				e.name,
+				count(1) c ,
+				min(c.year) minyear,
+				max(c.year) maxyear
+			from election_donor e 
+				join candidate_donation d on d.donorid = e.id 
+				join candidate_return r on r.id = d.returnid
+				join candidate c on c.id = r.candidateid
+			where 
+				e.id != :id and 
+				d.type = 1 and (";
+		$first = 1;
+		foreach ($keeps as $k) {
+			if ($first == 0) {
+				$sql .= " or ";
+			}
+			$sql .= " e.name like '%".mysql_escape_string($k)."%' ";
+			$first = 0;
+		}
+		$sql .= " ) ";
+		$sql .= " group by e.id, e.name ";
+		$sql .= " order by max(c.year) desc, count(1), e.name ";
+		$related = getDatabase()->all($sql,array('id'=>$id));
+		##
+		## /relatd
+		##
+
+		$rows = getDatabase()->all("
+			select
+				c.id cid,
+				c.year,
+				c.ward,
+				c.last,
+				c.first,
+				case when c.incumbent = 0 then 'No' when c.incumbent = 1 then 'Yes' else 'Unk' end incumbent,
+				case when c.winner = 0 then 'No' when c.winner = 1 then 'Yes' else 'Unk' end winner,
+				case when r.supplemental = 0 then 'No' when r.supplemental = 1 then 'Yes' else 'Unk' end supplemental,
+				e.name,
+				d.id did,
+				d.type,
+				d.address,
+				d.city,
+				d.postal,
+				d.amount
+			from
+				election_donor e
+				join candidate_donation d on d.donorid = e.id
+				join candidate_return r on r.id = d.returnid
+				join candidate c on c.id = r.candidateid
+			where
+				e.id = :id
+			order by
+				c.year desc,
+				c.ward,
+				c.last,
+				c.first
+		",array('id'=>$id));
+
+		?>
+		<div class="row">
+			<div class="col-sm-8">
+				<?php print "<h1>{$donor['name']} - Election Donations</h1>"; ?>
+			</div>
+			<div class="col-sm-4">
+				<b>
+				<?php print "Number of donations: ".count($rows); ?>
+				</b>
+				<br/>
+				<a href="/election/listDonations" class="btn btn-primary">Return to Donation Search Page</a>
+			</div>
+		</div>
+		<?php
+
+
+		?>
+    <table class="table table-bordered table-hover table-condensed">
+		<tr>
+		<th>year</th>
+		<th>ward</th>
+		<th>amount</th>
+		<th>candidate</th>
+		<th>incumbent</th>
+		<th>winner</th>
+		<th>supplemental</th>
+		<th>address</th>
+		<th>city</th>
+		<th>postal</th>
+		</tr>
+		<?php
+
+		foreach ($rows as $r) {
+			print "<tr>";
+			print "<td>{$r['year']}</td>";
+			print "<td>{$r['ward']}</td>";
+			print "<td><a href=\"/election/donation/{$r['did']}\">$".formatMoney($r['amount'],true)."</a></td>";
+			print "<td><a href=\"/election/listDonations?candidate[]={$r['cid']}\">{$r['last']}, {$r['first']}</a></td>";
+			print "<td>{$r['incumbent']}</td>";
+			print "<td>{$r['winner']}</td>";
+			print "<td>{$r['supplemental']}</td>";
+			print "<td>{$r['address']}</td>";
+			print "<td>{$r['city']}</td>";
+			print "<td><a href=\"/election/listDonations?postal={$r['postal']}\">{$r['postal']}</a></td>";
+			print "</tr>\n";
+		}
+
+		?>
+		</table>
+
+		<?php
+		if (count($related) > 0) {
+			?>
+				<h2>Possibly Related Corporate/Union Donors</h2>
+				There are <?php print count($related); ?> corporate donors with similar names.
+				Donations from regular people with similar names are not shown.
+				<br/>
+				<?php
+				print "<ul>";
+				foreach ($related as $rel) {
+					print "<li><a href=\"/election/donor/{$rel['id']}\">{$rel['name']}</a>, {$rel['c']} donations in years {$rel['minyear']} to {$rel['maxyear']}</li>";
+				}
+				print "</ul>";
+				
+		}
+
+		disqus();
+		bottom3();
+		return;
+
+		//
+		// OLD
+		//
+
+		$url = "/election/listDonations";
+		$rows = getDatabase()->all(" select distinct(id) id from candidate_donation where donorid = :id ",array('id'=>$id));
+		$sep = '?';
+		foreach ($rows as $r) {
+			$url .= "$sep";
+			$url .= urlencode("pinid[]");
+			$url .= "=";
+			$url .= $r['id'];
+			$sep = '&';
+		}
+		header("Location: $url");
+		return;
+	}
+
 	public static function processDonationScoreboard() {
 		top3();
 		$sql = "
@@ -273,6 +473,7 @@ class ElectionController {
 		$title = "{$row['first']} {$row['last']}: {$row['year']} Election Candidate Information";
 		top($title);
 		print "<h1>$title</h1>";
+		print "<a href=\"/election/listDonations?candidate[]={$row['id']}\">List Campaign Donations</a>";
 		mapToTable($row);
 		bottom();
 	}
@@ -317,13 +518,13 @@ class ElectionController {
 	public static function tmp() {
 		top();
 
-		if (!LoginController::isLoggedIn()) { 
-			print "Not logged in!";
+		if (!LoginController::isAdmin()) { 
+			print "Not an administrator!";
 			bottom();
 			return;
 		}
 
-		$rows = getDatabase()->all(" select * from candidate_donation where address != '' and prov != 'BROKEN' and returnid != 18 and location is null order by rand() ");
+		$rows = getDatabase()->all(" select * from candidate_donation where location is null and postal != '' and created > '2015-01-01' order by rand() ");
 		if (count($rows) == 0) {
 			print "No coding to do\n";
 			bottom();
@@ -358,6 +559,7 @@ class ElectionController {
 		<script>
       var geocoder = new google.maps.Geocoder();
       var addr = "<?php print "{$r['address']}, {$r['city']}, {$r['prov']}"; ?>";
+      addr = "<?php print "{$r['postal']}, Canada"; ?>";
       geocoder.geocode({address: addr},
         function(results, status) { 
           if (status != 'OK') {
@@ -388,7 +590,7 @@ class ElectionController {
       );
 
 			$(document).ready( function() { 
-				setTimeout(function() { location.reload(); }, 2000); 
+				// setTimeout(function() { location.reload(); }, 2000); 
 			}); 
 		</script>
 		<?php
@@ -557,7 +759,7 @@ class ElectionController {
       $title = "$wardname";
     }
 
-		top($title);
+		top3($title);
 		print "<h1>$title <small>(<a href=\"/election/\">main election page</a>)</small></h1>\n";
 
     $summ = getDatabase()->one("
@@ -572,16 +774,23 @@ class ElectionController {
       from candidate 
       where ward = :ward and year = :year and nominated is not null 
       order by votes desc, rand() ",array('ward'=>$race,'year'=>self::year));
+
     ?>
-    <div class="row-fluid">
-    <div class="span6">
     <h2><?php print self::year; ?> Results</h2>
 		<a href="/election/<?php print $rows[0]['electionid']; ?>/race/<?php print $race; ?>/results/">Full Results for this race</a>.
     <table class="table table-bordered table-hover table-condensed">
     <tr>
-      <th>Name</th>
-      <th>Votes</th>
-      <th>%</th>
+      <th rowspan="2">Name</th>
+			<th class="text-center" colspan="2">Election Result</th>
+			<th class="text-center" colspan="4">Campaign Donations</th>
+    </tr>
+    <tr>
+      <th class="text-center">Votes</th>
+      <th class="text-center">%</th>
+      <th class="text-center">Individuals $100 or less</th>
+      <th class="text-center">Over $100</th>
+      <th class="text-center">Corporate/Union</th>
+      <th class="text-center">Total</th>
     </tr>
 		<?php
     foreach ($rows as $r) {
@@ -601,11 +810,38 @@ class ElectionController {
 					<td <?php print $style; ?> >
 						<?php print $r['perc']; ?>
 					</td>
+						<?php
+							$donationsSQL = "
+						  select
+								c.id,
+						    c.last,
+						    c.first,
+						    sum(case when d.type = 0 then d.amount else 0 end) individual,
+						    sum(case when d.type = 1 then d.amount else 0 end) corpunion,
+						    sum(case when d.type = 2 then d.amount else 0 end) individualSmall,
+						    sum(d.amount) total,
+						    sum(case when d.type = 0 then d.amount else 0 end)/sum(d.amount)*100 perc_individual,
+						    sum(case when d.type = 1 then d.amount else 0 end)/sum(d.amount)*100 perc_corpunion,
+						    sum(case when d.type = 2 then d.amount else 0 end)/sum(d.amount)*100 perc_individualSmall
+						  from
+						    candidate_donation d
+						    join candidate_return r on r.id = d.returnid
+						    join candidate c on c.id = r.candidateid
+						  where
+								c.id = {$r['id']} ";
+						$d = getDatabase()->one($donationsSQL);
+						print "<td>$".formatMoney($d['individualSmall'],true)." (".formatPercent($d['perc_individualSmall']).")</td>";
+						print "<td>$".formatMoney($d['individual'],true)." (".formatPercent($d['perc_individual']).")</td>";
+						print "<td>$".formatMoney($d['corpunion'],true)." (".formatPercent($d['perc_corpunion']).")</td>";
+						print "<td><a href=\"/election/listDonations?candidate[]=".$r['id']."\">$".formatMoney($d['total'],true)."</a></td>";
+						// pr($row);
+						?>
 	      </tr>
 			<?php
 		}
 		?>
 		</table>
+
 		<?php if (false) { ?>
     <h2>Candidates</h2>
     <?php
@@ -683,9 +919,11 @@ class ElectionController {
 	      <?php
 	    }
     }
-		} // if false
     ?>
     </table>
+		<?php
+		} // if false
+		?>
 
     <?php
     $incumbent = getDatabase()->one("select * from candidate where ward = :ward and year = :year and incumbent = 1 ",array('ward'=>$race,'year'=>self::year));
@@ -704,6 +942,7 @@ class ElectionController {
 			));
     ?>
 
+		<?php if (false) { ?>
     <h2>Questions to Candidates</h2>
 		<?php
 		$qs = getDatabase()->all("
@@ -738,7 +977,9 @@ class ElectionController {
 		Ask your own question!
 		</a>
 		-->
+		<?php } ?>
 
+		<?php if (false) { ?>
     <h2>Incumbent</h2>
     <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
     <tr>
@@ -829,8 +1070,12 @@ class ElectionController {
       </td>
     </tr>
     </table>
+		<?php 
+		} // incumbent 
+		?>
+
     <?php 
-    if ($race > 0) { 
+    if ($race > 0) {
       ?>
 	    <h2>Map <small>(<a href="/election/ward/<?php print $race; ?>/map">fullsize</a>)</small></h2>
 	    <?php
@@ -838,17 +1083,8 @@ class ElectionController {
     }
     ?>
 
-    </div>
-
-    <div class="span6">
-    <p style="text-align: center;">The discussion thread will remain open for the entire 2014 year. Be civil.</p>
-    <?php disqus(); ?>
-    </div>
-    </div><!-- / row -->
-
     <?php
-
-    bottom();
+    bottom3();
   }
 
   public static function showMain() {
@@ -1408,7 +1644,7 @@ class ElectionController {
 		<div class="form-group">
 			<label class="col-sm-1 control-label" for="address">Address</label>
 			<div class="col-sm-5">
-				<input id="address" class="form-control" value="<?php print $row['address']; ?>" type="text" placeholder="address" name="address" />
+				<input id="address" class="form-control typeahead" autocomplete="off" value="<?php print $row['address']; ?>" type="text" placeholder="address" name="address" />
 			</div>
 			<div class="col-sm-6 processDonation-help">
 				Just street number, name and apt/unit/PO box.
@@ -1430,12 +1666,35 @@ class ElectionController {
 		<div class="form-group">
 			<label class="col-sm-1 control-label" for="postal">Postal</label>
 			<div class="col-sm-5">
-			<input id="postal" class="form-control" value="<?php print $row['postal']; ?>" type="text" placeholder="postal" name="postal" />
+			<input id="postal" class="form-control typeaheadpostal" autocomplete="off" value="<?php print $row['postal']; ?>" type="text" placeholder="postal" name="postal" />
 			</div>
 			<div class="col-sm-6 processDonation-help">
 				Lowercase and no-space is fine, easier to type. ex: k1c3e5
 			</div>
 		</div>
+
+		<script>
+		$('input.typeahead').typeahead({
+			ajax: {
+				triggerLength: 3,
+				url: '/api/typeahead/address',
+				displayField: 'address'
+			}
+		});
+		$('input.typeaheadpostal').typeahead({
+			ajax: {
+				triggerLength: 3,
+				url: '/api/typeahead/postal',
+				displayField: 'postal',
+				preDispatch: function(query) {
+					addr = $('#address').val();
+					return {
+						search: addr
+					}
+				}
+			}
+		});
+		</script>
 
 		<div class="form-group">
 			<label class="col-sm-1 control-label" for="amount">Amount</label>
@@ -1589,6 +1848,7 @@ class ElectionController {
 		$year = $_GET['year'];
 		$pinid = $_GET['pinid'];
 		$ward = $_GET['ward'];
+		$type = $_GET['type'];
 		$donor = $_GET['donor'];
 		$donorE = mysql_escape_string($donor);
 		$candidate = $_GET['candidate'];
@@ -1596,6 +1856,11 @@ class ElectionController {
 		$where = '';
 
 		$filtered = 0;
+
+		if (preg_match('/^\d$/',$type)) {
+			$where .= " and d.type = $type ";
+			$filtered = 1;
+		}
 
 		if ($donor != '') {
 			$toptitle = "Campaign Donations Report for donor $donorE";
@@ -1706,11 +1971,16 @@ class ElectionController {
 				c.last,
 				c.id candidateid,
 				c.incumbent,
+				c.winner,
 				d.page,
 				d.x,
 				d.y,
+				c.gender,
+				d.donor_gender,
         astext(d.location) location,
-				r.id retid
+				r.id retid,
+				r.supplemental,
+				d.donorid
 			from
 				candidate_donation d
 				join candidate_return r on d.returnid = r.id
@@ -1724,6 +1994,16 @@ class ElectionController {
 		$rows = array();
 		if ($filtered == 1) {
 			$rows = getDatabase()->all($sql);
+		}
+
+		foreach ($rows as &$r) {
+			$m = array();
+			# POINT(-75.743323639372 45.388638525446)
+			if (preg_match('/POINT\(([^ ]+) ([^\)]+)\)/',$r['location'],$m)) {
+				$r['lat'] = $m[2];
+				$r['lon'] = $m[1];
+			}
+			unset($r['location']);
 		}
 
 		if ($_GET['format'] == 'json') {
@@ -1742,12 +2022,12 @@ class ElectionController {
 			header("Content-Type: application/octet-stream");
 			header("Content-Type: application/download");
 			header("Content-Description: File Transfer");             
-			$cols = array( 'id', 'type', 'donor', 'address', 'city', 'postal', 'amount', 'year', 'ward', 'first', 'last', 'incumbent', 'page','x','y','retid');
+			$cols = array( 'id', 'type', 'donor', 'address', 'city', 'postal', 'amount', 'year', 'ward', 'first', 'last', 'incumbent', 'winner', 'page','x','y','retid','supplemental','gender','donor_gender','lat','lon');
 			foreach ($cols as $c) {
 				print "{$c}\t";
 			}
 			print "\n";
-			foreach ($rows as $r) {
+			foreach ($rows as &$r) {
 				foreach ($cols as $c) {
 					print "{$r[$c]}\t";
 				}
@@ -1803,7 +2083,11 @@ class ElectionController {
 		<select id="inputCandidate" class="form-control" name="candidate[]" multiple="yes" size="5">
 		<?php
 		foreach ($candidates as $c) {
-			print "<option value=\"{$c['id']}\">{$c['last']}, {$c['first']} ({$c['year']} ward:{$c['ward']})</option>";
+			$selected = '';
+			if (in_array($c['id'],$candidate)) {
+				$selected = ' selected="1" ';
+			}
+			print "<option $selected value=\"{$c['id']}\">{$c['last']}, {$c['first']} ({$c['year']} ward:{$c['ward']})</option>";
 		}
 		?>
 		</select>
@@ -1814,7 +2098,11 @@ class ElectionController {
 		<select id="inputYear" class="form-control" name="year[]" multiple="yes" size="5">
 		<?php
 		foreach ($years as $y) {
-			print "<option value=\"{$y['year']}\">{$y['year']}</option>\n";
+			$selected = '';
+			if (in_array($y['year'],$year)) {
+				$selected = ' selected="1" ';
+			}
+			print "<option $selected value=\"{$y['year']}\">{$y['year']}</option>\n";
 		}
 		?>
 		</select>
@@ -1825,7 +2113,11 @@ class ElectionController {
 		<select id="inputWard" class="form-control" name="ward[]" multiple="yes" size="5">
 		<?php
 		foreach ($wards as $y) {
-			print "<option value=\"{$y['ward']}\">{$y['ward']} - {$y['ward_en']}</option>\n";
+			$selected = '';
+			if (in_array($y['ward'],$ward)) {
+				$selected = ' selected="1" ';
+			}
+			print "<option $selected value=\"{$y['ward']}\">{$y['ward']} - {$y['ward_en']}</option>\n";
 		}
 		?>
 		</select>
@@ -1856,22 +2148,35 @@ class ElectionController {
 </div>
 
 <div class="form-group">
-	<div class="col-sm-8 col-sm-offset-2">
+	<div class="col-sm-1 col-sm-offset-1">
+	<label class="col-sm-2 control-label" for="inputType">Type</label>
+	</div>
+	<div class="col-sm-3">
+		<?php if ($type == '') { $type = -1; } ?>
+		<select id="inputType" class="form-control" name="type">
+			<option value="">All</option>
+			<option <?php if ($type == 0) { print ' selected="1" '; } ?> value="0">Individuals over $100</option>
+			<option <?php if ($type == 1) { print ' selected="1" '; } ?> value="1">Corporate/Union</option>
+			<option <?php if ($type == 2) { print ' selected="1" '; } ?> value="2">Individuals $100 or less</option>
+		</select>
+	</div>
+	<div class="col-sm-6 col-sm-offset-1">
 		<button type="submit" class="btn btn-primary">Search</button> 
 		<a class="btn btn-primary" href="?format=csv">Download all: CSV</a>
 		<a class="btn btn-primary" href="?format=json">Download all: JSON</a>
+		<a class="btn btn-primary" href="/election/listDonations">Reset (New Search)</a>
 	</div>
 </div>
 
 
 		<?php 
-    if (count($rows) > 0) { 
+    if (count($rows) > 0) {
 
       if ($mapMode > 0) {
 
       $noLocationCount = 0;
-      foreach ($rows as $r) { 
-        if ($r['location'] == '') { 
+      foreach ($rows as &$r) { 
+        if ($r['lat'] == '') { 
           $noLocationCount ++;
           continue; 
         }
@@ -1886,13 +2191,12 @@ class ElectionController {
       var map, pointarray, heatmap;
       var heatpoints = [
       <?php 
-      foreach ($rows as $r) { 
-        if ($r['location'] == '') { 
+      foreach ($rows as &$r) {
+        if ($r['lat'] == '') { 
           continue; 
         }
-        $ll = getLatLonFromPoint($r['location']);
-        $lat = $ll['lat'];
-        $lon = $ll['lon'];
+        $lat = $r['lat'];
+        $lon = $r['lon'];
         ?>
         {location: new google.maps.LatLng(<?php print $lat; ?>, <?php print $lon; ?>), weight: <?php print $r['amount']; ?>},
         <?php 
@@ -1905,13 +2209,12 @@ class ElectionController {
 
 			var bounds = new google.maps.LatLngBounds();
 			<?php
-      foreach ($rows as $r) {
-        if ($r['location'] == '') { 
+      foreach ($rows as &$r) {
+        if ($r['lat'] == '') { 
           continue; 
         }
-        $ll = getLatLonFromPoint($r['location']);
-        $lat = $ll['lat'];
-        $lon = $ll['lon'];
+        $lat = $r['lat'];
+        $lon = $r['lon'];
 				?>
 				bounds.extend(new google.maps.LatLng(<?php print $lat; ?>, <?php print $lon; ?>));
         <?php 
@@ -1933,7 +2236,7 @@ class ElectionController {
       var infowindow = new google.maps.InfoWindow();
       <?php 
       if ($mapMode == 2) {
-      foreach ($rows as $r) { 
+      foreach ($rows as &$r) { 
         $pinColor = '';
         if ($r['type'] == 0) {
           $pinColor = '00ff00';
@@ -1953,12 +2256,11 @@ class ElectionController {
 				} else {
           $r['type'] = 'Huh?';
         }
-        if ($r['location'] == '') { 
+        if ($r['lat'] == '') { 
           continue; 
         }
-        $ll = getLatLonFromPoint($r['location']);
-        $lat = $ll['lat'];
-        $lon = $ll['lon'];
+        $lat = $r['lat'];
+        $lon = $r['lon'];
 
 				$randShift = rand(0,10000);
 				if ($randShift % 2 == 0) { $randShift = $randShift * -1; }
@@ -1982,10 +2284,12 @@ class ElectionController {
         });
         google.maps.event.addListener(marker<?php print $r['id'] ?>, 'click', function() {
           infowindow.setContent(
-            '<p>Amount: <?php print $r['amount']; ?> ' + 
-						'<a target="_blank" href="/election/donation/<?php print $r['id']; ?>">Details</a></p> ' +
-            '<p>Type: <?php print $r['type']; ?><br/>' +
-            '<a target="_blank" href="/election/listDonations?postal=<?php print $r['postal']; ?>&map=0"><?php print $r['postal']; ?></a></p>' 
+            '<p>' + 
+						'Amount: <?php print $r['amount']; ?><br/>' + 
+            'Type: <?php print $r['type']; ?><br/>' +
+						'<a target="_blank" href="/election/donation/<?php print $r['id']; ?>">Details</a><br/>' +
+            '<a target="_blank" href="/election/listDonations?postal=<?php print $r['postal']; ?>&map=0"><?php print $r['postal']; ?></a>' + 
+						'</p>' 
           );
           infowindow.open(map,marker<?php print $r['id'] ?>);
         });
@@ -2025,7 +2329,7 @@ class ElectionController {
 			$total = 0;
 			$totalType = array();
 			$candidates = array();
-			foreach ($rows as $r) {
+			foreach ($rows as &$r) {
 				if (!isset($r['type'])) {
 					$r['type'] = 'Unclassified';
 				} elseif ($r['type'] == 0) {
@@ -2044,12 +2348,18 @@ class ElectionController {
 				print "<td>{$r['year']}</td>";
 				print "<td>{$r['ward']}</td>";
 				print "<td><nobr><a href=\"/election/listDonations?candidate[]={$r['candidateid']}\">{$r['last']}, {$r['first']}</a><nobr></td>";
-				print "<td>{$r['donor']}</td>";
+				print "<td><a href=\"/election/donor/{$r['donorid']}\">{$r['donor']}</a></td>";
 				print "<td><a href=\"/election/donation/{$r['id']}\">\$".formatMoney($r['amount'],true)."</a></td>";
 				print "<td>{$r['address']}</td>";
 				print "<td>{$r['city']}</td>";
 				print "<td><a href=\"/election/listDonations?postal={$r['postal']}\">{$r['postal']}</a></td>";
-				print "<td>{$r['type']}</td>";
+				print "<td>";
+				print "{$r['type']}";
+				if ($r['supplemental'] == 1) {
+					print " (supplemental)";
+				}
+
+				print "</td>";
 				print "<td><input ".(in_array($r['id'],$pinid) ? ' checked="1" ' : '')." type=\"checkbox\" name=\"pinid[]\" value=\"{$r['id']}\"</td>";
 				print "</tr>";
 				$total += $r['amount'];
@@ -2067,17 +2377,26 @@ class ElectionController {
 				print "<td></td>";
 				print "</tr>";
 				foreach ($totalType as $k => $v) {
-				print "<tr>";
-				print "<td></td>";
-				print "<td></td>";
-				print "<td></td>";
-				print "<td><b>Total from {$k}</b></td>";
-				print "<td><b>\$".formatMoney($v,true)." (".round($v/$total*100)."%)</b></td>";
-				print "<td></td>";
-				print "<td></td>";
-				print "<td></td>";
-				print "<td></td>";
-				print "</tr>";
+					print "<tr>";
+					print "<td></td>";
+					print "<td></td>";
+					print "<td></td>";
+					print "<td><b>Total from {$k}</b></td>";
+					print "<td><b>\$".formatMoney($v,true)." (".round($v/$total*100)."%)</b></td>";
+					if ($k == 'Individuals $100 or less') {
+						$totalIndividualU100 = $v;
+						print "<td colspan=\"4\">
+						Minimum of ".round($totalIndividualU100/100)." additional donors, assuming each contributed $100.<br/>
+						The actual number of donors in this class is likely much higher.<br/>
+						It's probable the average donation ranged between $20 and $100.
+						</td>";
+					} else {
+						print "<td></td>";
+						print "<td></td>";
+						print "<td></td>";
+						print "<td></td>";
+					}
+					print "</tr>";
 				}
 				print "<tr>";
 				print "<td></td>";
@@ -2085,10 +2404,9 @@ class ElectionController {
 				print "<td></td>";
 				print "<td><b>Total Donations</b></td>";
 				print "<td><b>".count($rows)."</b></td>";
-				print "<td></td>";
-				print "<td></td>";
-				print "<td></td>";
-				print "<td></td>";
+				print "<td colspan=\"4\">";
+				print "<i>Does not include the number of donations of $100 or less, if any.</i>";
+				print "</td>";
 				print "</tr>";
 				print "<tr>";
 				print "<td></td>";
@@ -2104,33 +2422,35 @@ class ElectionController {
 			?>
 			</table>
   		<?php 
-    } else { 
+    } else {
       # serach returned nothing, so prompt the user with some useful candidate based queries.
       ?>
 			<center><h3>No records found for this search</h3></center>
 	
 			<div class="row-fluid">
 			<div class="span12">
-			<h3>Browse by candidate lastname</h3>
+			<h3>Browse by Candidate</h3>
 	    <table class="table table-bordered table-hover table-condensed">
 			<tr>
 				<th>Last</th>
 				<th>First</th>
 				<th>Donations*</th>
 				<th>Amount*</th>
-				<th>Year(s)</th>
+				<th>Year</th>
 			</tr>
 			<?php
 			$sql = " 
-				select c.last, c.first, min(c.year) minyear, max(c.year) maxyear, sum(case when d.id is null then 0 else 1 end) as donations, sum(amount) as total
+				select c.id, c.last, c.first, min(c.year) minyear, max(c.year) maxyear, sum(case when d.id is null then 0 else 1 end) as donations, sum(amount) as total
 				from candidate c
 					left join candidate_return r on r.candidateid = c.id
 					left join candidate_donation d on d.returnid = r.id
-				group by c.last, c.first ";
+				group by c.id, c.last, c.first 
+				having sum(case when d.id is null then 0 else 1 end) > 0
+				order by max(c.year) desc, c.last, c.first ";
 			$rows = getDatabase()->all($sql);
-			foreach ($rows as $r) {
+			foreach ($rows as &$r) {
 				print "<tr>
-				<td><a href=\"/election/listDonations?candidate={$r['last']}\">{$r['last']}</a></td>
+				<td><a href=\"/election/listDonations?candidate[]={$r['id']}\">{$r['last']}</a></td>
 				<td>{$r['first']}</td>
 				<td>{$r['donations']}</td>
 				<td>\$".formatMoney($r['total'])."</td>
@@ -2178,7 +2498,8 @@ class ElectionController {
 				c.last,
 				r.filename,
 				r.id retid,
-				c.id candid
+				c.id candid,
+				d.donorid
 			from
 				candidate_donation d
 				join candidate_return r on d.returnid = r.id
@@ -2251,7 +2572,7 @@ class ElectionController {
 					$r['type'] = 'Individuals $100 or less';
 			}
 
-			print "<tr><th>Donor Name</th><td>{$r['donor']}</td></tr>";
+			print "<tr><th>Donor Name</th><td><a href=\"/election/donor/{$r['donorid']}\">{$r['donor']}</a></td></tr>";
 			print "<tr><th>Donor Type</th><td>{$r['type']}</td></tr>";
 			print "<tr><th>Amount</th><td>{$r['amount']}</td></tr>";
 			print "<tr><th>Address</th><td>{$r['address']}</td></tr>";

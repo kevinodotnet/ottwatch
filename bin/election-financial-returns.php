@@ -14,19 +14,25 @@ $html = preg_replace("/\n/"," ",$html);
 $html = preg_replace("/\"/"," ",$html);
 
 # trim HTML to only include council races
-$html = preg_replace("/Ottawa Catholic School Board.*Mayor/"," ",$html);
-$html = preg_replace("/Ottawa Catholic School Board.*/"," ",$html);
+#$html = preg_replace("/Ottawa Catholic School Board.*Mayor/"," ",$html);
+#$html = preg_replace("/Ottawa Catholic School Board.*/"," ",$html);
 
 $urls = preg_grep("/documents.*ottawa.*\.pdf/i",explode(" ",$html));
 
 $year = 2014;
 
 foreach ($urls as $u) {
-	$filename = preg_replace("/.*\//","",$u);
-	$file = OttWatchConfig::FILE_DIR."/election/$year/financial_returns/$filename";
-	if (preg_match('/Lougheed/',$file)) {
+	if (preg_match('/ougheed_Original/',$u)) {
 		continue;
 	}
+	if (preg_match('/_Accessible/',$u)) {
+		continue;
+	}
+	if (preg_match('/Curry/',$u)) {
+		break;
+	}
+	$filename = preg_replace("/.*\//","",$u);
+	$file = OttWatchConfig::FILE_DIR."/election/$year/financial_returns/$filename";
 	if (file_exists($file)) {
 		if (!preg_match('/Original/',$file)) {
 			continue;

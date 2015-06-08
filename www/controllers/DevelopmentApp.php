@@ -3,7 +3,9 @@
 class DevelopmentAppController {
 
   static public function scrapeCommitteeOfAdjustment($date,$panel,$file) {
-	  $txt = file_get_contents($file);
+
+		$txt = `pdftotext $file -`;
+	  # $txt = file_get_contents($file);
 
 		# split by PAGE_BREAK
 
@@ -386,6 +388,7 @@ class DevelopmentAppController {
         map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
         <?php
         foreach ($a as $addr) {
+					if ($addr->lat == '') { continue; }
 	        ?>
 	        var myLatlng = new google.maps.LatLng(<?php print $addr->lat; ?>,<?php print $addr->lon; ?>);
 	        var marker = new google.maps.Marker({ position: myLatlng, map: map, title: '<?php print $addr->addr; ?>' }); 
@@ -555,8 +558,15 @@ class DevelopmentAppController {
 
           # $url = self::getLinkToApp($a['appid']);
           $url = OttWatchConfig::WWW . "/devapps/{$a['devid']}"; # self::getLinkToApp($a['appid']);
-          $addr = json_decode($a['address']);
-          $addr = $addr[0];
+
+					# pick the address that has lat/lon data too
+          $addr_arr = json_decode($a['address']);
+					$addr = array();
+					foreach ($addr_arr as $tmp) {
+						if ($tmp->lat != '') {
+							$addr = $tmp;
+						}
+					}
           if (count($addr) == 0) {
             continue;
           }

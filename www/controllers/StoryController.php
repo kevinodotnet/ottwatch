@@ -148,6 +148,15 @@ class StoryController {
     <div style="padding-top: 30px;"><?php disqus(); ?></div>
     </div><!-- /span -->
     <div class="span3" style="background: #f0f0f0; padding: 0px 5px; border-radius: 4px;">
+		<?php
+		if (LoginController::isLoggedIn()) {
+	    if ($story['author'] == getSession()->get("user_id")) {
+				?>
+				<a href="/story/edit/<?php print $story['storyid']; ?>">Edit Story</a>
+				<?php
+			}
+		}
+		?>
 		<center><h3>More stories...</h3></center>
 		<?php
 		$rows = self::getPublished();
