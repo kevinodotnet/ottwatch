@@ -82,7 +82,7 @@ function scrapeLayer($metaurl,$table) {
 	}
 
 	$createTable .= "   primary key (ottwatchid) \n";
-	$createTable .= " ); \n";
+	$createTable .= " ) ENGINE = MYISAM ; \n"; // for spacial indexes
 
 	getDatabase()->execute($createTable);
 
