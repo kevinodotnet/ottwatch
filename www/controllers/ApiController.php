@@ -358,8 +358,10 @@ class ApiController {
             } else {
 	            $('#wardmsg').html(
 	              postal + 
-									' is in <b><a target="_blank" href="<?php print OttWatchConfig::WWW; ?>/election/ward/'+data.ward.wardnum+'">' + data.ward.ward + '</a></b>' + 
-									' (<a href="javascript:findwardagain(); ">again</a>)'
+									' is in <b><a target="_blank" href="<?php print OttWatchConfig::WWW; ?>/election/ward/'+data.ward.wardnum+'">' + data.ward.ward + '</a></b><br/>' + 
+									' Councillor: ' + data.ward.councillor.first + ' ' + data.ward.councillor.last + '<br/>' +
+									' Email: ' + data.ward.councillor.email +
+									' '
 	            );
             }
           });
