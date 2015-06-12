@@ -32,8 +32,8 @@ OpenDataController::scanOpenData();
     from 
       opendatafile f
       join opendata d on d.id = f.dataid
-    order by f.updated desc
     where f.updated > from_unixtime(:last)
+    order by f.updated desc
     ",array('last'=>$last));
 
   if (count($rows) > 5) {
