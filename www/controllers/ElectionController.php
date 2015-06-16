@@ -2631,7 +2631,16 @@ class ElectionController {
 			?>
 			<tr><th>Location</th>
 			<td>
-				<a target="_blank" href="http://documents.ottawa.ca/sites/documents.ottawa.ca/files/documents/<?php print $r['filename']; ?>"><?php print $r['filename']; ?></a>,
+				<?php if ($r['electionid'] < 5) {
+					?>
+					<a target="_blank" href="http://documents.ottawa.ca/sites/documents.ottawa.ca/files/documents/<?php print $r['filename']; ?>"><?php print $r['filename']; ?></a>,
+					<?php
+				} else {
+					?>
+					<a target="_blank" href="<?php print $r['filename']; ?>"><?php print preg_replace('/.*\//','',$r['filename']); ?></a>,
+					<?php
+				}
+				?>
 				page <?php print ($r['page']+1); ?>, <?php print round($r['y']*100/$size[1]); ?>% down from top
 			</td>
 			</tr>
