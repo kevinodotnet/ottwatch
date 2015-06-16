@@ -1876,6 +1876,12 @@ class ElectionController {
 			$filtered = 1;
 		}
 
+		if ($city != '') {
+			$where .= " and e.city = '".mysql_escape_string($city)."' ";
+		} else {
+			$where .= " and e.city = 'WILLNOTMATCH' ";
+		}
+
 		if ($donor != '') {
 			$toptitle = "Campaign Donations Report for donor $donorE";
 			$where .= " and d.name like '%$donorE%' ";
@@ -1994,11 +2000,15 @@ class ElectionController {
         astext(d.location) location,
 				r.id retid,
 				r.supplemental,
-				d.donorid
+				d.donorid,
+				c.electionid,
+				e.city,
+				e.date
 			from
 				candidate_donation d
 				join candidate_return r on d.returnid = r.id
 				join candidate c on r.candidateid = c.id
+				join election e on e.id = c.electionid
 			where 
 				$where_master
 			order by 
