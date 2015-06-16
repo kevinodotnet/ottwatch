@@ -13,3 +13,5 @@ if ($argv[1] == 'scrapeCommitteeOfAdjustment') {
   return;
 }
 
+print "ERROR: bad ARGV\n";
+
