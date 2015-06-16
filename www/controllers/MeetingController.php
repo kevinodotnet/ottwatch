@@ -1171,6 +1171,32 @@ class MeetingController {
 					";
         }
       }
+			// title
+			$words = explode(" ",$i['title']);
+			for ($x = 1; $x < count($words); $x++) {
+				if (!preg_match('/^\d+$/',$words[$x-1])) {
+					continue;
+				}
+				if (!preg_match('/^[a-z]/i',$words[$x])) {
+					continue;
+				}
+				$num = $words[$x-1];
+				$street = $words[$x];
+				$apps = getDatabase()->all(" select * from devapp where address like '%$num $street%'");
+				foreach ($apps as $a) {
+          print "
+					<tr>
+					<td style=\"padding-left: 20px;\">
+					<i class=\"fa fa-file-text\"></i>
+					Possibly related devapp: <a target=\"_blank\" href=\"/devapps/{$a['devid']}\">{$a['devid']}</a>
+					</td>
+					<td>
+					</td>
+					</tr>
+					";
+				}
+			}
+			
 		}
 		?>
 		</table>
