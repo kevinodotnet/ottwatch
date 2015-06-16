@@ -1352,7 +1352,7 @@ class ElectionController {
 				<td><?php print $r['ward']; ?></td>
 				<td><?php print $r['last']; ?></td>
 				<td><?php print $r['first']; ?></td>
-				<td><a href="/election/processReturn/<?php print $r['retid']; ?>?page=0"><?php print $r['filename']; ?></a></td>
+				<td><a target="_blank" href="/election/processReturn/<?php print $r['retid']; ?>?page=3"><?php print $r['filename']; ?></a></td>
 				<td><?
 					$sql = " select count(1) c ,sum(case when amount is not null and amount != '' then 1 else 0 end ) filled from candidate_donation d where returnid = {$r['retid']} group by returnid ";
 					$c = getDatabase()->one($sql);
