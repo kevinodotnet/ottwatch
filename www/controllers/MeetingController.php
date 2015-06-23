@@ -2541,7 +2541,7 @@ class MeetingController {
 	Also go back in time to catch files added to items at time of meeting (auditor reports, etc)
 	*/
 	public function hardScan() {
-		$rows = getDatabase()->all(" select id,category,starttime from meeting where datediff(starttime,CURRENT_TIMESTAMP) > -3 ");
+		$rows = getDatabase()->all(" select id,category,starttime from meeting where datediff(starttime,CURRENT_TIMESTAMP) > -3 order by starttime desc ");
 		foreach ($rows as $r) {
 			self::downloadAndParseMeeting($r['id']);
 		}
