@@ -7,14 +7,74 @@ set_include_path(get_include_path() . PATH_SEPARATOR . "$dirname/../lib");
 set_include_path(get_include_path() . PATH_SEPARATOR . "$dirname/../www");
 require_once('include.php');
 
-$url = $argv[1];
-$table = $argv[2];
-$key = $argv[3];
-#$url = "http://maps.ottawa.ca/arcgis/rest/services/Property_Parcels/MapServer/2";
+$action = $argv[1];
 
-scrapeLayer($url,$table,$key);
+if ($action == 'scrapeLayer') {
+	$url = $argv[2];
+	$table = $argv[3];
+	$key = $argv[4];
+	#$url = "http://maps.ottawa.ca/arcgis/rest/services/Property_Parcels/MapServer/2";
+	scrapeLayer($url,$table,$key);
+	return;
+}
 
-# addLatLonShape($table);
+if ($action == 'layerIndex') {
+	$url = $argv[2]; # http://maps.ottawa.ca/ArcGIS/rest/services
+	layerIndex($url);
+	return;
+}
+
+/*
+
+Start at the root of an ESRI instance rest services and dump all of the known layers;
+- Used to detect metadata/layer updates
+- Find all the new data!
+
+*/
+
+function layerIndex ($url) {
+
+	global $OTTVAR;
+	$saveDir = "$OTTVAR/geoottawa/meta/".date('Ymd_His');
+	mkdir($saveDir);
+
+	$totalJSON = '';
+
+	$root = json_decode(file_get_contents($url.'?f=pjson'));
+	foreach ($root->services as $s) {
+		$metaJSON = file_get_contents($url.'/'.$s->name.'/'.$s->type.'?f=pjson');
+		$meta = json_decode($metaJSON);
+		if (!property_exists($meta,'layers')) {
+			continue;
+		}
+		foreach ($meta->layers as $l) {
+			$layerURL = $url.'/'.$s->name.'/'.$s->type.'/'.$l->id.'?f=pjson';
+			$layerJSON = file_get_contents($layerURL);
+			$layer = json_decode($layerJSON);
+
+			$layerId = $layer->id;
+			$layerName = $layer->name;
+			$layerMD5 = md5($layerJSON);
+
+			$totalJSON .= $layerJSON;
+
+			$index = "{$s->name}\t{$s->type}\t$layerName\t$layerId\t$layerMD5\n";
+			file_put_contents("$saveDir/$layerMD5",$layerJSON);
+			file_put_contents("$saveDir/index",$index,FILE_APPEND);
+
+		}
+	}
+
+	$md5 = md5($totalJSON);
+	$key = 'geoottawa_index_md5';
+	$prev = getvar($key);
+	setvar($key,$md5);
+
+	if ($md5 != $prev) {
+		print "Layers have changed in some way\n";
+	}
+	
+}
 
 function addLatLonShape($table) {
 
