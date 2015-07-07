@@ -36,41 +36,43 @@ if (count($argv) > 1) {
 
 		# look for videos that have been uploaded and are now done processing (ready to tweet!)
 		$rows = getDatabase()->all(" 
-			select * 
-			from meeting 
+			select 
+				m.*
+			from meeting m
 			where 
 				youtube like 'http%'
 				and (youtubestate is null or youtubestate != 'ready')
+				and datediff(youtubeset,now()) <= -1
 		");
+
 		foreach ($rows as $r) {
 	    $id = $r['youtube'];
-	    $id = preg_replace("/.*\?v=/","",$id);
 
-			$user_email = OttWatchConfig::YOUTUBE_USER;
-			$user_passwd = OttWatchConfig::YOUTUBE_PASS;
-			$cmd = " PYTHONPATH=$dirname/../lib/gdata/src python ";
-			$cmd .= " $dirname/../lib/youtube-upload/youtube_upload/youtube_upload.py ";
-			$cmd .= " --email=$user_email --password=$user_passwd ";
-			$cmd .= " --check-status=$id ";
+			getDatabase()->execute(" update meeting set youtubestate = 'ready' where id = {$r['id']} ");
+      $title = meeting_category_to_title($r['category']);
+      $path = "/meetings/{$r['category']}/{$r['meetid']}";
+      syndicate("Video: {$title} on {$r['starttime']}",$path,$r['youtube']);
 
-			$state = `$cmd`;
-			$state = trim($state);
+			continue;
 
-			getDatabase()->execute(" update meeting set youtubestate = :state where id = :id ",array('id'=>$r['id'],'state'=>$state));
-
-			if ($state == 'ready') {
-				print "\n\n---------------------------------------------\n";
-				print "READY TO TWEET\n";
-				print "{$r['youtube']} transitioning from state '{$r['youtubestate']}' to '$state'\n";
-				pr($r);
-				print "---------------------------------------------\n\n\n";
-
-        $title = meeting_category_to_title($r['category']);
-        $path = "/meetings/{$r['category']}/{$r['meetid']}";
-        syndicate("Video: {$title} on {$r['starttime']}",$path,$r['youtube']);
-			}
+# 	    $id = preg_replace("/.*\?v=/","",$id);
+# 			$user_email = OttWatchConfig::YOUTUBE_USER;
+# 			$user_passwd = OttWatchConfig::YOUTUBE_PASS;
+# 			$cmd = " PYTHONPATH=$dirname/../lib/gdata/src python ";
+# 			$cmd .= " $dirname/../lib/youtube-upload/youtube_upload/youtube_upload.py ";
+# 			$cmd .= " --email=$user_email --password=$user_passwd ";
+# 			$cmd .= " --check-status=$id ";
+# 
+# 			$state = `$cmd`;
+# 			$state = trim($state);
+# 
+# 			getDatabase()->execute(" update meeting set youtubestate = :state where id = :id ",array('id'=>$r['id'],'state'=>$state));
+# 
+# 			if ($state == 'ready') {
+# 			}
 
 		}
+
 		# Look for new meeting videos on recent meetings.
 		$rows = getDatabase()->all(" 
 			select * 
