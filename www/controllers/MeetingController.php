@@ -975,7 +975,7 @@ class MeetingController {
 				<h1>O_o</h1>
 				<p>The 'fileid' of the file you are looking for cannot be found.</p>
 				<p>The City of Ottawa's agenda management system tends to change agenda item and file 'ids' when agendas are modified. This is hella annoying.</p>
-				<p><b>However</b>, based on the name of the file you are looking for I think I've located the same file under it's new "id".<p>
+				<p><b>However</b>, based on the name of the file you are looking for I think I've located the same file under its new "id".<p>
 				Possible matches:
 		    <table class="table table-bordered table-hover table-condensed" style="width: 95%;">
 				<tr>
