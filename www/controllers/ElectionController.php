@@ -597,13 +597,23 @@ class ElectionController {
 		bottom();
 	}
 
-	public static function getReturnPagesDir($year,$filename) {
+	public static function getReturnPagesDir($year,$filename,$electionid) {
 		$filename = preg_replace('/\.pdf/','',$filename);
-		return OttWatchConfig::FILE_DIR."/election/$year/financial_returns/$filename";
+		if ($electionid < 5) {
+			# old local reference
+			return OttWatchConfig::FILE_DIR."/election/$year/financial_returns/$filename";
+		}
+		# filename is actually full URL
+		$filename = preg_replace('/.*\//','',$filename);
+		return OttWatchConfig::FILE_DIR."/election/$year/financial_returns/$electionid/$filename";
 	}
 
-	public static function getReturnPages($year,$filename) {
-		$dir = self::getReturnPagesDir($year,$filename);
+	public static function getReturnPages($year,$filename,$electionid) {
+		if ($electionid == '') {
+			print "ERROR: electionid cannot be blank ";
+			return;
+		}
+		$dir = self::getReturnPagesDir($year,$filename,$electionid);
     $d = opendir($dir);
 		$pages = array();
     while (($file = readdir($d)) !== false) {
@@ -1324,8 +1334,8 @@ class ElectionController {
 			");
 			$returns = array();
 			foreach ($rows as $r) {
-				$dir = self::getReturnPagesDir($r['year'],$r['filename']);
-#				if (!file_exists($dir)) { continue; }
+				$dir = self::getReturnPagesDir($r['year'],$r['filename'],$r['electionid']);
+				if (!file_exists($dir)) { continue; }
 				$returns[] = $r;
 			}
 			?>
@@ -1342,7 +1352,7 @@ class ElectionController {
 				<td><?php print $r['ward']; ?></td>
 				<td><?php print $r['last']; ?></td>
 				<td><?php print $r['first']; ?></td>
-				<td><a href="/election/processReturn/<?php print $r['retid']; ?>?page=0"><?php print $r['filename']; ?></a></td>
+				<td><a target="_blank" href="/election/processReturn/<?php print $r['retid']; ?>?page=3"><?php print $r['filename']; ?></a></td>
 				<td><?
 					$sql = " select count(1) c ,sum(case when amount is not null and amount != '' then 1 else 0 end ) filled from candidate_donation d where returnid = {$r['retid']} group by returnid ";
 					$c = getDatabase()->one($sql);
@@ -1369,7 +1379,7 @@ class ElectionController {
 
 		# load data about the return
 		$ret = getDatabase()->one(" select c.*,r.filename from candidate_return r join candidate c on c.id = r.candidateid where r.id = $id ");
-		$pages = self::getReturnPages($ret['year'],$ret['filename']);
+		$pages = self::getReturnPages($ret['year'],$ret['filename'],$ret['electionid']);
 
     if ($_GET['saveA'] == 1) {
 			# click in a <canvass> denoting location of a campaign donation
@@ -1579,7 +1589,7 @@ class ElectionController {
 		$next = getDatabase()->one(" select min(y) y from candidate_donation where returnid = {$row['returnid']} and page = {$row['page']} and y > {$row['y']} ");
 
 		$ret = getDatabase()->one(" select c.*,r.filename from candidate_return r join candidate c on c.id = r.candidateid where r.id = {$row['returnid']} ");
-		$pages = self::getReturnPages($ret['year'],$ret['filename']);
+		$pages = self::getReturnPages($ret['year'],$ret['filename'],$ret['electionid']);
 
 		$page = $row['page'];
 		$pagefile = $pages[$page];
@@ -1652,7 +1662,10 @@ class ElectionController {
 			</div>
 		</div>
 
-		<?php if ($row['city'] == '') { $row['city'] = 'Ottawa'; } ?>
+		<?php if ($row['city'] == '') { 
+			// $row['city'] = 'Ottawa'; 
+			$row['city'] = 'London'; 
+		} ?>
 		<div class="form-group">
 			<label class="col-sm-1 control-label" for="city">City</label>
 			<div class="col-sm-5">
@@ -1841,6 +1854,7 @@ class ElectionController {
 
 		$toptitle = 'Campaign Donations Report';
 
+		$city = $_GET['city'];
 		$postal = $_GET['postal'];
 		$postal = strtoupper($postal);
 		$postal = preg_replace('/ /','',$postal);
@@ -1860,6 +1874,12 @@ class ElectionController {
 		if (preg_match('/^\d$/',$type)) {
 			$where .= " and d.type = $type ";
 			$filtered = 1;
+		}
+
+		if ($city != '') {
+			$where .= " and e.city = '".mysql_escape_string($city)."' ";
+		} else {
+			$where .= " and e.city = 'WILLNOTMATCH' ";
 		}
 
 		if ($donor != '') {
@@ -1980,11 +2000,15 @@ class ElectionController {
         astext(d.location) location,
 				r.id retid,
 				r.supplemental,
-				d.donorid
+				d.donorid,
+				c.electionid,
+				e.city,
+				e.date
 			from
 				candidate_donation d
 				join candidate_return r on d.returnid = r.id
 				join candidate c on r.candidateid = c.id
+				join election e on e.id = c.electionid
 			where 
 				$where_master
 			order by 
@@ -2052,23 +2076,48 @@ class ElectionController {
 		</div><!-- /row -->
 
 		<?php
+		if ($city == 'Ottawa') {
+			$wards = getDatabase()->all(" 
+				select * from (
+				select 0 ward ,'Mayor'  ward_en
+				union
+				select ward_num ward , ward_en from wards_2010 )
+				s order by ward+0
+			");
+		}
+
+		if ($city == '') {
+			$cities = getDatabase()->all(" 
+				select distinct(city) city from election
+			");
+			print "<h2>Pick a city</h2>";
+			foreach ($cities as $c) {
+				?>
+				<a class="btn btn-default" href="/election/listDonations?city=<?php print $c['city']; ?>"><?php print $c['city']; ?></a>
+				<?php
+			}
+			bottom3();
+			return;
+		}
+
 		$candidates = getDatabase()->all(" 
-			select id,year,ward,first,last from candidate order by last,first,year desc,ward 
-		");
+			select c.id,year,ward,first,last from candidate c
+			join election e on e.id = c.electionid 
+			where e.city = :city 
+			order by last,first,year desc,ward ",
+			array('city'=>$city));
+
 		$years = getDatabase()->all(" 
-			select distinct(year) year from candidate order by year desc
-		");
-		$wards = getDatabase()->all(" 
-			select * from (
-			select 0 ward ,'Mayor'  ward_en
-			union
-			select ward_num ward , ward_en from wards_2010 )
-			s order by ward+0
-		");
+			select distinct(year) year from candidate c 
+			join election e on e.id = c.electionid 
+			where e.city = :city 
+			order by year desc",
+			array('city'=>$city));
 
 		?>
 
 <form action="/election/listDonations" class="form-horizontal">
+<input type="hidden" name="city" value="<?php print $city; ?>"/>
 
 <div class="form-group">
 	<label class="col-sm-2 control-label" for="inputDonor">Donor Name</label>
@@ -2167,9 +2216,10 @@ class ElectionController {
 		<a class="btn btn-primary" href="/election/listDonations">Reset (New Search)</a>
 	</div>
 </div>
-
+</form>
 
 		<?php 
+
     if (count($rows) > 0) {
 
       if ($mapMode > 0) {
@@ -2471,10 +2521,6 @@ class ElectionController {
   		<?php 
     } 
 
-		?>
-		</form>
-		<?php
-
 		bottom3();
 	}
 
@@ -2499,7 +2545,8 @@ class ElectionController {
 				r.filename,
 				r.id retid,
 				c.id candid,
-				d.donorid
+				d.donorid,
+				c.electionid
 			from
 				candidate_donation d
 				join candidate_return r on d.returnid = r.id
@@ -2522,7 +2569,7 @@ class ElectionController {
 
 		$next = getDatabase()->one(" select min(y) y from candidate_donation where returnid = {$r['retid']} and page = {$r['page']} and y > {$r['y']} ");
 
-		$pages = self::getReturnPages($r['year'],$r['filename']);
+		$pages = self::getReturnPages($r['year'],$r['filename'],$r['electionid']);
 		$page = $r['page'];
 		$pagefile = $pages[$page];
     $size = getimagesize($pagefile);
@@ -2584,7 +2631,16 @@ class ElectionController {
 			?>
 			<tr><th>Location</th>
 			<td>
-				<a target="_blank" href="http://documents.ottawa.ca/sites/documents.ottawa.ca/files/documents/<?php print $r['filename']; ?>"><?php print $r['filename']; ?></a>,
+				<?php if ($r['electionid'] < 5) {
+					?>
+					<a target="_blank" href="http://documents.ottawa.ca/sites/documents.ottawa.ca/files/documents/<?php print $r['filename']; ?>"><?php print $r['filename']; ?></a>,
+					<?php
+				} else {
+					?>
+					<a target="_blank" href="<?php print $r['filename']; ?>"><?php print preg_replace('/.*\//','',$r['filename']); ?></a>,
+					<?php
+				}
+				?>
 				page <?php print ($r['page']+1); ?>, <?php print round($r['y']*100/$size[1]); ?>% down from top
 			</td>
 			</tr>

@@ -136,30 +136,7 @@ class DevelopmentAppController {
 			#pr($i);
 			foreach ($i['app'] as $devid) {
 				print "devid: $devid\n";
-		    $row = getDatabase()->one(" select * from devapp where devid = :devid ",array("devid"=>$devid));
-		    if ($row['id']) {
-					# exists, so update description
-					$id = $row['id'];
-					/*
-			    $row = getDatabase()->one(" select * from devappstatus where devappid = $id and statusdate = {$i['date']} and status = 'Appearance on CoA agenda, panel $panel' ");
-			    if (! $row['id']) {
-			      getDatabase()->execute(" 
-								insert into devappstatus (devappid,status,statusdate) values (:devappid,:status,:statusdate) 
-							",array(
-			        'devappid' => $id,
-			        'status' => 'Appearance on CoA agenda, panel ' . $panel,
-			        'statusdate' => $i['date']
-			      ));
-					}
-					*/
-					/*
-			    $id = getDatabase()->execute(" update devapp set address = :address, description = :description where id = :id ",array(
-		        'address'=> json_encode($addresses),
-		        'description' => "CoA {$i['date']} panel {$i['panel']}",
-						'id' => $id
-					));
-					*/
-				} else {
+		    getDatabase()->execute(" delete from devapp where devid = :devid ",array("devid"=>$devid));
 
 				$addresses = array();
 				foreach ($i['addr'] as $a) {
@@ -182,28 +159,27 @@ class DevelopmentAppController {
 					}
 				}
 
-					$ward = '';
-			    $id = getDatabase()->execute(" 
-			      insert into devapp 
-			      (address,appid,devid,ward,apptype,receiveddate,created,updated,description)
-			      values
-			      (:address,:appid,:devid,:ward,:apptype,:receiveddate,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP,:description)",array(
-			        'devid'=> $devid,
-			        'address'=> json_encode($addresses),
-			        'appid'=> 'n/a',
-			        'ward' => $ward,
-			        'apptype' => 'coa', #$labels['Application'],
-			        'receiveddate' => $i['date'],
-			        'description' => "CoA {$i['date']} panel {$i['panel']}"
-			    ));
-		      getDatabase()->execute(" 
-							insert into devappstatus (devappid,status,statusdate) values (:devappid,:status,:statusdate) 
-						",array(
-		        'devappid' => $id,
-		        'status' => 'Appearance on CoA agenda, panel ' . $panel,
-		        'statusdate' => $i['date']
-		      ));
-				}
+				$ward = '';
+		    $id = getDatabase()->execute(" 
+		      insert into devapp 
+		      (address,appid,devid,ward,apptype,receiveddate,created,updated,description)
+		      values
+		      (:address,:appid,:devid,:ward,:apptype,:receiveddate,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP,:description)",array(
+		        'devid'=> $devid,
+		        'address'=> json_encode($addresses),
+		        'appid'=> 'n/a',
+		        'ward' => $ward,
+		        'apptype' => 'coa', #$labels['Application'],
+		        'receiveddate' => $i['date'],
+		        'description' => "CoA {$i['date']} panel {$i['panel']}"
+		    ));
+	      getDatabase()->execute(" 
+						insert into devappstatus (devappid,status,statusdate) values (:devappid,:status,:statusdate) 
+					",array(
+	        'devappid' => $id,
+	        'status' => 'Appearance on CoA agenda, panel ' . $panel,
+	        'statusdate' => $i['date']
+	      ));
 			}
 		}
   }
