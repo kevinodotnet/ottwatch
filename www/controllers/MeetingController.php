@@ -942,24 +942,78 @@ class MeetingController {
 		if (!isset($file['id'])) {
 			# the fileid is now dead, as happens from time to time.
 			# give a best effort warning based on the DESC that we might now about
-			top();
-			?>
-			<h1>This file is no longer available</h1>
-			<p>
-			Most likely, the "fileid" has simply changed to something else, as happens from time to time as
-			city agendas are updated before and after a meeting.
-			</p>
-			<?php if ($desc != '') { ?>
-			<p>
-			This file description may help you locate the relevant meeting date / item, so you can lookup 
-			that meeting in <a href="/meetings/">the list of all meetings</a>.<br/>
-			</p>
-			<p>
-			<b>Description:</b> <?php print htmlentities($desc); ?>
-			</p>
-			<?php } ?>
-			<?php
-			bottom();
+			top3();
+			$words = $desc;
+			$words = preg_replace('/File_/','',$words);
+			$words = preg_replace('/_Item_.*_Meeting_.*_Date_20\d\d_\d\d_\d\d_\d\d_\d\d_\d\d$/','',$words);
+			$words = explode('_',$words);
+
+			$search = 0;
+
+			$sql = " 
+				select 
+					f.fileid,
+					f.title,
+					m.category,
+					left(m.starttime,10) starttime
+				from ifile f 
+					join item i on i.id = f.itemid
+					join meeting m on m.id = i.meetingid
+				where 1 = 1 ";
+			foreach ($words as $w) {
+				if ($w == '') { continue; }
+				$search = 1;
+				$sql .= " AND f.title like '%".mysql_escape_string($w)."%' ";
+			}
+			$sql .= ' order by m.starttime desc ';
+			if ($search) {
+				$rows = getDatabase()->all($sql);
+			}
+			if ($search && count($rows) > 0) {
+
+				?>
+				<h1>O_o</h1>
+				<p>The 'fileid' of the file you are looking for cannot be found.</p>
+				<p>The City of Ottawa's agenda management system tends to change agenda item and file 'ids' when agendas are modified. This is hella annoying.</p>
+				<p><b>However</b>, based on the name of the file you are looking for I think I've located the same file under it's new "id".<p>
+				Possible matches:
+		    <table class="table table-bordered table-hover table-condensed" style="width: 95%;">
+				<tr>
+					<th>Filename</th>
+					<th>Committee</th>
+					<th>Date</th>
+				</tr>
+				<?php
+				foreach ($rows as $r) {
+					print "<tr><td><a href=\"/meetings/file/".$r['fileid']."\">".$r['title']."</a></td><td>".meeting_category_to_title($r['category'])."</td><td>{$r['starttime']}</td></tr>";
+				}
+				?>
+				</table>
+
+				<?php
+
+			} else {
+
+				# File_2_Street_Checks_main_report_final_docx_Item_OTTAWA_POLICE_SERVICE_PLAN_FOR_PARTICIPATION_IN_PROVINCIAL_STREET_CHECK_REVIEW_Meeting_Police_Services_Board_Date_2015_07_27_05_00_00
+	
+				?>
+				<h1>This file is no longer available</h1>
+				<p>
+				Most likely, the "fileid" has simply changed to something else, as happens from time to time as
+				city agendas are updated before and after a meeting.
+				</p>
+				<?php if ($desc != '') { ?>
+				<p>
+				This file description may help you locate the relevant meeting date / item, so you can lookup 
+				that meeting in <a href="/meetings/">the list of all meetings</a>.<br/>
+				</p>
+				<p>
+				<b>Description:</b> <?php print htmlentities($desc); ?>
+				</p>
+				<?php } ?>
+				<?php
+				bottom3();
+			}
 			return;
 		}
 
