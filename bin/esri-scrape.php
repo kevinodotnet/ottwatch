@@ -222,7 +222,7 @@ function scrapeLayer($metaurl,$table,$key) {
 		$url .= "?where=".urlencode("$key > $maxid");
 		$url .= "&outFields=".urlencode(implode(",",$allfields));
 		$url .= "&returnGeometry=false";
-#		$url .= "&orderByFields=$key";
+		$url .= "&orderByFields=$key";
 		$url .= "&returnZ=false";
 		$url .= "&returnM=false";
 		$url .= "&returnDistinctValues=false";
