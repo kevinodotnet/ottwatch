@@ -515,7 +515,7 @@ class MeetingController {
   static public function getVideoStart($id) {
 		global $dirname; # set by bin/XXXX.php scripts, UGLY, should probably be passed in as FAR or a DEFINE
 
-		$debug = 0;
+		$debug = 1;
 
 		$m = getDatabase()->one(" select * from meeting where id = :id ",array('id'=>$id));
 		if (!$m['id']) {
@@ -577,7 +577,7 @@ class MeetingController {
   static public function getVideo($id) {
 		global $dirname; # set by bin/XXXX.php scripts, UGLY, should probably be passed in as FAR or a DEFINE
 
-		$debug = 0;
+		$debug = 1;
 
 		$m = getDatabase()->one(" select * from meeting where id = :id ",array('id'=>$id));
 		if (!$m['id']) {
