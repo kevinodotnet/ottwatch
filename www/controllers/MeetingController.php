@@ -985,7 +985,9 @@ class MeetingController {
 				</tr>
 				<?php
 				foreach ($rows as $r) {
-					print "<tr><td><a href=\"/meetings/file/".$r['fileid']."\">".$r['title']."</a></td><td>".meeting_category_to_title($r['category'])."</td><td>{$r['starttime']}</td></tr>";
+					$fileUrl = MeetingController::getFileUrl($r['fileid']);
+					print "<tr><td><a href=\"$fileUrl\">".$r['title']."</a></td><td>".meeting_category_to_title($r['category'])."</td><td>{$r['starttime']}</td></tr>";
+					#print "<tr><td><a href=\"/meetings/file/".$r['fileid']."\">".$r['title']."</a></td><td>".meeting_category_to_title($r['category'])."</td><td>{$r['starttime']}</td></tr>";
 				}
 				?>
 				</table>
@@ -1019,20 +1021,19 @@ class MeetingController {
 
 		# the fileid exists
 
-    $meetingtitle = meeting_category_to_title($file['category']);
-		$dbdesc = "File: {$file['filetitle']} Item: {$file['itemtitle']} Meeting: {$meetingtitle} Date: {$file['starttime']}";
-		$dbdesc = preg_replace('/[: -\.\(\)]/','_',$dbdesc);
-		$dbdesc = preg_replace('/__/','_',$dbdesc);
-		$dbdesc = preg_replace('/__/','_',$dbdesc);
-		$dbdesc = preg_replace('/__/','_',$dbdesc);
-		$dbdesc = preg_replace('/__/','_',$dbdesc);
-
-		if ($desc != $dbdesc) {
-			# coming in with mis-matched description; send them to the correc tone, which will be another HTTP GET but
-			# the next hit will get past this IF.
-			header("Location: /meetings/file/{$fileid}/{$dbdesc}");
-			return;
-		}
+    #$meetingtitle = meeting_category_to_title($file['category']);
+		#$dbdesc = "File: {$file['filetitle']} Item: {$file['itemtitle']} Meeting: {$meetingtitle} Date: {$file['starttime']}";
+		#$dbdesc = preg_replace('/[: -\.\(\)]/','_',$dbdesc);
+		#$dbdesc = preg_replace('/__/','_',$dbdesc);
+		#$dbdesc = preg_replace('/__/','_',$dbdesc);
+		#$dbdesc = preg_replace('/__/','_',$dbdesc);
+		#$dbdesc = preg_replace('/__/','_',$dbdesc);
+		#if ($desc != $dbdesc) {
+		#	# coming in with mis-matched description; send them to the correc tone, which will be another HTTP GET but
+		#	# the next hit will get past this IF.
+		#	header("Location: ".MeetingController::getFileUrl($fileid));
+		#	return;
+		#}
 
     # get the data
     $curl = 'http://app05.ottawa.ca/sirepub/view.aspx?cabinet=published_meetings&fileid=' . $fileid;
@@ -1091,6 +1092,30 @@ class MeetingController {
     return;
     ## get the real PDF and echo it back.
   }
+
+	static public function getFileUrl ($id) {
+    global $OTT_WWW;
+
+    $file = getDatabase()->one(" select * from ifile where fileid = :id ",array("id"=>$id));
+    if (!$file['id']) {
+      print "Fileid not found (b): $id\n";
+      return;
+    }
+
+		$m = getDatabase()->one(" select i.title itemtitle, m.* from meeting m join item i on i.meetingid = m.id join ifile f on f.itemid = i.id where f.fileid = $id ");
+
+		#pr($file); pr($m);
+
+    $meetingtitle = meeting_category_to_title($m['category']);
+		$dbdesc = "{$file['title']} Item: {$m['itemtitle']} Meeting: {$meetingtitle} Date: {$m['starttime']}";
+		$dbdesc = preg_replace('/[: -\.\(\)]/','_',$dbdesc);
+		$dbdesc = preg_replace('/__/','_',$dbdesc);
+		$dbdesc = preg_replace('/__/','_',$dbdesc);
+		$dbdesc = preg_replace('/__/','_',$dbdesc);
+		$dbdesc = preg_replace('/__/','_',$dbdesc);
+
+		return "$OTT_WWW/meetings/file/{$id}/{$dbdesc}";
+	}
 
   static public function getDocumentUrl ($meetid,$doctype) {
     return "http://app05.ottawa.ca/sirepub/agview.aspx?agviewmeetid={$meetid}&agviewdoctype={$doctype}";
@@ -1211,7 +1236,7 @@ class MeetingController {
       if (count($files) > 0) {
         foreach ($files as $f) {
           $ft = self::trimFileTitle($i['title'],$f['title']);
-          $fileurl = OttWatchConfig::WWW . "/meetings/file/" . $f['fileid'];
+          $fileurl = MeetingController::getFileUrl($f['fileid']);
           print "
 					<tr>
 					<td style=\"padding-left: 20px;\">
@@ -1603,7 +1628,7 @@ class MeetingController {
       if (count($files) > 0) {
         foreach ($files as $f) {
           $ft = self::trimFileTitle($i['title'],$f['title']);
-          $fileurl = OttWatchConfig::WWW . "/meetings/file/" . $f['fileid'];
+          $fileurl = MeetingController::getFileUrl($f['fileid']);
           print "<small><a target=\"_blank\" href=\"{$fileurl}\"><i class=\"icon-share-alt\"></i></a> <a href=\"javascript:focusOn('file',{$f['fileid']},'{$ft}')\"><i class=\"icon-edit\"></i> {$ft}</small></a><br/>\n";
         }
       }
@@ -2425,13 +2450,13 @@ class MeetingController {
 
     $file = getDatabase()->one(" select * from ifile where id = :id ",array("id"=>$id));
     if (!$file['id']) {
-      print "Fileid not found: $id\n";
+      print "Fileid not found (a): $id\n";
       return;
     }
 
     # get the file data
     print "downloading file: $id\n";
-    $pdf = file_get_contents(OttWatchConfig::WWW . "/meetings/file/".$file['fileid']);
+    $pdf = file_get_contents(MeetingController::getFileUrl($file['fileid']));
     #file_put_contents("tmp.pdf",$pdf);
     #$pdf = file_get_contents("tmp.pdf");
 
