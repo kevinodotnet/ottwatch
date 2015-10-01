@@ -11,7 +11,15 @@ MeetingController::formatMotion("foo");
 class MeetingController {
 
 	static public function reportLikeness() {
-		$pairs = self::getMemberLikeness();
+
+		$category = $_GET['category'];
+
+		$catName = "All Votes";
+		if ($category != '') {
+			$catName = meeting_category_to_title($category);
+		}
+
+		$pairs = self::getMemberLikeness($category);
 		#pr($pairs);
 		#return;
 		top3("Council Likeness Report");
@@ -22,6 +30,7 @@ class MeetingController {
 		<div class="row">
 		<div class="col-sm-6">
 		<h3>Council Likeness Report <small>Visualize level of agreement between councillors.</small></h3>
+		<h5><?php print $catName; ?></h5>
 		</div>
 		<div class="col-sm-3">
 			<div style="background: #00ff00; width: 20px; height: 20px;"></div>
@@ -65,12 +74,33 @@ class MeetingController {
 
 		?>
 		</table>
+		<h1>Filter by Committee</h1>
 		<?php
+
+		$rows = getDatabase()->all(" select distinct(category) c from meeting ");
+		foreach ($rows as $r) {
+			$c = $r['c'];
+			$name = meeting_category_to_title($r['c']);
+			if (preg_match('/Advisory/',$name)) { continue; }
+			if (preg_match('/Library/',$name)) { continue; }
+			if (preg_match('/Police/',$name)) { continue; }
+			if (preg_match('/Board of Health/',$name)) { continue; }
+			if (preg_match('/ECAC/',$name)) { continue; }
+			if (preg_match('/COURT OF REVISION/',$name)) { continue; }
+			?>
+			<a class="btn btn-default" href="/meetings/votes/report/likeness?category=<?php print $c; ?>"><?php print $name; ?></a>
+			<?php
+		}
 
 		bottom3();
 	}
 
-	static public function getMemberLikeness() {
+	static public function getMemberLikeness($category) {
+
+		$categoryWhere = '';
+		if ($category != '') {
+			$categoryWhere = "and m.category = '".mysql_escape_string($category)."' ";
+		}
 	
 		$sql = "
 			select
@@ -85,6 +115,7 @@ class MeetingController {
 				join itemvotecast ivc2 on ivc2.itemvoteid = iv.id
 			where 
 				m.starttime >= '2014-12-01'
+				$categoryWhere 
 				and ivc1.vote in ('y','n')
 				and ivc2.vote in ('y','n')
 				and ivc1.name not in ('L. A. (Sandy) Smallwood','B. Crew','B. Padolsky','F. Malo','G. Milner','C. Quinn','S. Burt')
