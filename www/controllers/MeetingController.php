@@ -118,15 +118,17 @@ class MeetingController {
 				$categoryWhere 
 				and ivc1.vote in ('y','n')
 				and ivc2.vote in ('y','n')
-				and ivc1.name not in ('L. A. (Sandy) Smallwood','B. Crew','B. Padolsky','F. Malo','G. Milner','C. Quinn','S. Burt')
-				and ivc2.name not in ('L. A. (Sandy) Smallwood','B. Crew','B. Padolsky','F. Malo','G. Milner','C. Quinn','S. Burt')
-				and ivc1.name not in ('Carmelle Bédard','Douglas Wallace','J. Vézina','J.P. Kingsley','L Russell')
-				and ivc2.name not in ('Carmelle Bédard','Douglas Wallace','J. Vézina','J.P. Kingsley','L Russell')
 			group by
 				ivc1.name, ivc2.name
 			order by
 				ivc1.name, ivc2.name
 		";
+		/*
+				and ivc1.name not in ('L. A. (Sandy) Smallwood','B. Crew','B. Padolsky','F. Malo','G. Milner','C. Quinn','S. Burt')
+				and ivc2.name not in ('L. A. (Sandy) Smallwood','B. Crew','B. Padolsky','F. Malo','G. Milner','C. Quinn','S. Burt')
+				and ivc1.name not in ('Carmelle Bédard','Douglas Wallace','J. Vézina','J.P. Kingsley','L Russell')
+				and ivc2.name not in ('Carmelle Bédard','Douglas Wallace','J. Vézina','J.P. Kingsley','L Russell')
+				*/
 	
 		$pairs = array();
 	
