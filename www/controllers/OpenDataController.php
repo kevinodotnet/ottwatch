@@ -134,6 +134,11 @@ class OpenDataController {
       $values['guid'] = $set->id;
       $values['name'] = $set->name;
       $values['title'] = $set->title;
+			if (preg_match('/^{/',$set->title)) {
+				# title is embedded JSON; pull out English
+				$title = json_decode($set->title);
+				$values['title'] = $title->en;
+			}
       $values['url'] = $set->ckan_url;
       $values['updated'] = $set->metadata_modified;
 			$id = db_save('opendata',$values,'guid');
@@ -267,9 +272,9 @@ class OpenDataController {
     <tr>
     <th>Updated</th>
     <th>File</th>
+    <th>Format</th>
     <th>Dataset</th>
     <th>Size (kB)</th>
-    <th>Format</th>
     <th>Description</th>
     </tr>
     <?php
@@ -282,9 +287,9 @@ class OpenDataController {
       <tr>
       <td><nobr><?php print $r['updated']; ?></nobr></td>
       <td><nobr><a href="<?php print $r['fileurl']; ?>"><?php print $r['fname']; ?></a></nobr></td>
+      <td><?php print $r['format']; ?></td>
       <td><nobr><a href="<?php print $r['url']; ?>"><?php print $r['title']; ?></a></nobr></td>
       <td><?php print $size ?></td>
-      <td><?php print $r['format']; ?></td>
       <td><?php print $r['description']; ?></td>
       </tr>
       <?php
