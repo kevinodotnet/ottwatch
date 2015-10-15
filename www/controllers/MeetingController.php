@@ -10,6 +10,53 @@ MeetingController::formatMotion("foo");
 
 class MeetingController {
 
+	static public function graphLikenessJSON() {
+
+		$category = $_GET['category'];
+
+		$pairs = self::getMemberLikeness($category);
+
+		$nodes = array();
+		$links = array();
+
+		$nodeIndex = array();
+		$linksDone = array();
+
+		$i = 0;
+
+		foreach ($pairs as $k => $v) {
+			if ($k == 'minperc') { continue; }
+			if ($k == 'maxperc') { continue; }
+			$node = array(
+				'name' => $k
+			);
+			$nodes[] = $node;
+			$nodeIndex[$k] = $i++;
+		}
+
+		foreach ($pairs as $k => $v) {
+			foreach ($v as $l) {
+				$source = $nodeIndex[$l['n1']];
+				$target = $nodeIndex[$l['n2']];
+				if ($source >= $target) { continue; }
+				$value = $l['percnorm'];
+				if ($value < .60) { continue; } # less than 50% agree, so no link
+				$link = array(
+					'source' => $source,
+					'target' => $target,
+					'value' => 1/$value
+				);
+				$links[] = $link;
+			}
+		}
+
+		$data = array(
+			'nodes' => $nodes,
+			'links' => $links
+		);
+		return $data;
+	}
+
 	static public function reportLikeness() {
 
 		$category = $_GET['category'];

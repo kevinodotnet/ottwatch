@@ -12,6 +12,7 @@ include_once 'epiphany/src/Epi.php';
 include_once 'controllers/ApiController.php';
 include_once 'controllers/ScrapeApiController.php';
 include_once 'controllers/MeetingController.php';
+include_once 'controllers/GraphController.php';
 include_once 'controllers/DevelopmentApp.php';
 include_once 'controllers/LobbyistController.php';
 include_once 'controllers/LoginController.php';
@@ -132,7 +133,11 @@ getRoute()->get('/meetings/votes', array('MeetingController','votesIndex'));
 getRoute()->get('/meetings/votes/member/([^\/]*)', array('MeetingController','votesMember'));
 getRoute()->get('/meetings/votes/(\d+)', array('MeetingController','voteDisplay'));
 getRoute()->get('/meetings/votes/report/closeVotes', array('MeetingController','reportCloseVotes'));
-getRoute()->get('/meetings/votes/report/likeness', array('MeetingController','reportLikeness'));
+getApi()->get('/meetings/votes/report/likeness', array('MeetingController','reportLikeness'));
+
+getRoute()->get('/graph/force', array('GraphController','graphForce'));
+
+getApi()->get('/meetings/votes/report/likeness/graph/data.json', array('MeetingController', 'graphLikenessJSON'), EpiApi::external);
 
 getRoute()->get('/meetings/dump/all', array('MeetingController','dump'));
 getRoute()->get('/meetings/calendar', array('MeetingController','calendarView'));
@@ -538,6 +543,7 @@ function top_common($v3, $title = '',$quiet = false) {
 <?php 
 if ($v3) {
 	?>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
 	<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
 	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
 	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css">
