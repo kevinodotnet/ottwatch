@@ -133,7 +133,7 @@ getRoute()->get('/meetings/votes', array('MeetingController','votesIndex'));
 getRoute()->get('/meetings/votes/member/([^\/]*)', array('MeetingController','votesMember'));
 getRoute()->get('/meetings/votes/(\d+)', array('MeetingController','voteDisplay'));
 getRoute()->get('/meetings/votes/report/closeVotes', array('MeetingController','reportCloseVotes'));
-getApi()->get('/meetings/votes/report/likeness', array('MeetingController','reportLikeness'));
+getRoute()->get('/meetings/votes/report/likeness', array('MeetingController','reportLikeness'));
 
 getRoute()->get('/graph/force', array('GraphController','graphForce'));
 

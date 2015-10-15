@@ -21,6 +21,7 @@ class GraphController {
 }
 
 </style>
+<div><small>(NOTE: this is really early beta work, and I've probably messed it up, so just have fun. "DRAW" no conclusions (zing!)</small></div>
 <div id="tipname">Please wait for data to load ... hover over circles for popup information. Drag to pin circles to a spot. Double-click to release.</div>
 <script>
 
