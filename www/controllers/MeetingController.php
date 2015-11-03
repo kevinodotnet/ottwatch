@@ -1343,6 +1343,7 @@ class MeetingController {
 				}
 				$num = $words[$x-1];
 				$street = $words[$x];
+				$street = preg_replace("/'/","''",$street);
 				$apps = getDatabase()->all(" select * from devapp where address like '%$num $street%'");
 				foreach ($apps as $a) {
           print "
