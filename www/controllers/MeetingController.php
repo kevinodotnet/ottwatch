@@ -427,11 +427,73 @@ class MeetingController {
   }
 
   static public function votesIndex() {
-    top();
+    top3();
+
+		$year = $_GET['year'];
+		if ($year == '') {
+			$year = date('Y');
+		}
+
+		$years = getDatabase()->all(" 
+			select 
+				distinct(left(m.starttime,4)) year
+			from itemvote iv
+				join item i on i.id = iv.itemid
+				join meeting m on m.id = i.meetingid
+		");
+
+		print "<div style=\"padding-bottom: 20px;\">";
+		print "<b>Display votes from year:</b>";
+		foreach ($years as $y) {
+			$y = $y['year'];
+			print "&nbsp;";
+			print "&nbsp;";
+			print "<a href=\"/meetings/votes?year=$y\">$y</a>";
+		}
+		print "</div>";
+
     ?>
 
-    <div class="row-fluid">
-    <div class="span6">
+
+		<?php
+		$rows = getDatabase()->all(" 
+			select 
+				iv.id,
+				iv.motion,
+				i.title item,
+				i.itemid,
+				m.category,
+				left(m.starttime,10) starttime
+			from itemvote iv
+				join item i on i.id = iv.itemid
+				join meeting m on m.id = i.meetingid
+			where
+				left(m.starttime,4) = :year
+			order by 
+				m.starttime desc
+		",array('year'=>$year));
+		print "<h1>".count($rows)." votes found in year $year</h1>";
+		?>
+    <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
+		<tr>
+			<th>Vote# <small>(details)</small></th>
+			<th>Motion/Item <small>(click for full details and documents/reports)</small></th>
+			<th>Meeting/Date</th>
+		</tr>
+		<?php
+		foreach ($rows as $r) {
+			print "<tr>";
+			print "<td><a href=\"/meetings/votes/{$r['id']}\">{$r['id']}</a></td>";
+			print "<td>{$r['motion']}<br/><i><b>Item #<a target=\"_blank\" href=\"http://app05.ottawa.ca/sirepub/item.aspx?itemid={$r['itemid']}\">{$r['itemid']}</a></b>: {$r['item']}</i></td>";
+			print "<td>".meeting_category_to_title($r['category'])."<br/><nobr>{$r['starttime']}</nobr></td>";
+			print "</tr>";
+		}
+		?>
+
+		</table>
+
+		<div class="row">
+    <div class="col-sm-3">
     Choose the name of a council or committee member to see their entire voting history.
     <p/>
     <ul>
@@ -443,12 +505,12 @@ class MeetingController {
     ?>
     </ul>
     </div>
-    <div class="span6">
+    <div class="col-sm-3">
     <a href="/meetings/votes/report/closeVotes">Close Votes Report</a>
     </div>
     </div><!-- row -->
     <?php
-    bottom();
+    bottom3();
   }
 
   static public function votesMember($name) {
@@ -661,9 +723,11 @@ class MeetingController {
 
 		$debug = 1;
 
-		$m = getDatabase()->one(" select * from meeting where id = :id ",array('id'=>$id));
+		$m = getDatabase()->one(" select * from meeting where id = :id or meetid = :meetid",array('id'=>$id,'meetid'=>$id));
 		if (!$m['id']) {
-			# can't get video for a meeting we don't know about
+			if ($debug) {
+				print "can't get video for a meeting we don't know about; $id\n";
+			}
 			return -1;
 		}
 
