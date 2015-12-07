@@ -12,6 +12,7 @@ include_once 'epiphany/src/Epi.php';
 include_once 'controllers/ApiController.php';
 include_once 'controllers/ScrapeApiController.php';
 include_once 'controllers/MeetingController.php';
+include_once 'controllers/GisController.php';
 include_once 'controllers/GraphController.php';
 include_once 'controllers/DevelopmentApp.php';
 include_once 'controllers/LobbyistController.php';
@@ -189,6 +190,8 @@ getRoute()->post('/election/question/vote', array('ElectionController','question
 getRoute()->post('/election/question/answer', array('ElectionController','saveAnswer'));
 
 getRoute()->get('/election/(\d+)/race/(\d+)/results/', array('ElectionController','raceResults'));
+
+getRoute()->get('/gis/viewLayer', array('GisController','viewLayer'));
 
 getRoute()->get('.*', 'error404');
 getRoute()->run();
