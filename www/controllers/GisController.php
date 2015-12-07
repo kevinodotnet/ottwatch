@@ -6,19 +6,11 @@ class GisController {
 		top3();
 
 		$layer = $_GET['layer'];
-		$where = '';
 		$whereK = $_GET['whereK'];
 		$whereV = $_GET['whereV'];
-		if ($whereK != '') {
-			$where = " where ".mysql_escape_string($whereK)." = '".mysql_escape_string($whereV)."' ";
-		}
-		$limit = $_GET['limit'];
-		if ($limit != '') { 
-			$limit = " limit $limit; "; 
-		}
 
 		?>
-		<b><?php print $layer; ?></b> <i><?php print $where; ?></i>
+		<b><?php print $layer; ?></b> <i><?php print " where $whereK = $whereV"; ?></i>
 		<?php
 
 		$sql =
@@ -31,6 +23,22 @@ class GisController {
 		$cols = array();
 		foreach ($r as $k => $v) {
 			$cols[] = $k;
+		}
+
+		$where = '';
+		if ($whereK != '') {
+			if (!in_array($whereK,$cols)) {
+				print "BAD WHEREK: $whereK";
+				bottom();
+				return;
+			}
+			$where = " where ".mysql_escape_string($whereK)." = '".mysql_escape_string($whereV)."' ";
+		}
+		$limit = intval($_GET['limit']);
+		if ($limit != '' && $limit > 0) { 
+			$limit = " limit $limit; "; 
+		} else {
+			$limit = '';
 		}
 
 		$sql = " select 1";
