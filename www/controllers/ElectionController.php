@@ -1854,7 +1854,6 @@ class ElectionController {
 
 		$toptitle = 'Campaign Donations Report';
 
-		$city = $_GET['city'];
 		$postal = $_GET['postal'];
 		$postal = strtoupper($postal);
 		$postal = preg_replace('/ /','',$postal);
@@ -1874,12 +1873,6 @@ class ElectionController {
 		if (preg_match('/^\d$/',$type)) {
 			$where .= " and d.type = $type ";
 			$filtered = 1;
-		}
-
-		if ($city != '') {
-			$where .= " and e.city = '".mysql_escape_string($city)."' ";
-		} else {
-			$where .= " and e.city = 'WILLNOTMATCH' ";
 		}
 
 		if ($donor != '') {
@@ -2076,7 +2069,6 @@ class ElectionController {
 		</div><!-- /row -->
 
 		<?php
-		if ($city == 'Ottawa') {
 			$wards = getDatabase()->all(" 
 				select * from (
 				select 0 ward ,'Mayor'  ward_en
@@ -2084,40 +2076,21 @@ class ElectionController {
 				select ward_num ward , ward_en from wards_2010 )
 				s order by ward+0
 			");
-		}
 
-		if ($city == '') {
-			$cities = getDatabase()->all(" 
-				select distinct(city) city from election
-			");
-			print "<h2>Pick a city</h2>";
-			foreach ($cities as $c) {
-				?>
-				<a class="btn btn-default" href="/election/listDonations?city=<?php print $c['city']; ?>"><?php print $c['city']; ?></a>
-				<?php
-			}
-			bottom3();
-			return;
-		}
 
 		$candidates = getDatabase()->all(" 
 			select c.id,year,ward,first,last from candidate c
 			join election e on e.id = c.electionid 
-			where e.city = :city 
-			order by last,first,year desc,ward ",
-			array('city'=>$city));
+			order by last,first,year desc,ward ");
 
 		$years = getDatabase()->all(" 
 			select distinct(year) year from candidate c 
 			join election e on e.id = c.electionid 
-			where e.city = :city 
-			order by year desc",
-			array('city'=>$city));
+			order by year desc");
 
 		?>
 
 <form action="/election/listDonations" class="form-horizontal">
-<input type="hidden" name="city" value="<?php print $city; ?>"/>
 
 <div class="form-group">
 	<label class="col-sm-2 control-label" for="inputDonor">Donor Name</label>
