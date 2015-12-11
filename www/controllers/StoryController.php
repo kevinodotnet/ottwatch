@@ -7,39 +7,33 @@ class StoryController {
 	}
 
   public static function doList() {
-    top('Stories');
+    top3('Stories');
     $rows = self::getPublished();
     foreach ($rows as $r) {
 
-      $preview = strip_tags($r['body'],'<p><div>');
-      $preview = preg_replace('/\n/',' ',$preview);
-      $preview = preg_replace('/\n/',' ',$preview);
-      $preview = preg_replace('/\s+<p/',"\n<p",$preview);
-      $lines = explode("\n",$preview);
-      $preview = $lines[0];
-      $preview = preg_replace('/<\/p>$/','',$preview);
-      $preview .= "&nbsp;&nbsp;<b><a href=\"{$r['id']}/{$r['title']}\">Read More...</a></b><p/>";
+			#pr($r);
+
+			$arr = explode(' ',strip_tags($r['body']));
+			$preview = '';
+			$i = 0;
+			while (strlen($preview) < 175) {
+				$preview .= " {$arr[$i++]}";
+			}
+
+      $preview .= "&nbsp;&nbsp;&nbsp;<b><a href=\"{$r['id']}/{$r['title']}\">...read more...</a></b>";
+
+			$r['updated'] = preg_replace('/ .*/','',$r['updated']);
 
       ?>
-      <div class="row-fluid">
-      <div class="span6">
-      <h1><a href="<?php print "{$r['id']}/{$r['title']}"; ?>"><?php print $r['title']; ?></a></h1>
+      <div class="col-sm-4">
+							<h3 style="min-height: 75px;"><a href="<?php print "{$r['id']}/{$r['title']}"; ?>"><?php print $r['title']; ?></a><br/></h3>
+							<div>
+							<b><?php print $r['updated']; ?></b> - <?php print $preview; ?>
+							</div>
       </div>
-      </div>
-      <div class="row-fluid">
-      <div class="span5">
-      <?php print $preview; ?>
-      </div>
-      <div class="span2">
-      <center>
-      <b>Updated</b><br/>
-      <?php print $r['updated']; ?>
-      </center>
-      </div>
-      </div>
-      <?php
+			<?php
     }
-    bottom();
+    bottom3();
   }
 
   public static function add() {
