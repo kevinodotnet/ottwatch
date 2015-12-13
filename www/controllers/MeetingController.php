@@ -737,18 +737,18 @@ class MeetingController {
     $url = "http://app05.ottawa.ca/sirepub/mtgviewer.aspx?meetid={$meetid}&doctype=AGENDA";
     $html = `wget -qO - '$url'`; // file_get_contents($url);
 
-		if ($debug) {
-		print "\n\n-----------------------------------------\n\n";
-		print "$html\n";
-		print "\n\n-----------------------------------------\n\n";
-		}
-
     $tmp = preg_grep('/g_locationPrimary/',explode("\n",$html));
     if (count($tmp) == 0) {
 			# print "NO video details found (g_locationPrimary)\n";
       // no video
 			return -1;
     }
+
+		if ($debug) {
+		print "\n\n-----------------------------------------\n\n";
+		print "$html\n";
+		print "\n\n-----------------------------------------\n\n";
+		}
 
 		# Extract just the URL from the HTML line that matched
     foreach ($tmp as $k => $v) { $tmp = $v; }
