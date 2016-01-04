@@ -613,6 +613,9 @@ class ElectionController {
 			print "ERROR: electionid cannot be blank ";
 			return;
 		}
+
+		return;
+
 		$dir = self::getReturnPagesDir($year,$filename,$electionid);
     $d = opendir($dir);
 		$pages = array();
