@@ -195,24 +195,21 @@ class DevelopmentAppController {
 		
     $a = getDatabase()->one(" select * from devapp where id = :devid or devid = :devid ",array("devid"=>$devid));
     if (!$a['id']) {
-      top();
+      top3();
       print "$devid not found in the database.\n";
-      bottom();
+      bottom3();
       return;
     }
-    top($a['devid'] . " - ". $a['apptype'] . " - " . $a['appid']);
 
-    #$a['ward'] = preg_replace("/Ward /","",$a['ward']);
-    #$a['ward'] = preg_replace("/ .*/","",$a['ward']);
+    top3($a['devid'] . " - ". $a['apptype'] . " - " . $a['appid']);
     $a['address'] = json_decode($a['address']);
 
     ?>
     <h1><?php print $a['devid']; ?></h1>
 
-    <div class="row-fluid">
-    <div class="span6">
+    <div class="row">
+    <div class="col-sm-6">
 
-    <div class="pull-right"><?php renderShareLinks("{$a['devid']}","/devapps/{$a['devid']}"); ?></div>
     <p>
     <b><?php print $a['apptype']; ?></b>: <?php print $a['description']; ?>
 		<?php
@@ -231,7 +228,7 @@ class DevelopmentAppController {
 		} else {
 			?>
 			<p>
-	    <a target="_new" href="<?php print self::getLinkToApp($a['appid']); ?>"><i class="icon-share-alt"></i> View application on ottawa.ca</a>
+	    <a target="_new" href="<?php print self::getLinkToApp($a['appid']); ?>"><i class="fa fa-external-link"></i> View application on ottawa.ca</a>
 	    </p>
 			<?php
 		}
@@ -294,7 +291,7 @@ class DevelopmentAppController {
     <?php
     $docs = getDatabase()->all(" select * from devappfile where devappid = :id order by updated desc,title ",array('id'=>$a['id']));
     ?>
-    <table class="table table-condensed">
+    <table>
       <tr>
       <th>Title</th>
       <th>Modified</th>
@@ -303,6 +300,7 @@ class DevelopmentAppController {
     foreach ($docs as $d) {
       $doctitle = $d['title'];
       $doctitle = preg_replace("/{$a['devid']}/","",$doctitle);
+      $doctitle = preg_replace("/^ *- */","",$doctitle);
       $doctitle = preg_replace("/  /"," ",$doctitle);
       $doctitle = preg_replace("/  /"," ",$doctitle);
       $doctitle = preg_replace("/  /"," ",$doctitle);
@@ -342,12 +340,9 @@ class DevelopmentAppController {
     ?>
     </table>
 
-    <?php
-    disqus();
-    ?>
     </div>
 
-    <div class="span6">
+    <div class="col-sm-6">
     <?php
     $a = $a['address'];
     if ($a && count($a>0)) {
@@ -382,6 +377,10 @@ class DevelopmentAppController {
     </div>
 
     </div><!-- row -->
+
+		<div id="comments">
+    <?php disqus(); ?>
+		</div>
     <?php
 
     bottom();
