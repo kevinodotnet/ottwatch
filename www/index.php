@@ -712,7 +712,7 @@ if ($v3) {
 					?>
 				</li>
 				<?php
-				if ($remaining == 0) {
+				if (true) { // if (false && $remaining == 0) {
 					?>
 					<!--<li><a style="" href="<?php print $OTT_WWW; ?>/election/processDonation/">0 donations remaining</a></li>-->
 					<?php
@@ -761,7 +761,7 @@ if ($v3) {
 		?>
 	</li>
 	<?php
-	if ($remaining == 0) {
+	if (true) { // if (false && $remaining == 0) {
 		?>
 		<!--<li><a style="" href="<?php print $OTT_WWW; ?>/election/processDonation/">0 donations remaining</a></li>-->
 		<?php
