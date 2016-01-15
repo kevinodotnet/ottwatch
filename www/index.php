@@ -78,6 +78,7 @@ getRoute()->get('/budget/(\d+)/(capital)/(adopted)/search', array('BudgetControl
 
 # Scraper API
 getApi()->get('/api/scrape/item/(\d+)/votes', array('ScrapeApiController','itemVote'), EpiApi::external);
+getApi()->get('/api/scrape/coa/item/all', array('DevelopmentAppController','apiScrapeCoaSireForItemIds'), EpiApi::external);
 
 getRoute()->get('/feed/', 'feed');
 

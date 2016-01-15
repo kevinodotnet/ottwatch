@@ -2,6 +2,95 @@
 
 class DevelopmentAppController {
 
+	static public function apiScrapeCoaSireForItemIds() {
+		
+		$urls = array();
+		$urls[] = 'http://app05.ottawa.ca/sirepub/items.aspx?stype=advanced&itemtype=-%20All%20Types%20-&meettype=Committee%20of%20Adjustment%20-%20Panel%201&meetdate=-%20All%20Dates%20-';
+		$urls[] = 'http://app05.ottawa.ca/sirepub/items.aspx?stype=advanced&itemtype=-%20All%20Types%20-&meettype=Committee%20of%20Adjustment%20-%20Panel%202&meetdate=-%20All%20Dates%20-';
+		$urls[] = 'http://app05.ottawa.ca/sirepub/items.aspx?stype=advanced&itemtype=-%20All%20Types%20-&meettype=Committee%20of%20Adjustment%20-%20Panel%203&meetdate=-%20All%20Dates%20-';
+
+		$html = "";
+		foreach ($urls as $u) {
+			$html .= file_get_contents($u);
+		}
+		#file_put_contents('h',$html);
+		#$html = file_get_contents('h');
+		$html = strtolower($html);
+		$html = strip_tags($html,'<tr><td><img>');
+		$html = preg_replace("/\n/"," ",$html);
+		$html = preg_replace("/\r/"," ",$html);
+		$html = preg_replace("/\t/"," ",$html);
+		$html = preg_replace('/&nbsp;/'," ",$html);
+		$html = preg_replace("/  /"," ",$html);
+		$html = preg_replace("/  /"," ",$html);
+		$html = preg_replace("/  /"," ",$html);
+		$html = preg_replace("/  /"," ",$html);
+		$html = preg_replace("/  /"," ",$html);
+		$html = preg_replace("/  /"," ",$html);
+		$html = preg_replace("/<tr/","\n<tr",$html);
+		$html = preg_replace("/\/tr>/","/tr>\n",$html);
+
+		$items = array();
+
+		foreach (explode("\n",$html) as $l) {
+			if (!preg_match('/^<tr/',$l)) { continue; }
+			if (!preg_match('/datagrid/',$l)) { continue; }
+			if (preg_match('/meeting date/',$l)) { continue; }
+			$l = preg_replace('/<tr[^>]*>/',"",$l);
+			$l = preg_replace('/<td[^>]*>/',"|",$l);
+			$l = preg_replace('/<\/td>/',"",$l);
+			$l = preg_replace('/<\/tr>/',"",$l);
+			$l = preg_replace('/<img.*gotoitem\(/',"",$l);
+			$l = preg_replace('/\)" \/>/',"",$l);
+			$l = preg_replace('/<img[^>]*>/',"",$l);
+			$l = preg_replace('/\|\|*/',"|",$l);
+			$l = html_entity_decode($l);
+
+			$l = preg_replace('/-jan-/','-01-',$l);
+			$l = preg_replace('/-feb-/','-02-',$l);
+			$l = preg_replace('/-mar-/','-03-',$l);
+			$l = preg_replace('/-apr-/','-04-',$l);
+			$l = preg_replace('/-may-/','-05-',$l);
+			$l = preg_replace('/-jun-/','-06-',$l);
+			$l = preg_replace('/-jul-/','-07-',$l);
+			$l = preg_replace('/-aug-/','-08-',$l);
+			$l = preg_replace('/-sep-/','-09-',$l);
+			$l = preg_replace('/-oct-/','-10-',$l);
+			$l = preg_replace('/-nov-/','-11-',$l);
+			$l = preg_replace('/-dec-/','-12-',$l);
+
+			# ::: |343010|d08-01-15/b-00445|committee of adjustment - panel 3|2016-jan-13|21-rideau-goulbourn|6096 third line north :::
+			# print "::: $l :::\n";
+
+			$l = explode('|',$l);
+			$index = 1;
+			$item = array(
+				'itemid' => $l[$index++],
+				'devappids' => $l[$index++],
+				'panel' => $l[$index++],
+				'date' => $l[$index++],
+				'ward' => $l[$index++],
+				'addresses' => $l[$index++]
+			);
+
+			$ids = $item['devappids'];
+			$ids = preg_replace("/ to /"," ",$ids);
+			$ids = preg_replace("/ & /"," ",$ids);
+			$ids = preg_replace("/^ */","",$ids);
+			$ids = preg_replace("/ *$/","",$ids);
+			$item['devappids'] = explode(" ",$ids);
+			$item['ward'] = preg_replace('/ - .*/','',$item['ward']);
+			$item['panel'] = preg_replace('/committee of adjustment - panel /','',$item['panel']);
+			$item['sire_url'] = "http://app05.ottawa.ca/sirepub/item.aspx?itemid={$item['itemid']}";
+
+			$items[] = $item;
+
+		}
+
+		return $items;
+
+	}
+
   static public function scrapeCommitteeOfAdjustment($date,$panel,$file) {
 
 		$txt = `pdftotext $file -`;
