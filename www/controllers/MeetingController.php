@@ -10,6 +10,92 @@ MeetingController::formatMotion("foo");
 
 class MeetingController {
 
+	static public function apiScrapeItem($itemid) {
+		$url = 'http://app05.ottawa.ca/sirepub/item.aspx?itemid=' . $itemid; // 343002
+
+		$html = file_get_contents($url);
+		$html = strtolower($html);
+
+		$html = preg_replace("/\n/","",$html);
+		$html = preg_replace("/\r/","",$html);
+		$html = preg_replace("/\t/","",$html);
+
+		$html = preg_replace("/<tr/","\n<tr",$html);
+		$html = preg_replace("/<\/tr>/","</tr>\n",$html);
+		$html = preg_replace("/\&nbsp;/"," ",$html);
+		$html = preg_replace("/  */"," ",$html);
+
+		$html = strip_tags($html,"<tr><td><a>");
+
+		$item = array();
+		$item['itemid'] = "$itemid";
+		$item['sire_url'] = "http://app05.ottawa.ca/sirepub/item.aspx?itemid=$itemid";
+
+		foreach (explode("\n",$html) as $l) {
+			if (! preg_match("/^<tr/",$l)) { continue; }
+			$matches = array();
+
+			if (preg_match("/class=\"title\">([^<]*)</",$l,$matches)) {
+				$item['addressstr'] = $matches[1];
+			}
+			if (preg_match("/item #:<\/td><td>([^<]*)</",$l,$matches)) {
+				$item['devappid'] = strtoupper($matches[1]);
+			}
+			/*
+			<tr> 
+			<td class="lbl">meeting date:</td>
+			<td><a href="mtgviewer.aspx?meetid=6804&itemid=343002&player=silverlight" target="_meeting" title="open meeting">2016-jan-13</a></td> 
+			<td class="lbl">ward:</td>
+			<td>17 - capital</td> </tr>
+			*/
+			if (preg_match("/meeting date:.*meetid=(\d+).*open meeting\">(\d\d\d\d-...-\d\d).*ward:<\/td><td>(\d\d)/",$l,$matches)) {
+				$item['meetid'] = strtoupper($matches[1]);
+				$item['meetdate'] = $matches[2];
+				$item['ward'] = strtoupper($matches[3]);
+
+				$item['meet_url'] = "http://app05.ottawa.ca/sirepub/mtgviewer.aspx?meetid={$item['meetid']}&itemid={$item['itemid']}";
+
+				$l = $item['meetdate'];
+				$l = preg_replace('/-jan-/','-01-',$l);
+				$l = preg_replace('/-feb-/','-02-',$l);
+				$l = preg_replace('/-mar-/','-03-',$l);
+				$l = preg_replace('/-apr-/','-04-',$l);
+				$l = preg_replace('/-may-/','-05-',$l);
+				$l = preg_replace('/-jun-/','-06-',$l);
+				$l = preg_replace('/-jul-/','-07-',$l);
+				$l = preg_replace('/-aug-/','-08-',$l);
+				$l = preg_replace('/-sep-/','-09-',$l);
+				$l = preg_replace('/-oct-/','-10-',$l);
+				$l = preg_replace('/-nov-/','-11-',$l);
+				$l = preg_replace('/-dec-/','-12-',$l);
+				$item['meetdate'] = $l;
+			}
+
+			if (preg_match("/attachments:/",$l,$matches)) {
+				$files = array();
+				$l = strip_tags($l,"<a>");
+				$l = preg_replace("/<a /","\n<a ",$l);
+				foreach (explode("\n",$l) as $a) {
+					if (preg_match("/<a.*href=.*fileid=(\d+)[^>]*>([^<]*)</",$a,$matches)) {
+						$file = array(
+							'fileid' => $matches[1],
+							'name' => $matches[2]
+						);
+						$file['sire_url'] = "http://app05.ottawa.ca/sirepub/view.aspx?cabinet=published_meetings&fileid={$file['fileid']}";
+						$files[] = $file;
+					}
+				}
+				$item['files'] = $files;
+			}
+
+			#print "$l\n---------------\n";
+		}
+
+		return $item;
+
+		# $6,526.33
+	}
+
 	static public function graphLikenessJSON() {
 
 		$category = $_GET['category'];

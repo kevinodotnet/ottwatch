@@ -2,6 +2,7 @@
 
 class DevelopmentAppController {
 
+
 	static public function apiScrapeCoaSireForItemIds() {
 		
 		$urls = array();
@@ -72,6 +73,7 @@ class DevelopmentAppController {
 				'ward' => $l[$index++],
 				'addresses' => $l[$index++]
 			);
+			$item['api_url'] = OttWatchConfig::WWW . "/api/scrape/item/" . $item['itemid'];
 
 			$ids = $item['devappids'];
 			$ids = preg_replace("/ to /"," ",$ids);
