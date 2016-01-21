@@ -2194,7 +2194,6 @@ class ElectionController {
 		<a class="btn btn-primary" href="/election/listDonations">Reset (New Search)</a>
 	</div>
 </div>
-</form>
 
 		<?php 
 
@@ -2498,6 +2497,9 @@ class ElectionController {
 
   		<?php 
     } 
+		?>
+		</form>
+		<?php
 
 		bottom3();
 	}
