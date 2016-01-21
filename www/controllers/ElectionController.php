@@ -614,7 +614,9 @@ class ElectionController {
 			return;
 		}
 
-		#return;
+		if ($year < 2014) {
+			return;
+		}
 
 		$dir = self::getReturnPagesDir($year,$filename,$electionid);
     $d = opendir($dir);
