@@ -1455,11 +1455,8 @@ class MeetingController {
 		<h3 class="text-center"><?php print $title; ?></h3>
 
 		<div class="row" style="margin-bottom: 10px;">
-		<div class="col-sm-4 text-left"><?php print "".substr($m['starttime'],0,10); ?></div>
-		<div class="col-sm-4 text-center">
-			<?php print "<a href=\"".$m['meetid']."?new=0\">old layout</a>"; ?>
-		</div>
-		<div class="col-sm-4 text-right">
+		<div class="col-sm-6 text-left"><?php print "".substr($m['starttime'],0,10); ?></div>
+		<div class="col-sm-6 text-right">
 			<?php print "<a href=\"http://app05.ottawa.ca/sirepub/mtgviewer.aspx?meetid=".$meetid."&doctype=AGENDA\"> view on ottawa.ca <small><i class=\"fa fa-external-link\"></i></small></a>"; ?><br/>
 		</div>
 		</div>
