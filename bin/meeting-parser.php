@@ -159,6 +159,16 @@ if (count($argv) > 1) {
 
 # get RSS of all meetings
 # keep track of all meetids in the RSS (to find deleted meetings)
+
+# get RSS of all meetings
+$data = `wget -qO - http://app05.ottawa.ca/sirepub/rss/rss.aspx | head -1`; # file_put_contents("rss.rss",$data);
+#$data = file_get_contents("rss.rss");
+$xml = simplexml_load_string($data);
+if (!is_object($xml)) {
+  # network bubble; ignore
+  return;
+}
+$items = $xml->xpath("//item");
 $meetids = array();
 
 # iterate through each meeting
@@ -200,7 +210,7 @@ foreach ($items as $i) {
   }
 
 	MeetingController::createOrUpdateMeeting($meetid,$guid,$starttime,$title,$category);
-  MeetingController::downloadAndParseMeeting($meetingid);
+  MeetingController::downloadAndParseMeeting($meetid);
 
 	if (false) {
 		// moved to createOrUpdateMeeting();
