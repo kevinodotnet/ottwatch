@@ -14,22 +14,21 @@ if (count($argv) > 1) {
 		$items = DevelopmentAppController::apiScrapeCoaSireForItemIds();
 		#file_put_contents("j.json",json_encode($items)); $items = json_decode(file_get_contents("j.json"));
 		foreach ($items as $i) {
-			$r = getDatabase()->one(" select count(1) c from item where itemid = {$i->itemid} ");
+			$r = getDatabase()->one(" select count(1) c from item where itemid = {$i['itemid']} ");
 			if ($r['c'] == 0) {
-				print $i->itemid . " NOT found...\n";
-				$item = MeetingController::apiScrapeItem($i->itemid);
-				pr($item);
+				print $i['itemid'] . " NOT found...\n";
+				$item = MeetingController::apiScrapeItem($i['itemid']);
 				$meetid = $item['meetid'];
 				// item not found, so the meeting for this COA does not exist, so go get it.
 				$guid = $meetid;
 				$starttime = $item['meetdate'];
-				$title = 'Committee of Adjustment Panel '.$i->panel.' - '.$i->date;
-				$category = 'COA'.$i->panel;
+				$title = 'Committee of Adjustment Panel '.$i['panel'].' - '.$i['date'];
+				$category = 'COA'.$i['panel'];
 				print "  createOrUpdateMeeting($meetid,$guid,$starttime,$title,$category) \n";
 				MeetingController::createOrUpdateMeeting($meetid,$guid,$starttime,$title,$category);
 				MeetingController::downloadAndParseMeeting($meetid);
 			} else {
-				print $i->itemid . " was found...\n";
+				print $i['itemid'] . " was found...\n";
 			}
 		}
 		exit;
