@@ -9,6 +9,32 @@ require_once('include.php');
 require_once('twitteroauth.php');
 
 if (count($argv) > 1) {
+
+  if ($argv[1] == 'coaMeetingScrapeAndParse') {
+		$items = DevelopmentAppController::apiScrapeCoaSireForItemIds();
+		#file_put_contents("j.json",json_encode($items)); $items = json_decode(file_get_contents("j.json"));
+		foreach ($items as $i) {
+			$r = getDatabase()->one(" select count(1) c from item where itemid = {$i->itemid} ");
+			if ($r['c'] == 0) {
+				print $i->itemid . " NOT found...\n";
+				$item = MeetingController::apiScrapeItem($i->itemid);
+				pr($item);
+				$meetid = $item['meetid'];
+				// item not found, so the meeting for this COA does not exist, so go get it.
+				$guid = $meetid;
+				$starttime = $item['meetdate'];
+				$title = 'Committee of Adjustment Panel '.$i->panel.' - '.$i->date;
+				$category = 'COA'.$i->panel;
+				print "  createOrUpdateMeeting($meetid,$guid,$starttime,$title,$category) \n";
+				MeetingController::createOrUpdateMeeting($meetid,$guid,$starttime,$title,$category);
+				MeetingController::downloadAndParseMeeting($meetid);
+			} else {
+				print $i->itemid . " was found...\n";
+			}
+		}
+		exit;
+	}
+
   if ($argv[1] == 'resetVideo') {
     $id = $argv[2];
     getDatabase()->execute(" update meeting set youtube = null, youtubestart = null, youtubestate = null, youtubeset = null where meetid = :id ",array('id'=>$id));
@@ -133,16 +159,6 @@ if (count($argv) > 1) {
 }
 
 # get RSS of all meetings
-$data = `wget -qO - http://app05.ottawa.ca/sirepub/rss/rss.aspx | head -1`; # file_put_contents("rss.rss",$data);
-#$data = file_get_contents("rss.rss");
-
-$xml = simplexml_load_string($data);
-if (!is_object($xml)) {
-  # network bubble; ignore
-  return;
-}
-$items = $xml->xpath("//item");
-
 # keep track of all meetids in the RSS (to find deleted meetings)
 $meetids = array();
 
@@ -183,48 +199,57 @@ foreach ($items as $i) {
     # meeting has already been parsed
     continue;
   }
-  
-  $mdb = getDatabase()->one('select * from meeting where meetid = :meetid ', array(':meetid' => $meetid));
-  $meetingid = $mdb['id'];
-  if ($mdb['id']) {
-    # print "$category ($meetid) has changed guid\nhttp://ottwatch.ca/meetings/meeting/{$meetid}\n";
-    # meeting has changed guid, so needs rescraping.
-	  getDatabase()->execute(' 
-      update meeting set 
-        rssguid = :rssguid,
-        starttime = :starttime,
-        title = :title,
-        category = :category,
-        updated = CURRENT_TIMESTAMP
-      where 
-        meetid = :meetid ', array( ':rssguid' => $guid,':meetid' => $meetid, 'starttime' => $starttime, 'title'=>$title, 'category'=>$category ));
-    $new = getDatabase()->one('select * from meeting where meetid = :meetid ', array(':meetid' => $meetid));
-    #print "\nWAS:\n"; pr($mdb); print "\nNEW:\n"; pr($new);
-  } else {
-    # meeting has never been seen before
-    print "$category ($meetid) is new\nhttp://ottwatch.ca/meetings/meeting/{$meetid}\n";
-	  $meetingid = getDatabase()->execute('
-			insert into meeting (rssguid,meetid,title,category,starttime,created,updated) 
-			values (:rssguid,:meetid,:title,:category,:starttime,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP); ', array(
-	    'rssguid' => $guid,
-	    'meetid' => $meetid,
-	    'title' => $title,
-	    'category' => $category,
-	    'starttime' => $starttime,
-	  ));
-  }
 
-	# import the items for the new meeting.
+	MeetingController::createOrUpdateMeeting($meetid,$guid,$starttime,$title,$category);
   MeetingController::downloadAndParseMeeting($meetingid);
+
+	if (false) {
+		// moved to createOrUpdateMeeting();
+	  $mdb = getDatabase()->one('select * from meeting where meetid = :meetid ', array(':meetid' => $meetid));
+	  $meetingid = $mdb['id'];
+	  if ($mdb['id']) {
+	    # print "$category ($meetid) has changed guid\nhttp://ottwatch.ca/meetings/meeting/{$meetid}\n";
+	    # meeting has changed guid, so needs rescraping.
+		  getDatabase()->execute(' 
+	      update meeting set 
+	        rssguid = :rssguid,
+	        starttime = :starttime,
+	        title = :title,
+	        category = :category,
+	        updated = CURRENT_TIMESTAMP
+	      where 
+	        meetid = :meetid ', array( ':rssguid' => $guid,':meetid' => $meetid, 'starttime' => $starttime, 'title'=>$title, 'category'=>$category ));
+	    $new = getDatabase()->one('select * from meeting where meetid = :meetid ', array(':meetid' => $meetid));
+	    #print "\nWAS:\n"; pr($mdb); print "\nNEW:\n"; pr($new);
+	  } else {
+	    # meeting has never been seen before
+	    print "$category ($meetid) is new\nhttp://ottwatch.ca/meetings/meeting/{$meetid}\n";
+		  $meetingid = getDatabase()->execute('
+				insert into meeting (rssguid,meetid,title,category,starttime,created,updated) 
+				values (:rssguid,:meetid,:title,:category,:starttime,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP); ', array(
+		    'rssguid' => $guid,
+		    'meetid' => $meetid,
+		    'title' => $title,
+		    'category' => $category,
+		    'starttime' => $starttime,
+		  ));
+	  }
+	}
+
 }
 
 # Delete meetings that (a) have not started yet and (b) are no longer in the RSS. It means
 # they were cancelled, or were tests in 2050 and beyond.
-$rows = getDatabase()->all(" select * from meeting where starttime > CURRENT_TIMESTAMP and meetid not in (".implode(',',$meetids).") order by starttime ");
+$rows = getDatabase()->all(" 
+	select * from meeting 
+	where 
+		starttime > CURRENT_TIMESTAMP 
+		and category not in ('COA1','COA2','COA3') 
+		and meetid not in (".implode(',',$meetids).") 
+	order by starttime ");
 foreach ($rows as $r) {
 	print "\nDELETING LOST FUTURE MEETING:\n";
 	pr($r);
 	getDatabase()->execute(" delete from meeting where id = :id ",array('id'=>$r['id']));
-
 }
 

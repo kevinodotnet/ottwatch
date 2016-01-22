@@ -10,6 +10,39 @@ MeetingController::formatMotion("foo");
 
 class MeetingController {
 
+	static public function createOrUpdateMeeting($meetid,$guid,$starttime,$title,$category) {
+
+	  $mdb = getDatabase()->one('select * from meeting where meetid = :meetid ', array(':meetid' => $meetid));
+	  $meetingid = $mdb['id'];
+	  if ($mdb['id']) {
+	    # print "$category ($meetid) has changed guid\nhttp://ottwatch.ca/meetings/meeting/{$meetid}\n";
+	    # meeting has changed guid, so needs rescraping.
+		  getDatabase()->execute(' 
+	      update meeting set 
+	        rssguid = :rssguid,
+	        starttime = :starttime,
+	        title = :title,
+	        category = :category,
+	        updated = CURRENT_TIMESTAMP
+	      where 
+	        meetid = :meetid ', array( ':rssguid' => $guid,':meetid' => $meetid, 'starttime' => $starttime, 'title'=>$title, 'category'=>$category ));
+	    #$new = getDatabase()->one('select * from meeting where meetid = :meetid ', array(':meetid' => $meetid));
+			$meetingid = $mdb['id'];
+	  } else {
+	    # meeting has never been seen before
+		  $meetingid = getDatabase()->execute('
+				insert into meeting (rssguid,meetid,title,category,starttime,created,updated) 
+				values (:rssguid,:meetid,:title,:category,:starttime,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP); ', array(
+		    'rssguid' => $guid,
+		    'meetid' => $meetid,
+		    'title' => $title,
+		    'category' => $category,
+		    'starttime' => $starttime,
+		  ));
+	  }
+		return $meetingid;
+	}
+
 	static public function apiScrapeItem($itemid) {
 		$url = 'http://app05.ottawa.ca/sirepub/item.aspx?itemid=' . $itemid; // 343002
 
@@ -48,7 +81,7 @@ class MeetingController {
 			<td class="lbl">ward:</td>
 			<td>17 - capital</td> </tr>
 			*/
-			if (preg_match("/meeting date:.*meetid=(\d+).*open meeting\">(\d\d\d\d-...-\d\d).*ward:<\/td><td>(\d\d)/",$l,$matches)) {
+			if (preg_match("/meeting date:.*meetid=(\d+).*open meeting\">(\d\d\d\d-...-\d\d).*ward:<\/td><td>(\d+)/",$l,$matches)) {
 				$item['meetid'] = strtoupper($matches[1]);
 				$item['meetdate'] = $matches[2];
 				$item['ward'] = strtoupper($matches[3]);
@@ -1633,6 +1666,9 @@ class MeetingController {
     $members = $m['members'];
     if ($m['category'] == 'City Council') {
       $rows = getDatabase()->all(" select * from electedofficials order by last, first ");
+    } else if (preg_match('/^COA\d+$/',$m['category'])) {
+      $rows = array();
+			$members = array();
     } else if ($members != '') {
       $members = json_decode($members);
       $rows = getDatabase()->all(" select * from electedofficials where id in (".implode(",",$members).") order by last, first ");
