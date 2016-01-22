@@ -1514,6 +1514,7 @@ class MeetingController {
       }
 			// title
 			$words = explode(" ",$i['title']);
+			if (!preg_match('/^COA\d+/',$i['category'])) {
 			for ($x = 1; $x < count($words); $x++) {
 				if (!preg_match('/^\d+$/',$words[$x-1])) {
 					continue;
@@ -1537,6 +1538,7 @@ class MeetingController {
 					</tr>
 					";
 				}
+			}
 			}
 			
 		}
