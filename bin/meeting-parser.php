@@ -17,18 +17,23 @@ if (count($argv) > 1) {
 			$r = getDatabase()->one(" select count(1) c from item where itemid = {$i['itemid']} ");
 			if ($r['c'] == 0) {
 				print $i['itemid'] . " NOT found...\n";
+				pr($i);
 				$item = MeetingController::apiScrapeItem($i['itemid']);
+				pr($item);
 				$meetid = $item['meetid'];
 				// item not found, so the meeting for this COA does not exist, so go get it.
 				$guid = $meetid;
 				$starttime = $item['meetdate'];
 				$title = 'Committee of Adjustment Panel '.$i['panel'].' - '.$i['date'];
 				$category = 'COA'.$i['panel'];
+				print "\n";
 				print "  createOrUpdateMeeting($meetid,$guid,$starttime,$title,$category) \n";
+				print "\n";
 				MeetingController::createOrUpdateMeeting($meetid,$guid,$starttime,$title,$category);
 				MeetingController::downloadAndParseMeeting($meetid);
 			} else {
-				print $i['itemid'] . " was found...\n";
+				# item was found in database; assumed to be unchanged
+				# print $i['itemid'] . " was found...\n";
 			}
 		}
 		exit;
