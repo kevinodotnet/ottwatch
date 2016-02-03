@@ -119,6 +119,7 @@ if (count($argv) > 1) {
     return;
 	}
   if ($argv[1] == 'getVideoStart') {
+		# skip two meetings that just aren't happy
 		$sql = " 
 			select id,meetid,youtubeset
 			from 
@@ -127,6 +128,7 @@ if (count($argv) > 1) {
 				datediff(now(),youtubeset) < 30 
 				and youtubestate = 'ready' 
 				and (youtubestart is null or youtubestart = 0) 
+				and id not in (943,935)
 			order by id desc
 		 ";
 				// datediff(now(),youtubeset) < 30 
@@ -134,6 +136,7 @@ if (count($argv) > 1) {
 		foreach ($rows as $r) {
 			$id = $r['id'];
 	    $start = MeetingController::getVideoStart($id);
+			print "$id :: $start\n";
 			if ($start > 0) {
 				db_update('meeting',array('id'=>$id,'youtubestart'=>$start),'id');
 				$r['new_start_value'] = $start;
