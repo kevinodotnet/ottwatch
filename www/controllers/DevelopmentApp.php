@@ -453,7 +453,7 @@ class DevelopmentAppController {
 					if ($addr->lat == '') { continue; }
 	        ?>
 	        var myLatlng = new google.maps.LatLng(<?php print $addr->lat; ?>,<?php print $addr->lon; ?>);
-	        var marker = new google.maps.Marker({ position: myLatlng, map: map, title: '<?php print $addr->addr; ?>' }); 
+	        var marker = new google.maps.Marker({ position: myLatlng, map: map, title: '<?php print preg_replace("/'/","",($addr->addr)); ?>' }); 
 	        map.panTo(myLatlng);
 	        <?php 
         }
