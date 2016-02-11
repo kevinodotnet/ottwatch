@@ -1361,6 +1361,8 @@ class MeetingController {
 	static public function getFileUrl ($id) {
     global $OTT_WWW;
 
+		return "$OTT_WWW/meetings/file/{$id}";
+
     $file = getDatabase()->one(" select * from ifile where fileid = :id ",array("id"=>$id));
     if (!$file['id']) {
       print "Fileid not found (b): $id\n";
