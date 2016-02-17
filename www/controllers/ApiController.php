@@ -510,6 +510,13 @@ class ApiController {
       unset($d['devappid']);
       $row['statuses'][] = $d;
     }
+    $row['files'] = array();
+    $files = getDatabase()->all(" select * from devappfile where devappid = :devid order by updated desc ",array('devid'=>$row['id']));
+		foreach ($files as $f) {
+			unset($f['id']);
+			unset($f['devappid']);
+	    $row['files'][] = $f;
+		}
     unset($row['id']);
     return $row;
   }
