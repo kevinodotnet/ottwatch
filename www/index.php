@@ -267,11 +267,22 @@ function feed() {
   bottom();
 }
 
+function adsense_adaptive() {
+?>
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- ottwatch-homepage -->
+<ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-5904054241204672" data-ad-slot="8106870146" data-ad-format="auto"></ins>
+<script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+
+<?php
+}
+
 function dashboard() {
   global $OTT_WWW;
   top("OttWatch - watching ottawa.ca to save you time");
-
   ?>
+
   <div class="row-fluid">
   <div class="span4">
 
@@ -489,6 +500,7 @@ function dashboard() {
   </table>
 
   <?php
+	adsense_adaptive();
   bottom();
 }
 
