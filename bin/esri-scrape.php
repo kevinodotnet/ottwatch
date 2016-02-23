@@ -24,6 +24,11 @@ if ($action == 'layerIndex') {
 	return;
 }
 
+if ($action == 'addLatLonShape') {
+	$table = $argv[2];
+	addLatLonShape($table);
+}
+
 /*
 
 Start at the root of an ESRI instance rest services and dump all of the known layers;
@@ -79,7 +84,7 @@ function layerIndex ($url) {
 function addLatLonShape($table) {
 
 	$sql = " alter table $table add shapeLatLon geometry not null ";
-	# getDatabase()->execute($sql);
+	getDatabase()->execute($sql);
 
 	$sql = " select id,s,left(s,3) l from ( select ottwatchid id,astext(shape) s from $table where astext(shapeLatLon) is null ) t limit 100 ";
 	# $sql = " select id,s,left(s,3) l from ( select ottwatchid id,astext(shape) s from $table where road_name = 'WESTHAVEN' ) t ";
@@ -194,6 +199,8 @@ function scrapeLayer($metaurl,$table,$key) {
 			$createTable .= "bigint";
 		} else if ($f->type == 'esriFieldTypeString') {
 			$createTable .= "varchar({$f->length})";
+		} else if ($f->type == 'esriFieldTypeGlobalID') {
+			$createTable .= "varchar({$f->length})";
 		} else {
 			print "ERROR: type\n";
 			pr($f);
@@ -293,7 +300,7 @@ function scrapeLayer($metaurl,$table,$key) {
 
 		}
 
-		$sleep = 10;
+		$sleep = 2;
 		print " sleep: $sleep";
 		sleep($sleep);
 
