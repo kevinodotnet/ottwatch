@@ -2,6 +2,66 @@
 
 class DevelopmentAppController {
 
+	static public function coaAgendaToDevApp() {
+
+	  Epi::init('api');
+		getApi()->get('/api/scrape/item/(\d+)', array('MeetingController','apiScrapeItem'), EpiApi::external);
+
+		$sql = "
+			select
+				i.id,
+				i.itemid,
+				i.title,
+				m.meetid meetid,
+				left(m.starttime,10) starttime,
+				m.category
+			from
+				meeting m
+				join item i on i.meetingid = m.id
+			where
+				m.category like 'COA%'
+			order by
+				i.id desc
+		";
+		$rows = getDatabase()->all($sql);
+		foreach ($rows as $item) {
+			#pr($item);
+			$details = getApi()->invoke("/api/scrape/item/" . $item['itemid']);
+			$devappid = $details['devappid'];
+			$devappid = preg_replace('/ .*/','',$devappid);
+			#pr($details);
+			$devapp = getDatabase()->one(" select * from devapp where devid = :devid ",array('devid'=>$devappid));
+			$addresses = array();
+			if (! isset($devapp['id'])) {
+				pr($item);
+				$addresses[] = array(
+					'addr'=>$details['addressstr']
+				);
+		    $id = getDatabase()->execute(" 
+		      insert into devapp 
+		      (address,appid,devid,ward,apptype,receiveddate,created,updated,description)
+		      values
+		      (:address,:appid,:devid,:ward,:apptype,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP,:description)",array(
+		        'devid'=> $devappid,
+		        'address'=> json_encode($addresses),
+		        'appid'=> 'n/a',
+		        'ward' => $details['ward'],
+		        'apptype' => 'coa', #$labels['Application'],
+		        'description' => "CoA {$item['starttime']} panel {$item['category']}"
+		    ));
+				$devapp = getDatabase()->one(" select * from devapp where devid = :devid ",array('devid'=>$devappid));
+			}
+			$status = "CoA meeting <a href=\"http://app05.ottawa.ca/sirepub/item.aspx?itemid={$item['itemid']}\">{$item['itemid']}</a>";
+			getDatabase()->execute(" delete from devappstatus where devappid = :id and statusdate = :starttime ",array('id'=>$devapp['id'],'starttime'=>$item['starttime']));
+      getDatabase()->execute(" 
+					insert into devappstatus (devappid,status,statusdate) values (:devappid,:status,:statusdate) 
+				",array(
+        'devappid' => $devapp['id'],
+        'status' => $status,
+        'statusdate' => $item['starttime']
+      ));
+		}
+	}
 
 	static public function apiScrapeCoaSireForItemIds() {
 		
@@ -301,30 +361,21 @@ class DevelopmentAppController {
     <div class="row">
     <div class="col-sm-6">
 
-    <p>
-    <b><?php print $a['apptype']; ?></b>: <?php print $a['description']; ?>
 		<?php
 		if ($a['apptype'] == 'coa') {
+			# all good now!
 			?>
-	    <p>
-			Agendas for the <b>Committee of Adjustment</b> are not available directly from the City of Ottawa, but 
-			OttWatch makes them available as they are distributed to media via email. 
-			
-			<a href="/story/15/committee-of-adjustment-agendas">Use the 'panel' and 'dates' associated with this application to find relevant information from the index of CoA agendas</a>.
-	    </p>
-			<p>
-			<i>(CoA applications on OttWatch are in beta; expect odd results for the next while; -ko 2015-Mar)</i>
-			</p>
+	    <b>Committee of Adjustment application</b>
 			<?php
 		} else {
 			?>
 			<p>
+	    <b><?php print $a['apptype']; ?></b>: <?php print $a['description']; ?>
 	    <a target="_new" href="<?php print self::getLinkToApp($a['appid']); ?>"><i class="fa fa-external-link"></i> View application on ottawa.ca</a>
 	    </p>
 			<?php
 		}
 		?>
-    </p>
 
     <table class="table table-bordered table-condensed" style="width: 100%;">
     <tr><td>Ward</td><td><?php print $a['ward']; ?></td></tr>
