@@ -22,6 +22,7 @@ class DevelopmentAppController {
 				m.category like 'COA%'
 			order by
 				i.id desc
+			limit 50
 		";
 		$rows = getDatabase()->all($sql);
 		foreach ($rows as $item) {
