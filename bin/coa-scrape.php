@@ -3,6 +3,7 @@
 $dirname = `dirname $argv[0]`;
 $dirname = preg_replace("/\n/","",$dirname);
 set_include_path(get_include_path() . PATH_SEPARATOR . "$dirname/../lib");
+
 require_once('include.php');
 
 if ($argv[1] == 'scrapeCommitteeOfAdjustment') {
@@ -18,6 +19,11 @@ if ($argv[1] == 'scrapeCommitteeOfAdjustment') {
 
   DevelopmentAppController::scrapeCommitteeOfAdjustment($date,$panel,$file);
   return;
+}
+
+if ($argv[1] == 'coaAgendaToDevApp') {
+  DevelopmentAppController::coaAgendaToDevApp();
+	return;
 }
 
 print "ERROR: bad ARGV\n";
