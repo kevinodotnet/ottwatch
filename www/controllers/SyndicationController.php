@@ -61,6 +61,11 @@ class SyndicationController {
 		$message = preg_replace('/ Cycling /i',' #ottbike ',$message);
 		$message = preg_replace('/ bikeway /i',' #ottbike ',$message);
     $tweet = tweet_txt_and_url($message,$url);
+
+		if ($tweet == 'Lobbying: Jeff Polowin (Coventry Connections Inc.) Taxi issues http://bit.ly/1t1fJQJ') {
+			$tweet = 'Lobbying: Jeff Polowin (Coventry Connections Inc.) Taxi issues http://bit.ly/1t1fJQJ http://pic.twitter.com/Nb7TVCEl7v';
+		}
+
     tweet($tweet);
   }
 
