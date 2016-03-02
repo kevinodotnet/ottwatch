@@ -515,6 +515,10 @@ class ApiController {
 		foreach ($files as $f) {
 			unset($f['id']);
 			unset($f['devappid']);
+			$title = $f['title'];
+			$title = preg_replace("/{$row['devid']}/","",$title);
+			$title = preg_replace("/  */","",$title);
+			$f['title'] = $title;
 	    $row['files'][] = $f;
 		}
     unset($row['id']);
