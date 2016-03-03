@@ -223,6 +223,8 @@ class ConsultationController {
 		self::crawlCategory('Transportation','http://ottawa.ca/en/city-hall/public-consultations/transportation');
 		self::crawlCategory('Municipal Addressing','http://ottawa.ca/en/municipal-addressing-0');
 		self::crawlCategory('Public Engagement','http://ottawa.ca/en/city-hall/public-consultations/public-engagement/public-engagement-strategy-and-consultations');
+		self::crawlCategory('Parks and recreation','http://ottawa.ca/en/city-hall/public-consultations/parks-and-recreation-public-consultations');
+		#self::crawlCategory('Construction and Infrastructure','http://ottawa.ca/en/major-projects/construction-and-infrastructure');
 
     # start at the stop level consultation listing.
     $html = file_get_contents("http://ottawa.ca/en/city-hall/public-consultations");
