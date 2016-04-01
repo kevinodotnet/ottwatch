@@ -468,6 +468,7 @@ function dashboard() {
 
   </div>
   <div class="span4">
+	<?php adsense_adaptive(); ?>
   <h4>Recent Comments</h4>
   <?php disqusRecent(8); ?>
   </div>
@@ -500,7 +501,6 @@ function dashboard() {
   </table>
 
   <?php
-	adsense_adaptive();
   bottom();
 }
 
@@ -877,6 +877,9 @@ function disqusRecent ($count) {
     if ($x++ == $count) {
       return;
     }
+    if ($x >= 6) {
+			return;
+		}
     
     $name = $r->author->name;
     $message = substr($r->raw_message,0,100);
