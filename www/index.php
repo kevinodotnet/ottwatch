@@ -280,7 +280,7 @@ function adsense_adaptive() {
 
 function dashboard() {
   global $OTT_WWW;
-  top("OttWatch - watching ottawa.ca to save you time");
+  top("OttWatch - watching ottawa.ca to save you time",false,false)
   ?>
 
   <div class="row-fluid">
@@ -541,17 +541,17 @@ function error404() {
   bottom();
 }
 
-function top3($title = '',$quiet = false) {
-	top_common(1,$title,$quiet);
+function top3($title = '',$quiet = false, $menu = true) {
+	top_common(1,$title,$quiet,$menu);
 	?>
 	<?php
 }
 
-function top($title = '',$quiet = false) {
-	top_common(0,$title,$quiet);
+function top($title = '',$quiet = false, $menu = true) {
+	top_common(0,$title,$quiet, $menu);
 }
 
-function top_common($v3, $title = '',$quiet = false) {
+function top_common($v3, $title = '',$quiet = false, $menu = true) {
   global $OTT_WWW;
 ?>
 <!DOCTYPE html>
@@ -747,7 +747,7 @@ if ($v3) {
 	<div class="container">
 
 	<?php
-} else {
+} elseif ($menu == true) {
 	?>
 	<div class="row-fluid">
 	<div class="span12">
