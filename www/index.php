@@ -317,6 +317,10 @@ function dashboard() {
   </a>
   </div>
 
+	<div class="visible-phone">
+	<?php adsense_adaptive(); ?>
+	</div>
+
   <table class="table table-bordered table-hover table-condensed" style="width: 100%; margin-top: 20px;">
   <?php 
   $meetings = getDatabase()->all(" select id,meetid,category,date(starttime) starttime from meeting where date(starttime) = date(CURRENT_TIMESTAMP) order by starttime ");
