@@ -317,7 +317,7 @@ function dashboard() {
   </a>
   </div>
 
-	<div class="visible-phone">
+	<div class="visible-phone" style="margin-top: 10px; ">
 	<?php adsense_adaptive(); ?>
 	</div>
 
