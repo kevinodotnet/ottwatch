@@ -2199,7 +2199,7 @@ class ElectionController {
 		<input type="text" id="inputCity" class="form-control" name="city" placeholder="optional" value="<?php print $city; ?>"/> 
 	</div>
 	<div class="col-sm-3">
-		<input type="checkbox" id="inputCityNot" class="form-control" name="cityNot" value="1" checked="<?php print $cityNot; ?>"/> 
+		<input type="checkbox" id="inputCityNot" class="form-control" name="cityNot" value="1" <?php print ($cityNot == 1 ? ' checked="1" ' : ''); ?>"/>
 		(Not this city)
 	</div>
 </div>
