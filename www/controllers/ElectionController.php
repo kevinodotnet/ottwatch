@@ -1859,6 +1859,9 @@ class ElectionController {
 
 		$toptitle = 'Campaign Donations Report';
 
+		$city = mysql_escape_string($_GET['city']);
+		$cityNot = htmlentities($_GET['cityNot']);
+		$street = mysql_escape_string($_GET['street']);
 		$postal = $_GET['postal'];
 		$postal = strtoupper($postal);
 		$postal = preg_replace('/ /','',$postal);
@@ -1877,6 +1880,19 @@ class ElectionController {
 
 		if (preg_match('/^\d$/',$type)) {
 			$where .= " and d.type = $type ";
+			$filtered = 1;
+		}
+
+		if ($city != '') {
+			if ($cityNot == '1') {
+				$where .= " and d.city != '$city' ";
+			} else {
+				$where .= " and d.city = '$city' ";
+			}
+			$filtered = 1;
+		}
+		if ($street != '') {
+			$where .= " and d.address like '%$street%' ";
 			$filtered = 1;
 		}
 
@@ -2000,7 +2016,6 @@ class ElectionController {
 				r.supplemental,
 				d.donorid,
 				c.electionid,
-				e.city,
 				e.date
 			from
 				candidate_donation d
@@ -2171,6 +2186,21 @@ class ElectionController {
 			<option <?php print ($mapMode == 1 ? ' selected="1" ' : ''); ?> value="1">Heatmap</option>
 			<option <?php print ($mapMode == 2 ? ' selected="1" ' : ''); ?> value="2">Placemarks</option>
 		</select>
+	</div>
+</div>
+
+<div class="form-group">
+	<label class="col-sm-2 control-label" for="inputStreet">Street</label>
+	<div class="col-sm-3">
+		<input type="text" id="inputStreet" class="form-control" name="street" placeholder="optional" value="<?php print $street; ?>"/> 
+	</div>
+	<label class="col-sm-1 control-label" for="inputCity">City</label>
+	<div class="col-sm-2">
+		<input type="text" id="inputCity" class="form-control" name="city" placeholder="optional" value="<?php print $city; ?>"/> 
+	</div>
+	<div class="col-sm-3">
+		<input type="checkbox" id="inputCityNot" class="form-control" name="cityNot" value="1" checked="<?php print $cityNot; ?>"/> 
+		(Not this city)
 	</div>
 </div>
 
