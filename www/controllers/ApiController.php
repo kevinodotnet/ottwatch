@@ -303,10 +303,76 @@ class ApiController {
 		return $result;
 	}
 
+	public static function widgetFindRiding() {
+		top3('',true);
+		self::widgetFindRidingInner(true);
+		bottom3(true);
+	}
+
 	public static function widgetFindWard() {
 		top('',true);
 		self::widgetFindWardInner(true);
 		bottom(true);
+	}
+
+	public static function widgetFindRidingInner($branded) {
+		?>
+		<div id="findridingwidget" style="text-align: center;">
+    <form id="findridingform" class="form-inline" method="post" action="should_never_happen" onsubmit="findriding(); return false;" style="margin: 0px;">
+		<nobr>
+    <input id="postal" type="text" name="postal" placeholder="Postal Code"/>
+    <button type="button" class="btn" onclick="findriding(); return false;">Search</button>
+		</nobr>
+    </form>
+    <div style="display: none;" id="ridingmsg"></div>
+		<?php if ($branded) { ?>
+		<i style="color: #c0c0c0;">powered by <a target="_blank" href="http://ottwatch.ca/election">ottwatch.ca</i>
+		<?php } ?>
+		</div><!-- /findridingwidget -->
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=<?php print OttWatchConfig::GOOGLE_API_KEY; ?>&sensor=false"></script>
+    <script>
+    function findridingagain() {
+      $('#postal').val('');
+      $('#findridingform').css("display", "block");
+      $('#ridingmsg').css("display", "none");
+		}
+    function findriding() {
+      $('#findridingform').css("display", "none");
+      $('#ridingmsg').css("display", "block");
+      postal = $('#postal').val();
+			if (postal == '') {
+	      $('#ridingmsg').html('Enter a postal code first.' + ' (<a href="javascript:findridingagain();">again</a>)');
+				return;
+			}
+      $('#ridingmsg').html('... googling for lat/lon ...');
+      var geocoder = new google.maps.Geocoder();
+      geocoder.geocode({address: postal},
+        function(results, status) { 
+          if (status != 'OK') {
+            $('#ridingmsg').html('Error mapping postal code <b>"' + postal + '"</b> (<a href="javascript:findridingagain(); return false;">again</a>)');
+            return;
+          }
+          lat = results[0].geometry.location.lat();
+          lon = results[0].geometry.location.lng();
+          // http://ottwatch.ca/api/point?lat=45.265309&lon=-75.777104
+          $('#ridingmsg').html('... loading riding information ...');
+          url = '<?php print OttWatchConfig::WWW ; ?>/api/point?lat=' + lat + '&lon=' + lon;
+          $.getJSON(url,function(data){
+            console.log(data);
+            if (data.fed_riding.enname == undefined) {
+	            $('#ridingmsg').html( postal + ' seems to be outside of Canada (<a href="javascript:findridingagain(); return false;">again</a>)');
+            } else {
+	            $('#ridingmsg').html( 
+								postal + ' is in '+data.fed_riding.enname +
+								' (<a href="javascript:findridingagain(); ">again</a>)'
+							);
+            }
+          });
+        }
+      );
+    }
+    </script>
+		<?php
 	}
 
 	public static function widgetFindWardInner($branded) {
@@ -707,6 +773,12 @@ class ApiController {
     } else {
       $result['ward'] = self::errResult("Point is not within Ottawa city limits");
     }
+
+		# riding
+    $row = getDatabase()->one(" select enname,frname,provcode,fednum from ridings_2011 where ST_Contains(shape,PointFromText('POINT($lon $lat)')) ");
+		if ($row['enname']) {
+			$result['fed_riding'] = $row;
+		}
 
     return $result;
   }
