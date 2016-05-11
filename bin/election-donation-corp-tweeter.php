@@ -38,7 +38,6 @@ foreach ($rows as $r) {
 	$sql = " update tmp_tweet_corporate_donations set tweeted = 1 where id = " . $r['id'];
 	getDatabase()->execute(" update tmp_tweet_corporate_donations set tweeted = 1 where id = " . $r['id']);
 	$tweet = "{$r['last']}: \${$r['amount']} from {$r['name']}, {$r['address']}, {$r['city']} http://ottwatch.ca/election/donation/{$r['id']} #ottpoli";
-	print "$tweet\n";
 	tweet($tweet);
 }
 
