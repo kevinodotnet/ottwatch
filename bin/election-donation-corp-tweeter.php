@@ -8,10 +8,6 @@ set_include_path(get_include_path() . PATH_SEPARATOR . "$dirname/../www");
 require_once('include.php');
 require_once('twitteroauth.php');
 
-# $rows = getDatabase()->all(" select * from candidate_donation where city = 'Ottawa' and location is null order by updated desc ");
-# $rows = getDatabase()->all(" select * from candidate_donation where returnid = 18 and location is null order by rand() limit 10  ");
-# $rows = getDatabase()->all(" select * from candidate_donation where created > '2015-01-01' and location is null order by rand() limit 10  ");
-
 $rows = getDatabase()->all(" 
 	select 
 		t.id,
@@ -26,10 +22,6 @@ $rows = getDatabase()->all("
 		join candidate_return r on r.id = d.returnid
 		join candidate c on c.id = r.candidateid
 		join election e on e.id = c.electionid
-	where 
-		e.id = 1
-		and d.type = 1
-		and c.winner = 1
 	order by rand()
 	limit 1
 	");
