@@ -137,7 +137,7 @@ function tweet($tweet) {
   $accessToken = OttWatchConfig::TWITTER_POST_ACCESS_TOKEN;
   $accessTokenSecret = OttWatchConfig::TWITTER_POST_TOKEN_SECRET;
 
-	print "Sending... $tweet\n";
+	# print "$tweet\n";
 
   if ($consumerKey == '') {
     # we are in debug mode, so silently discard
