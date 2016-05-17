@@ -793,9 +793,9 @@ class MeetingController {
     $html = `wget -qO - '$url'`; // file_get_contents($url);
 
 		if (false && $debug) {
-		print "\n\n-----------------------------------------\n\n";
+		print "\n\n-----[ A ]-----------------------------------------\n\n";
 		print "$html\n";
-		print "\n\n-----------------------------------------\n\n";
+		print "\n\n-----[ A ]-----------------------------------------\n\n";
 		}
 
     $tmp = preg_grep('/g_locationPrimary/',explode("\n",$html));
@@ -821,10 +821,10 @@ class MeetingController {
 		}
 
 		if ($debug) {
-		print "\n\n-----------------------------------------\n\n";
+		print "\n\n-----[ B ]-----------------------------------------\n\n";
 		print "url: $isplUrl\n";
 		print "spl: $spl\n";
-		print "\n\n-----------------------------------------\n\n";
+		print "\n\n-----[ B ]-----------------------------------------\n\n";
 		}
 
     $xml = simplexml_load_string($spl);
@@ -863,10 +863,10 @@ class MeetingController {
 			return -1;
     }
 
-		if ($debug) {
-		print "\n\n-----------------------------------------\n\n";
+		if (false && $debug) {
+		print "\n\n-----[ A ]-----------------------------------------\n\n";
 		print "$html\n";
-		print "\n\n-----------------------------------------\n\n";
+		print "\n\n-----[ A ]-----------------------------------------\n\n";
 		}
 
 		# Extract just the URL from the HTML line that matched
@@ -880,15 +880,19 @@ class MeetingController {
 		# print "Loading video ISPL file: $isplUrl\n";
     $spl = `wget -qO - '$isplUrl'`;
 		if ($spl == '') {
-			# print "ISPL file not found or is not XML\n";
+			pr($m);
+			print "ISPL file not found or is not XML\n";
+			#print "\n\n-----------------------------------------\n\n";
+			#print "$html\n";
 			return -1;
 		}
 
-		if ($debug) {
+		if (false && $debug) {
 		print "\n\n-----------------------------------------\n\n";
 		print "url: $isplUrl\n";
 		print "spl: $spl\n";
 		print "\n\n-----------------------------------------\n\n";
+		print "$html\n";
 		}
 
     $xml = simplexml_load_string($spl);
@@ -2813,7 +2817,7 @@ class MeetingController {
 		$html = preg_replace('/<\/meta>/','',$html);
 		$html = preg_replace('/<font[^>]*/i','',$html);
 		$html = preg_replace('/<\/font>/i','',$html);
-		$html = preg_replace('/ & /',' and ',$html);
+		$html = preg_replace('/&/',' and ',$html);
 
 		$html = preg_replace('/<TR>\s*<TD[^>]*>\s*<\/TR>/i','',$html); # fix <tr><td></tr> shit.
 
