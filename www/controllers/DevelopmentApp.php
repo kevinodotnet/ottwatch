@@ -374,6 +374,10 @@ class DevelopmentAppController {
 	    <b><?php print $a['apptype']; ?></b>: <?php print $a['description']; ?>
 	    <a target="_new" href="<?php print self::getLinkToApp($a['appid']); ?>"><i class="fa fa-external-link"></i> View application on ottawa.ca</a>
 	    </p>
+			<p>
+			<a class="btn btn-primary" target="_blank" href="https://app01.ottawa.ca/postingplans/commentForm.jsf?lang=en&appId=<?php print $a['appid']; ?>&newReq=true">Send an official comment to the city regarding <?php print $a['devid']; ?></a>.
+
+			</p>
 			<?php
 		}
 		?>
