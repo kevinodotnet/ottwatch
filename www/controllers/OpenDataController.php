@@ -188,7 +188,16 @@ class OpenDataController {
 					}
 					if ($r->hash == '') {
 						# opendata portal does not have a hash, so do the actual download and calculate our own for 'change detection' purposes
-						$data = `wget -qO - "{$r->url}"`;
+						$data = '';
+						print "\n{$r->url}\n";
+						if (preg_match('/stagingdata/',$r->url)) {
+							print "skipping possible huge file: {$r->url}\n";
+							$row['hash'] = '';
+							$r->hash = '';
+							pr($r);
+						} else {
+							$data = `wget -qO - "{$r->url}"`;
+						}
 #						if ($r->url == 'http://octranspo1.com/developers/register' || $r->url == 'http://biblioottawalibrary.ca/branches.xml') {
 #							# these two URLs have random values inside the actual content. Supress so the random
 #							# numbers don't mutate the hash calculation.
