@@ -220,7 +220,19 @@ class ConsultationController {
 		getDatabase()->execute(" update consultation set category = 'DELETED'; ");
 
 		# manually missing...
-		self::crawlCategory('Transportation','http://ottawa.ca/en/city-hall/public-consultations/transportation');
+		self::crawlCategory('Transit','http://ottawa.ca/en/city-hall/planning-and-development/under-way-1');
+		self::crawlCategory('Transit','http://ottawa.ca/en/city-hall/planning-and-development/planned');
+		self::crawlCategory('Sidewalks','http://ottawa.ca/en/underway-0');
+		self::crawlCategory('Sidewalks','http://ottawa.ca/en/planned');
+		self::crawlCategory('Sewers, water and wastewater','http://ottawa.ca/en/city-hall/planning-and-development/under-way-0');
+		self::crawlCategory('Sewers, water and wastewater','http://ottawa.ca/en/major-projects/construction-and-infrastructure/planned-0');
+		self::crawlCategory('Bridges and Pathways','http://ottawa.ca/en/major-projects/construction-and-infrastructure/planned-2');
+		self::crawlCategory('Bridges and Pathways','http://ottawa.ca/en/city-hall/planning-and-development/under-way');
+		self::crawlCategory('Cycling projects','http://ottawa.ca/en/city-hall/planning-and-development/planned-0');
+		self::crawlCategory('Cycling projects','http://ottawa.ca/en/underway');
+		self::crawlCategory('Roadwork','http://ottawa.ca/en/major-projects/construction-and-infrastructure/planned');
+		self::crawlCategory('Roadwork','http://ottawa.ca/en/city-hall/planning-and-development/under-way-2');
+		self::crawlCategory('Construction and Infrastructure projects','http://ottawa.ca/en/major-projects/construction-and-infrastructure');
 		self::crawlCategory('Municipal Addressing','http://ottawa.ca/en/municipal-addressing-0');
 		self::crawlCategory('Public Engagement','http://ottawa.ca/en/city-hall/public-consultations/public-engagement/public-engagement-strategy-and-consultations');
 		self::crawlCategory('Parks and recreation','http://ottawa.ca/en/city-hall/public-consultations/parks-and-recreation-public-consultations');
