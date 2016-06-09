@@ -45,7 +45,8 @@ class SyndicationController {
         print $e;
       }
       try {
-  			self::facebook($r);
+				# facebook broke b/c I changed my password and I just cant care to fix it, so
+  			# self::facebook($r);
       } catch (Exception $e) {
         print $e;
       }
