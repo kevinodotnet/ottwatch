@@ -189,9 +189,9 @@ class OpenDataController {
 					if ($r->hash == '') {
 						# opendata portal does not have a hash, so do the actual download and calculate our own for 'change detection' purposes
 						$data = '';
-						print "\n{$r->url}\n";
+						# print "\n{$r->url}\n";
 						if (preg_match('/stagingdata/',$r->url)) {
-							print "skipping possible huge file: {$r->url}\n";
+							# print "skipping possible huge file: {$r->url}\n";
 							$row['hash'] = '';
 							$r->hash = '';
 							pr($r);
