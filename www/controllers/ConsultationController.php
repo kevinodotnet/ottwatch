@@ -176,7 +176,7 @@ class ConsultationController {
     foreach ($rows as $row) {
       ?>
 	    <tr>
-	    <th><a target="_blank" href="<?php print $row['id']; ?>"><?php print $row['title']; ?></a></th>
+	    <th><a target="_blank" href="/consultations/<?php print $row['id']; ?>"><?php print $row['title']; ?></a></th>
 	    <td><?php 
 				if ($row['delta'] == 0) {
 					?>
