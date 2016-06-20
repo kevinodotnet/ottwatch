@@ -2456,7 +2456,6 @@ class MeetingController {
 			$tmp = preg_replace("/$t=[^\s>]*/i",'',$tmp);
 		}
 
-		#print $tmp; print "\n\n";
 		$xml = simplexml_load_string("<foo>{$tmp}</foo>");
 		$anchors = $xml->xpath("//a"); 
 		foreach ($anchors as $a) {
@@ -2471,8 +2470,9 @@ class MeetingController {
 	  	    'itemid' => $itemid,
 	  	    'title' => $title,
 	  	  );
-				pr($zzz);
-	  	  $dbitemid = getDatabase()->execute('insert into item (meetingid,itemid,title) values (:meetingid,:itemid,:title) ', $zzz);
+				if (preg_match('/^\d+$/',$itemid)) {
+		  	  $dbitemid = getDatabase()->execute('insert into item (meetingid,itemid,title) values (:meetingid,:itemid,:title) ', $zzz);
+				}
 			}
 		}
 
