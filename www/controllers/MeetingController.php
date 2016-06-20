@@ -2466,11 +2466,13 @@ class MeetingController {
 			$href = $a['href'];
 			if (isset($href)) {
 				$itemid = preg_replace('/.*itemid=/','',$href);
-	  	  $dbitemid = getDatabase()->execute('insert into item (meetingid,itemid,title) values (:meetingid,:itemid,:title) ', array(
+	  	  $zzz = array(
 	  	    'meetingid' => $id,
 	  	    'itemid' => $itemid,
 	  	    'title' => $title,
-	  	  ));
+	  	  );
+				pr($zzz);
+	  	  $dbitemid = getDatabase()->execute('insert into item (meetingid,itemid,title) values (:meetingid,:itemid,:title) ', $zzz);
 			}
 		}
 
