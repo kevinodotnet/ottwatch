@@ -159,8 +159,6 @@ class ConsultationController {
     <tr>
     <th>Consultation/Document Title</th>
     <th>Updated (days ago)</th>
-    <!-- <th>Created</th> -->
-    <th>Category</th>
     </tr>
     <?php
     $rows = getDatabase()->all(" 
@@ -170,6 +168,7 @@ class ConsultationController {
     from consultation c
       left join (select consultationid,max(updated) docupdated from consultationdoc group by consultationid) d on d.consultationid = c.id
     order by 
+			case when c.category = 'DELETED' then 1 else 0 end,
       case when d.docupdated is null then c.updated else greatest(c.updated,d.docupdated) end desc,
 			title
     ");
@@ -186,7 +185,6 @@ class ConsultationController {
 					print $row['delta']; 
 				}
 			?></td>
-	    <td><?php print $row['category']; ?></td>
 	    </tr>
       <?php
       $docs = getDatabase()->all(" select *,datediff(CURRENT_TIMESTAMP,updated) delta from consultationdoc where consultationid = :id order by updated desc ",array('id'=>$row['id']));
@@ -220,23 +218,37 @@ class ConsultationController {
 		getDatabase()->execute(" update consultation set category = 'DELETED'; ");
 
 		# manually missing...
-		self::crawlCategory('Transit','http://ottawa.ca/en/city-hall/planning-and-development/under-way-1');
-		self::crawlCategory('Transit','http://ottawa.ca/en/city-hall/planning-and-development/planned');
-		self::crawlCategory('Sidewalks','http://ottawa.ca/en/underway-0');
-		self::crawlCategory('Sidewalks','http://ottawa.ca/en/planned');
-		self::crawlCategory('Sewers, water and wastewater','http://ottawa.ca/en/city-hall/planning-and-development/under-way-0');
-		self::crawlCategory('Sewers, water and wastewater','http://ottawa.ca/en/major-projects/construction-and-infrastructure/planned-0');
-		self::crawlCategory('Bridges and Pathways','http://ottawa.ca/en/major-projects/construction-and-infrastructure/planned-2');
 		self::crawlCategory('Bridges and Pathways','http://ottawa.ca/en/city-hall/planning-and-development/under-way');
+		self::crawlCategory('Bridges and Pathways','http://ottawa.ca/en/major-projects/construction-and-infrastructure/planned-2');
+		self::crawlCategory('By-law','http://ottawa.ca/en/city-hall/public-consultations/law');
+		self::crawlCategory('Construction and Infrastructure projects','http://ottawa.ca/en/major-projects/construction-and-infrastructure');
 		self::crawlCategory('Cycling projects','http://ottawa.ca/en/city-hall/planning-and-development/planned-0');
 		self::crawlCategory('Cycling projects','http://ottawa.ca/en/underway');
-		self::crawlCategory('Roadwork','http://ottawa.ca/en/major-projects/construction-and-infrastructure/planned');
-		self::crawlCategory('Roadwork','http://ottawa.ca/en/city-hall/planning-and-development/under-way-2');
-		self::crawlCategory('Construction and Infrastructure projects','http://ottawa.ca/en/major-projects/construction-and-infrastructure');
+		self::crawlCategory('Economic Development and Innovation','http://ottawa.ca/en/city-hall/public-consultations/economic-development-and-innovation');
+		self::crawlCategory('Environment','http://ottawa.ca/en/city-hall/public-consultations/environment');
 		self::crawlCategory('Municipal Addressing','http://ottawa.ca/en/municipal-addressing-0');
+		self::crawlCategory('Parks and Recreation','http://ottawa.ca/en/city-hall/public-consultations/parks-and-recreation-public-consultations');
+		self::crawlCategory('Planning and Infrastructure','http://ottawa.ca/en/taxonomy/term/2651');
 		self::crawlCategory('Public Engagement','http://ottawa.ca/en/city-hall/public-consultations/public-engagement/public-engagement-strategy-and-consultations');
-		self::crawlCategory('Parks and recreation','http://ottawa.ca/en/city-hall/public-consultations/parks-and-recreation-public-consultations');
-		#self::crawlCategory('Construction and Infrastructure','http://ottawa.ca/en/major-projects/construction-and-infrastructure');
+		self::crawlCategory('Public Engagement','http://ottawa.ca/en/public-engagement');
+		self::crawlCategory('Roadwork','http://ottawa.ca/en/city-hall/planning-and-development/under-way-2');
+		self::crawlCategory('Roadwork','http://ottawa.ca/en/major-projects/construction-and-infrastructure/planned');
+		self::crawlCategory('Safety','http://ottawa.ca/en/city-hall/public-consultations/miscellaneous');
+		self::crawlCategory('Sewers and Wastewater','http://ottawa.ca/en/city-hall/public-consultations/sewers-and-wastewater');
+		self::crawlCategory('Sewers, water and wastewater','http://ottawa.ca/en/city-hall/planning-and-development/under-way-0');
+		self::crawlCategory('Sewers, water and wastewater','http://ottawa.ca/en/major-projects/construction-and-infrastructure/planned-0');
+		self::crawlCategory('Sidewalks','http://ottawa.ca/en/planned');
+		self::crawlCategory('Sidewalks','http://ottawa.ca/en/underway-0');
+		self::crawlCategory('Transit','http://ottawa.ca/en/city-hall/planning-and-development/planned');
+		self::crawlCategory('Transit','http://ottawa.ca/en/city-hall/planning-and-development/under-way-1');
+		self::crawlCategory('Transit','http://ottawa.ca/en/city-hall/public-consultations/transit');
+		self::crawlCategory('Transportation','http://ottawa.ca/en/city-hall/public-consultations/transportation');
+		self::crawlCategory('Water','http://ottawa.ca/en/city-hall/public-consultations/water');
+
+		# purge any deleted (or URL renamed) consultations
+		# getDatabase()->execute(" delete from consultation where category = 'DELETED'; ");
+
+		return;
 
     # start at the stop level consultation listing.
     $html = file_get_contents("http://ottawa.ca/en/city-hall/public-consultations");
@@ -251,8 +263,6 @@ class ConsultationController {
       self::crawlCategory($category,"http://ottawa.ca{$url}");
     }
 
-		# purge any deleted (or URL renamed) consultations
-		getDatabase()->execute(" delete from consultation where category = 'DELETED'; ");
 
   }
 
@@ -282,6 +292,8 @@ class ConsultationController {
   // crawl a specific consultation 
 
   public static function crawlConsultation ($category, $title, $url) {
+
+		print "($category)\t$url ($title)\n";
 
     $html = @file_get_contents($url);
 		if ($html === FALSE) { 
@@ -347,6 +359,11 @@ class ConsultationController {
 
   public static function crawlConsultationLink ($parent, $title, $url) {
     #print "    LINK: $title\n";
+
+		if ($url == 'http://ottawa.ca/en/node/298008') {
+			# lansdown is not actually changing...
+			return;
+		}
 
 		if (!preg_match('/\/ottawa.ca\//',$url)) {
 			# do not leave ottawa.ca
