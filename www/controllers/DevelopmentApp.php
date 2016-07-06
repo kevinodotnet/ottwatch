@@ -851,6 +851,31 @@ class DevelopmentAppController {
   }
 
   static function injestApplication ($appid,$action) {
+
+		# get GIS data for it
+    $addresses = array();
+
+		$url = 'http://maps.ottawa.ca/arcgis/rest/services/Development_Applications/MapServer/0/query';
+		$url .= '?where=DT_APP_ID+%3D+%27'.urlencode($appid).'%27';
+		$url .= '&outFields=OBJECTID%2C+LATITUDE%2CLONGITUDE%2CADDRESS_NUMBER_ROAD_NAME';
+		$url .= '&f=pjson';
+		$gis_json = file_get_contents($url);
+		$gis = json_decode($gis_json);
+		$addrSeen = array();
+		foreach ($gis->features as $f) {
+			$lat = $f->attributes->LATITUDE;
+			$lon = $f->attributes->LONGITUDE;
+			$roadname = $f->attributes->ADDRESS_NUMBER_ROAD_NAME;
+			if (!isset($addrSeen[$roadname])) {
+			$addr = array();
+			$addr['lat'] = $lat;
+			$addr['lon'] = $lon;
+			$addr['addr'] = $roadname;
+			$addresses[] = $addr;
+			$addrSeen[$roadname] = 1;
+			}
+		}
+
     $url = "http://app01.ottawa.ca/postingplans/appDetails.jsf?lang=en&appId=$appid";
     $html = file_get_contents($url);
     #file_put_contents("a.html",$html);
@@ -869,8 +894,14 @@ class DevelopmentAppController {
 		$labels['Status Date'] = '';
 		$labels['Description'] = '';
 
-    $addresses = array();
     $files = array();
+
+		$doAddr = 1;
+		if (count($addresses) > 0) {
+			# only try to get addresses out of the description if the GIS lookup failed.
+			# GIS data, when present, is much better.
+			$doAddr = 0;
+		}
 
     $label = '';
     $value = '';
@@ -881,20 +912,20 @@ class DevelopmentAppController {
         # get lat/lon from mercator
         $addr = mercatorToLatLon($matches[1],$matches[2]);
         $addr['addr'] = $matches[3];
-        $addresses[] = $addr;
+				if ($doAddr) { $addresses[] = $addr; }
 			} else if (preg_match('/apps104.*LAT=([-\d\.]+).*LON=([-\d\.]+).*>([^<]+)</',$lines[$x],$matches)) {
         # <li><a href="http://apps104.ottawa.ca/emap?emapver=lite&LAT=45.278462&LON=-75.570191&featname=5640+Bank+Street&amp;lang=en" target="_emap">5640 Bank Street</a></li>
         $addr = array();
         $addr['lat'] = $matches[1];
         $addr['lon'] = $matches[2];
         $addr['addr'] = $matches[3];
-        $addresses[] = $addr;
+        if ($doAddr) { $addresses[] = $addr; }
         #$addresses[0] = $matches[1];
       } else if (preg_match('/<a.*target="_emap">([^<]+)</',$lines[$x],$matches)) {
         # <li><a href="http://apps104.ottawa.ca/emap?emapver=lite&amp;lang=en" target="_emap">114 Richmond Road</a></li>
         $addr = array();
         $addr['addr'] = $matches[1];
-        $addresses[] = $addr;
+        if ($doAddr) { $addresses[] = $addr; }
       }
       if (preg_match('/div.*class="label"/',$lines[$x])) {
         $x++;
