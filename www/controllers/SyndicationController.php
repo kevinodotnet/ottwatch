@@ -61,6 +61,7 @@ class SyndicationController {
 		}
 		$message = preg_replace('/ Cycling /i',' #ottbike ',$message);
 		$message = preg_replace('/ bikeway /i',' #ottbike ',$message);
+		if ($preg_match('/sidewalk/i',$message)) { $message .= " #ottwalk"; }
     $tweet = tweet_txt_and_url($message,$url);
 
 		if ($tweet == 'Lobbying: Jeff Polowin (Coventry Connections Inc.) Taxi issues http://bit.ly/1t1fJQJ') {
