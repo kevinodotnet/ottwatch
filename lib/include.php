@@ -565,3 +565,16 @@ function address_latlon ($num, $street) {
 	return $m;
 
 }
+
+function c_file_get_contents($url) {
+	global $OTTVAR;
+	$m = md5($url);
+	$f = "$OTTVAR/c_file_get_contents/$m";
+	if (file_exists($f)) {
+		return `gzip -cd $f`;
+	}
+	$d = file_get_contents($url);
+	file_put_contents($f,gzencode($d));
+	return $d;
+}
+
