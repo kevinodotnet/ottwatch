@@ -397,12 +397,21 @@ class ConsultationController {
     if ($row['id']) {
       getDatabase()->execute(" update consultationdoc set title = :title where id = :id ",array('id'=>$row['id'],'title'=>$title));
       if ($row['md5'] != $md5) {
-        print "consultation.id = {$parent['id']} doc.id = {$row['id']} md5 changed: {$row['md5']} $md5\nurl: $url\n\n";
+
+				print "$title ($category) DOC CHANGED $url\n";
+				print "http://ottwatch.ca/consultations/{$parent['id']}\n";
+        print "c.sh {$row['md5']} $md5\n";
+				print "http://app.kevino.ca/ottwatchvar/consultationmd5/{$row['md5']}\n";
+				print "http://app.kevino.ca/ottwatchvar/consultationmd5/$md5\n";
+				print "\n";
+
         getDatabase()->execute(" update consultationdoc set md5 = :md5, updated = CURRENT_TIMESTAMP where id = :id ",array('id'=>$row['id'],'md5'=>$md5));
       }
     } else {
       $id = db_insert("consultationdoc",array('consultationid'=>$parent['id'],'title'=>$title, 'url'=>$url, 'md5'=>$md5)); 
-      print "consultation.id = {$parent['id']} doc.id = {$id} is new\nurl: $url\n\n";
+			print "$title ($category) DOC NEW $url\n";
+			print "http://ottwatch.ca/consultations/{$parent['id']}\n";
+			print "\n";
     }
 
 		$data = "DOCUMENT|$url|$title\n.$data";
