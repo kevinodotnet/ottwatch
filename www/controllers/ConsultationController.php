@@ -293,7 +293,6 @@ class ConsultationController {
 
   public static function crawlConsultation ($category, $title, $url) {
 
-		print "($category)\t$url ($title)\n";
 
     $html = @file_get_contents($url);
 		if ($html === FALSE) { 
@@ -311,13 +310,20 @@ class ConsultationController {
     if ($row['id']) {
       getDatabase()->execute(" update consultation set category = :category where id = :id ",array('id'=>$row['id'],'category'=>$category));
       if ($row['md5'] != $contentMD5) {
-        print "$category/$title consultation.id = {$row['id']} md5 changed: {$row['md5']} $contentMD5\nurl: $url\n\n";
+				print "$title ($category) CHANGED\n";
+				print "http://ottwatch.ca/consultations/{$row['id']}\n";
+        print "c.sh {$row['md5']} $contentMD5\n";
+				print "http://app.kevino.ca/ottwatchvar/consultationmd5/{$row['md5']}\n";
+				print "http://app.kevino.ca/ottwatchvar/consultationmd5/$contentMD5\n";
+				print "\n";
         getDatabase()->execute(" update consultation set md5 = :md5, updated = CURRENT_TIMESTAMP where id = :id ",array('id'=>$row['id'],'md5'=>$contentMD5));
       }
     } else {
       $id = db_insert("consultation",array( 'category'=>$category, 'title'=>$title, 'url'=>$url, 'md5'=>$contentMD5)); 
-      print "$category/$title consultation.id = {$id} is new\nurl: $url\n\n";
-    }
+			print "$title ($category) NEW\n";
+			print "http://ottwatch.ca/consultations/$id\n";
+			print "\n";
+   }
 
     # reset from database, may have updated/inserted
     $row = getDatabase()->one(" select * from consultation where url = :url ",array('url'=>$url));
