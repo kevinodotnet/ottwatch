@@ -310,6 +310,7 @@ class ConsultationController {
     if ($row['id']) {
       getDatabase()->execute(" update consultation set category = :category where id = :id ",array('id'=>$row['id'],'category'=>$category));
       if ($row['md5'] != $contentMD5) {
+				print "--------------------------------------------------------------\n";
 				print "$title ($category) CHANGED\n";
 				print "http://ottwatch.ca/consultations/{$row['id']}\n";
         print "c.sh {$row['md5']} $contentMD5\n";
@@ -320,6 +321,7 @@ class ConsultationController {
       }
     } else {
       $id = db_insert("consultation",array( 'category'=>$category, 'title'=>$title, 'url'=>$url, 'md5'=>$contentMD5)); 
+			print "--------------------------------------------------------------\n";
 			print "$title ($category) NEW\n";
 			print "http://ottwatch.ca/consultations/$id\n";
 			print "\n";
@@ -398,7 +400,8 @@ class ConsultationController {
       getDatabase()->execute(" update consultationdoc set title = :title where id = :id ",array('id'=>$row['id'],'title'=>$title));
       if ($row['md5'] != $md5) {
 
-				print "$title ($category) DOC CHANGED $url\n";
+				print "--------------------------------------------------------------\n";
+				print "$title DOC CHANGED $url\n";
 				print "http://ottwatch.ca/consultations/{$parent['id']}\n";
         print "c.sh {$row['md5']} $md5\n";
 				print "http://app.kevino.ca/ottwatchvar/consultationmd5/{$row['md5']}\n";
@@ -409,7 +412,8 @@ class ConsultationController {
       }
     } else {
       $id = db_insert("consultationdoc",array('consultationid'=>$parent['id'],'title'=>$title, 'url'=>$url, 'md5'=>$md5)); 
-			print "$title ($category) DOC NEW $url\n";
+			print "--------------------------------------------------------------\n";
+			print "$title DOC NEW $url\n";
 			print "http://ottwatch.ca/consultations/{$parent['id']}\n";
 			print "\n";
     }
