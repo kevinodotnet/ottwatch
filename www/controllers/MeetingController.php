@@ -1411,7 +1411,7 @@ class MeetingController {
       error404();
       return;
     }
-    header("Location: ../".urlencode($m['category']})/{$m['meetid']}");
+		header("Location: ../".urlencode($m['category'])."/{$m['meetid']}");
   }
 
 #  static public function itemFiles ($category,$id,$itemid,$format) {
