@@ -12,6 +12,7 @@ include_once 'epiphany/src/Epi.php';
 include_once 'controllers/ApiController.php';
 include_once 'controllers/ScrapeApiController.php';
 include_once 'controllers/MeetingController.php';
+include_once 'controllers/BylawController.php';
 include_once 'controllers/GisController.php';
 include_once 'controllers/GraphController.php';
 include_once 'controllers/DevelopmentApp.php';
@@ -132,6 +133,10 @@ getRoute()->get('/lobbyist/([^\/]*)', 'lobbyist'); # legacy REST location
 
 getRoute()->get('/devapps', array('DevelopmentAppController','listAll'));
 getRoute()->get('/devapps/(D.*)', array('DevelopmentAppController','viewDevApp'));
+
+getRoute()->get('/bylaws/(\d\d\d\d-\d+)', array('BylawController','show'));
+getRoute()->get('/bylaws', array('BylawController','listAll'));
+getRoute()->get('/bylaws/', array('BylawController','listAll'));
 
 getRoute()->get('/meetings/votes', array('MeetingController','votesIndex'));
 getRoute()->get('/meetings/votes/member/([^\/]*)', array('MeetingController','votesMember'));
