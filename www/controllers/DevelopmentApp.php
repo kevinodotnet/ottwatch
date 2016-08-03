@@ -1060,7 +1060,7 @@ class DevelopmentAppController {
     if ($action == 'insert') {
       $tweet = "NEW {$labels['Application']}: ".$addr." {$labels['Application #']} in $ward";
     } else if ($action == 'update') {
-      $tweet = "Updated {$labels['Application']}: ".$addr." {$labels['Application #']} in $ward";
+      $tweet = "Changed {$labels['Application']}: ".$addr." {$labels['Application #']} in $ward";
     } else {
 			# no tweeting!
 			return;

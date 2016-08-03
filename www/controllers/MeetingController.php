@@ -1139,7 +1139,7 @@ class MeetingController {
       if ($r['created'] == $r['updated']) {
         $tweet = "New Meeting: ".meeting_category_to_title($r['category'])." on $meetingDate";
       } else {
-        $tweet = "Meeting: ".meeting_category_to_title($r['category'])." on $meetingDate is updated";
+        $tweet = "Meeting: ".meeting_category_to_title($r['category'])." on $meetingDate has changed";
       }
 
       $tweets[$link] = $tweet;
@@ -1411,7 +1411,7 @@ class MeetingController {
       error404();
       return;
     }
-    header("Location: ../{$m['category']}/{$m['meetid']}");
+    header("Location: ../".urlencode($m['category']})/{$m['meetid']}");
   }
 
 #  static public function itemFiles ($category,$id,$itemid,$format) {

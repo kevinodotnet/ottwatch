@@ -49,7 +49,7 @@ class ConsultationController {
         $tweet = "Consultation sub-page(s) updated: {$row['title']}";
 			}
       */
-      $tweet = "Consultation updated: {$row['title']}";
+      $tweet = "Consultation changed: {$row['title']}";
 			if (isset($tweeted[$row['id']])) {
 				continue;
 			}
