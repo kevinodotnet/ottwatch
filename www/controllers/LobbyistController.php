@@ -514,13 +514,24 @@ class LobbyistController {
   public static function search ($query) {
     top();
 
-    $clause = mysql_escape_string($query);
+		# only show lobbying since specific date
     $since = $_GET['since'];
     if (preg_match('/^\d\d\d\d-\d\d-\d\d$/',$since)) {
       $since = " and l.created >= '$since' ";
     } else {
       $since = '';
     }
+
+		# same, but by number of days from now()
+		$recent = $_GET['recent'];
+		if (preg_match('/^\d+$/',$recent)) {
+			$t = time();
+			$t = $t-($recent*24*60*60);
+			$since = date('Y-m-d',$t);
+      $since = " and l.created >= '$since' ";
+		}
+
+    $clause = mysql_escape_string($query);
 
     $rows = getDatabase()->all("
       select 

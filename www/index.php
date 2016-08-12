@@ -432,7 +432,7 @@ function dashboard() {
     document.location.href = 'lobbying/search/'+encodeURIComponent(v);
   }
   </script>
-  <h4>Lobbyist Registry <small>(<a  onclick="javascript:document.location.href = 'lobbying/search/'">all</a>)</small></h4>
+  <h4>Lobbyist Registry <small>(<a onclick="javascript:document.location.href = 'lobbying/search/?recent=30'">recent</a>,<a onclick="javascript:document.location.href = 'lobbying/search/'">all</a>)</small></h4>
   <div class="input-prepend input-append">
   <input type="text" id="lobbyist_search_value" placeholder="Search Lobbyist Registry...">
   <button class="btn" onclick="lobbyist_search_form_submit()"><i class="icon-search"></i> Search</button>
