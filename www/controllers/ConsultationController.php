@@ -293,7 +293,6 @@ class ConsultationController {
 
   public static function crawlConsultation ($category, $title, $url) {
 
-
     $html = @file_get_contents($url);
 		if ($html === FALSE) { 
       // this is probably a one-time network error on a link that does actually
@@ -318,14 +317,16 @@ class ConsultationController {
 				print "http://app.kevino.ca/ottwatchvar/consultationmd5/$contentMD5\n";
 				print "\n";
         getDatabase()->execute(" update consultation set md5 = :md5, updated = CURRENT_TIMESTAMP where id = :id ",array('id'=>$row['id'],'md5'=>$contentMD5));
+				db_insert("md5hist",array('curmd5'=>$contentMD5,'prevmd5'=>$row['md5']));
       }
     } else {
       $id = db_insert("consultation",array( 'category'=>$category, 'title'=>$title, 'url'=>$url, 'md5'=>$contentMD5)); 
+			db_insert("md5hist",array('curmd5'=>$contentMD5,'prevmd5'=>''));
 			print "--------------------------------------------------------------\n";
 			print "$title ($category) NEW\n";
 			print "http://ottwatch.ca/consultations/$id\n";
 			print "\n";
-   }
+		}
 
     # reset from database, may have updated/inserted
     $row = getDatabase()->one(" select * from consultation where url = :url ",array('url'=>$url));
@@ -409,9 +410,11 @@ class ConsultationController {
 				print "\n";
 
         getDatabase()->execute(" update consultationdoc set md5 = :md5, updated = CURRENT_TIMESTAMP where id = :id ",array('id'=>$row['id'],'md5'=>$md5));
+				db_insert("md5hist",array('curmd5'=>$md5,'prevmd5'=>$row['md5']));
       }
     } else {
       $id = db_insert("consultationdoc",array('consultationid'=>$parent['id'],'title'=>$title, 'url'=>$url, 'md5'=>$md5)); 
+			db_insert("md5hist",array('curmd5'=>$md5,'prevmd5'=>''));
 			print "--------------------------------------------------------------\n";
 			print "$title DOC NEW $url\n";
 			print "http://ottwatch.ca/consultations/{$parent['id']}\n";
