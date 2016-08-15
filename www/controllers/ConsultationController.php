@@ -109,46 +109,44 @@ class ConsultationController {
     ?>
 
 		<h1><?php print $row['title']; ?></h1>
+		<b>Location</b>: <a target="_new" href="<?php print $row['url']; ?>"><?php print $row['url']; ?></a><br/>
 		<b>Last updated</b>: <?php print ($row['delta'] == 0 ? '<span style="color: #ff0000;">today</span>' : $row['delta'].' days(s) ago'); ?><br/>
+		<b>Current Version (cache) </b>: <a href="http://app.kevino.ca/ottwatchvar/consultationmd5/<?php print $row['md5']; ?>"><?php print $row['md5']; ?></a><br/>
+		<?php
+		$md5 = getDatabase()->one(" select * from md5hist where curmd5 = '{$row['md5']}' order by created desc limit 1 ");
+		if (isset($md5['id']) && $md5['prevmd5'] != '') {
+			?>
+			<b>Previous Version (cache)</b>: <a href="http://app.kevino.ca/ottwatchvar/consultationmd5/<?php print $md5['prevmd5']; ?>"><?php print $md5['prevmd5']; ?></a><br/>
+			<?php
+		}
+		?>
 
-		<h3>Documents at a glance</h3>
-    <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
-	  <tr>
-	  </tr>
     <?php
     $docs = getDatabase()->all(" select *,datediff(CURRENT_TIMESTAMP,updated) delta from consultationdoc where consultationid = :id order by updated desc ",array('id'=>$row['id']));
-    foreach ($docs as $doc) {
-      ?>
-	    <tr>
-	    <td><?php print ($doc['delta'] == 0 ? '<span style="color: #ff0000;">today</span>' : $doc['delta'].' days(s) ago'); ?></td>
-	    <td><a target="_blank" href="<?php print $doc['url']; ?>"><?php print $doc['title']; ?></a></td>
-	    </tr>
-      <?php
-    }
-    ?>
-    </table>
+		if (count($docs) > 0) {
+			?>
+			<h3>Documents at a glance</h3>
+	    <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
+			<tr>
+			<th>Modified</th>
+			<th>Title</th>
+			<th>Current Version</th>
+			</tr>
+			<?php
+    	foreach ($docs as $doc) {
+	      ?>
+		    <tr>
+		    <td><?php print ($doc['delta'] == 0 ? '<span style="color: #ff0000;">today</span>' : $doc['delta'].' days(s) ago'); ?></td>
+		    <td><a target="_blank" href="<?php print $doc['url']; ?>"><?php print $doc['title']; ?></a></td>
+		    <td><a target="_blank" href="http://app.kevino.ca/ottwatchvar/consultationmd5/<?php print $doc['md5']; ?>"><?php print $doc['md5']; ?></a></td>
+		    </tr>
+	      <?php
+	    }
+			?>
+    	</table>
+			<?php
+		}
 
-    <div class="row-fluid">
-   
-    <div class="span6">
-    <?php
-    $frameSrc = "{$row['id']}/content";
-    ?>
-    <h3>Overview</h3>
-    <i>
-    The overview provided below may have formatting and readability problems.
-    You're better off <a target="_new" href="<?php print $row['url']; ?>">viewing the actual page on ottawa.ca</a> instead.</i>
-    <iframe src="<?php print $frameSrc ?>" style="margin-top: 10px; width: 100%; height: 600px; border: 2px solid #000000;"></iframe>
-    </div>
-
-    <div class="span6">
-    <h3>Discuss</h3>
-    <?php disqus(); ?>
-    </div>
-
-    </div><!-- row -->
-
-    <?php
     bottom();
   }
 
