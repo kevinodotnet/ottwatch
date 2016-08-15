@@ -147,6 +147,7 @@ class OpenDataController {
 			$dataid = $row['id'];
 
       foreach ($set->resources as $r) {
+				try {
 
         $values = array();
         $values['dataid'] = $dataid;
@@ -194,7 +195,7 @@ class OpenDataController {
 							# print "skipping possible huge file: {$r->url}\n";
 							$row['hash'] = '';
 							$r->hash = '';
-							pr($r);
+							#pr($r);
 						} else {
 							$data = `wget -qO - "{$r->url}"`;
 						}
@@ -226,7 +227,10 @@ class OpenDataController {
 				} else {
 	        db_insert('opendatafile',$values);
 				}
+			} catch (Exception $e) {
+				print $e;
       }
+			}
 
     }
   }
