@@ -131,6 +131,7 @@ class ConsultationController {
 			<th>Modified</th>
 			<th>Title</th>
 			<th>Current Version</th>
+			<th>Previous Version</th>
 			</tr>
 			<?php
     	foreach ($docs as $doc) {
@@ -139,6 +140,20 @@ class ConsultationController {
 		    <td><?php print ($doc['delta'] == 0 ? '<span style="color: #ff0000;">today</span>' : $doc['delta'].' days(s) ago'); ?></td>
 		    <td><a target="_blank" href="<?php print $doc['url']; ?>"><?php print $doc['title']; ?></a></td>
 		    <td><a target="_blank" href="http://app.kevino.ca/ottwatchvar/consultationmd5/<?php print $doc['md5']; ?>"><?php print $doc['md5']; ?></a></td>
+		    <td>
+				<?php
+				$md5 = getDatabase()->one(" select * from md5hist where curmd5 = '{$doc['md5']}' order by created desc limit 1 ");
+				if (isset($md5['id']) && $md5['prevmd5'] != '') {
+					?>
+					<b>Previous Version (cache)</b>: <a href="http://app.kevino.ca/ottwatchvar/consultationmd5/<?php print $md5['prevmd5']; ?>"><?php print $md5['prevmd5']; ?></a><br/>
+					<?php
+				} else {
+					?>
+					-
+					<?php
+				}
+				?>
+				</td>
 		    </tr>
 	      <?php
 	    }
