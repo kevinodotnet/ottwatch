@@ -172,6 +172,8 @@ getRoute()->get('/consultations/', array('ConsultationController','showMain'));
 getRoute()->get('/consultations/(\d+)', array('ConsultationController','showConsultation'));
 getRoute()->get('/consultations/(\d+)/content', array('ConsultationController','showConsultationContent'));
 
+getRoute()->get('/md5hist/([a-z0-9]*)', 'md5hist');
+
 getRoute()->get('/election/*', array('ElectionController','showMain'));
 getRoute()->get('/election/candidates.csv', array('ElectionController','candidatesCSV'));
 getRoute()->get('/election/tools', array('ElectionController','showTools'));
@@ -588,6 +590,11 @@ if ($v3) {
 	<?php
 }
 ?>
+
+<link rel="stylesheet" type="text/css" href="/diff2html/diff2html.css">
+<script type="text/javascript" src="/diff2html/diff2html.js"></script>
+<script type="text/javascript" src="/diff2html/diff2html-ui.js"></script>
+
 <script src="<?php print $OTT_WWW; ?>/bootstrap-ajax-typeahead/js/bootstrap-typeahead.js" type="text/javascript"></script>
 <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
 <style type="text/css">
@@ -931,6 +938,65 @@ function mapToTable($o) {
 	?>
 	</table>
 	<?php
+}
+
+function md5hist ($md5) {
+	top3();
+
+	$rows = getDatabase()->all(" select * from md5hist where curmd5 = :md5 ",array('md5'=>$md5));
+	if (count($rows) == 0) {
+		print "End of the line; OttWatch doesn't have a cached copy of that version of the document.";
+		bottom3();
+		return;
+	}
+	if (count($rows) > 1) {
+		print "Collision on MD5 hash happened, which shouldn't, so Kevin screwed up; maybe tweet this URL to @odonnell_k please?";
+		bottom3();
+		return;
+	}
+	$row = $rows[0];
+	if ($row['prevmd5'] == '') {
+		print "This is the first version; can't compare to before the beginning of time!";
+		bottom3();
+		return;
+	}
+
+	?>
+	<h1>Document MD5: <?php print $row['curmd5']; ?></h1>
+	<ul>
+	<li>Created: <?php print $row['created']; ?></li>
+	<li>Previous diff: <a href="/md5hist/<?php print $row['prevmd5']; ?>"><?php print $row['prevmd5']; ?></a></li>
+	<li>Jump down to the <a href="#line-by-line">line-by-line</a> comparison.</li>
+	</ul>
+	<?php
+
+	$file1 = OttWatchConfig::FILE_DIR."/consultationmd5/".$row['prevmd5'];
+	$file2 = OttWatchConfig::FILE_DIR."/consultationmd5/".$row['curmd5'];
+	$cmd = "diff -u $file1 $file2";
+	#$cmd = "diff -u /mnt/shared/ottwatch/var/consultationmd5/b28bd0cf99eb78067347ad130f89e0a5 /mnt/shared/ottwatch/var/consultationmd5/f8e160e7a13d3cf2ddbb10c2051c5931";
+
+	$diff = `$cmd`;
+	#pr(htmlspecialchars($diff));
+
+	?>
+	<script>
+	lineDiffExample
+	var lineDiffExample = <?php echo json_encode($diff); ?>;
+
+	$(document).ready(function() {
+		var diff2htmlUi = new Diff2HtmlUI({diff: lineDiffExample});
+		diff2htmlUi.draw('#side-by-side', { inputFormat: 'json', showFiles: false, matching: 'words', outputFormat: 'side-by-side', synchronisedScroll: true });
+		diff2htmlUi.draw('#line-by-line', { inputFormat: 'json', showFiles: false, matching: 'words', outputFormat: 'line-by-line', synchronisedScroll: true });
+	});
+	</script>
+
+	<h2>Side-by-Side</h2>
+	<div id="side-by-side"></div>
+	<h2>Line-by-Line</h2>
+	<div id="line-by-line"></div>
+
+	<?php
+	bottom3();
 }
 
 ?>
