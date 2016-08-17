@@ -179,6 +179,9 @@ class OpenDataController {
 
 						|| preg_match('/ottawacityjobs/',$r->url)
 						|| preg_match('/jobs.xml/',$r->url)
+						|| preg_match('/20cm_2005_ortho_images/',$r->url)
+						|| preg_match('/2000_scale_mapping.tar.gz/',$r->url)
+						|| preg_match('/wards-2014/',$r->url)
 
 						|| preg_match('/biblioottawalibrary/',$r->url)
 						) {
