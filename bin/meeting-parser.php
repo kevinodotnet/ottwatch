@@ -106,6 +106,7 @@ if (count($argv) > 1) {
 				starttime < current_timestamp 
 				and (youtube is null or youtube = '')
 				and datediff(current_timestamp,starttime) < 60
+				and category not like 'COA%'
 			order by starttime desc
 		");
 		foreach ($rows as $m) {
