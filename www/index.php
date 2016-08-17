@@ -346,7 +346,7 @@ function dashboard() {
 	    <tr>
 	      <td><?php print meeting_category_to_title($m['category']); ?></td>
 	      <td style="text-align: center; width: 90px;"><?php print $m['starttime']; ?></td>
-	      <td style="text-align: center;"><a class="btn btn-mini" href="<?php print "$OTT_WWW/meetings/{$m['category']}/{$m['meetid']}"; ?>">Agenda</a></td>
+	      <td style="text-align: center;"><a class="btn btn-mini" href="<?php print "$OTT_WWW/meetings/meeting/{$m['meetid']}"; ?>">Agenda</a></td>
 	    </tr>
 	    <?php
 	  }
@@ -374,7 +374,7 @@ function dashboard() {
 	    <tr itemscope="" itemtype="http://data-vocabulary.org/Event">
 	      <td itemprop="summary"><?php print meeting_category_to_title($m['category']); ?></td>
 	      <td itemprop="startDate" datetime="<?php print $m['starttime']; ?>" style="text-align: center; width: 90px;"><?php print $m['starttime']; ?></td>
-	      <td style="text-align: center;"><a itemprop="url" class="btn btn-mini" href="<?php print "$OTT_WWW/meetings/{$m['category']}/{$m['meetid']}"; ?>">Agenda</a></td>
+	      <td style="text-align: center;"><a itemprop="url" class="btn btn-mini" href="<?php print "$OTT_WWW/meetings/meeting/{$m['meetid']}"; ?>">Agenda</a></td>
 	    </tr>
 	    <?php
 	  }
@@ -393,7 +393,7 @@ function dashboard() {
     <tr>
       <td><?php print meeting_category_to_title($m['category']); ?></td>
       <td style="text-align: center; width: 90px;"><?php print $m['starttime']; ?></td>
-      <td style="text-align: center;"><a class="btn btn-mini" href="<?php print "$OTT_WWW/meetings/{$m['category']}/{$m['meetid']}"; ?>">Agenda</a></td>
+      <td style="text-align: center;"><a class="btn btn-mini" href="<?php print "$OTT_WWW/meetings/meeting/{$m['meetid']}"; ?>">Agenda</a></td>
     </tr>
     <?php
   }
