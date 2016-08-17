@@ -109,15 +109,12 @@ class ConsultationController {
     ?>
 
 		<h1><?php print $row['title']; ?></h1>
-		<b>Location</b>: <a target="_new" href="<?php print $row['url']; ?>"><?php print $row['url']; ?></a><br/>
+		<b>Location</b>: <a target="_blank" href="<?php print $row['url']; ?>"><?php print $row['url']; ?></a><br/>
 		<b>Last updated</b>: <?php print ($row['delta'] == 0 ? '<span style="color: #ff0000;">today</span>' : $row['delta'].' days(s) ago'); ?><br/>
-		<b>Current Version (cache) </b>: <a href="http://app.kevino.ca/ottwatchvar/consultationmd5/<?php print $row['md5']; ?>"><?php print $row['md5']; ?></a><br/>
 		<?php
-		$md5 = getDatabase()->one(" select * from md5hist where curmd5 = '{$row['md5']}' order by created desc limit 1 ");
-		if (isset($md5['id']) && $md5['prevmd5'] != '') {
-			?>
-			<b>Previous Version (cache)</b>: <a href="http://app.kevino.ca/ottwatchvar/consultationmd5/<?php print $md5['prevmd5']; ?>"><?php print $md5['prevmd5']; ?></a><br/>
-			<?php
+		$md5 = getDatabase()->one(" select * from md5hist m1 join md5hist m2 on m2.curmd5 = m1.prevmd5 where m1.curmd5 = '{$row['md5']}' order by m1.created desc limit 1 ");
+		if (isset($md5['id'])) {
+			?><b>Diff to previous version</b>: <a target="_blank" href="/md5hist/<?php print $row['md5']; ?>">diff</a><br/><?php
 		}
 		?>
 
@@ -130,8 +127,7 @@ class ConsultationController {
 			<tr>
 			<th>Modified</th>
 			<th>Title</th>
-			<th>Current Version</th>
-			<th>Previous Version</th>
+			<th>Diff to previous</th>
 			</tr>
 			<?php
     	foreach ($docs as $doc) {
@@ -139,14 +135,11 @@ class ConsultationController {
 		    <tr>
 		    <td><?php print ($doc['delta'] == 0 ? '<span style="color: #ff0000;">today</span>' : $doc['delta'].' days(s) ago'); ?></td>
 		    <td><a target="_blank" href="<?php print $doc['url']; ?>"><?php print $doc['title']; ?></a></td>
-		    <td><a target="_blank" href="http://app.kevino.ca/ottwatchvar/consultationmd5/<?php print $doc['md5']; ?>"><?php print $doc['md5']; ?></a></td>
 		    <td>
 				<?php
-				$md5 = getDatabase()->one(" select * from md5hist where curmd5 = '{$doc['md5']}' order by created desc limit 1 ");
-				if (isset($md5['id']) && $md5['prevmd5'] != '') {
-					?>
-					<b>Previous Version (cache)</b>: <a href="http://app.kevino.ca/ottwatchvar/consultationmd5/<?php print $md5['prevmd5']; ?>"><?php print $md5['prevmd5']; ?></a><br/>
-					<?php
+				$md5 = getDatabase()->one(" select * from md5hist m1 join md5hist m2 on m2.curmd5 = m1.prevmd5 where m1.curmd5 = '{$doc['md5']}' order by m1.created desc limit 1 ");
+				if (isset($md5['id'])) {
+					?><a target="_blank" href="/md5hist/<?php print $doc['md5']; ?>">diff</a><br/><?php
 				} else {
 					?>
 					-
