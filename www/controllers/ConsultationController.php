@@ -347,7 +347,7 @@ class ConsultationController {
     $div = simplexml_load_string($div[0]->asXML());
     $links = $div->xpath('//a');
 
-		getDatabase()->execute(" update consultationdoc set title = 'DELETED' where consultationid = {$row['id']} ");
+		getDatabase()->execute(" update consultationdoc set deleted = 1 where consultationid = {$row['id']} ");
 
     foreach ($links as $a) {
       $docLink = $a->attributes();
@@ -365,7 +365,7 @@ class ConsultationController {
       self::crawlConsultationLink($row,$docTitle,$docLink);
     }
 
-		getDatabase()->execute(" delete from consultationdoc where title = 'DELETED' and consultationid = {$row['id']} ");
+		# getDatabase()->execute(" delete from consultationdoc where title = 'DELETED' and consultationid = {$row['id']} ");
 
   }
 
@@ -404,7 +404,7 @@ class ConsultationController {
 
     $row = getDatabase()->one(" select * from consultationdoc where url = :url ",array('url'=>$url));
     if ($row['id']) {
-      getDatabase()->execute(" update consultationdoc set title = :title where id = :id ",array('id'=>$row['id'],'title'=>$title));
+      getDatabase()->execute(" update consultationdoc set deleted = null, title = :title where id = :id ",array('id'=>$row['id'],'title'=>$title));
       if ($row['md5'] != $md5) {
 
 				print "--------------------------------------------------------------\n";
