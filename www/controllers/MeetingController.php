@@ -473,7 +473,7 @@ class MeetingController {
 		<div class="span6">
 		<p>Vote recorded from <b><?php print $category; ?></b> on <?php print substr($m['starttime'],0,10); ?> regarding 
 		agenda item <b><?php print $i['title']; ?></b>.</p>
-		<p><a href="<?php print OttWatchConfig::WWW."/meetings/{$m['category']}/{$m['meetid']}"; ?>">Full meeting details</a>.</p>
+		<p><a href="<?php print OttWatchConfig::WWW."/meetings/meeting/{$m['meetid']}"; ?>">Full meeting details</a>.</p>
 		<?php
 		if ($m['youtubestate'] == 'ready') {
 			print "<center>\n";
@@ -712,7 +712,7 @@ class MeetingController {
         <tr>
         <td colspan="4" style="background: #f0f0f0;">
         <h5><?php print meeting_category_to_title($v['category']); ?></h5>
-        <a href="<?php print OttWatchConfig::WWW."/meetings/{$v['category']}/{$v['meetid']}"; ?>"><?php print $v['starttime']; ?></a>
+        <a href="<?php print OttWatchConfig::WWW."/meetings/meeting/{$v['meetid']}"; ?>"><?php print $v['starttime']; ?></a>
         </td>
         </tr>
 	      <tr>
@@ -1256,7 +1256,6 @@ class MeetingController {
 				foreach ($rows as $r) {
 					$fileUrl = MeetingController::getFileUrl($r['fileid']);
 					print "<tr><td><a href=\"$fileUrl\">".$r['title']."</a></td><td>".meeting_category_to_title($r['category'])."</td><td>{$r['starttime']}</td></tr>";
-					#print "<tr><td><a href=\"/meetings/file/".$r['fileid']."\">".$r['title']."</a></td><td>".meeting_category_to_title($r['category'])."</td><td>{$r['starttime']}</td></tr>";
 				}
 				?>
 				</table>
@@ -2296,7 +2295,7 @@ class MeetingController {
 			<?php
     foreach ($rows as $r) { 
       $mtgurl = htmlspecialchars("http://app05.ottawa.ca/sirepub/mtgviewer.aspx?meetid={$r['meetid']}&doctype");
-      $myurl = htmlspecialchars($OTT_WWW."/meetings/{$r['category']}/{$r['meetid']}");
+      $myurl = $OTT_WWW."/meetings/meeting/{$r['meetid']}";
       ?>
 	    <tr>
 	      <td style="width: 90px; text-align: center;"><?php print $r['starttime']; ?></td>
@@ -2693,29 +2692,6 @@ class MeetingController {
 	  $title = preg_replace("/ pm$/","pm",$title);
     $meetingDate = explode(" - ",$title);
     $meetingDate = $meetingDate[1];
-
-#    if (count($origitemids) > 0) {
-#      # not a "new" meeting
-#	    $newitems = array_diff($nowitemids,$origitemids);
-#	    if (count($newitems) > 0) {
-#        foreach ($newitems as $n) {
-#          $row = getDatabase()->one(" select * from item where itemid = $n ");
-#          if ($row['id']) {
-#            $title = $row['title'];
-#            $itemid = $row['itemid'];
-#            $tweet = "New mtg item: {$row['title']} - ".meeting_category_to_title($m['category'])." on $meetingDate";
-#          	$link = OttWatchConfig::WWW."/meetings/meetid/".$m['meetid'];
-#            #$tweet = tweet_txt_and_url($tweet,$link);
-#            if (preg_match('/^ADJOURNMENT$/i',$title)) { continue; }
-#            if (preg_match('/^COMMUNICATIONS$/i',$title)) { continue; }
-#            if (preg_match('/^CONFIRMATION OF MINUTES$/i',$title)) { continue; }
-#            if (preg_match('/DECLARATION OF INTERES/',$title)) { continue; }
-#            if (preg_match('/DECLARATIONS OF INTEREST/',$title)) { continue; }
-#            print "SKIPPING (but would have sent) $tweet\n"; 
-#          }
-#        }
-#	    }
-#    }
 
   }
 
