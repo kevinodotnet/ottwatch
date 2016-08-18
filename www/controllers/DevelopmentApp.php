@@ -961,25 +961,38 @@ class DevelopmentAppController {
     $row = getDatabase()->one(" select * from devapp where appid = :appid ",array("appid"=>$appid));
     if ($row['id']) {
       $id = $row['id'];
-	    getDatabase()->execute(" 
-	      update devapp set 
-          address = :address,
-          devid = :devid,
-          ward = :ward,
-          apptype = :apptype,
-          receiveddate = :receiveddate,
-          updated = CURRENT_TIMESTAMP,
-          description = :description
-        where appid = :appid
-        ",array(
-	        'address'=> json_encode($addresses),
-	        'description' =>$labels['Description'],
-          'devid' => $labels['Application #'],
-          'ward' => $labels['Ward'],
-          'receiveddate' => $labels['date_received'],
-          'apptype' => $labels['Application'],
-	        'appid'=> $appid,
-	    ));
+      try {
+		    getDatabase()->execute(" 
+		      update devapp set 
+	          address = :address,
+	          devid = :devid,
+	          ward = :ward,
+	          apptype = :apptype,
+	          receiveddate = :receiveddate,
+	          updated = CURRENT_TIMESTAMP,
+	          description = :description
+	        where appid = :appid
+	        ",array(
+		        'address'=> json_encode($addresses),
+		        'description' =>$labels['Description'],
+	          'devid' => $labels['Application #'],
+	          'ward' => $labels['Ward'],
+	          'receiveddate' => $labels['date_received'],
+	          'apptype' => $labels['Application'],
+		        'appid'=> $appid,
+		    ));
+      } catch (Exception $e) {
+				print $e;
+				pr(array(
+		        'address'=> json_encode($addresses),
+		        'description' =>$labels['Description'],
+	          'devid' => $labels['Application #'],
+	          'ward' => $labels['Ward'],
+	          'receiveddate' => $labels['date_received'],
+	          'apptype' => $labels['Application'],
+		        'appid'=> $appid,
+		    ));
+			}
       try {
 	      getDatabase()->execute(" insert into devappstatus (devappid,status,statusdate) values (:devappid,:status,:statusdate) ",array(
 	        'devappid' => $id,
