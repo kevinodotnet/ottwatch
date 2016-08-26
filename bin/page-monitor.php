@@ -39,5 +39,7 @@ if ($md5 == $prevMD5) {
 
 setvar($var,$md5);
 
-sendEmail('kevino@kevino.net',"$url is updated","$url\n\nis updated");
+db_insert("md5hist",array('curmd5'=>$md5,'prevmd5'=>$prevMD5));
+file_put_contents(OttWatchConfig::FILE_DIR."/consultationmd5/".$md5,$html);
+sendEmail('kevino@kevino.net',"$url is updated","updated:\n\n$url\n\n$prevMD5 $md5");
 
