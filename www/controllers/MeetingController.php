@@ -115,6 +115,7 @@ class MeetingController {
 							'name' => $matches[2]
 						);
 						$file['sire_url'] = "http://app05.ottawa.ca/sirepub/view.aspx?cabinet=published_meetings&fileid={$file['fileid']}";
+						$file['url'] = "http://ottwatch.ca/meetings/file/{$file['fileid']}";
 						$files[] = $file;
 					}
 				}
