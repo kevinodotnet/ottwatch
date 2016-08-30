@@ -59,7 +59,7 @@ class SyndicationController {
 		if ($url == null) {
 			$url = OttWatchConfig::WWW.$r['path'];
 		}
-		$message = preg_replace('/cycling/i','#ottbike',$message);
+		$message = preg_replace('/ cycling/i','#ottbike',$message);
 		$message = preg_replace('/bikeway/i','#ottbike',$message);
 		if (preg_match('/sidewalk/i',$message)) { $message .= " #ottwalk"; }
     $tweet = tweet_txt_and_url($message,$url);
