@@ -11,15 +11,15 @@ class BylawController {
     <table class="table table-bordered table-hover">
 		<tr>
 		<th style="white-space: nowrap;">Bylaw #</th>
+		<th>PDF</th>
 		<th>Summary</th>
 		</tr>
 		<?
 		foreach ($rows as $r) {
 			?>
 			<tr>
-			<td style="white-space: nowrap;"><?php 
-				print "<a href=\"/bylaws/{$r['bylawnum']}\">".$r['bylawnum']."</a>";
-			?></td>
+			<td style="white-space: nowrap;"><?php print "<a href=\"/bylaws/{$r['bylawnum']}\">".$r['bylawnum']."</a>"; ?></td>
+			<td><a target="_blank" href="<?php print $r['url']; ?>">view</a></td>
 			<td><?php print $r['summary']; ?></td>
 			</tr>
 			<?
