@@ -36,18 +36,15 @@ class BylawController {
 		top3("By-Law NO. $num");
 		$rows = getDatabase()->all(" 
 			select 
-				m.id,
-				m.meetid,
 				summary,
 				left(b.created,10) retrieved,
 				url,
-				left(m.starttime,10) enacted
+				enacted
 			from bylaw b
-				join meeting m on m.id = b.meetingid
 			where 
 				bylawnum = :num 
 			order by 
-				meetingid desc 
+				enacted desc
 			",array('num'=>$num));
 		#pr($rows);
 		?>
@@ -56,16 +53,15 @@ class BylawController {
 		<tr>
 		<th>Enacted</th>
 		<th>PDF</th>
-		<th>Meeting</th>
 		<th>Summary</th>
 		</tr>
 		<?php
 		foreach ($rows as $r) {
 			?>
 			<tr>
-			<td><?php print $r['enacted']; ?></td>
-			<td><a href="<?php print $r['url']; ?>" target="_blank">pdf</a>
-			<td><a href="/meetings/meeting/<?php print $r['meetid']; ?>" target="_blank"><?php print $r['meetid']; ?></a>
+			<td style="white-space: nowrap;"><?php print $r['enacted']; ?></td>
+			<td><a href="<?php print $r['url']; ?>" target="_blank">view</a>
+			<!--<td><a href="/meetings/meeting/<?php print $r['meetid']; ?>" target="_blank"><?php print $r['meetid']; ?></a>-->
 			<td><?php print $r['summary']; ?></td>
 			</tr>
 			<?php

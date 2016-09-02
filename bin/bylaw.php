@@ -13,9 +13,9 @@ if (count($argv) > 1) {
 		$index = 2;
   	$pdf = $argv[$index++];
   	$summary = $argv[$index++];
-  	$meetingid = $argv[$index++];
+  	$enacted = $argv[$index++];
 
-		injestBylaw($pdf,$summary,$meetingid);
+		injestBylaw($pdf,$summary,$enacted);
 	}
 
 	return "Bad argv\n";
@@ -24,27 +24,19 @@ if (count($argv) > 1) {
 print "missing arguments\n";
 return;
 
-function injestBylaw($pdf,$summary,$meetingid) {
+function injestBylaw($pdf,$summary,$enacted) {
+
 	$num = $pdf;
 	$num = preg_replace('/\.pdf$/','',$num);
 	$num = preg_replace('/.*\//','',$num);
 
-	$m = getDatabase()->one(" select * from meeting where meetid = $meetingid ");
-	if (!isset($m['id'])) {
-		print "bad meeting id: $meetingid\n";
-		return;
-	}
-
-	$enacted = substr($m['starttime'],0,10);
-
-	getDatabase()->execute(" delete from bylaw where bylawnum = :bylawnum and meetingid = :meetingid ",array(
-		'bylawnum' => $num,
-		'meetingid' => $m['id']
+	getDatabase()->execute(" delete from bylaw where bylawnum = :bylawnum ",array(
+		'bylawnum' => $num
 	));
-	$id = getDatabase()->execute(" insert into bylaw (bylawnum,summary,meetingid) values (:bylawnum,:summary,:meetingid) ",array(
+	$id = getDatabase()->execute(" insert into bylaw (bylawnum,summary,enacted) values (:bylawnum,:summary,:enacted) ",array(
 		'bylawnum' => $num,
 		'summary' => $summary,
-		'meetingid' => $m['id']
+		'enacted' => $enacted
 	));
 
 	print "new row: $id\n";
@@ -55,10 +47,12 @@ function injestBylaw($pdf,$summary,$meetingid) {
 	ob_start();
 	?>
 	<html>
-	<head>
-	<title>By-Law NO. <?php print $num; ?> as of <?php print $enacted; ?>. OttWatch By-Law Archive</title>
-	</head>
 	<body>
+
+	<div>
+	<h1>By-Law No. <?php print $num; ?></h1>
+	<p><i><?php print $summary; ?></i></p>
+	</div>
 	
 	<img style="float: right; padding: 0px 0px 10px 10px;" src="http://ottwatch.ca/img/ottwatch.png"/>
 	<h1>OttWatch.ca By-law Archival Project</h1>
@@ -70,7 +64,7 @@ function injestBylaw($pdf,$summary,$meetingid) {
 
 	<p>
 	Be aware though that you may not be looking at the most recent version of this by-law. It is very possible that it
-	has been amended by Council by another by-law. So, um, just know that before assuming anything.
+	has been amended by Council by another by-law, or even by the Ontario Municipal Board. So, um, just know that before assuming anything.
 	</p>
 
 	<p>
@@ -89,15 +83,12 @@ function injestBylaw($pdf,$summary,$meetingid) {
 	</p>
 
 	<p>
-	This title page generated on <i><?php print date('Y-m-d'); ?></i>
+	<b>Enacted On:</b> <?php print $enacted; ?><br/>
+	<b>OttWatch Bylaw Reference:</b> http://ottwatch.ca/bylaws/<?php print $num; ?><br/>
 	</p>
 
-	<h1>By-Law No. <?php print $num; ?></h1>
-	<p><i><?php print $summary; ?></i></p>
 	<p>
-	<b>Enacted On:</b> <?php print $enacted; ?><br/>
-	<b>Council Meeting:</b> <?php print "http://ottwatch.ca/meetings/meeting/$meetingid"; ?><br/>
-	<b>OttWatch Bylaw Reference:</b> http://ottwatch.ca/bylaws/<?php print $num; ?><br/>
+	This title page generated on <i><?php print date('Y-m-d'); ?></i>
 	</p>
 
 	</body>
