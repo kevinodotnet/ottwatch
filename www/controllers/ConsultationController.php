@@ -119,7 +119,14 @@ class ConsultationController {
 		?>
 
     <?php
-    $docs = getDatabase()->all(" select *,datediff(CURRENT_TIMESTAMP,updated) delta from consultationdoc where consultationid = :id order by updated desc ",array('id'=>$row['id']));
+    $docs = getDatabase()->all(" 
+			select *,datediff(CURRENT_TIMESTAMP,updated) delta 
+			from consultationdoc 
+			where consultationid = :id 
+			order by 
+				deleted,
+				updated desc
+			",array('id'=>$row['id']));
 		if (count($docs) > 0) {
 			?>
 			<h3>Documents at a glance</h3>
@@ -134,7 +141,9 @@ class ConsultationController {
 	      ?>
 		    <tr>
 		    <td><?php print ($doc['delta'] == 0 ? '<span style="color: #ff0000;">today</span>' : $doc['delta'].' days(s) ago'); ?></td>
-		    <td><a target="_blank" href="<?php print $doc['url']; ?>"><?php print $doc['title']; ?></a></td>
+		    <td>
+				<?php if ($doc['deleted'] == 1) { print "(DELETED)"; } ?>
+				<a target="_blank" href="<?php print $doc['url']; ?>"><?php print $doc['title']; ?></a></td>
 		    <td>
 				<?php
 				$md5 = getDatabase()->one(" select * from md5hist m1 join md5hist m2 on m2.curmd5 = m1.prevmd5 where m1.curmd5 = '{$doc['md5']}' order by m1.created desc limit 1 ");
