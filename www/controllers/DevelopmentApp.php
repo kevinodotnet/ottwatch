@@ -436,6 +436,40 @@ class DevelopmentAppController {
       <?php
     }
     ?>
+
+			<?php
+    $sql = " select * from bylaw where ";
+    $first = 1;
+    foreach ($a['address'] as $addr) {
+      if (!$first) {
+        $sql .= " or ";
+      }
+      $sql .= " summary like '%".mysql_escape_string($addr->addr)."%' ";
+      $first = 0;
+    }
+    $related = array();
+    if (count($a['address']) > 0) {
+      $related = getDatabase()->all($sql);
+    }
+    if (count($related) > 0) {
+			?>
+			<tr>
+				<td>Possibly related by-laws</td>
+				<td>
+					<?php
+					foreach ($related as $r) {
+						print "<a href=\"/bylaws/{$r['bylawnum']}\" target=\"_blank\">{$r['bylawnum']}</a>: {$r['summary']}<br/>";
+					}
+					?>
+				</td>
+			</tr>
+			<?php
+		}
+			?>
+
+
+
+
 		<?php if ($a['apptype'] != 'coa') { ?>
     <tr><td>Documents</td><td>
     <?php
