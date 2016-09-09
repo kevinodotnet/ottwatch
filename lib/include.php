@@ -24,7 +24,6 @@ if (1) {
 	Epi::setSetting('exceptions', true);
 	EpiDatabase::employ(OttWatchConfig::DB_TYPE, OttWatchConfig::DB_NAME, OttWatchConfig::DB_HOST, OttWatchConfig::DB_USER, OttWatchConfig::DB_PASS);
 
-	include_once 'controllers/MediaController.php';
 	include_once 'controllers/EventController.php';
 	include_once 'controllers/MeetingController.php';
 	include_once 'controllers/DevelopmentApp.php';
