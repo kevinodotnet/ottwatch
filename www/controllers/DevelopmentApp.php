@@ -516,7 +516,7 @@ class DevelopmentAppController {
     foreach ($dates as $d) {
       ?>
       <tr>
-      <td><?php print $d['statusdate']; ?></td>
+      <td style="white-space: nowrap;"><?php print $d['statusdate']; ?></td>
       <td><?php print $d['status']; ?></td>
       </tr>
       <?php
