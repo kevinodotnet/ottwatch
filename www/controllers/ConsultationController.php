@@ -328,8 +328,8 @@ class ConsultationController {
 				print "$title ($category) CHANGED\n";
 				print "http://ottwatch.ca/consultations/{$row['id']}\n";
         print "c.sh {$row['md5']} $contentMD5\n";
-				print "http://app.kevino.ca/ottwatchvar/consultationmd5/{$row['md5']}\n";
-				print "http://app.kevino.ca/ottwatchvar/consultationmd5/$contentMD5\n";
+#				print "http://app.kevino.ca/ottwatchvar/consultationmd5/{$row['md5']}\n";
+#				print "http://app.kevino.ca/ottwatchvar/consultationmd5/$contentMD5\n";
 				print "\n";
         getDatabase()->execute(" update consultation set md5 = :md5, updated = CURRENT_TIMESTAMP where id = :id ",array('id'=>$row['id'],'md5'=>$contentMD5));
 				db_insert("md5hist",array('curmd5'=>$contentMD5,'prevmd5'=>$row['md5']));
@@ -420,8 +420,8 @@ class ConsultationController {
 				print "$title DOC CHANGED $url\n";
 				print "http://ottwatch.ca/consultations/{$parent['id']}\n";
         print "c.sh {$row['md5']} $md5\n";
-				print "http://app.kevino.ca/ottwatchvar/consultationmd5/{$row['md5']}\n";
-				print "http://app.kevino.ca/ottwatchvar/consultationmd5/$md5\n";
+#				print "http://app.kevino.ca/ottwatchvar/consultationmd5/{$row['md5']}\n";
+#				print "http://app.kevino.ca/ottwatchvar/consultationmd5/$md5\n";
 				print "\n";
 
         getDatabase()->execute(" update consultationdoc set md5 = :md5, updated = CURRENT_TIMESTAMP where id = :id ",array('id'=>$row['id'],'md5'=>$md5));
