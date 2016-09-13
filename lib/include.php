@@ -149,7 +149,7 @@ function tweet($tweet) {
 	if ($code == 200) {
 		return 1;
 	} 
-	print "ERROR: twitter returned $code\n";
+	print "ERROR: twitter returned $code ($tweet)\n";
 	return 0;
 }
 
