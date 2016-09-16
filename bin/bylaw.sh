@@ -1,8 +1,13 @@
 #!/bin/bash
 
+cat ~/bylaw/bylaw.txt | while read l; do
+	num=`echo $l | cut -d\| -f1`
+	desc=`echo $l | cut -d\| -f2`
+	date=`echo $l | cut -d\| -f3`
+	echo "-----"
+	echo $num
 
-php ./bylaw.php injestBylaw \
-	~/2016-256.pdf \
-	'A by-law of the City of Ottawa to authorize the borrowing upon 32 year sinking fund debentures in the principal amount of $100,000,000.00 towards the cost of certain capital works of the City of Ottawa.' \
-	2016-07-21
+	php bylaw.php injestBylaw ~/bylaw/$num.pdf "$desc" $date
+
+done
 
