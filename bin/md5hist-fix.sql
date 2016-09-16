@@ -1,5 +1,5 @@
 
-drop table t; 
+drop table if exists t;
 
 create table t as 
 	select max(id) id 
