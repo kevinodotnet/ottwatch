@@ -51,6 +51,7 @@ if ($argv[1] == 'coaNoticeToText') {
 		global $OTTVAR;
 		file_put_contents("$OTTVAR/pdf/fileid_{$r['fileid']}.pdf",$pdf);
 		`pdftotext $OTTVAR/pdf/fileid_{$r['fileid']}.pdf $OTTVAR/pdf/fileid_{$r['fileid']}.txt`;
+		#system("grep -C 2 -i '$match' $OTTVAR/pdf/fileid_{$r['fileid']}.txt");
 		system("grep -C 2 -i '$match' $OTTVAR/pdf/fileid_{$r['fileid']}.txt");
 	}
 	return;
