@@ -12,6 +12,7 @@ class BylawController {
 		<tr>
 		<th style="white-space: nowrap;">Bylaw #</th>
 		<th>PDF</th>
+		<th>Enacted</th>
 		<th>Summary</th>
 		</tr>
 		<?
@@ -20,7 +21,21 @@ class BylawController {
 			<tr>
 			<td style="white-space: nowrap;"><?php print "<a href=\"/bylaws/{$r['bylawnum']}\">".$r['bylawnum']."</a>"; ?></td>
 			<td><a target="_blank" href="<?php print $r['url']; ?>">view</a></td>
-			<td><?php print $r['summary']; ?></td>
+			<td style="white-space: nowrap;"><?php print $r['enacted']; ?></td>
+			<td>
+			<?php 
+			$summary = $r['summary'];
+			preg_match_all('/20\d\d-\d\d+/',$summary,$matches);
+			foreach ($matches as $m) {
+				foreach ($m as $b) {
+					$link = "<a target=\"_blank\" href=\"/bylaws/$b\">$b</a>";
+					$summary = preg_replace("/$b/",$link,$summary);
+					#print "<b>---$b---</b><br/>";
+				}
+			}
+			print $summary; 
+			?>
+			</td>
 			</tr>
 			<?
 		}
@@ -34,6 +49,9 @@ class BylawController {
 
 	static public function show($num) {
 		top3("By-Law NO. $num");
+
+		?><h1>By-Law No. <?php print $num; ?></h1><?php
+
 		$rows = getDatabase()->all(" 
 			select 
 				summary,
@@ -46,9 +64,29 @@ class BylawController {
 			order by 
 				enacted desc
 			",array('num'=>$num));
-		#pr($rows);
+
+		if (count($rows) == 0) {
+			?>
+			<p>
+			Sorry. OttWatch does not (yet) have an archived copy of this bylaw.
+			<p>
+
+			<div class="row">
+			<div class="col-sm-4">
+			<p>
+			Maybe tomorrow!<br/>
+			<img src="http://s3.ottwatch.ca/easter/littlesthobo.jpg" class="img-responsive responsive"/>
+			<p>
+			</div>
+			</div>
+
+
+			<?php
+			bottom3();
+			return;
+		}
 		?>
-		<h1>By-Law No. <?php print $num; ?></h1>
+
     <table class="table table-bordered table-hover">
 		<tr>
 		<th>Enacted</th>
