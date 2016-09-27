@@ -383,6 +383,8 @@ class DevelopmentAppController {
 			-->
 			<?php
 		}
+
+		$streetviewImgUrl = '';
 		?>
 
     <table class="table table-bordered table-condensed" style="width: 100%;">
@@ -392,9 +394,15 @@ class DevelopmentAppController {
     <tr><td>Address (Zoning)</td><td>
     <?php 
     foreach ($a['address'] as $addr) {
+			#$sv_url = "https://maps.googleapis.com/maps/api/streetview?size=600x300&heading=1&pitch=-0.76&key=".OttWatchConfig::GOOGLE_STREETVIEW_API_KEY.".&location=".urlencode($addr->addr);
+			if ($streetviewImgUrl == '') {
+				$streetviewImgUrl = "https://maps.googleapis.com/maps/api/streetview?size=600x300&pitch=-0.76&key=".OttWatchConfig::GOOGLE_STREETVIEW_API_KEY."&location=".urlencode($addr->addr);
+			}
       print $addr->addr;
+
 			if (isset($addr->lat) && $addr->lat != '') {
 	      $zoning = getApi()->invoke("/api/zoning/{$addr->lat}/{$addr->lon}");
+
 	      print " (";
 	      if ($zoning['ZONE_CODE'] != '') {
 	        print "<a href=\"{$zoning['URL']}\">{$zoning['ZONE_CODE']}</a>";
@@ -527,7 +535,10 @@ class DevelopmentAppController {
     </div>
 
     <div class="col-sm-6">
-    <?php
+    <?php 
+
+		print "<p><img src=\"$streetviewImgUrl\" class=\"img-responsive responsive\"/></p>";
+
     $a = $a['address'];
     if ($a && count($a>0)) {
     ?>
