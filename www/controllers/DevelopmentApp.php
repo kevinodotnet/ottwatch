@@ -396,7 +396,7 @@ class DevelopmentAppController {
     foreach ($a['address'] as $addr) {
 			#$sv_url = "https://maps.googleapis.com/maps/api/streetview?size=600x300&heading=1&pitch=-0.76&key=".OttWatchConfig::GOOGLE_STREETVIEW_API_KEY.".&location=".urlencode($addr->addr);
 			if ($streetviewImgUrl == '') {
-				$streetviewImgUrl = "https://maps.googleapis.com/maps/api/streetview?size=600x300&pitch=-0.76&key=".OttWatchConfig::GOOGLE_STREETVIEW_API_KEY."&location=".urlencode($addr->addr);
+				$streetviewImgUrl = "https://maps.googleapis.com/maps/api/streetview?size=600x300&pitch=-0.76&key=".OttWatchConfig::GOOGLE_STREETVIEW_API_KEY."&fov=120&location=".urlencode($addr->addr);
 			}
       print $addr->addr;
 
