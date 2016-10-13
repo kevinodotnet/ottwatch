@@ -2849,9 +2849,10 @@ class MeetingController {
         array_push($vote['votes'],array('name'=>$who,'voted'=>$votefor));
       }
 
-      if (strlen($motion) > 1020) {
-        $motion = substr($motion,0,1020);
+      if (strlen($motion) > 1000) {
+        $motion = substr($motion,0,1000);
       }
+			try {
       $voteid = getDatabase()->execute('insert into itemvote (itemid,motion) values (:itemid,:motion) ', array('itemid'=>$item['id'],'motion'=>$motion));
       foreach ($vote['votes'] as $v) {
         if ($v['voted'] == 'Yes') { $vote = 'y'; }
@@ -2861,6 +2862,13 @@ class MeetingController {
         else { $vote = 'u'; } // should never happen
         getDatabase()->execute('insert into itemvotecast (itemvoteid,vote,name) values (:itemvoteid,:vote,:name) ', array('itemvoteid'=>$voteid,'vote'=>$vote,'name'=>$v['name']));
       }
+			} catch (Exception $e) {
+				print "$e\n";
+				pr($item);
+				print "\n\n$motion\n\n";
+				print "length: ".strlen($motion)."\n";
+				throw $e;
+			}
     }
 
   }
