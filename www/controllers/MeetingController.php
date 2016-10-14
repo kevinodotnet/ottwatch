@@ -779,7 +779,7 @@ class MeetingController {
   static public function getVideoStart($id) {
 		global $dirname; # set by bin/XXXX.php scripts, UGLY, should probably be passed in as FAR or a DEFINE
 
-		$debug = 1;
+		$debug = 0;
 
 		$m = getDatabase()->one(" select * from meeting where id = :id ",array('id'=>$id));
 		if (!$m['id']) {
