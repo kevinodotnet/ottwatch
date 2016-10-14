@@ -851,6 +851,10 @@ class MeetingController {
 			return -1;
 		}
 
+		if ($m['category'] == 'Ottawa Public Library Board') { return; }
+		if ($m['category'] == 'Police Services Board Human Resources Committee') { return; }
+		if ($m['category'] == 'FLSAC') { return; }
+
 		$meetid = $m['meetid'];
 
 		# Get the full HTML for the meeting (all frames and details)
