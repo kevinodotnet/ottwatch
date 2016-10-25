@@ -26,11 +26,31 @@ if ($argv[1] == 'coaAgendaToDevApp') {
 	return;
 }
 
+if ($argv[1] == 'recent') {
+	$match = $argv[2];
+	$rows = getDatabase()->all(" select category,starttime,meetid from meeting where category like 'COA%' and meetid != '' order by starttime desc limit 9 ");
+	foreach ($rows as $r) {
+		$meetid = $r['meetid'];
+		print "##############################################\n";
+		pr($r);
+		print "##############################################\n";
+		coaNoticeToText($meetid,$match);
+	}
+	return;
+}
+
 if ($argv[1] == 'coaNoticeToText') {
 
 	$meetid = $argv[2];
 	$match = $argv[3];
 
+	coaNoticeToText($meetid,$match);
+
+	return;
+
+}
+
+function coaNoticeToText($meetid,$match) {
 	$sql = "
 		select m.meetid, i.id itemid, i.title itemtitle, f.id fileid, f.* 
 		from meeting m 
@@ -42,21 +62,25 @@ if ($argv[1] == 'coaNoticeToText') {
 	";
 	$rows = getDatabase()->all($sql);
 	foreach ($rows as $r) {
-		print "-------------------------------------\n";
-		print "{$r['itemtitle']}\n";
-		print "-------------------------------------\n";
 		$url = "http://ottwatch.ca/meetings/file/{$r['fileid']}";
 		$pdf = c_file_get_contents($url);
 
 		global $OTTVAR;
 		file_put_contents("$OTTVAR/pdf/fileid_{$r['fileid']}.pdf",$pdf);
 		`pdftotext $OTTVAR/pdf/fileid_{$r['fileid']}.pdf $OTTVAR/pdf/fileid_{$r['fileid']}.txt`;
-		#system("grep -C 2 -i '$match' $OTTVAR/pdf/fileid_{$r['fileid']}.txt");
-		system("grep -C 2 -i '$match' $OTTVAR/pdf/fileid_{$r['fileid']}.txt");
+		#system(" grep -C 2 -i '$match' $OTTVAR/pdf/fileid_{$r['fileid']}.txt");
+		$lines = ` grep -C 2 -i '$match' $OTTVAR/pdf/fileid_{$r['fileid']}.txt`;
+		if ($lines != '') {
+			print "\n";
+			print "-------------------------------------\n";
+			print "http://ottwatch.ca/meetings/meeting/$meetid\n";
+			print "-------------------------------------\n";
+			print "{$r['itemtitle']}\n";
+			print "\n$lines\n";
+		}
 	}
-	return;
-
 }
+
 
 print "ERROR: bad ARGV\n";
 
