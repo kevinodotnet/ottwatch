@@ -10,6 +10,22 @@ require_once('twitteroauth.php');
 
 if (count($argv) > 1) {
 
+  if ($argv[1] == 'createMeeting') {
+		array_shift($argv); #php
+		array_shift($argv); #this php file
+		$meetid = array_shift($argv);
+		$starttime = array_shift($argv);
+		$title = array_shift($argv);
+		$category = array_shift($argv);
+
+		$guid = $meetid;
+
+		# 6999 2016-01-13 "Committee of Adjustment Panel 1 - 2016-01-13" COA1
+		MeetingController::createOrUpdateMeeting($meetid,$guid,$starttime,$title,$category);
+	  MeetingController::downloadAndParseMeeting($meetid);
+		return;
+	}
+
   if ($argv[1] == 'coaMeetingScrapeAndParse') {
 		$items = DevelopmentAppController::apiScrapeCoaSireForItemIds();
 		#file_put_contents("j.json",json_encode($items)); $items = json_decode(file_get_contents("j.json"));
@@ -213,41 +229,9 @@ foreach ($items as $i) {
     continue;
   }
 
+	print "$category :: $title :: $link\n";
 	MeetingController::createOrUpdateMeeting($meetid,$guid,$starttime,$title,$category);
   MeetingController::downloadAndParseMeeting($meetid);
-
-	if (false) {
-		// moved to createOrUpdateMeeting();
-	  $mdb = getDatabase()->one('select * from meeting where meetid = :meetid ', array(':meetid' => $meetid));
-	  $meetingid = $mdb['id'];
-	  if ($mdb['id']) {
-	    # print "$category ($meetid) has changed guid\nhttp://ottwatch.ca/meetings/meeting/{$meetid}\n";
-	    # meeting has changed guid, so needs rescraping.
-		  getDatabase()->execute(' 
-	      update meeting set 
-	        rssguid = :rssguid,
-	        starttime = :starttime,
-	        title = :title,
-	        category = :category,
-	        updated = CURRENT_TIMESTAMP
-	      where 
-	        meetid = :meetid ', array( ':rssguid' => $guid,':meetid' => $meetid, 'starttime' => $starttime, 'title'=>$title, 'category'=>$category ));
-	    $new = getDatabase()->one('select * from meeting where meetid = :meetid ', array(':meetid' => $meetid));
-	    #print "\nWAS:\n"; pr($mdb); print "\nNEW:\n"; pr($new);
-	  } else {
-	    # meeting has never been seen before
-	    print "$category ($meetid) is new\nhttp://ottwatch.ca/meetings/meeting/{$meetid}\n";
-		  $meetingid = getDatabase()->execute('
-				insert into meeting (rssguid,meetid,title,category,starttime,created,updated) 
-				values (:rssguid,:meetid,:title,:category,:starttime,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP); ', array(
-		    'rssguid' => $guid,
-		    'meetid' => $meetid,
-		    'title' => $title,
-		    'category' => $category,
-		    'starttime' => $starttime,
-		  ));
-	  }
-	}
 
 }
 
