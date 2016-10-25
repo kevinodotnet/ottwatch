@@ -577,3 +577,18 @@ function c_file_get_contents($url) {
 	return $d;
 }
 
+function md5hist_insert ($values) {
+	db_insert('md5hist',$values);
+	md5hist_fix();
+}
+
+function md5hist_fix () {
+
+	$sql = " select max(id) id from md5hist group by curmd5,prevmd5 having count(1) > 1; ";
+	$rows = getDatabase()->all($sql);
+	foreach ($rows as $r) {
+		$ids = $r['id'];
+		getDatabase()->execute(" delete from md5hist where id in ( $ids ); ");
+	}
+
+}
