@@ -10,6 +10,10 @@ require_once('twitteroauth.php');
 
 if (count($argv) > 1) {
 
+  if ($argv[1] == 'findNonRssMeetings') {
+		MeetingController::findNonRssMeetings();
+		return;
+	}
   if ($argv[1] == 'createMeeting') {
 		array_shift($argv); #php
 		array_shift($argv); #this php file
@@ -245,8 +249,8 @@ $rows = getDatabase()->all("
 		and meetid not in (".implode(',',$meetids).") 
 	order by starttime ");
 foreach ($rows as $r) {
-	print "\nDELETING LOST FUTURE MEETING:\n";
+	print "\nDELETE LOST FUTURE MEETING ??? \n";
 	pr($r);
-	getDatabase()->execute(" delete from meeting where id = :id ",array('id'=>$r['id']));
+	#getDatabase()->execute(" delete from meeting where id = :id ",array('id'=>$r['id']));
 }
 

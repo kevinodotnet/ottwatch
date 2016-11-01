@@ -10,6 +10,55 @@ MeetingController::formatMotion("foo");
 
 class MeetingController {
 
+	static public function findNonRssMeetings() {
+
+		# the RSS feed sucks, so go hunting for meetings by other means.
+		for ($x = 0; $x < 30; $x++) {
+			$start = new DateTime();
+			$now = $start->add(new DateInterval("P" . $x . "D"));
+			$date = $now->format('Y-m-d');
+
+			print "$date\n";
+
+			$url = "http://app05.ottawa.ca/sirepub/items.aspx?stype=simple&meetdate=$date&itemtype=-%20All%20Types%20-";
+			$html = file_get_contents($url);
+			$html = preg_replace("/\n/"," ",$html);
+			$html = preg_replace("/\r/"," ",$html);
+			$html = preg_replace("/\t/"," ",$html);
+			$html = preg_replace("/  */"," ",$html);
+			$html = preg_replace("/<tr/i","\n<tr",$html);
+			foreach (explode("\n",$html) as $line) {
+				$m = array();
+				if (!preg_match("/^<tr/",$line)) { continue; }
+				if (preg_match("/GoToItem\((\d+)\)/",$line,$m)) {
+					$itemid = $m[1];
+					$row = getDatabase()->one(" select * from item where itemid = :itemid ",array('itemid'=>$itemid));
+					if (!isset($row['id'])) {
+						#item is not known; may still be false alarm because some dud-item entries aren't included in OttWatch (agenda headers).
+						$item = self::apiScrapeItem($itemid);
+						$meetid = $item['meetid'];
+						$row = getDatabase()->one(" select * from meeting where meetid = :meetid ",array('meetid'=>$meetid));
+						if (! isset($row)) {
+							print "---------------------------------------------------------------------------\n";
+							print "Item found that is not in the database and neither is its meeting!\n";
+							print "---------------------------------------------------------------------------\n";
+							print "$url\n";
+							print "---------------------------------------------------------------------------\n";
+							pr($item);
+						}
+					}
+				}
+				# mysql> select * from item where itemid = 353947;
+				# <img src="templates/classic/images/open.gif" alt="Open" title="Open" style="cursor: pointer;" onclick="GoToItem(353947)">
+			}
+
+		}
+
+
+#		MeetingController::createOrUpdateMeeting($meetid,$guid,$starttime,$title,$category);
+#	  MeetingController::downloadAndParseMeeting($meetid);
+	}
+
 	static public function createOrUpdateMeeting($meetid,$guid,$starttime,$title,$category) {
 
 	  $mdb = getDatabase()->one('select * from meeting where meetid = :meetid ', array(':meetid' => $meetid));
@@ -81,6 +130,10 @@ class MeetingController {
 			<td class="lbl">ward:</td>
 			<td>17 - capital</td> </tr>
 			*/
+			if (preg_match("/meeting date:.*meetid=(\d+).*open meeting\">(\d\d\d\d-...-\d\d)/",$l,$matches)) {
+				$item['meetid'] = strtoupper($matches[1]);
+				$item['meetdate'] = $matches[2];
+			}
 			if (preg_match("/meeting date:.*meetid=(\d+).*open meeting\">(\d\d\d\d-...-\d\d).*ward:<\/td><td>(\d+)/",$l,$matches)) {
 				$item['meetid'] = strtoupper($matches[1]);
 				$item['meetdate'] = $matches[2];
