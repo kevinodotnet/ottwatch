@@ -18,8 +18,6 @@ class MeetingController {
 			$now = $start->add(new DateInterval("P" . $x . "D"));
 			$date = $now->format('Y-m-d');
 
-			print "$date\n";
-
 			$url = "http://app05.ottawa.ca/sirepub/items.aspx?stype=simple&meetdate=$date&itemtype=-%20All%20Types%20-";
 			$html = file_get_contents($url);
 			$html = preg_replace("/\n/"," ",$html);
