@@ -66,7 +66,6 @@ class MeetingController {
 							MeetingController::downloadAndParseMeeting($meetid);
 						}
 					}
-					return;
 				}
 				# mysql> select * from item where itemid = 353947;
 				# <img src="templates/classic/images/open.gif" alt="Open" title="Open" style="cursor: pointer;" onclick="GoToItem(353947)">
