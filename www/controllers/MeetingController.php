@@ -29,6 +29,24 @@ class MeetingController {
 				$m = array();
 				if (!preg_match("/^<tr/",$line)) { continue; }
 				if (preg_match("/GoToItem\((\d+)\)/",$line,$m)) {
+
+					$tds = explode("<td>",$line);
+					$title = $tds[5];
+					$title = preg_replace("/<.*/","",$title);
+
+					#<tr style="padding: 2px;" class="&#xD;&#xA; datagrid&#xD;&#xA; ">
+					#<td style="width: 18px;"><img src="templates/classic/images/open.gif" alt="Open" title="Open" style="cursor: pointer;" onclick="GoToItem(358171)" /></td>
+					#<td id="CommentCell" valign="middle" align="center"><a onclick="return false;" style="cursor:default;"><img src="templates/classic/images/comment_dis.png" alt="Make a comment" title="Make a comment" border="0" style="width: 16px; height: 16px;" /></a></td>
+					#<td></td>
+					#<td></td>
+					#<td></td>
+					#<td></td>
+					#<td>Ottawa Police Services Board</td>
+					#<td>2016-Nov-07</td>
+					#<td></td>
+					#<td></td>
+					#<td>2017 DRAFT OPERATING AND CAPITAL BUDGETS </td></tr></table></tr></table></td></tr></table> </td> </tr> 
+
 					$itemid = $m[1];
 					$row = getDatabase()->one(" select * from item where itemid = :itemid ",array('itemid'=>$itemid));
 					if (!isset($row['id'])) {
@@ -40,11 +58,15 @@ class MeetingController {
 							print "---------------------------------------------------------------------------\n";
 							print "Item found that is not in the database and neither is its meeting!\n";
 							print "---------------------------------------------------------------------------\n";
+							print "$title\n";
 							print "$url\n";
 							print "---------------------------------------------------------------------------\n";
 							pr($item);
+							MeetingController::createOrUpdateMeeting($meetid,"manual-$meetid",$item['meetdate'],$title,$title);
+							MeetingController::downloadAndParseMeeting($meetid);
 						}
 					}
+					return;
 				}
 				# mysql> select * from item where itemid = 353947;
 				# <img src="templates/classic/images/open.gif" alt="Open" title="Open" style="cursor: pointer;" onclick="GoToItem(353947)">
@@ -131,6 +153,20 @@ class MeetingController {
 			if (preg_match("/meeting date:.*meetid=(\d+).*open meeting\">(\d\d\d\d-...-\d\d)/",$l,$matches)) {
 				$item['meetid'] = strtoupper($matches[1]);
 				$item['meetdate'] = $matches[2];
+				$l = $item['meetdate'];
+				$l = preg_replace('/-jan-/','-01-',$l);
+				$l = preg_replace('/-feb-/','-02-',$l);
+				$l = preg_replace('/-mar-/','-03-',$l);
+				$l = preg_replace('/-apr-/','-04-',$l);
+				$l = preg_replace('/-may-/','-05-',$l);
+				$l = preg_replace('/-jun-/','-06-',$l);
+				$l = preg_replace('/-jul-/','-07-',$l);
+				$l = preg_replace('/-aug-/','-08-',$l);
+				$l = preg_replace('/-sep-/','-09-',$l);
+				$l = preg_replace('/-oct-/','-10-',$l);
+				$l = preg_replace('/-nov-/','-11-',$l);
+				$l = preg_replace('/-dec-/','-12-',$l);
+				$item['meetdate'] = $l;
 			}
 			if (preg_match("/meeting date:.*meetid=(\d+).*open meeting\">(\d\d\d\d-...-\d\d).*ward:<\/td><td>(\d+)/",$l,$matches)) {
 				$item['meetid'] = strtoupper($matches[1]);
