@@ -1222,8 +1222,7 @@ class MeetingController {
 		  $title = preg_replace("/ am$/","am",$title);
 		  $title = preg_replace("/ pm$/","pm",$title);
 
-      $meetingDate = explode(" - ",$title);
-      $meetingDate = $meetingDate[1];
+      $meetingDate = $r['starttime'];
 
     	$path = "/meetings/meetid/".$r['meetid'];
     	$link = OttWatchConfig::WWW."/meetings/meetid/".$r['meetid'];
