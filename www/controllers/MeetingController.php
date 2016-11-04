@@ -36,7 +36,7 @@ class MeetingController {
 						$item = self::apiScrapeItem($itemid);
 						$meetid = $item['meetid'];
 						$row = getDatabase()->one(" select * from meeting where meetid = :meetid ",array('meetid'=>$meetid));
-						if (! isset($row)) {
+						if (! isset($row['id'])) {
 							print "---------------------------------------------------------------------------\n";
 							print "Item found that is not in the database and neither is its meeting!\n";
 							print "---------------------------------------------------------------------------\n";
