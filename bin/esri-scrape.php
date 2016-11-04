@@ -139,18 +139,6 @@ function addLatLonShape($table) {
 
 }
 
-function c_file_get_contents($url) {
-	$m = md5($url);
-	$f = "cache_$m";
-	print "$f :: $url\n";
-	if (file_exists($f)) {
-		return `gzip -cd $f`;
-	}
-	$d = file_get_contents($url);
-	file_put_contents($f,gzencode($d));
-	return $d;
-}
-
 function scrapeLayer($metaurl,$table,$key) {
 
 	# URL EXAMPLE:

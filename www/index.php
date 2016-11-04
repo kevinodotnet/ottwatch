@@ -12,6 +12,7 @@ include_once 'epiphany/src/Epi.php';
 include_once 'controllers/ApiController.php';
 include_once 'controllers/ScrapeApiController.php';
 include_once 'controllers/MeetingController.php';
+include_once 'controllers/BylawController.php';
 include_once 'controllers/GisController.php';
 include_once 'controllers/GraphController.php';
 include_once 'controllers/DevelopmentApp.php';
@@ -133,6 +134,10 @@ getRoute()->get('/lobbyist/([^\/]*)', 'lobbyist'); # legacy REST location
 getRoute()->get('/devapps', array('DevelopmentAppController','listAll'));
 getRoute()->get('/devapps/(D.*)', array('DevelopmentAppController','viewDevApp'));
 
+getRoute()->get('/bylaws/(\d\d\d\d-\d+)', array('BylawController','show'));
+getRoute()->get('/bylaws', array('BylawController','listAll'));
+getRoute()->get('/bylaws/', array('BylawController','listAll'));
+
 getRoute()->get('/meetings/votes', array('MeetingController','votesIndex'));
 getRoute()->get('/meetings/votes/member/([^\/]*)', array('MeetingController','votesMember'));
 getRoute()->get('/meetings/votes/(\d+)', array('MeetingController','voteDisplay'));
@@ -166,6 +171,8 @@ getRoute()->get('/consultations', array('ConsultationController','showMain'));
 getRoute()->get('/consultations/', array('ConsultationController','showMain'));
 getRoute()->get('/consultations/(\d+)', array('ConsultationController','showConsultation'));
 getRoute()->get('/consultations/(\d+)/content', array('ConsultationController','showConsultationContent'));
+
+getRoute()->get('/md5hist/([a-z0-9]*)', 'md5hist');
 
 getRoute()->get('/election/*', array('ElectionController','showMain'));
 getRoute()->get('/election/candidates.csv', array('ElectionController','candidatesCSV'));
@@ -339,7 +346,7 @@ function dashboard() {
 	    <tr>
 	      <td><?php print meeting_category_to_title($m['category']); ?></td>
 	      <td style="text-align: center; width: 90px;"><?php print $m['starttime']; ?></td>
-	      <td style="text-align: center;"><a class="btn btn-mini" href="<?php print "$OTT_WWW/meetings/{$m['category']}/{$m['meetid']}"; ?>">Agenda</a></td>
+	      <td style="text-align: center;"><a class="btn btn-mini" href="<?php print "$OTT_WWW/meetings/meeting/{$m['meetid']}"; ?>">Agenda</a></td>
 	    </tr>
 	    <?php
 	  }
@@ -367,7 +374,7 @@ function dashboard() {
 	    <tr itemscope="" itemtype="http://data-vocabulary.org/Event">
 	      <td itemprop="summary"><?php print meeting_category_to_title($m['category']); ?></td>
 	      <td itemprop="startDate" datetime="<?php print $m['starttime']; ?>" style="text-align: center; width: 90px;"><?php print $m['starttime']; ?></td>
-	      <td style="text-align: center;"><a itemprop="url" class="btn btn-mini" href="<?php print "$OTT_WWW/meetings/{$m['category']}/{$m['meetid']}"; ?>">Agenda</a></td>
+	      <td style="text-align: center;"><a itemprop="url" class="btn btn-mini" href="<?php print "$OTT_WWW/meetings/meeting/{$m['meetid']}"; ?>">Agenda</a></td>
 	    </tr>
 	    <?php
 	  }
@@ -386,7 +393,7 @@ function dashboard() {
     <tr>
       <td><?php print meeting_category_to_title($m['category']); ?></td>
       <td style="text-align: center; width: 90px;"><?php print $m['starttime']; ?></td>
-      <td style="text-align: center;"><a class="btn btn-mini" href="<?php print "$OTT_WWW/meetings/{$m['category']}/{$m['meetid']}"; ?>">Agenda</a></td>
+      <td style="text-align: center;"><a class="btn btn-mini" href="<?php print "$OTT_WWW/meetings/meeting/{$m['meetid']}"; ?>">Agenda</a></td>
     </tr>
     <?php
   }
@@ -427,7 +434,7 @@ function dashboard() {
     document.location.href = 'lobbying/search/'+encodeURIComponent(v);
   }
   </script>
-  <h4>Lobbyist Registry <small>(<a  onclick="javascript:document.location.href = 'lobbying/search/'">all</a>)</small></h4>
+  <h4>Lobbyist Registry <small>(<a onclick="javascript:document.location.href = 'lobbying/search/?recent=30'">recent</a>,<a onclick="javascript:document.location.href = 'lobbying/search/'">all</a>)</small></h4>
   <div class="input-prepend input-append">
   <input type="text" id="lobbyist_search_value" placeholder="Search Lobbyist Registry...">
   <button class="btn" onclick="lobbyist_search_form_submit()"><i class="icon-search"></i> Search</button>
@@ -448,6 +455,7 @@ function dashboard() {
 	<li><a href="<?php print $OTT_WWW; ?>/lobbying/latereport">Late Lobbying Report</a>: Who's been naughty and failed to report lobbying activity within the required deadlines.</li>
 	<li><a href="<?php print $OTT_WWW; ?>/chart/lobbying/weighted/30">Lobbying Intensity Report</a>: See what companies are most active pushing their agenda at City Hall.</li>
 	<li><a href="<?php print $OTT_WWW; ?>/mfippa/">MFIPPA</a>: Freedom of Information requests processed by the City.</li>
+	<li><a href="<?php print $OTT_WWW; ?>/bylaws/">By-Laws</a>: Archive of bylaws as they are enacted.</li>
 	<li><a href="<?php print $OTT_WWW; ?>/opendata/">OpenData</a>: Most recently updated data from <i>data.ottawa.ca</i>.</li>
 	<li><a href="<?php print $OTT_WWW; ?>/story/list">Stories</a>: Original articles by OttWatch</li>
 	<li><a href="<?php print $OTT_WWW; ?>/meetings/votes">Voting History</a>: See all votes at committee and council.</li>
@@ -582,6 +590,11 @@ if ($v3) {
 	<?php
 }
 ?>
+
+<link rel="stylesheet" type="text/css" href="/diff2html/diff2html.css">
+<script type="text/javascript" src="/diff2html/diff2html.js"></script>
+<script type="text/javascript" src="/diff2html/diff2html-ui.js"></script>
+
 <script src="<?php print $OTT_WWW; ?>/bootstrap-ajax-typeahead/js/bootstrap-typeahead.js" type="text/javascript"></script>
 <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
 <style type="text/css">
@@ -925,6 +938,65 @@ function mapToTable($o) {
 	?>
 	</table>
 	<?php
+}
+
+function md5hist ($md5) {
+	top3();
+
+	$rows = getDatabase()->all(" select * from md5hist where curmd5 = :md5 ",array('md5'=>$md5));
+	if (count($rows) == 0) {
+		print "End of the line; OttWatch doesn't have a cached copy of that version of the document.";
+		bottom3();
+		return;
+	}
+	if (count($rows) > 1) {
+		print "Collision on MD5 hash happened, which shouldn't, so Kevin screwed up; maybe tweet this URL to @odonnell_k please?";
+		bottom3();
+		return;
+	}
+	$row = $rows[0];
+	if ($row['prevmd5'] == '') {
+		print "This is the first version; can't compare to before the beginning of time!";
+		bottom3();
+		return;
+	}
+
+	?>
+	<h1>Document MD5: <?php print $row['curmd5']; ?></h1>
+	<ul>
+	<li>Created: <?php print $row['created']; ?></li>
+	<li>Previous diff: <a href="/md5hist/<?php print $row['prevmd5']; ?>"><?php print $row['prevmd5']; ?></a></li>
+	<li>Jump down to the <a href="#line-by-line">line-by-line</a> comparison.</li>
+	</ul>
+	<?php
+
+	$file1 = OttWatchConfig::FILE_DIR."/consultationmd5/".$row['prevmd5'];
+	$file2 = OttWatchConfig::FILE_DIR."/consultationmd5/".$row['curmd5'];
+	$cmd = "diff -u $file1 $file2";
+	#$cmd = "diff -u /mnt/shared/ottwatch/var/consultationmd5/b28bd0cf99eb78067347ad130f89e0a5 /mnt/shared/ottwatch/var/consultationmd5/f8e160e7a13d3cf2ddbb10c2051c5931";
+
+	$diff = `$cmd`;
+	#pr(htmlspecialchars($diff));
+
+	?>
+	<script>
+	lineDiffExample
+	var lineDiffExample = <?php echo json_encode($diff); ?>;
+
+	$(document).ready(function() {
+		var diff2htmlUi = new Diff2HtmlUI({diff: lineDiffExample});
+		diff2htmlUi.draw('#side-by-side', { inputFormat: 'json', showFiles: false, matching: 'words', outputFormat: 'side-by-side', synchronisedScroll: true });
+		diff2htmlUi.draw('#line-by-line', { inputFormat: 'json', showFiles: false, matching: 'words', outputFormat: 'line-by-line', synchronisedScroll: true });
+	});
+	</script>
+
+	<h2>Side-by-Side</h2>
+	<div id="side-by-side"></div>
+	<h2>Line-by-Line</h2>
+	<div id="line-by-line"></div>
+
+	<?php
+	bottom3();
 }
 
 ?>

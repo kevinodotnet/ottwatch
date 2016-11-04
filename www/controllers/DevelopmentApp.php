@@ -383,6 +383,8 @@ class DevelopmentAppController {
 			-->
 			<?php
 		}
+
+		$streetviewImgUrl = '';
 		?>
 
     <table class="table table-bordered table-condensed" style="width: 100%;">
@@ -392,9 +394,16 @@ class DevelopmentAppController {
     <tr><td>Address (Zoning)</td><td>
     <?php 
     foreach ($a['address'] as $addr) {
+			#$sv_url = "https://maps.googleapis.com/maps/api/streetview?size=600x300&heading=1&pitch=-0.76&key=".OttWatchConfig::GOOGLE_STREETVIEW_API_KEY.".&location=".urlencode($addr->addr);
+			if ($streetviewImgUrl == '') {
+				$streetviewImgUrl = "https://maps.googleapis.com/maps/api/streetview?size=600x300&pitch=-0.76&key=".OttWatchConfig::GOOGLE_STREETVIEW_API_KEY."&fov=120&location=".urlencode($addr->addr).", Ottawa, Ontario";
+				#$streetviewImgUrl2 = "https://maps.googleapis.com/maps/api/streetview?size=600x300&pitch=-0.76&key=".OttWatchConfig::GOOGLE_STREETVIEW_API_KEY."&fov=120&location={$addr->lat},{$addr->lon}";
+			}
       print $addr->addr;
+
 			if (isset($addr->lat) && $addr->lat != '') {
 	      $zoning = getApi()->invoke("/api/zoning/{$addr->lat}/{$addr->lon}");
+
 	      print " (";
 	      if ($zoning['ZONE_CODE'] != '') {
 	        print "<a href=\"{$zoning['URL']}\">{$zoning['ZONE_CODE']}</a>";
@@ -436,6 +445,40 @@ class DevelopmentAppController {
       <?php
     }
     ?>
+
+			<?php
+    $sql = " select * from bylaw where ";
+    $first = 1;
+    foreach ($a['address'] as $addr) {
+      if (!$first) {
+        $sql .= " or ";
+      }
+      $sql .= " summary like '%".mysql_escape_string($addr->addr)."%' ";
+      $first = 0;
+    }
+    $related = array();
+    if (count($a['address']) > 0) {
+      $related = getDatabase()->all($sql);
+    }
+    if (count($related) > 0) {
+			?>
+			<tr>
+				<td>Possibly related by-laws</td>
+				<td>
+					<?php
+					foreach ($related as $r) {
+						print "<a href=\"/bylaws/{$r['bylawnum']}\" target=\"_blank\">{$r['bylawnum']}</a>: {$r['summary']}<br/>";
+					}
+					?>
+				</td>
+			</tr>
+			<?php
+		}
+			?>
+
+
+
+
 		<?php if ($a['apptype'] != 'coa') { ?>
     <tr><td>Documents</td><td>
     <?php
@@ -482,7 +525,7 @@ class DevelopmentAppController {
     foreach ($dates as $d) {
       ?>
       <tr>
-      <td><?php print $d['statusdate']; ?></td>
+      <td style="white-space: nowrap;"><?php print $d['statusdate']; ?></td>
       <td><?php print $d['status']; ?></td>
       </tr>
       <?php
@@ -493,7 +536,10 @@ class DevelopmentAppController {
     </div>
 
     <div class="col-sm-6">
-    <?php
+    <?php 
+
+		print "<p><img src=\"$streetviewImgUrl\" class=\"img-responsive responsive\"/></p>";
+
     $a = $a['address'];
     if ($a && count($a>0)) {
     ?>
@@ -961,25 +1007,38 @@ class DevelopmentAppController {
     $row = getDatabase()->one(" select * from devapp where appid = :appid ",array("appid"=>$appid));
     if ($row['id']) {
       $id = $row['id'];
-	    getDatabase()->execute(" 
-	      update devapp set 
-          address = :address,
-          devid = :devid,
-          ward = :ward,
-          apptype = :apptype,
-          receiveddate = :receiveddate,
-          updated = CURRENT_TIMESTAMP,
-          description = :description
-        where appid = :appid
-        ",array(
-	        'address'=> json_encode($addresses),
-	        'description' =>$labels['Description'],
-          'devid' => $labels['Application #'],
-          'ward' => $labels['Ward'],
-          'receiveddate' => $labels['date_received'],
-          'apptype' => $labels['Application'],
-	        'appid'=> $appid,
-	    ));
+      try {
+		    getDatabase()->execute(" 
+		      update devapp set 
+	          address = :address,
+	          devid = :devid,
+	          ward = :ward,
+	          apptype = :apptype,
+	          receiveddate = :receiveddate,
+	          updated = CURRENT_TIMESTAMP,
+	          description = :description
+	        where appid = :appid
+	        ",array(
+		        'address'=> json_encode($addresses),
+		        'description' =>$labels['Description'],
+	          'devid' => $labels['Application #'],
+	          'ward' => $labels['Ward'],
+	          'receiveddate' => $labels['date_received'],
+	          'apptype' => $labels['Application'],
+		        'appid'=> $appid,
+		    ));
+      } catch (Exception $e) {
+				print $e;
+				pr(array(
+		        'address'=> json_encode($addresses),
+		        'description' =>$labels['Description'],
+	          'devid' => $labels['Application #'],
+	          'ward' => $labels['Ward'],
+	          'receiveddate' => $labels['date_received'],
+	          'apptype' => $labels['Application'],
+		        'appid'=> $appid,
+		    ));
+			}
       try {
 	      getDatabase()->execute(" insert into devappstatus (devappid,status,statusdate) values (:devappid,:status,:statusdate) ",array(
 	        'devappid' => $id,
@@ -1014,18 +1073,34 @@ class DevelopmentAppController {
       ));
     }
 
-    getDatabase()->execute(" delete from devappfile where devappid = :devappid ",array( 'devappid' => $id,));
+
+    getDatabase()->execute(" update devappfile set deleted = CURRENT_TIMESTAMP where deleted is null and devappid = :devappid ",array( 'devappid' => $id,));
+    #getDatabase()->execute(" delete from devappfile where devappid = :devappid ",array( 'devappid' => $id,));
+
 		$touched = array();
     foreach ($files as $f) {
 			if (isset($touched[$f['href']])) {
 				continue;
 			}
 			$touched[$f['href']] = 1;
-      getDatabase()->execute(" insert into devappfile (devappid,href,title,created,updated) values (:devappid,:href,:title,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP) ",array(
+
+			$exists = getDatabase()->one(" select count(1) c from devappfile where devappid = :devappid and href = :href ",array(
         'devappid' => $id,
-        'href' => $f['href'],
-        'title' => $f['title'],
-      ));
+        'href' => $f['href']
+			));
+
+			if ($exists['c'] == 0) {
+				# insert
+      	getDatabase()->execute(" insert into devappfile (devappid,href,title,created,updated) values (:devappid,:href,:title,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP) ",array(
+	        'devappid' => $id,
+	        'href' => $f['href'],
+	        'title' => $f['title'],
+	      ));
+			} else {
+				# update
+	      getDatabase()->execute(" update devappfile set deleted = null where href = :href  ",array( 'href' => $f['href']));
+			}
+
 			$meta = `HEAD {$f['href']}`;
 			$meta = explode("\n",$meta);
 			$lastmodified = preg_grep('/^Last-Modified: /',$meta);
@@ -1042,6 +1117,7 @@ class DevelopmentAppController {
 		      ));
 				}
 			}
+
     }
 
     $ward = $labels['Ward'];

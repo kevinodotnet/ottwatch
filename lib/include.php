@@ -24,7 +24,6 @@ if (1) {
 	Epi::setSetting('exceptions', true);
 	EpiDatabase::employ(OttWatchConfig::DB_TYPE, OttWatchConfig::DB_NAME, OttWatchConfig::DB_HOST, OttWatchConfig::DB_USER, OttWatchConfig::DB_PASS);
 
-	include_once 'controllers/MediaController.php';
 	include_once 'controllers/EventController.php';
 	include_once 'controllers/MeetingController.php';
 	include_once 'controllers/DevelopmentApp.php';
@@ -150,7 +149,7 @@ function tweet($tweet) {
 	if ($code == 200) {
 		return 1;
 	} 
-	print "ERROR: twitter returned $code\n";
+	print "ERROR: twitter returned $code ($tweet)\n";
 	return 0;
 }
 
@@ -578,3 +577,18 @@ function c_file_get_contents($url) {
 	return $d;
 }
 
+function md5hist_insert ($values) {
+	db_insert('md5hist',$values);
+	md5hist_fix();
+}
+
+function md5hist_fix () {
+
+	$sql = " select max(id) id from md5hist group by curmd5,prevmd5 having count(1) > 1; ";
+	$rows = getDatabase()->all($sql);
+	foreach ($rows as $r) {
+		$ids = $r['id'];
+		getDatabase()->execute(" delete from md5hist where id in ( $ids ); ");
+	}
+
+}

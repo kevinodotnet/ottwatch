@@ -109,46 +109,61 @@ class ConsultationController {
     ?>
 
 		<h1><?php print $row['title']; ?></h1>
+		<b>Location</b>: <a target="_blank" href="<?php print $row['url']; ?>"><?php print $row['url']; ?></a><br/>
 		<b>Last updated</b>: <?php print ($row['delta'] == 0 ? '<span style="color: #ff0000;">today</span>' : $row['delta'].' days(s) ago'); ?><br/>
-
-		<h3>Documents at a glance</h3>
-    <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
-	  <tr>
-	  </tr>
-    <?php
-    $docs = getDatabase()->all(" select *,datediff(CURRENT_TIMESTAMP,updated) delta from consultationdoc where consultationid = :id order by updated desc ",array('id'=>$row['id']));
-    foreach ($docs as $doc) {
-      ?>
-	    <tr>
-	    <td><?php print ($doc['delta'] == 0 ? '<span style="color: #ff0000;">today</span>' : $doc['delta'].' days(s) ago'); ?></td>
-	    <td><a target="_blank" href="<?php print $doc['url']; ?>"><?php print $doc['title']; ?></a></td>
-	    </tr>
-      <?php
-    }
-    ?>
-    </table>
-
-    <div class="row-fluid">
-   
-    <div class="span6">
-    <?php
-    $frameSrc = "{$row['id']}/content";
-    ?>
-    <h3>Overview</h3>
-    <i>
-    The overview provided below may have formatting and readability problems.
-    You're better off <a target="_new" href="<?php print $row['url']; ?>">viewing the actual page on ottawa.ca</a> instead.</i>
-    <iframe src="<?php print $frameSrc ?>" style="margin-top: 10px; width: 100%; height: 600px; border: 2px solid #000000;"></iframe>
-    </div>
-
-    <div class="span6">
-    <h3>Discuss</h3>
-    <?php disqus(); ?>
-    </div>
-
-    </div><!-- row -->
+		<?php
+		$md5 = getDatabase()->one(" select * from md5hist m1 join md5hist m2 on m2.curmd5 = m1.prevmd5 where m1.curmd5 = '{$row['md5']}' order by m1.created desc limit 1 ");
+		if (isset($md5['id'])) {
+			?><b>Diff to previous version</b>: <a target="_blank" href="/md5hist/<?php print $row['md5']; ?>">diff</a><br/><?php
+		}
+		?>
 
     <?php
+    $docs = getDatabase()->all(" 
+			select *,datediff(CURRENT_TIMESTAMP,updated) delta 
+			from consultationdoc 
+			where consultationid = :id 
+			order by 
+				deleted,
+				updated desc
+			",array('id'=>$row['id']));
+		if (count($docs) > 0) {
+			?>
+			<h3>Documents at a glance</h3>
+	    <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
+			<tr>
+			<th>Modified</th>
+			<th>Title</th>
+			<th>Diff to previous</th>
+			</tr>
+			<?php
+    	foreach ($docs as $doc) {
+	      ?>
+		    <tr>
+		    <td><?php print ($doc['delta'] == 0 ? '<span style="color: #ff0000;">today</span>' : $doc['delta'].' days(s) ago'); ?></td>
+		    <td>
+				<?php if ($doc['deleted'] == 1) { print "(DELETED)"; } ?>
+				<a target="_blank" href="<?php print $doc['url']; ?>"><?php print $doc['title']; ?></a></td>
+		    <td>
+				<?php
+				$md5 = getDatabase()->one(" select * from md5hist m1 join md5hist m2 on m2.curmd5 = m1.prevmd5 where m1.curmd5 = '{$doc['md5']}' order by m1.created desc limit 1 ");
+				if (isset($md5['id'])) {
+					?><a target="_blank" href="/md5hist/<?php print $doc['md5']; ?>">diff</a><br/><?php
+				} else {
+					?>
+					-
+					<?php
+				}
+				?>
+				</td>
+		    </tr>
+	      <?php
+	    }
+			?>
+    	</table>
+			<?php
+		}
+
     bottom();
   }
 
@@ -293,7 +308,6 @@ class ConsultationController {
 
   public static function crawlConsultation ($category, $title, $url) {
 
-
     $html = @file_get_contents($url);
 		if ($html === FALSE) { 
       // this is probably a one-time network error on a link that does actually
@@ -314,18 +328,20 @@ class ConsultationController {
 				print "$title ($category) CHANGED\n";
 				print "http://ottwatch.ca/consultations/{$row['id']}\n";
         print "c.sh {$row['md5']} $contentMD5\n";
-				print "http://app.kevino.ca/ottwatchvar/consultationmd5/{$row['md5']}\n";
-				print "http://app.kevino.ca/ottwatchvar/consultationmd5/$contentMD5\n";
+#				print "http://app.kevino.ca/ottwatchvar/consultationmd5/{$row['md5']}\n";
+#				print "http://app.kevino.ca/ottwatchvar/consultationmd5/$contentMD5\n";
 				print "\n";
         getDatabase()->execute(" update consultation set md5 = :md5, updated = CURRENT_TIMESTAMP where id = :id ",array('id'=>$row['id'],'md5'=>$contentMD5));
+				md5hist_insert(array('curmd5'=>$contentMD5,'prevmd5'=>$row['md5']));
       }
     } else {
       $id = db_insert("consultation",array( 'category'=>$category, 'title'=>$title, 'url'=>$url, 'md5'=>$contentMD5)); 
+			md5hist_insert(array('curmd5'=>$contentMD5,'prevmd5'=>''));
 			print "--------------------------------------------------------------\n";
 			print "$title ($category) NEW\n";
 			print "http://ottwatch.ca/consultations/$id\n";
 			print "\n";
-   }
+		}
 
     # reset from database, may have updated/inserted
     $row = getDatabase()->one(" select * from consultation where url = :url ",array('url'=>$url));
@@ -340,7 +356,7 @@ class ConsultationController {
     $div = simplexml_load_string($div[0]->asXML());
     $links = $div->xpath('//a');
 
-		getDatabase()->execute(" update consultationdoc set title = 'DELETED' where consultationid = {$row['id']} ");
+		getDatabase()->execute(" update consultationdoc set deleted = 1 where consultationid = {$row['id']} ");
 
     foreach ($links as $a) {
       $docLink = $a->attributes();
@@ -358,7 +374,7 @@ class ConsultationController {
       self::crawlConsultationLink($row,$docTitle,$docLink);
     }
 
-		getDatabase()->execute(" delete from consultationdoc where title = 'DELETED' and consultationid = {$row['id']} ");
+		# getDatabase()->execute(" delete from consultationdoc where title = 'DELETED' and consultationid = {$row['id']} ");
 
   }
 
@@ -397,21 +413,23 @@ class ConsultationController {
 
     $row = getDatabase()->one(" select * from consultationdoc where url = :url ",array('url'=>$url));
     if ($row['id']) {
-      getDatabase()->execute(" update consultationdoc set title = :title where id = :id ",array('id'=>$row['id'],'title'=>$title));
+      getDatabase()->execute(" update consultationdoc set deleted = null, title = :title where id = :id ",array('id'=>$row['id'],'title'=>$title));
       if ($row['md5'] != $md5) {
 
 				print "--------------------------------------------------------------\n";
 				print "$title DOC CHANGED $url\n";
 				print "http://ottwatch.ca/consultations/{$parent['id']}\n";
         print "c.sh {$row['md5']} $md5\n";
-				print "http://app.kevino.ca/ottwatchvar/consultationmd5/{$row['md5']}\n";
-				print "http://app.kevino.ca/ottwatchvar/consultationmd5/$md5\n";
+#				print "http://app.kevino.ca/ottwatchvar/consultationmd5/{$row['md5']}\n";
+#				print "http://app.kevino.ca/ottwatchvar/consultationmd5/$md5\n";
 				print "\n";
 
         getDatabase()->execute(" update consultationdoc set md5 = :md5, updated = CURRENT_TIMESTAMP where id = :id ",array('id'=>$row['id'],'md5'=>$md5));
+				md5hist_insert(array('curmd5'=>$md5,'prevmd5'=>$row['md5']));
       }
     } else {
       $id = db_insert("consultationdoc",array('consultationid'=>$parent['id'],'title'=>$title, 'url'=>$url, 'md5'=>$md5)); 
+			md5hist_insert(array('curmd5'=>$md5,'prevmd5'=>''));
 			print "--------------------------------------------------------------\n";
 			print "$title DOC NEW $url\n";
 			print "http://ottwatch.ca/consultations/{$parent['id']}\n";

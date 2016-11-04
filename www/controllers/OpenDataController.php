@@ -147,6 +147,7 @@ class OpenDataController {
 			$dataid = $row['id'];
 
       foreach ($set->resources as $r) {
+				try {
 
         $values = array();
         $values['dataid'] = $dataid;
@@ -178,6 +179,9 @@ class OpenDataController {
 
 						|| preg_match('/ottawacityjobs/',$r->url)
 						|| preg_match('/jobs.xml/',$r->url)
+						|| preg_match('/20cm_2005_ortho_images/',$r->url)
+						|| preg_match('/2000_scale_mapping.tar.gz/',$r->url)
+						|| preg_match('/wards-2014/',$r->url)
 
 						|| preg_match('/biblioottawalibrary/',$r->url)
 						) {
@@ -194,7 +198,7 @@ class OpenDataController {
 							# print "skipping possible huge file: {$r->url}\n";
 							$row['hash'] = '';
 							$r->hash = '';
-							pr($r);
+							#pr($r);
 						} else {
 							$data = `wget -qO - "{$r->url}"`;
 						}
@@ -226,7 +230,10 @@ class OpenDataController {
 				} else {
 	        db_insert('opendatafile',$values);
 				}
+			} catch (Exception $e) {
+				print $e;
       }
+			}
 
     }
   }

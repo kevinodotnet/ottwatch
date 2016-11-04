@@ -10,6 +10,75 @@ MeetingController::formatMotion("foo");
 
 class MeetingController {
 
+	static public function findNonRssMeetings() {
+
+		# the RSS feed sucks, so go hunting for meetings by other means.
+		for ($x = 0; $x < 30; $x++) {
+			$start = new DateTime();
+			$now = $start->add(new DateInterval("P" . $x . "D"));
+			$date = $now->format('Y-m-d');
+
+			$url = "http://app05.ottawa.ca/sirepub/items.aspx?stype=simple&meetdate=$date&itemtype=-%20All%20Types%20-";
+			$html = file_get_contents($url);
+			$html = preg_replace("/\n/"," ",$html);
+			$html = preg_replace("/\r/"," ",$html);
+			$html = preg_replace("/\t/"," ",$html);
+			$html = preg_replace("/  */"," ",$html);
+			$html = preg_replace("/<tr/i","\n<tr",$html);
+			foreach (explode("\n",$html) as $line) {
+				$m = array();
+				if (!preg_match("/^<tr/",$line)) { continue; }
+				if (preg_match("/GoToItem\((\d+)\)/",$line,$m)) {
+
+					$tds = explode("<td>",$line);
+					$title = $tds[5];
+					$title = preg_replace("/<.*/","",$title);
+
+					#<tr style="padding: 2px;" class="&#xD;&#xA; datagrid&#xD;&#xA; ">
+					#<td style="width: 18px;"><img src="templates/classic/images/open.gif" alt="Open" title="Open" style="cursor: pointer;" onclick="GoToItem(358171)" /></td>
+					#<td id="CommentCell" valign="middle" align="center"><a onclick="return false;" style="cursor:default;"><img src="templates/classic/images/comment_dis.png" alt="Make a comment" title="Make a comment" border="0" style="width: 16px; height: 16px;" /></a></td>
+					#<td></td>
+					#<td></td>
+					#<td></td>
+					#<td></td>
+					#<td>Ottawa Police Services Board</td>
+					#<td>2016-Nov-07</td>
+					#<td></td>
+					#<td></td>
+					#<td>2017 DRAFT OPERATING AND CAPITAL BUDGETS </td></tr></table></tr></table></td></tr></table> </td> </tr> 
+
+					$itemid = $m[1];
+					$row = getDatabase()->one(" select * from item where itemid = :itemid ",array('itemid'=>$itemid));
+					if (!isset($row['id'])) {
+						#item is not known; may still be false alarm because some dud-item entries aren't included in OttWatch (agenda headers).
+						$item = self::apiScrapeItem($itemid);
+						$meetid = $item['meetid'];
+						$row = getDatabase()->one(" select * from meeting where meetid = :meetid ",array('meetid'=>$meetid));
+						if (! isset($row['id'])) {
+							print "---------------------------------------------------------------------------\n";
+							print "Item found that is not in the database and neither is its meeting!\n";
+							print "---------------------------------------------------------------------------\n";
+							print "$title\n";
+							print "$url\n";
+							print "---------------------------------------------------------------------------\n";
+							pr($item);
+							MeetingController::createOrUpdateMeeting($meetid,"manual-$meetid",$item['meetdate'],$title,$title);
+							MeetingController::downloadAndParseMeeting($meetid);
+						}
+					}
+					return;
+				}
+				# mysql> select * from item where itemid = 353947;
+				# <img src="templates/classic/images/open.gif" alt="Open" title="Open" style="cursor: pointer;" onclick="GoToItem(353947)">
+			}
+
+		}
+
+
+#		MeetingController::createOrUpdateMeeting($meetid,$guid,$starttime,$title,$category);
+#	  MeetingController::downloadAndParseMeeting($meetid);
+	}
+
 	static public function createOrUpdateMeeting($meetid,$guid,$starttime,$title,$category) {
 
 	  $mdb = getDatabase()->one('select * from meeting where meetid = :meetid ', array(':meetid' => $meetid));
@@ -81,6 +150,24 @@ class MeetingController {
 			<td class="lbl">ward:</td>
 			<td>17 - capital</td> </tr>
 			*/
+			if (preg_match("/meeting date:.*meetid=(\d+).*open meeting\">(\d\d\d\d-...-\d\d)/",$l,$matches)) {
+				$item['meetid'] = strtoupper($matches[1]);
+				$item['meetdate'] = $matches[2];
+				$l = $item['meetdate'];
+				$l = preg_replace('/-jan-/','-01-',$l);
+				$l = preg_replace('/-feb-/','-02-',$l);
+				$l = preg_replace('/-mar-/','-03-',$l);
+				$l = preg_replace('/-apr-/','-04-',$l);
+				$l = preg_replace('/-may-/','-05-',$l);
+				$l = preg_replace('/-jun-/','-06-',$l);
+				$l = preg_replace('/-jul-/','-07-',$l);
+				$l = preg_replace('/-aug-/','-08-',$l);
+				$l = preg_replace('/-sep-/','-09-',$l);
+				$l = preg_replace('/-oct-/','-10-',$l);
+				$l = preg_replace('/-nov-/','-11-',$l);
+				$l = preg_replace('/-dec-/','-12-',$l);
+				$item['meetdate'] = $l;
+			}
 			if (preg_match("/meeting date:.*meetid=(\d+).*open meeting\">(\d\d\d\d-...-\d\d).*ward:<\/td><td>(\d+)/",$l,$matches)) {
 				$item['meetid'] = strtoupper($matches[1]);
 				$item['meetdate'] = $matches[2];
@@ -115,6 +202,7 @@ class MeetingController {
 							'name' => $matches[2]
 						);
 						$file['sire_url'] = "http://app05.ottawa.ca/sirepub/view.aspx?cabinet=published_meetings&fileid={$file['fileid']}";
+						$file['url'] = "http://ottwatch.ca/meetings/file/{$file['fileid']}";
 						$files[] = $file;
 					}
 				}
@@ -473,7 +561,7 @@ class MeetingController {
 		<div class="span6">
 		<p>Vote recorded from <b><?php print $category; ?></b> on <?php print substr($m['starttime'],0,10); ?> regarding 
 		agenda item <b><?php print $i['title']; ?></b>.</p>
-		<p><a href="<?php print OttWatchConfig::WWW."/meetings/{$m['category']}/{$m['meetid']}"; ?>">Full meeting details</a>.</p>
+		<p><a href="<?php print OttWatchConfig::WWW."/meetings/meeting/{$m['meetid']}"; ?>">Full meeting details</a>.</p>
 		<?php
 		if ($m['youtubestate'] == 'ready') {
 			print "<center>\n";
@@ -712,7 +800,7 @@ class MeetingController {
         <tr>
         <td colspan="4" style="background: #f0f0f0;">
         <h5><?php print meeting_category_to_title($v['category']); ?></h5>
-        <a href="<?php print OttWatchConfig::WWW."/meetings/{$v['category']}/{$v['meetid']}"; ?>"><?php print $v['starttime']; ?></a>
+        <a href="<?php print OttWatchConfig::WWW."/meetings/meeting/{$v['meetid']}"; ?>"><?php print $v['starttime']; ?></a>
         </td>
         </tr>
 	      <tr>
@@ -778,7 +866,7 @@ class MeetingController {
   static public function getVideoStart($id) {
 		global $dirname; # set by bin/XXXX.php scripts, UGLY, should probably be passed in as FAR or a DEFINE
 
-		$debug = 1;
+		$debug = 0;
 
 		$m = getDatabase()->one(" select * from meeting where id = :id ",array('id'=>$id));
 		if (!$m['id']) {
@@ -849,6 +937,10 @@ class MeetingController {
 			}
 			return -1;
 		}
+
+		if ($m['category'] == 'Ottawa Public Library Board') { return; }
+		if ($m['category'] == 'Police Services Board Human Resources Committee') { return; }
+		if ($m['category'] == 'FLSAC') { return; }
 
 		$meetid = $m['meetid'];
 
@@ -1130,8 +1222,7 @@ class MeetingController {
 		  $title = preg_replace("/ am$/","am",$title);
 		  $title = preg_replace("/ pm$/","pm",$title);
 
-      $meetingDate = explode(" - ",$title);
-      $meetingDate = $meetingDate[1];
+      $meetingDate = $r['starttime'];
 
     	$path = "/meetings/meetid/".$r['meetid'];
     	$link = OttWatchConfig::WWW."/meetings/meetid/".$r['meetid'];
@@ -1256,7 +1347,6 @@ class MeetingController {
 				foreach ($rows as $r) {
 					$fileUrl = MeetingController::getFileUrl($r['fileid']);
 					print "<tr><td><a href=\"$fileUrl\">".$r['title']."</a></td><td>".meeting_category_to_title($r['category'])."</td><td>{$r['starttime']}</td></tr>";
-					#print "<tr><td><a href=\"/meetings/file/".$r['fileid']."\">".$r['title']."</a></td><td>".meeting_category_to_title($r['category'])."</td><td>{$r['starttime']}</td></tr>";
 				}
 				?>
 				</table>
@@ -1411,7 +1501,7 @@ class MeetingController {
       error404();
       return;
     }
-    header("Location: ../".urlencode($m['category']})/{$m['meetid']}");
+		header("Location: ../".urlencode($m['category'])."/{$m['meetid']}");
   }
 
 #  static public function itemFiles ($category,$id,$itemid,$format) {
@@ -2296,7 +2386,7 @@ class MeetingController {
 			<?php
     foreach ($rows as $r) { 
       $mtgurl = htmlspecialchars("http://app05.ottawa.ca/sirepub/mtgviewer.aspx?meetid={$r['meetid']}&doctype");
-      $myurl = htmlspecialchars($OTT_WWW."/meetings/{$r['category']}/{$r['meetid']}");
+      $myurl = $OTT_WWW."/meetings/meeting/{$r['meetid']}";
       ?>
 	    <tr>
 	      <td style="width: 90px; text-align: center;"><?php print $r['starttime']; ?></td>
@@ -2694,29 +2784,6 @@ class MeetingController {
     $meetingDate = explode(" - ",$title);
     $meetingDate = $meetingDate[1];
 
-#    if (count($origitemids) > 0) {
-#      # not a "new" meeting
-#	    $newitems = array_diff($nowitemids,$origitemids);
-#	    if (count($newitems) > 0) {
-#        foreach ($newitems as $n) {
-#          $row = getDatabase()->one(" select * from item where itemid = $n ");
-#          if ($row['id']) {
-#            $title = $row['title'];
-#            $itemid = $row['itemid'];
-#            $tweet = "New mtg item: {$row['title']} - ".meeting_category_to_title($m['category'])." on $meetingDate";
-#          	$link = OttWatchConfig::WWW."/meetings/meetid/".$m['meetid'];
-#            #$tweet = tweet_txt_and_url($tweet,$link);
-#            if (preg_match('/^ADJOURNMENT$/i',$title)) { continue; }
-#            if (preg_match('/^COMMUNICATIONS$/i',$title)) { continue; }
-#            if (preg_match('/^CONFIRMATION OF MINUTES$/i',$title)) { continue; }
-#            if (preg_match('/DECLARATION OF INTERES/',$title)) { continue; }
-#            if (preg_match('/DECLARATIONS OF INTEREST/',$title)) { continue; }
-#            print "SKIPPING (but would have sent) $tweet\n"; 
-#          }
-#        }
-#	    }
-#    }
-
   }
 
   static public function downloadAndParseFile ($id) {
@@ -2872,9 +2939,10 @@ class MeetingController {
         array_push($vote['votes'],array('name'=>$who,'voted'=>$votefor));
       }
 
-      if (strlen($motion) > 1020) {
-        $motion = substr($motion,0,1020);
+      if (strlen($motion) > 1000) {
+        $motion = substr($motion,0,1000);
       }
+			try {
       $voteid = getDatabase()->execute('insert into itemvote (itemid,motion) values (:itemid,:motion) ', array('itemid'=>$item['id'],'motion'=>$motion));
       foreach ($vote['votes'] as $v) {
         if ($v['voted'] == 'Yes') { $vote = 'y'; }
@@ -2884,6 +2952,13 @@ class MeetingController {
         else { $vote = 'u'; } // should never happen
         getDatabase()->execute('insert into itemvotecast (itemvoteid,vote,name) values (:itemvoteid,:vote,:name) ', array('itemvoteid'=>$voteid,'vote'=>$vote,'name'=>$v['name']));
       }
+			} catch (Exception $e) {
+				print "$e\n";
+				pr($item);
+				print "\n\n$motion\n\n";
+				print "length: ".strlen($motion)."\n";
+				throw $e;
+			}
     }
 
   }
