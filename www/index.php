@@ -275,7 +275,7 @@ function feed() {
   bottom();
 }
 
-function adsense_adaptive() {
+function DEPRECATED_adsense_adaptive() {
 ?>
 
 <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -324,10 +324,6 @@ function dashboard() {
   </center>
   </a>
   </div>
-
-	<div class="visible-phone" style="margin-top: 10px; ">
-	<?php adsense_adaptive(); ?>
-	</div>
 
   <table class="table table-bordered table-hover table-condensed" style="width: 100%; margin-top: 20px;">
   <?php 
@@ -481,7 +477,6 @@ function dashboard() {
 
   </div>
   <div class="span4">
-	<?php adsense_adaptive(); ?>
   <h4>Recent Comments</h4>
   <?php disqusRecent(8); ?>
   </div>
