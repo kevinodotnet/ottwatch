@@ -233,7 +233,7 @@ foreach ($items as $i) {
     continue;
   }
 
-	print "$category :: $title :: $link\n";
+	#print "$category :: $title :: $link\n";
 	MeetingController::createOrUpdateMeeting($meetid,$guid,$starttime,$title,$category);
   MeetingController::downloadAndParseMeeting($meetid);
 
