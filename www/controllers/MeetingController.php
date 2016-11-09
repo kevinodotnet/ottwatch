@@ -2766,23 +2766,6 @@ class MeetingController {
 		  }
 	  }
 
-#    # detect 'diff' in items/files
-#    $now_items = getDatabase()->all(" select * from item where meetingid = $id ");
-#    $now_files = getDatabase()->all(" select * from ifile where itemid in (select id from item where meetingid = $id) ");
-#
-#    $origitemids = array();
-#    foreach ($orig_items as $i) { $origitemids[] = $i['itemid']; }
-#    $nowitemids = array();
-#    foreach ($now_items as $i) { $nowitemids[] = $i['itemid']; }
-#
-#    $title = $m['title'];
-#	  $title = preg_replace("/ AM$/"," am",$title);
-#	  $title = preg_replace("/ PM$/"," pm",$title);
-#	  $title = preg_replace("/ am$/","am",$title);
-#	  $title = preg_replace("/ pm$/","pm",$title);
-#    $meetingDate = $m['starttime']; // explode(" - ",$title);
-#    #$meetingDate = $meetingDate[1];
-
   }
 
   static public function downloadAndParseFile ($id) {

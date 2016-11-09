@@ -249,6 +249,7 @@ $rows = getDatabase()->all("
 		and meetid not in (".implode(',',$meetids).") 
 	order by starttime ");
 foreach ($rows as $r) {
+	if (preg_match('/manual-/',$r['rssguid'])) { continue; } # do not delete rss-maual finds
 	print "\nDELETE LOST FUTURE MEETING ??? \n";
 	pr($r);
 	#getDatabase()->execute(" delete from meeting where id = :id ",array('id'=>$r['id']));
