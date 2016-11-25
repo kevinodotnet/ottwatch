@@ -99,6 +99,9 @@ getApi()->get('/api/lobbying/all/csv', array('ApiController', 'lobbyingAllCsv'),
 getApi()->get('/api/devapps/all', array('ApiController', 'devAppAll'), EpiApi::external);
 getApi()->get('/api/devapps/([D_].*)', array('ApiController', 'devApp'), EpiApi::external);
 
+getRoute()->get('/twilio/feed/latest/voice', 'twilioFeedLatestVoice');
+getRoute()->get('/twilio/feed/latest/sms', 'twilioFeedLatestSMS');
+
 getRoute()->get('/', 'dashboard');
 getRoute()->get('/about', 'about');
 #getRoute()->get('/ideas', 'ideas');
@@ -992,6 +995,25 @@ function md5hist ($md5) {
 
 	<?php
 	bottom3();
+}
+
+function twilioFeedLatestVoice() {
+	$msg = feedLatest();
+	?>
+	<Response><Say><?php print $msg; ?></Say></Response>
+	<?php
+}
+
+function twilioFeedLatestSMS() {
+	$msg = feedLatest();
+	?>
+	<Response><Message><?php print $msg; ?></Message></Response>
+	<?php
+}
+
+function feedLatest() {
+	$row = getDatabase()->one(" select * from feed order by id desc limit 1 ");
+	return "{$row['message']} {$row['url']}";
 }
 
 ?>
