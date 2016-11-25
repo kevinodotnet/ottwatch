@@ -2766,7 +2766,6 @@ class MeetingController {
 		  }
 	  }
 
-
   }
 
   static public function downloadAndParseFile ($id) {
