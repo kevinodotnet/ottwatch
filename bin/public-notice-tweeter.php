@@ -17,11 +17,6 @@ require_once('include.php');
 require_once('twitteroauth.php');
 
 $url = "http://ottawa.ca/en/city-hall/accountability-and-transparency/public-meetings-and-notices/notices";
-#$tweet = tweet_txt_and_url("Public Notices & Meetings updated",$url);
-$tweet = tweet_txt_and_url("Hi everyone just ignore this it's a test of a really long tweet because I'm playing with stuff and want to make sure I didn't break anything kthxbye",$url);
-print "$tweet\n";
-tweet($tweet);
-return;
 
 @$html = file_get_contents($url);
 if (strlen($html) == 0) {
