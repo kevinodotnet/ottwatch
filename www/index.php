@@ -264,7 +264,7 @@ function feed() {
     $type = $type[1];
     ?>
     <tr>
-    <td><?php print $type; ?></td>
+    <td><?php print $type;?></td>
     <td><nobr><?php print $r['diff']; ?></nobr></td>
     <td><a href="<?php print $r['url']; ?>"><?php print $r['message']; ?></a></td>
     <td><nobr><?php print $r['created']; ?></nobr></td>
@@ -496,7 +496,7 @@ function dashboard() {
     ?>
     <tr>
     <?php
-    $url = OttWatchConfig::WWW.$r['path'];
+    $url = $r['path'];
     $message = $r['message'];
     ?>
     <td><nobr><?php print $r['diff']; ?></nobr></td>
