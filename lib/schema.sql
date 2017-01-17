@@ -547,3 +547,13 @@ create table t (
 	votes mediumint
 ) engine = innodb;
 
+drop table if exists publicevent;
+create table publicevent (
+  id mediumint not null auto_increment,
+	title varchar(100),
+  href varchar(200),
+  starttime datetime,
+  created datetime default CURRENT_TIMESTAMP,
+  primary key (id)
+) engine = innodb;
+

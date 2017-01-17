@@ -2,7 +2,74 @@
 
 class ConsultationController {
 
-  // main entry point for crawling public consultations
+
+
+
+  public static function crawlEngagements() {
+
+		$url = 'https://ottawa.ca/2/en/city-hall/public-engagement/public-engagement-event-search';
+		$html = file_get_contents($url);
+
+		$html = preg_replace("/\n/"," ",$html);
+		$html = preg_replace("/\r/"," ",$html);
+		$html = preg_replace("/\t/"," ",$html);
+		$html = preg_replace("/  */"," ",$html);
+		$html = preg_replace("/^.*<body/","<html><body>",$html);
+		$html = preg_replace("/”/","\"",$html);
+		$html = preg_replace("/&raquo;/"," ",$html);
+		$html = preg_replace("/&copy;/"," ",$html);
+		$html = strip_tags($html,"<html><body><table><tr><td><a><p><div>");
+		file_put_contents('/mnt/www/kevino.ca/app/tmp/c.html',$html);
+    $xml = simplexml_load_string($html);
+
+		$events = array();
+
+    $trs = $xml->xpath('//tr');
+		foreach ($trs as $tr) {
+	    $tr = simplexml_load_string($tr->asXML());
+
+			$a = $tr->xpath('//a');
+			if (sizeof($a) == 0) { continue; } // no links, likely <th> row
+			$a = $a[0];
+			$name = trim(''.$a[0]);
+			$href = $a['href'];
+			if (preg_match('/^\//',$href)) { $href = "http://ottawa.ca$href"; }
+
+			$td = $tr->xpath('//td');
+			$date = trim(''.$td[1]);
+			#print "\n\n$date\n\n";
+			$date = date_parse($date);
+			#pr($date);
+			$date = date('Y-m-d H:i:s', mktime($date['hour'], $date['minute'], $date['second'], $date['month'], $date['day'], $date['year'])); 
+
+			#Tuesday, January 10, 2017 - 18:00
+
+			$event = array(
+				'title' => $name,
+				'href' => $href,
+				'starttime' => $date,
+			);
+			$events[] = $event;
+
+			#print "$name\n$href\n$date\n\n";
+			#pr($x);
+		}
+
+		foreach ($events as $e) {
+			#pr($e);
+			$row = getDatabase()->one(" select * from publicevent where href = :href ",array('href'=>$e['href']));
+			$action = '';
+			if (!$row['id']) {
+	      db_insert("publicevent",$e);
+				$row = getDatabase()->one(" select * from publicevent where href = :href ",array('href'=>$e['href']));
+	      $message = "New consultation event: {$e['title']} ({$e['starttime']})";
+	      syndicate($message,$e['href'],$e['href']);
+			}
+		}
+
+		#print $html;
+		
+	}
 
   public static function tweetUpdatedConsultations() {
 
@@ -168,11 +235,36 @@ class ConsultationController {
   }
 
   public static function showMain() {
-    top();
-    ?>
+    top3();
+		$rows = getDatabase()->all(" select *,datediff(starttime,CURRENT_TIMESTAMP) from publicevent where datediff(starttime,CURRENT_TIMESTAMP) > -7 order by starttime desc ");
+		if (count($rows) > 0) {
+		?>
+		<h1>Upcoming and Recent Public Events</h1>
+    <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
+		<tr>
+		<th>Date</th>
+		<th>Title</th>
+		</tr>
+
+		<?php
+		foreach ($rows as $r) {
+			?>
+			<tr>
+			<td><?php print $r['starttime']; ?></td>
+			<td><a href="<?php print $r['href']; ?>" target="_blank"><?php print $r['title']; ?></a></td>
+			</tr>
+			<?php
+		}
+		?>
+		</table>
+		<?php
+		} 
+		?>
+		<h1>Consultations</h1>
+
     <table class="table table-bordered table-hover table-condensed" style="width: 100%;">
     <tr>
-    <th>Consultation/Document Title</th>
+    <th>Title</th>
     <th>Updated (days ago)</th>
     </tr>
     <?php
@@ -224,7 +316,7 @@ class ConsultationController {
     ?>
     </table>
     <?php
-    bottom();
+    bottom3();
   }
 
   public static function crawlConsultations() {

@@ -8,6 +8,12 @@ set_include_path(get_include_path() . PATH_SEPARATOR . "$dirname/../www");
 require_once('include.php');
 require_once('twitteroauth.php');
 
+$action = $argv[1];
+if ($action == 'crawlEngagements') {
+	ConsultationController::crawlEngagements();
+	return;
+}
+
 ConsultationController::crawlConsultations();
 ConsultationController::tweetUpdatedConsultations();
 
