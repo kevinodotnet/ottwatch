@@ -250,8 +250,8 @@ $rows = getDatabase()->all("
 	order by starttime ");
 foreach ($rows as $r) {
 	if (preg_match('/manual-/',$r['rssguid'])) { continue; } # do not delete rss-maual finds
-	print "\nDELETE LOST FUTURE MEETING ??? \n";
+	print "\nDELETING LOST FUTURE MEETING\n";
 	pr($r);
-	#getDatabase()->execute(" delete from meeting where id = :id ",array('id'=>$r['id']));
+	getDatabase()->execute(" delete from meeting where id = :id ",array('id'=>$r['id']));
 }
 
