@@ -12,5 +12,6 @@
 34 */2 * * * php /mnt/www/ottwatch/bin/lobby-scaper.php 90
 36 11 * * 1 php /mnt/code/ottwatch/bin/esri-scrape.php layerIndex http://maps.ottawa.ca/ArcGIS/rest/services 
 41 6-18 * * * php /mnt/www/ottwatch/bin/omb.php
+43 8,10,12,14,16,18,20 * * * php /mnt/www/ottwatch/bin/consultations-parser.php crawlProjects
 53 8-20 * * * php /mnt/www/ottwatch/bin/consultations-parser.php crawlEngagements
 */5 * * * * php /mnt/www/ottwatch/bin/syndicate.php

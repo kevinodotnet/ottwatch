@@ -2,14 +2,7 @@
 
 class ConsultationController {
 
-
-
-
-  public static function crawlEngagements() {
-
-		$url = 'https://ottawa.ca/2/en/city-hall/public-engagement/public-engagement-event-search';
-		$html = file_get_contents($url);
-
+  public static function cleanCityHtml2($html) {
 		$html = preg_replace("/\n/"," ",$html);
 		$html = preg_replace("/\r/"," ",$html);
 		$html = preg_replace("/\t/"," ",$html);
@@ -18,9 +11,125 @@ class ConsultationController {
 		$html = preg_replace("/”/","\"",$html);
 		$html = preg_replace("/&raquo;/"," ",$html);
 		$html = preg_replace("/&copy;/"," ",$html);
-		$html = strip_tags($html,"<html><body><table><tr><td><a><p><div>");
-		file_put_contents('/mnt/www/kevino.ca/app/tmp/c.html',$html);
-    $xml = simplexml_load_string($html);
+		$html = preg_replace("/&nbsp;/"," ",$html);
+		$html = strip_tags($html,"<html><body><table><tr><td><a><div><h1>");
+
+		# $l = explode("\n",$html); $x = 1; foreach ($l as $ll) { print ">>> $x <<< \n\n $ll\n"; $x++; }
+
+		return $html;
+	}
+
+  public static function crawlProjects() {
+
+		$projects = array();
+
+		$url = 'https://ottawa.ca/2/en/city-hall/public-engagement/public-engagement-project-search';
+		#$url = 'http://ottawa.ca/2/en/city-hall/public-engagement/public-engagement-project-search?page=1';
+		while ($url != '') {
+			$html = file_get_contents($url);
+	    $xml = simplexml_load_string(self::cleanCityHtml2($html));
+			#print "\n\n\nURL $url\n\n\n";
+			$url = '';
+	
+			$as = $xml->xpath('//a');
+#			pr($as);
+	
+			$go = 0;
+			$getNext = 0;
+			foreach ($as as $a) {
+	
+				#print "getNext: $getNext go:$go ".$a['href']."\n";
+				if (preg_match('/feedback/',$a['href'])) { continue; }
+
+				if ($getNext == 1) {
+	
+					#print "NEXT? -----> "; print $a['href']; print " ".$a."\n";
+					$text = ''.$a;
+	
+					if (preg_match('/^next .*/',$text)) {
+						$url = 'http://ottawa.ca' . $a['href'];
+						break;
+					}
+					continue;
+				}
+
+	
+				if ($a['href'] == '/2/en/city-hall/public-engagement') {
+					#print "\nGO!\n";
+					$go = 1; continue; 
+				}
+				if ($a['href'] == '') { continue; }
+				if ( preg_match('/^.*public-engagement\/public-engagement-project-search/',$a['href'])
+						&& preg_match('/.*first$/',''.$a) ) {
+					$getNext = 1;
+					$go = 0;
+					continue;
+				}
+				if (preg_match('/^.*public-engagement\/public-engagement-project-search\?page/',$a['href'])) {
+					$getNext = 1;
+					$go = 0;
+					continue;
+				}
+				if (!$go) { continue; }
+
+				$href = ''.$a['href'];
+				if (preg_match('/^\//',$href)) {
+					$href = 'http://ottawa.ca' . $a['href'];
+				}
+				if (preg_match('/^http/',$href)) {
+					$projects[] = $href;
+				}
+	
+			}
+			#$url = '';
+		}
+
+		foreach ($projects as $url) {
+			self::crawlProject($url);
+		}
+	}
+
+  public static function crawlProject($url) {
+		$html = file_get_contents($url);
+    $html = self::cleanCityHtml2($html);
+		if (!preg_match('/Get more detailed information on the project/',$html)) {
+			return;
+		}
+		$xml = simplexml_load_string($html);
+
+		$h1s = $xml->xpath("//h1");
+		foreach ($h1s as $h1) {
+			if ($h1['id'] = 'page-title') {
+				$title = ''.$h1;
+			}
+		}
+
+    $row = getDatabase()->one(" select * from consultation where url = :url ",array('url'=>$url));
+		$new = 0;
+    if (!$row['id']) {
+			db_insert("consultation",array( 'category'=>'default', 'title'=>$title, 'url'=>$url, 'md5'=>'')); 
+			print "NEW consultation\n$title\n$url\n\n";
+		} 
+
+# 		$as = $xml->xpath('//a');
+# 
+# 		foreach ($as as $a) {
+# 			$text = ''.$a;
+# 			if ($text == 'Get more detailed information on the project') {
+# 				#pr($a);
+# 				print "\n\n{$a['href']}\n\n";
+# 			}
+# 			#print $a->href."\n";
+# 		}
+# 		#print ''.$xml."\n";
+
+	}
+
+  public static function crawlEngagements() {
+
+		$url = 'https://ottawa.ca/2/en/city-hall/public-engagement/public-engagement-event-search';
+		$html = file_get_contents($url);
+    $xml = simplexml_load_string(self::cleanCityHtml2($html));
 
 		$events = array();
 

@@ -13,6 +13,10 @@ if ($action == 'crawlEngagements') {
 	ConsultationController::crawlEngagements();
 	return;
 }
+if ($action == 'crawlProjects') {
+	ConsultationController::crawlProjects();
+	return;
+}
 
 ConsultationController::crawlConsultations();
 ConsultationController::tweetUpdatedConsultations();
