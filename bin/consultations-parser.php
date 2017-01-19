@@ -18,6 +18,11 @@ if ($action == 'crawlProjects') {
 	return;
 }
 
+if ($action == 'crawlProject') {
+	ConsultationController::crawlProject($argv[2]);
+	return;
+}
+
 ConsultationController::crawlConsultations();
 ConsultationController::tweetUpdatedConsultations();
 
