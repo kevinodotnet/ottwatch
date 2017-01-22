@@ -90,7 +90,8 @@ class ConsultationController {
 	}
 
   public static function crawlProject($url) {
-		$html = file_get_contents($url);
+		@$html = file_get_contents($url);
+		if (strlen($html) == 0) { return; } // no content
     $html = self::cleanCityHtml2($html);
 		if (!preg_match('/Get more detailed information on the project/',$html)) {
 			return;
