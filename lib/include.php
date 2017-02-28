@@ -104,21 +104,13 @@ function tweet_txt_and_url($txt,$url) {
   # fix HTML escapes
   $txt = html_entity_decode($txt);
 
-#  if (!preg_match("/bitly/",$url)) {
-#    # shorten the url
-#  	$bitly = bitly_v3_shorten($url);
-#  	$bitly = $bitly['url'];
-#    $url = $bitly;
-#  }
-
 	$parts = explode(" ",$txt);
-	#$t = "$txt $url";
 	$t = $txt;
-	while (strlen($t) >= 138) {
+	while (strlen($t) >= 120) {
 		array_pop($parts);
 		$txt = implode(" ",$parts);
 		$txt = preg_replace("/[\.,:]$/","",$txt);
-		$t = "$txt... ";
+		$t = "$txt...";
 	}
 	return "$t $url";
 }
