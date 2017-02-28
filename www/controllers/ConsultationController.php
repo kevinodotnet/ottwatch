@@ -196,10 +196,14 @@ class ConsultationController {
 			$row = getDatabase()->one(" select * from publicevent where href = :href ",array('href'=>$e['href']));
 			$action = '';
 			if (!$row['id']) {
-	      db_insert("publicevent",$e);
-				$row = getDatabase()->one(" select * from publicevent where href = :href ",array('href'=>$e['href']));
-	      $message = "New consultation event: {$e['title']} ({$e['starttime']})";
-	      syndicate($message,$e['href'],$e['href']);
+				try {
+		      db_insert("publicevent",$e);
+					$row = getDatabase()->one(" select * from publicevent where href = :href ",array('href'=>$e['href']));
+		      $message = "New consultation event: {$e['title']} ({$e['starttime']})";
+		      syndicate($message,$e['href'],$e['href']);
+				} catch (Exception $e) {
+					pr($e);
+				}
 			}
 		}
 
