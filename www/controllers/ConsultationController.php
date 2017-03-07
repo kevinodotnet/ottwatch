@@ -109,7 +109,7 @@ class ConsultationController {
 		$new = 0;
     if (!$row['id']) {
 			db_insert("consultation",array( 'category'=>'default', 'title'=>$title, 'url'=>$url, 'md5'=>'')); 
-			print "NEW consultation\n$title\n$url\n\n";
+      syndicate("NEW consultation: $title",$url,$url);
 		} 
 
     $row = getDatabase()->one(" select * from consultation where url = :url ",array('url'=>$url));
