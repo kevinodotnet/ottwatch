@@ -106,7 +106,7 @@ function tweet_txt_and_url($txt,$url) {
 
 	$parts = explode(" ",$txt);
 	$t = $txt;
-	while (strlen($t) >= 120) {
+	while (strlen($t) >= 115) {
 		array_pop($parts);
 		$txt = implode(" ",$parts);
 		$txt = preg_replace("/[\.,:]$/","",$txt);
