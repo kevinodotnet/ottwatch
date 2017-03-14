@@ -460,6 +460,7 @@ function dashboard() {
 	<li><a href="<?php print $OTT_WWW; ?>/meetings/votes">Voting History</a>: See all votes at committee and council.</li>
 	<li><a href="<?php print $OTT_WWW; ?>/api/about">API</a>: Documentation on the application programming interface for OttWatch.</li>
 	<li><a href="<?php print $OTT_WWW; ?>/about">About</a>: What's this all about?</li>
+	<li><a href="https://docs.google.com/document/d/1E8hLg41O-CFYHVTtiTRXdo52ltD5uXeNkVDTmAPmwFA/edit?usp=sharing">Privacy Policy</a>: how OttWatch handles personal information</li>
 	</ul>
 
   <h4>User</h4>
@@ -842,7 +843,8 @@ function bottom_common($v3, $quiet) {
 				Follow <a href="http://twitter.com/OttWatch">@OttWatch</a></b> and <b><a href="http://twitter.com/ODonnell_K">@ODonnell_K</a>
 			</div>
 			<div class="col-sm-3 text-center">
-				<a href="<?php print $OTT_WWW; ?>"><img style="width: 50px; height: 50px;" src="<?php print $OTT_WWW; ?>/img/ottwatch.png"/></a>
+				<!--<a href="<?php print $OTT_WWW; ?>"><img style="width: 50px; height: 50px;" src="<?php print $OTT_WWW; ?>/img/ottwatch.png"/></a><br/>-->
+				<a href="https://docs.google.com/document/d/1E8hLg41O-CFYHVTtiTRXdo52ltD5uXeNkVDTmAPmwFA/edit?usp=sharing">Privacy Policy</a>
 			</div>
 		</div>
 		</footer>
@@ -853,7 +855,8 @@ function bottom_common($v3, $quiet) {
 		<div class="well" style="margin-top: 10px;" >
 		<a href="<?php print $OTT_WWW; ?>"><img style="float: right; padding-left: 5px; width: 50px; height: 50px;" src="<?php print $OTT_WWW; ?>/img/ottwatch.png"/></a>
 		<i>Created by <a href="http://kevino.ca"><b>Kevin O'Donnell</b></a> to make it easier to be part of the political conversation in Ottawa.</i><br/>
-		On Twitter? Follow <b><a href="http://twitter.com/OttWatch">@OttWatch</a></b> and <b><a href="http://twitter.com/ODonnell_K">@ODonnell_K</a></b>
+		On Twitter? Follow <b><a href="http://twitter.com/OttWatch">@OttWatch</a></b> and <b><a href="http://twitter.com/ODonnell_K">@ODonnell_K</a></b><br/>
+		<a href="https://docs.google.com/document/d/1E8hLg41O-CFYHVTtiTRXdo52ltD5uXeNkVDTmAPmwFA/edit?usp=sharing">Privacy Policy</a>
 		<div class="clearfix"></div>
 		</div>
 
