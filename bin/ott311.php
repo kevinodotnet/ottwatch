@@ -10,7 +10,7 @@ require_once('include.php');
 if (count($argv) > 1) {
 
   if ($argv[1] == 'scan') {
-		Ott311Controller::scan();
+		Ott311Controller::scan($argv[2]);
 		return;
 	}
   return;

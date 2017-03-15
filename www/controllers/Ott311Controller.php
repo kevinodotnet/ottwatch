@@ -4,19 +4,31 @@ class Ott311Controller {
 
 	static $apiurl = 'http://city-of-ottawa-prod.apigee.net/open311/v2';
 
-	static public function scan() {
+	static public function scan($daysAgo) {
 
-	ini_set('memory_limit', '64M');
+		$start = new DateTime();
+		$x = $daysAgo;
+		$now = $start->sub(new DateInterval("P" . $x . "D"));
+		$now->setTime(0,0,0);
+		pr($now);
 
-		$start_date = '2017-01-05T00:00:00Z';
-		$end_date =   '2017-01-06T00:00:00Z';
+		for ($h = 0; $h < 24; $h++) {
+			$start_date = $now->format('Y-m-d\TH:i:s-05:00');
+			$end = clone $now;
+			$end->add(new DateInterval("PT1H"));
+			$end_date = $end->format('Y-m-d\TH:i:s-05:00');
 
-		$url = self::$apiurl."/requests.json?1=1";
-	  $url = "$url&start_date=$start_date";
-		$url = "$url&end_date=$end_date";
+			$url = self::$apiurl."/requests.json";
+		  $url = "$url?start_date=$start_date";
+			$url = "$url&end_date=$end_date";
 
-		$url = "https://city-of-ottawa-prod.apigee.net/open311/v2/requests.json?1=1&start_date=2017-03-01T00:00:00Zend_date=2017-03-01T02:00:00Z";
-		#$url = "https://city-of-ottawa-dev.apigee.net/open311/v2/requests.json?=1&end_date=2017-01-06T00:00:00Z&start_date=2017-01-05T00:00:00Z";
+			$now->add(new DateInterval("PT1H"));
+
+		#self::$apiurl = 'http://city-of-ottawa-dev.apigee.net/open311/v2';
+		# $url = "https://city-of-ottawa-prod.apigee.net/open311/v2/requests.json?1=1&start_date=$start_date&end_date=$end_date";
+		# $url = "https://city-of-ottawa-dev.apigee.net/open311/v2/requests.json?1=1&start_date=$start_date&end_date=$end_date";
+		# $url = "https://city-of-ottawa-dev.apigee.net/open311/v2/requests.json?=1&end_date=2017-01-06T00:00:00Z&start_date=2017-01-05T00:00:00Z";
+		print "$url\n";
 
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL,$url);
@@ -27,16 +39,15 @@ class Ott311Controller {
 		#curl_setopt($ch, CURLINFO_HEADER_OUT, true);
 		#curl_setopt($ch, CURLOPT_VERBOSE, true);
 
-		#$json = curl_exec ($ch);
-		#file_put_contents("c.json",$json);
-		$json = file_get_contents("c.json");
+		$json = curl_exec ($ch);
+		curl_close ($ch);
+		file_put_contents("c.json",$json);
+		#$json = file_get_contents("c.json");
 		$data = json_decode($json);
 		pr($data);
-		exit;
+		if ($h > 2) { exit; }
+		}
 
-		curl_close ($ch);
-
-		#pr($json);
 
 	}
 
