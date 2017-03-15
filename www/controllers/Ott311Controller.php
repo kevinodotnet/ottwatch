@@ -106,14 +106,21 @@ class Ott311Controller {
 
 		$max = getDatabase()->one(" select max(requested) m from sr ");
 		$max = $max['m'];
-	
 
-		$rows = getDatabase()->all(" select description,count(1) c from sr where requested > curdate() group by description order by count(1) desc ");
+		$c = getDatabase()->one(" select count(1) c from sr where requested > curdate() ");
+		$c = $c['c'];
+
 		?>
 		<h1>Today in 311 <small>as of: <?php print $max; ?></small></h1>
+
+		<h2>by type</h2>
+		<?php
+		$rows = getDatabase()->all(" select description,count(1) c from sr where requested > curdate() group by description order by count(1) desc ");
+		?>
 		<table class="table table-bordered table-hover table-condensed">
 		<tr>
 		<th>Count</th>
+		<th>%</th>
 		<th>Description</th>
 		</tr>
 		<?php
@@ -121,7 +128,31 @@ class Ott311Controller {
 			?>
 			<tr>
 			<td><?php print $r['c']; ?></td>
+			<td><?php print number_format($r['c']/$c*100,1); ?></td>
 			<td><?php print $r['description']; ?></td>
+			</tr>
+			<?php
+		}
+		?>
+		</table>
+
+		<h2>by ward</h2>
+		<?php
+		$rows = getDatabase()->all(" select address,count(1) c from sr where requested > curdate() and address != 'null' group by address order by count(1) desc ");
+		?>
+		<table class="table table-bordered table-hover table-condensed">
+		<tr>
+		<th>Count</th>
+		<th>%</th>
+		<th>Ward</th>
+		</tr>
+		<?php
+		foreach ($rows as $r) {
+			?>
+			<tr>
+			<td><?php print $r['c']; ?></td>
+			<td><?php print number_format($r['c']/$c*100,1); ?></td>
+			<td><?php print $r['address']; ?></td>
 			</tr>
 			<?php
 		}
