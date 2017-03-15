@@ -9,6 +9,11 @@ require_once('include.php');
 
 if (count($argv) > 1) {
 
+  if ($argv[1] == 'latest') {
+		Ott311Controller::scanLatest();
+		return;
+	}
+
   if ($argv[1] == 'scan') {
 		Ott311Controller::scan($argv[2]);
 		return;
