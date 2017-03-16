@@ -27,6 +27,65 @@ class Ott311Controller {
 		return $dt->format('Y-m-d H:i:s');
 	}
 
+	static public function showDate($date) {
+		top3();
+
+		$start = new DateTime($date);
+		$start->setTime(0,0,0);
+		$prev = clone $start;
+		$prev->sub(new DateInterval("P1D"));
+		$end = clone $start;
+		$end->add(new DateInterval("P1D"));
+
+		$start = $start->format('Y-m-d');
+		$end = $end->format('Y-m-d');
+		$prev = $prev->format('Y-m-d');
+
+		$rows = getDatabase()->all(" select * from sr where requested >= :start and requested < :end order by requested ",array( 'start' => $start, 'end' => $end));
+
+		?>
+
+
+		<div class="row">
+		<div class="col-xs-6"><h1><?php print $start; ?></div>
+		<div class="col-xs-3 text-center"><a class="btn btn-default" href="/311/date/<?php print $prev; ?>">previous day</a></div>
+		<div class="col-xs-3 text-center"><a class="btn btn-default" href="/311/date/<?php print $end; ?>">next day</a></div>
+		</div>
+
+		Found: <?php print count($rows); ?>
+
+		<p><i>note: ottwatch isn't re-scanning SRs to detect updates yet; so what you're looking at is just the state of the SR when it was first detected by OttWatch.  Updates are coming soon....</i> </p>
+
+		<table class="table table-bordered table-hover table-condensed">
+		<tr>
+		<th>SR</th>
+		<th>Status</th>
+		<th>Ward</th>
+		<th>Description/ward</th>
+		<th>Requested</th>
+		<th>Updated</th>
+		</tr>
+		<?php
+		foreach ($rows as $r) {
+			$r['address'] = preg_replace('/ [A-Z].*/','',$r['address']);
+			$r['address'] = preg_replace('/WARD /','',$r['address']);
+			?>
+			<tr>
+			<td><a href="/311/sr/<?php print $r['sr_id']; ?>"><?php print $r['sr_id']; ?></a></td>
+			<td><?php print $r['status']; ?></td>
+			<td><?php print $r['address']; ?></td>
+			<td><?php print $r['description']; ?></td>
+			<td><nobr><?php print $r['requested']; ?></nobr></td>
+			<td><nobr><?php print $r['updated']; ?></nobr></td>
+			</tr>
+			<?php
+		}
+		?>
+		</table>
+		<?php
+
+		bottom3();
+	}
 	static public function showSR($srid) {
 		top3();
 		?>

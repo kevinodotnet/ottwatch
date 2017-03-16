@@ -89,6 +89,7 @@ getRoute()->get('/feed/', 'feed');
 getRoute()->get('/311', array('Ott311Controller','doMain'));
 getRoute()->get('/311/', array('Ott311Controller','doMain'));
 getRoute()->get('/311/sr/(\d+)', array('Ott311Controller','showSR'));
+getRoute()->get('/311/date/(\d\d\d\d-\d\d-\d\d)', array('Ott311Controller','showDate'));
 
 getRoute()->get('/mfippa/', array('MfippaController','doList'));
 getRoute()->get('/mfippa/random', array('MfippaController','showRandom'));
