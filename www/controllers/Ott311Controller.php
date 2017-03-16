@@ -180,12 +180,17 @@ class Ott311Controller {
 		$c = getDatabase()->one(" select count(1) c from sr where requested > curdate() ");
 		$c = $c['c'];
 
+		$today = new DateTime($date);
+		$today->setTime(0,0,0);
+		$today = $today->format('Y-m-d');
+
 		?>
 		<h1>Today in 311 <small>as of: <?php print $max; ?></small></h1>
 
 		jump to: 
 		<a href="#byward" class="btn btn-default">by ward</a>
 		<a href="#latestSR" class="btn btn-default">latest SRs</a>
+		<a href="/311/date/<?php print $today; ?>" class="btn btn-default">today's SRs</a>
 
 		<h2>by type</h2>
 		<?php
