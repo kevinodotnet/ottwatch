@@ -86,7 +86,9 @@ getApi()->get('/api/scrape/item/(\d+)', array('MeetingController','apiScrapeItem
 
 getRoute()->get('/feed/', 'feed');
 
+getRoute()->get('/311', array('Ott311Controller','doMain'));
 getRoute()->get('/311/', array('Ott311Controller','doMain'));
+getRoute()->get('/311/sr/(\d+)', array('Ott311Controller','showSR'));
 
 getRoute()->get('/mfippa/', array('MfippaController','doList'));
 getRoute()->get('/mfippa/random', array('MfippaController','showRandom'));
@@ -569,6 +571,13 @@ function top_common($v3, $title = '',$quiet = false, $menu = true) {
 <!DOCTYPE html>
 <html>
 <head>
+<?php
+if ($_SERVER['HTTP_HOST'] == 'beta.ottwatch.ca') {
+	?>
+	<meta name="robots" content="noindex"/>
+	<?php
+}
+?>
 <title><?php print $title; ?></title>
 <meta property="twitter:account_id" content="1512911885" /><!-- ads.twitter -->
 <meta charset="utf-8">

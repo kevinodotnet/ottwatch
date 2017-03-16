@@ -27,6 +27,17 @@ class Ott311Controller {
 		return $dt->format('Y-m-d H:i:s');
 	}
 
+	static public function showSR($srid) {
+		top3();
+		?>
+		<i>note: ottwatch isn't re-scanning SRs to detect updates yet; so what you're looking at is just the state of the SR when it was first detected by OttWatch.
+		Updates are coming soon....</i>
+		<?php
+		$row = getDatabase()->one(" select * from sr where sr_id = $srid ");
+		pr($row);
+		bottom3();
+	}
+
 	static public function saveSR($sr) {
 		$dbin = array(
 			'sr_id' => $sr->service_request_id,
@@ -113,6 +124,10 @@ class Ott311Controller {
 		?>
 		<h1>Today in 311 <small>as of: <?php print $max; ?></small></h1>
 
+		jump to: 
+		<a href="#byward" class="btn btn-default">by ward</a>
+		<a href="#latestSR" class="btn btn-default">latest SRs</a>
+
 		<h2>by type</h2>
 		<?php
 		$rows = getDatabase()->all(" select description,count(1) c from sr where requested > curdate() group by description order by count(1) desc ");
@@ -136,7 +151,7 @@ class Ott311Controller {
 		?>
 		</table>
 
-		<h2>by ward</h2>
+		<h2 id="byward">by ward</h2>
 		<?php
 		$rows = getDatabase()->all(" select address,count(1) c from sr where requested > curdate() and address != 'null' group by address order by count(1) desc ");
 		?>
@@ -153,6 +168,34 @@ class Ott311Controller {
 			<td><?php print $r['c']; ?></td>
 			<td><?php print number_format($r['c']/$c*100,1); ?></td>
 			<td><?php print $r['address']; ?></td>
+			</tr>
+			<?php
+		}
+		?>
+		</table>
+
+		<h2 id="latestSR">Latest SRs</h2>
+		<table class="table table-bordered table-hover table-condensed">
+		<i>note: ottwatch isn't re-scanning SRs to detect updates yet; so what you're looking at is just the state of the SR when it was first detected by OttWatch.
+		Updates are coming soon....</i>
+		<tr>
+		<th>SR</th>
+		<th>Status</th>
+		<th>Description/ward</th>
+		<th>Requested</th>
+		<th>Updated</th>
+		</tr>
+		<?php
+		$rows = getDatabase()->all(" select * from sr order by requested desc limit 50 ");
+		foreach ($rows as $r) {
+			?>
+			<tr>
+			<td><a href="/311/sr/<?php print $r['sr_id']; ?>"><?php print $r['sr_id']; ?></a></td>
+			<td><?php print $r['status']; ?></td>
+			<td><?php print $r['description']; ?><br/>
+			<?php print $r['address']; ?></td>
+			<td><nobr><?php print $r['requested']; ?></nobr></td>
+			<td><nobr><?php print $r['updated']; ?></nobr></td>
 			</tr>
 			<?php
 		}
