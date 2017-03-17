@@ -222,7 +222,7 @@ class Ott311Controller {
 		<div class="row">
 		<div class="col-sm-6">
 
-		<h2>by type</h2>
+		<h2>today's requests, by type</h2>
 		<?php
 		$rows = getDatabase()->all(" select description,count(1) c from sr where requested > curdate() group by description order by count(1) desc ");
 		?>
@@ -247,7 +247,7 @@ class Ott311Controller {
 		</div>
 
 		<div class="col-sm-6">
-		<h2 id="byward">by ward</h2>
+		<h2 id="byward">today's requests, by ward</h2>
 		<?php
 		$rows = getDatabase()->all(" select address,count(1) c from sr where requested > curdate() and address != 'null' group by address order by count(1) desc ");
 		?>
@@ -273,33 +273,6 @@ class Ott311Controller {
 		</div>
 		</div>
 
-		<h2 id="latestSR">Latest SRs</h2>
-		<table class="table table-bordered table-hover table-condensed">
-		<i>note: ottwatch isn't re-scanning SRs to detect updates yet; so what you're looking at is just the state of the SR when it was first detected by OttWatch.
-		Updates are coming soon....</i>
-		<tr>
-		<th>SR</th>
-		<th>Status</th>
-		<th>Description/ward</th>
-		<th>Requested</th>
-		<th>Updated</th>
-		</tr>
-		<?php
-		$rows = getDatabase()->all(" select * from sr order by requested desc limit 50 ");
-		foreach ($rows as $r) {
-			?>
-			<tr>
-			<td><a href="/311/sr/<?php print $r['sr_id']; ?>"><?php print $r['sr_id']; ?></a></td>
-			<td><?php print $r['status']; ?></td>
-			<td><?php print $r['description']; ?><br/>
-			<?php print $r['address']; ?></td>
-			<td><nobr><?php print $r['requested']; ?></nobr></td>
-			<td><nobr><?php print $r['updated']; ?></nobr></td>
-			</tr>
-			<?php
-		}
-		?>
-		</table>
 		<?php
 		bottom3();
 
