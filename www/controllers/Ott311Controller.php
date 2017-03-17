@@ -196,9 +196,6 @@ class Ott311Controller {
 	static public function doMain() {
 		top3();
 
-		$max = getDatabase()->one(" select max(requested) m from sr ");
-		$max = $max['m'];
-
 		$c = getDatabase()->one(" select count(1) c from sr where requested > curdate() ");
 		$c = $c['c'];
 
@@ -207,13 +204,23 @@ class Ott311Controller {
 		$today = $today->format('Y-m-d');
 
 		?>
-		<h1>Today in 311 <small>as of: <?php print $max; ?></small></h1>
 
-		jump to: 
-		<a href="#byward" class="btn btn-default">by ward</a>
-		<a href="#latestSR" class="btn btn-default">latest SRs</a>
-		<a href="/311/date/<?php print $today; ?>" class="btn btn-default">today's SRs</a>
-		<a href="/311/download/all.csv" class="btn btn-default">big download of all SRs (csv)</a>
+		<div class="row">
+		<div class="col-sm-6">
+		<h1>311 data</h1>
+		</div>
+		<div class="col-sm-6">
+		More data:<br/>
+		<ul>
+		<li><a href="/311/date/<?php print $today; ?>" >today's SRs</a></li>
+		<li><a href="/311/download/all.csv" >CSV download of all data</a></li>
+		</ul>
+		</div>
+		</div>
+
+
+		<div class="row">
+		<div class="col-sm-6">
 
 		<h2>by type</h2>
 		<?php
@@ -237,7 +244,9 @@ class Ott311Controller {
 		}
 		?>
 		</table>
+		</div>
 
+		<div class="col-sm-6">
 		<h2 id="byward">by ward</h2>
 		<?php
 		$rows = getDatabase()->all(" select address,count(1) c from sr where requested > curdate() and address != 'null' group by address order by count(1) desc ");
@@ -260,6 +269,9 @@ class Ott311Controller {
 		}
 		?>
 		</table>
+
+		</div>
+		</div>
 
 		<h2 id="latestSR">Latest SRs</h2>
 		<table class="table table-bordered table-hover table-condensed">
