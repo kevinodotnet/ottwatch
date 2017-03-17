@@ -213,6 +213,7 @@ class Ott311Controller {
 		<a href="#byward" class="btn btn-default">by ward</a>
 		<a href="#latestSR" class="btn btn-default">latest SRs</a>
 		<a href="/311/date/<?php print $today; ?>" class="btn btn-default">today's SRs</a>
+		<a href="/311/download/all.csv" class="btn btn-default">big download of all SRs (csv)</a>
 
 		<h2>by type</h2>
 		<?php
