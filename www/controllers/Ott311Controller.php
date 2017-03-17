@@ -22,6 +22,28 @@ class Ott311Controller {
 #             [long] => 
 #             [media_url] => 
 
+	static public function downloadAllCsv() {
+		$rows = getDatabase()->all(" select * from sr order by requested ");
+		header("Content-disposition: attachment; filename=\"ottawa_311_sr_all.csv\""); 
+		$head = $rows[0];
+		$first = 1;
+		foreach ($head as $k=>$v) {
+			if ($first != 1) { print "\t"; }
+			print "$k";
+			$first = 0;
+		}
+		print "\n";
+		foreach ($rows as $r) {
+		$first = 1;
+		foreach ($r as $k=>$v) {
+			if ($first != 1) { print "\t"; }
+			print $r[$k];
+			$first = 0;
+		}
+		print "\n";
+		}
+	}
+
 	static public function w3DateTime($d) {
 		$dt = new DateTime($d);
 		return $dt->format('Y-m-d H:i:s');
