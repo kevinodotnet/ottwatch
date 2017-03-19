@@ -22,6 +22,48 @@ class Ott311Controller {
 #             [long] => 
 #             [media_url] => 
 
+	static public function scanOpenForUpdates() {
+		$rows = getDatabase()->all(" select * from sr where status = 'Open' and requested < (curdate()-2) order by rand() limit 1 ");
+		foreach ($rows as $r) {
+			pr($r);
+			print "-----\n";
+			$sr = self::scanSR($r['sr_id']);
+				pr($sr);
+			if (!isset($sr->service_request_id)) {
+				print "SR is gone?\n";
+			} else {
+				pr($sr);
+			}
+		}
+	}
+
+	static public function scanSR($srid) {
+		$url = self::$apiurl."/requests/$srid.json";
+
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL,$url);
+		$headers = array( 'api_key: '.OttWatchConfig::OTTAPI_KEY);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+		#curl_setopt($ch, CURLINFO_HEADER_OUT, true);
+		#curl_setopt($ch, CURLOPT_VERBOSE, true);
+
+		$json = curl_exec ($ch);
+		if ($json == '') {
+			print "WARN: no data returned for srid: $srid;\n";
+		}
+		curl_close ($ch);
+
+		#file_put_contents("c.json",$json);
+		#$json = file_get_contents("c.json");
+		$data = json_decode($json);
+		if (count($data) > 0) {
+			return $data[0];
+		}
+		return null;
+	}
+
 	static public function downloadAllCsv() {
 		$rows = getDatabase()->all(" select * from sr order by requested ");
 		header("Content-disposition: attachment; filename=\"ottawa_311_sr_all.csv\""); 
@@ -138,13 +180,6 @@ class Ott311Controller {
 	  $url = "$url?start_date=$start_date";
 		$url = "$url&end_date=$end_date";
 
-
-		#self::$apiurl = 'http://city-of-ottawa-dev.apigee.net/open311/v2';
-		# $url = "https://city-of-ottawa-prod.apigee.net/open311/v2/requests.json?1=1&start_date=$start_date&end_date=$end_date";
-		# $url = "https://city-of-ottawa-dev.apigee.net/open311/v2/requests.json?1=1&start_date=$start_date&end_date=$end_date";
-		# $url = "https://city-of-ottawa-dev.apigee.net/open311/v2/requests.json?=1&end_date=2017-01-06T00:00:00Z&start_date=2017-01-05T00:00:00Z";
-		# print "$url\n";
-
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL,$url);
 		$headers = array( 'api_key: '.OttWatchConfig::OTTAPI_KEY);
@@ -155,13 +190,19 @@ class Ott311Controller {
 		#curl_setopt($ch, CURLOPT_VERBOSE, true);
 
 		$json = curl_exec ($ch);
+		if ($json == '') {
+			# api is down, or other network error
+			return;
+		}
 		curl_close ($ch);
 		#file_put_contents("c.json",$json);
 		#$json = file_get_contents("c.json");
 		$data = json_decode($json);
-		foreach ($data as $sr) {
-			#print "{$sr->requested_datetime} {$sr->service_request_id} {$sr->description}\n";
-			self::saveSR($sr);
+		if (count($data) > 0) {
+			foreach ($data as $sr) {
+				#print "{$sr->requested_datetime} {$sr->service_request_id} {$sr->description}\n";
+				self::saveSR($sr);
+			}
 		}
 	}
 

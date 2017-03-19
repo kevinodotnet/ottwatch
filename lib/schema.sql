@@ -579,6 +579,7 @@ create table sr (
 	-- media_url, -- ] => 
 
   created datetime default CURRENT_TIMESTAMP,
+  scanned datetime default CURRENT_TIMESTAMP,
   primary key (id)
 ) engine = innodb;
 create unique index sr_in1 on sr (sr_id);

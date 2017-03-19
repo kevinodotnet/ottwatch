@@ -9,6 +9,11 @@ require_once('include.php');
 
 if (count($argv) > 1) {
 
+  if ($argv[1] == 'scanOpenForUpdates') {
+		Ott311Controller::scanOpenForUpdates();
+		return;
+	}
+
   if ($argv[1] == 'latest') {
 		Ott311Controller::scanLatest();
 		return;
