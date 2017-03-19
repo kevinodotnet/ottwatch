@@ -201,7 +201,7 @@ class Ott311Controller {
 		#file_put_contents("c.json",$json);
 		#$json = file_get_contents("c.json");
 		$data = json_decode($json);
-		print "count: ".count($data)."\n";
+		# print "count: ".count($data)."\n";
 		if (count($data) > 0) {
 			foreach ($data as $sr) {
 				#print "{$sr->requested_datetime} {$sr->service_request_id} {$sr->description}\n";
