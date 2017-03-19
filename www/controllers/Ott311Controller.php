@@ -25,10 +25,10 @@ class Ott311Controller {
 	static public function scanOpenForUpdates() {
 		$rows = getDatabase()->all(" select * from sr where status = 'Open' and requested < (curdate()-2) order by rand() limit 1 ");
 		foreach ($rows as $r) {
+			print "-----\n";
 			pr($r);
 			print "-----\n";
 			$sr = self::scanSR($r['sr_id']);
-				pr($sr);
 			if (!isset($sr->service_request_id)) {
 				print "SR is gone?\n";
 			} else {
@@ -180,6 +180,8 @@ class Ott311Controller {
 	  $url = "$url?start_date=$start_date";
 		$url = "$url&end_date=$end_date";
 
+		#print "$start_date\n$end_date\n";
+
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL,$url);
 		$headers = array( 'api_key: '.OttWatchConfig::OTTAPI_KEY);
@@ -192,12 +194,14 @@ class Ott311Controller {
 		$json = curl_exec ($ch);
 		if ($json == '') {
 			# api is down, or other network error
+			print "no data\n";
 			return;
 		}
 		curl_close ($ch);
 		#file_put_contents("c.json",$json);
 		#$json = file_get_contents("c.json");
 		$data = json_decode($json);
+		print "count: ".count($data)."\n";
 		if (count($data) > 0) {
 			foreach ($data as $sr) {
 				#print "{$sr->requested_datetime} {$sr->service_request_id} {$sr->description}\n";
@@ -214,6 +218,16 @@ class Ott311Controller {
 		$start_date = $now->format('Y-m-d\TH:i:s-05:00');
 
 		self::scanStartEnd($start_date,$end_date);
+	}
+
+	static public function scanOld() {
+		$row = getDatabase()->one(" select datediff(curdate(),min(requested)) d, min(requested) r from sr ");
+		$ago = $row['d'];
+		pr($row);
+		print "oldest is $ago days ago\n";
+		$ago++;
+		print "getting for $ago days\n";
+		self::scan($ago);
 	}
 
 	static public function scan($daysAgo) {
@@ -313,6 +327,29 @@ class Ott311Controller {
 
 		</div>
 		</div>
+
+		<h2 id="byward">Browse by day</h2>
+		<?php
+		$rows = getDatabase()->all(" select left(requested,10) day, count(1) c from sr group by left(requested,10) ");
+		?>
+		<table class="table table-bordered table-hover table-condensed">
+		<tr>
+		<th>Date</th>
+		<th>Count</th>
+		</tr>
+		<?php
+		foreach ($rows as $r) {
+			?>
+			<tr>
+			<td>
+			<a href="/311/date/<?php print $r['day']; ?>"><?php print $r['day']; ?></a>
+			</td>
+			<td><?php print $r['c']; ?></td>
+			</tr>
+			<?php
+		}
+		?>
+		</table>
 
 		<?php
 		bottom3();

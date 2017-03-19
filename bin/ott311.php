@@ -19,6 +19,11 @@ if (count($argv) > 1) {
 		return;
 	}
 
+  if ($argv[1] == 'scanOld') {
+		Ott311Controller::scanOld();
+		return;
+	}
+
   if ($argv[1] == 'scan') {
 		Ott311Controller::scan($argv[2]);
 		return;
