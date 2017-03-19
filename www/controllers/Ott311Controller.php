@@ -223,10 +223,7 @@ class Ott311Controller {
 	static public function scanOld() {
 		$row = getDatabase()->one(" select datediff(curdate(),min(requested)) d, min(requested) r from sr ");
 		$ago = $row['d'];
-		pr($row);
-		print "oldest is $ago days ago\n";
 		$ago++;
-		print "getting for $ago days\n";
 		self::scan($ago);
 	}
 
