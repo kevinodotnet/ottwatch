@@ -31,7 +31,7 @@ class Ott311Controller {
 			order by 
 				scanned,
 				requested desc
-			limit 5
+			limit 10
 		");
 		foreach ($rows as $r) {
 			$sr = self::scanSR($r['sr_id']);
