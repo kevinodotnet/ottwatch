@@ -49,9 +49,9 @@ class Ott311Controller {
 					'status' => $sr->status,
 					'updated' => self::w3DateTime($sr->updated_datetime),
 				);
-				print "\n\nClose detected\n\n";
-				pr($r);
-				pr($sr);
+				#print "\n\nClose detected\n\n";
+				#pr($r);
+				#pr($sr);
 				getDatabase()->execute(" update sr set status = :status, updated = :updated, close_detected = CURRENT_TIMESTAMP, scanned = CURRENT_TIMESTAMP where id = :id ",$dbin);
 			} else {
 				# mark that we scanned it
