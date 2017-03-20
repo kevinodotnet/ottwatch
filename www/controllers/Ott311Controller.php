@@ -23,16 +23,40 @@ class Ott311Controller {
 #             [media_url] => 
 
 	static public function scanOpenForUpdates() {
-		$rows = getDatabase()->all(" select * from sr where status = 'Open' and requested < (curdate()-2) order by rand() limit 1 ");
+		$rows = getDatabase()->all(" 
+			select *
+			from sr 
+			where 
+				status = 'Open' 
+			order by 
+				scanned,
+				requested desc
+			limit 5
+		");
 		foreach ($rows as $r) {
-			print "-----\n";
-			pr($r);
-			print "-----\n";
 			$sr = self::scanSR($r['sr_id']);
 			if (!isset($sr->service_request_id)) {
 				print "SR is gone?\n";
-			} else {
+				pr($r);
+				# mark that we scanned it
+				$dbin = array( 'id' => $r['id']);
+				getDatabase()->execute(" update sr set scanned = CURRENT_TIMESTAMP where id = :id ",$dbin);
+				continue;
+			}
+			if ($sr->status == 'Closed') {
+				$dbin = array(
+					'id' => $r['id'],
+					'status' => $sr->status,
+					'updated' => self::w3DateTime($sr->updated_datetime),
+				);
+				print "\n\nClose detected\n\n";
+				pr($r);
 				pr($sr);
+				getDatabase()->execute(" update sr set status = :status, updated = :updated, close_detected = CURRENT_TIMESTAMP, scanned = CURRENT_TIMESTAMP where id = :id ",$dbin);
+			} else {
+				# mark that we scanned it
+				$dbin = array( 'id' => $r['id']);
+				getDatabase()->execute(" update sr set scanned = CURRENT_TIMESTAMP where id = :id ",$dbin);
 			}
 		}
 	}
