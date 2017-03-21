@@ -2,6 +2,53 @@
 
 class ConsultationController {
 
+	public static function checkPublicNotices() {
+		$url = 'http://ottawa.ca/en/city-hall/accountability-and-transparency/public-meetings-and-notices';
+		$html = file_get_contents($url);
+#		$html = self::cleanCityHtml2($html);
+
+		$html = preg_replace("/\r/","",$html);
+		$html = preg_replace("/\n/","",$html);
+		$html = preg_replace("/<br[^>]*>/"," ",$html);
+		$html = preg_replace("/&nbsp;/"," ",$html);
+
+		#$html = preg_replace("/<h/","\n<h",$html);
+		#$html = preg_replace("/<div/","\n<div",$html);
+		$html = preg_replace("/<article/","\n<article",$html);
+		$html = preg_replace("/<\/article>/","</article>\n",$html);
+		$articles = array();
+		foreach (explode("\n",$html) as $l) {
+			if (!preg_match("/<article/",$l)) { continue; }
+			if (!preg_match("/node-ottawa-article/",$l)) { continue; }
+			$articles[] = $l;
+		}
+		if (count($articles) != 2) {
+			print "BAD count for public notices page\n";
+			return;
+		}
+
+		$html = $articles[1];
+    $md5 = md5($html);
+
+		$prevmd5 = getvar('public-meetings-and-notices.md5');
+
+		print "md5: $md5 prevmd5: $prevmd5\n";
+		if ($md5 != $prevmd5) {
+			print "changed!\n";
+    	file_put_contents(OttWatchConfig::FILE_DIR."/consultationmd5/".$md5,$html);
+			md5hist_insert(array('curmd5'=>$md5,'prevmd5'=>$prevmd5));
+			md5hist_fix();
+			md5hist_fix();
+			md5hist_fix();
+			md5hist_fix();
+			md5hist_fix();
+		}
+		#print $html;
+
+    #$xml = simplexml_load_string($articles[1]);
+		#pr($xml);
+	}
+
   public static function cleanCityHtml2($html) {
 		$html = preg_replace("/\n/"," ",$html);
 		$html = preg_replace("/\r/"," ",$html);
