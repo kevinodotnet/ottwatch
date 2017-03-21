@@ -30,11 +30,18 @@ class ConsultationController {
 		$html = $articles[1];
     $md5 = md5($html);
 
+		$html = preg_replace("/<article/","\n<article",$html);
+		$html = preg_replace("/<div/","\n<div",$html);
+		$html = preg_replace("/<p/","\n<p",$html);
+		$html = preg_replace("/<h/","\n<h",$html);
+
 		$prevmd5 = getvar('public-meetings-and-notices.md5');
 
-		print "md5: $md5 prevmd5: $prevmd5\n";
+		#print "md5: $md5 prevmd5: $prevmd5\n";
 		if ($md5 != $prevmd5) {
 			print "changed!\n";
+			print "md5: $md5\n";
+			print "prevmd5: $prevmd5\n";
     	file_put_contents(OttWatchConfig::FILE_DIR."/consultationmd5/".$md5,$html);
 			md5hist_insert(array('curmd5'=>$md5,'prevmd5'=>$prevmd5));
 			md5hist_fix();
@@ -42,6 +49,10 @@ class ConsultationController {
 			md5hist_fix();
 			md5hist_fix();
 			md5hist_fix();
+
+			$md5url = "http://ottwatch.ca/md5hist/$md5";
+			syndicate('Public Notices page has changed',$md5url,$md5url);
+			setvar('public-meetings-and-notices.md5',$md5);
 		}
 		#print $html;
 
