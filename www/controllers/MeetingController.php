@@ -1110,12 +1110,12 @@ class MeetingController {
 		$youtube_url = preg_replace("/\n/","",$youtube_url);
 		$youtube_url = preg_replace("/\r/","",$youtube_url);
 		# dont need this now
-		unlink($video_file);
 
 		if ($youtube_url == '') {
 			# mark as ERROR so we don't keep trying over and over again on this video; something must be wrong.
 			getDatabase()->execute(" update meeting set youtubeset = current_timestamp, youtube = 'ERROR', youtubestate = 'ERROR' where id = :id ",array('id'=>$m['id']));
 		} else {
+			unlink($video_file);
   		getDatabase()->execute(" update meeting set youtubestart = $start, youtubeset = current_timestamp, youtube = :url, youtubestate = 'UPLOADED' where id = :id ",array('id'=>$m['id'],'url'=>$youtube_url));
       print "\n";
       print "Uploaded: $youtube_url\n";

@@ -376,11 +376,17 @@ class ApiController {
 	}
 
 	public static function widgetFindWardInner($branded) {
+
+		$return_url = urlencode($_GET['return_url']);
+		$return_param_num = urlencode($_GET['return_param_num']);
+		$return_param_name = urlencode($_GET['return_param_name']);
+		$return_param_email = urlencode($_GET['return_param_email']);
+
 		?>
 		<div id="findwardwidget" style="text-align: center;">
     <form id="findwardform" class="form-inline" method="post" action="should_never_happen" onsubmit="findward(); return false;" style="margin: 0px;">
 		<nobr>
-    <input id="postal" type="text" name="postal" placeholder="Postal Code"/>
+    <input id="postal" type="text" name="postal" value="<?php print urlencode($_GET['postal']); ?>" placeholder="Postal Code"/>
     <button type="button" class="btn" onclick="findward(); return false;">Search</button>
 		</nobr>
     </form>
@@ -391,6 +397,13 @@ class ApiController {
 		</div><!-- /findwardwidget -->
     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=<?php print OttWatchConfig::GOOGLE_API_KEY; ?>&sensor=false"></script>
     <script>
+		function urldecode(str) {
+			return decodeURIComponent((str+'').replace(/\+/g, '%20'));
+		}
+		return_url = urldecode('<?php print $return_url; ?>');
+		return_param_num = urldecode('<?php print $return_param_num; ?>');
+		return_param_name = urldecode('<?php print $return_param_name; ?>');
+		return_param_email = urldecode('<?php print $return_param_email; ?>');
     function findwardagain() {
       $('#postal').val('');
       $('#findwardform').css("display", "block");
@@ -422,18 +435,33 @@ class ApiController {
             if (data.ward.ward == undefined) {
 	            $('#wardmsg').html( postal + ' seems to be outside of Ottawa (<a href="javascript:findwardagain(); return false;">again</a>)');
             } else {
-	            $('#wardmsg').html(
-	              postal + 
-									' is in <b><a target="_blank" href="<?php print OttWatchConfig::WWW; ?>/election/ward/'+data.ward.wardnum+'">' + data.ward.ward + '</a></b><br/>' + 
-									' Councillor: ' + data.ward.councillor.first + ' ' + data.ward.councillor.last + '<br/>' +
-									' Email: ' + data.ward.councillor.email +
-									' '
-	            );
+							if (return_url != '') {
+								url = decodeURI(return_url);
+								url += '?'; url += decodeURI(return_param_num); url += '='; url += data.ward.wardnum;
+								url += '&'; url += decodeURI(return_param_name); url += '='; url += data.ward.ward;
+								url += '&'; url += decodeURI(return_param_email); url += '='; url += data.ward.councillor.email;
+								window.location.href = url;
+							} else {
+		            $('#wardmsg').html(
+		              postal + 
+										' is in <b><a target="_blank" href="<?php print OttWatchConfig::WWW; ?>/election/ward/'+data.ward.wardnum+'">' + data.ward.ward + '</a></b><br/>' + 
+										' Councillor: ' + data.ward.councillor.first + ' ' + data.ward.councillor.last + '<br/>' +
+										' Email: ' + data.ward.councillor.email +
+										' '
+		            );
+							}
             }
           });
         }
       );
     }
+		<?php
+			if ($_GET['postal'] != '') {
+				?>
+				findward();
+				<?php
+			}
+		?>
     </script>
 		<?php
 	}

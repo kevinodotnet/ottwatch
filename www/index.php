@@ -12,6 +12,7 @@ include_once 'epiphany/src/Epi.php';
 include_once 'controllers/ApiController.php';
 include_once 'controllers/ScrapeApiController.php';
 include_once 'controllers/MeetingController.php';
+include_once 'controllers/Ott311Controller.php';
 include_once 'controllers/BylawController.php';
 include_once 'controllers/GisController.php';
 include_once 'controllers/GraphController.php';
@@ -84,6 +85,12 @@ getApi()->get('/api/scrape/coa/item/all', array('DevelopmentAppController','apiS
 getApi()->get('/api/scrape/item/(\d+)', array('MeetingController','apiScrapeItem'), EpiApi::external);
 
 getRoute()->get('/feed/', 'feed');
+
+getRoute()->get('/311', array('Ott311Controller','doMain'));
+getRoute()->get('/311/', array('Ott311Controller','doMain'));
+getRoute()->get('/311/download/all.csv', array('Ott311Controller','downloadAllCsv'));
+getRoute()->get('/311/sr/(\d+)', array('Ott311Controller','showSR'));
+getRoute()->get('/311/date/(\d\d\d\d-\d\d-\d\d)', array('Ott311Controller','showDate'));
 
 getRoute()->get('/mfippa/', array('MfippaController','doList'));
 getRoute()->get('/mfippa/random', array('MfippaController','showRandom'));
@@ -450,6 +457,7 @@ function dashboard() {
   <h4>More Reports and Data</h4>
 	<ul>
 	<li><a href="<?php print $OTT_WWW; ?>/consultations/">Consultations</a>: A complete list of public consultations from ottawa.ca</li>
+	<li><a href="<?php print $OTT_WWW; ?>/311/">311</a>: data direct from the city's 311 system.</li>
 	<li><a href="<?php print $OTT_WWW; ?>/election/">Election 2014</a>: Everything election related!</li>
 	<li><a href="<?php print $OTT_WWW; ?>/lobbying/latereport">Late Lobbying Report</a>: Who's been naughty and failed to report lobbying activity within the required deadlines.</li>
 	<li><a href="<?php print $OTT_WWW; ?>/chart/lobbying/weighted/30">Lobbying Intensity Report</a>: See what companies are most active pushing their agenda at City Hall.</li>
@@ -460,6 +468,7 @@ function dashboard() {
 	<li><a href="<?php print $OTT_WWW; ?>/meetings/votes">Voting History</a>: See all votes at committee and council.</li>
 	<li><a href="<?php print $OTT_WWW; ?>/api/about">API</a>: Documentation on the application programming interface for OttWatch.</li>
 	<li><a href="<?php print $OTT_WWW; ?>/about">About</a>: What's this all about?</li>
+	<li><a href="https://docs.google.com/document/d/1E8hLg41O-CFYHVTtiTRXdo52ltD5uXeNkVDTmAPmwFA/edit?usp=sharing">Privacy Policy</a>: how OttWatch handles personal information</li>
 	</ul>
 
   <h4>User</h4>
@@ -564,6 +573,13 @@ function top_common($v3, $title = '',$quiet = false, $menu = true) {
 <!DOCTYPE html>
 <html>
 <head>
+<?php
+if ($_SERVER['HTTP_HOST'] == 'beta.ottwatch.ca') {
+	?>
+	<meta name="robots" content="noindex"/>
+	<?php
+}
+?>
 <title><?php print $title; ?></title>
 <meta property="twitter:account_id" content="1512911885" /><!-- ads.twitter -->
 <meta charset="utf-8">
@@ -684,14 +700,6 @@ function voteOnQuestion(p,i,v) {
 </script>
 </head>
 <body>
-<div id="fb-root"></div>
-<script>(function(d, s, id) {
-  var js, fjs = d.getElementsByTagName(s)[0];
-    if (d.getElementById(id)) return;
-      js = d.createElement(s); js.id = id;
-        js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=204783589569220";
-          fjs.parentNode.insertBefore(js, fjs);
-          }(document, 'script', 'facebook-jssdk'));</script>
 
 <?php
 if ($quiet) { return; }
@@ -842,7 +850,8 @@ function bottom_common($v3, $quiet) {
 				Follow <a href="http://twitter.com/OttWatch">@OttWatch</a></b> and <b><a href="http://twitter.com/ODonnell_K">@ODonnell_K</a>
 			</div>
 			<div class="col-sm-3 text-center">
-				<a href="<?php print $OTT_WWW; ?>"><img style="width: 50px; height: 50px;" src="<?php print $OTT_WWW; ?>/img/ottwatch.png"/></a>
+				<!--<a href="<?php print $OTT_WWW; ?>"><img style="width: 50px; height: 50px;" src="<?php print $OTT_WWW; ?>/img/ottwatch.png"/></a><br/>-->
+				<a href="https://docs.google.com/document/d/1E8hLg41O-CFYHVTtiTRXdo52ltD5uXeNkVDTmAPmwFA/edit?usp=sharing">Privacy Policy</a>
 			</div>
 		</div>
 		</footer>
@@ -853,7 +862,8 @@ function bottom_common($v3, $quiet) {
 		<div class="well" style="margin-top: 10px;" >
 		<a href="<?php print $OTT_WWW; ?>"><img style="float: right; padding-left: 5px; width: 50px; height: 50px;" src="<?php print $OTT_WWW; ?>/img/ottwatch.png"/></a>
 		<i>Created by <a href="http://kevino.ca"><b>Kevin O'Donnell</b></a> to make it easier to be part of the political conversation in Ottawa.</i><br/>
-		On Twitter? Follow <b><a href="http://twitter.com/OttWatch">@OttWatch</a></b> and <b><a href="http://twitter.com/ODonnell_K">@ODonnell_K</a></b>
+		On Twitter? Follow <b><a href="http://twitter.com/OttWatch">@OttWatch</a></b> and <b><a href="http://twitter.com/ODonnell_K">@ODonnell_K</a></b><br/>
+		<a href="https://docs.google.com/document/d/1E8hLg41O-CFYHVTtiTRXdo52ltD5uXeNkVDTmAPmwFA/edit?usp=sharing">Privacy Policy</a>
 		<div class="clearfix"></div>
 		</div>
 
@@ -1015,9 +1025,4 @@ function feedLatest() {
 	$row = getDatabase()->one(" select * from feed order by id desc limit 1 ");
 	return "{$row['message']} {$row['url']}";
 }
-
-?>
-
-
-
 

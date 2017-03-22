@@ -557,3 +557,30 @@ create table publicevent (
   primary key (id)
 ) engine = innodb;
 
+drop table if exists sr;
+create table sr (
+  id mediumint not null auto_increment,
+	sr_id varchar(12) not null, -- ] => 2017 0046 2980
+	status varchar(6), -- ] => Open Closed
+	-- status_notes, -- ] => 
+	-- service_name, -- ] => General Road Maintenance
+	service_code varchar(9), -- ] => 2000164-1
+	description varchar(200), -- ] => Roads Maintenance / Travelled Surface / Plowing or sanding is overdue
+	-- agency_responsible, -- ] => 
+	-- service_notice, -- ] => 
+	requested datetime, -- ] => 2017-03-15T02:18:37-05:00
+	updated datetime, -- , -- ] => 
+	expected datetime, -- ] => 2017-03-22T08:30:00-05:00
+	address varchar(100), -- ] => WARD 21 RIDEAU-GOULBOURN
+	-- address_id, -- ] => 
+	-- zipcode, -- ] => 
+	-- lat, -- ] => 
+	-- long, -- ] => 
+	-- media_url, -- ] => 
+
+  created datetime default CURRENT_TIMESTAMP,
+  scanned datetime default CURRENT_TIMESTAMP,
+  primary key (id)
+) engine = innodb;
+create unique index sr_in1 on sr (sr_id);
+

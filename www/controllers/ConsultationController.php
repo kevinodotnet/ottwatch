@@ -2,6 +2,64 @@
 
 class ConsultationController {
 
+	public static function checkPublicNotices() {
+		$url = 'http://ottawa.ca/en/city-hall/accountability-and-transparency/public-meetings-and-notices';
+		$html = file_get_contents($url);
+#		$html = self::cleanCityHtml2($html);
+
+		$html = preg_replace("/\r/","",$html);
+		$html = preg_replace("/\n/","",$html);
+		$html = preg_replace("/<br[^>]*>/"," ",$html);
+		$html = preg_replace("/&nbsp;/"," ",$html);
+
+		#$html = preg_replace("/<h/","\n<h",$html);
+		#$html = preg_replace("/<div/","\n<div",$html);
+		$html = preg_replace("/<article/","\n<article",$html);
+		$html = preg_replace("/<\/article>/","</article>\n",$html);
+		$articles = array();
+		foreach (explode("\n",$html) as $l) {
+			if (!preg_match("/<article/",$l)) { continue; }
+			if (!preg_match("/node-ottawa-article/",$l)) { continue; }
+			$articles[] = $l;
+		}
+		if (count($articles) != 2) {
+			print "BAD count for public notices page\n";
+			return;
+		}
+
+		$html = $articles[1];
+    $md5 = md5($html);
+
+		$html = preg_replace("/<article/","\n<article",$html);
+		$html = preg_replace("/<div/","\n<div",$html);
+		$html = preg_replace("/<p/","\n<p",$html);
+		$html = preg_replace("/<h/","\n<h",$html);
+
+		$prevmd5 = getvar('public-meetings-and-notices.md5');
+
+		#print "md5: $md5 prevmd5: $prevmd5\n";
+		if ($md5 != $prevmd5) {
+			print "changed!\n";
+			print "md5: $md5\n";
+			print "prevmd5: $prevmd5\n";
+    	file_put_contents(OttWatchConfig::FILE_DIR."/consultationmd5/".$md5,$html);
+			md5hist_insert(array('curmd5'=>$md5,'prevmd5'=>$prevmd5));
+			md5hist_fix();
+			md5hist_fix();
+			md5hist_fix();
+			md5hist_fix();
+			md5hist_fix();
+
+			$md5url = "http://ottwatch.ca/md5hist/$md5";
+			syndicate('Public Notices page has changed',$md5url,$md5url);
+			setvar('public-meetings-and-notices.md5',$md5);
+		}
+		#print $html;
+
+    #$xml = simplexml_load_string($articles[1]);
+		#pr($xml);
+	}
+
   public static function cleanCityHtml2($html) {
 		$html = preg_replace("/\n/"," ",$html);
 		$html = preg_replace("/\r/"," ",$html);
@@ -12,7 +70,7 @@ class ConsultationController {
 		$html = preg_replace("/&raquo;/"," ",$html);
 		$html = preg_replace("/&copy;/"," ",$html);
 		$html = preg_replace("/&nbsp;/"," ",$html);
-		$html = strip_tags($html,"<html><body><table><tr><td><a><div><h1>");
+		$html = strip_tags($html,"<html><body><table><tr><td><a><div><h1><h2><h3><h4>");
 
 		# $l = explode("\n",$html); $x = 1; foreach ($l as $ll) { print ">>> $x <<< \n\n $ll\n"; $x++; }
 
@@ -90,7 +148,8 @@ class ConsultationController {
 	}
 
   public static function crawlProject($url) {
-		$html = file_get_contents($url);
+		@$html = file_get_contents($url);
+		if (strlen($html) == 0) { return; } // no content
     $html = self::cleanCityHtml2($html);
 		if (!preg_match('/Get more detailed information on the project/',$html)) {
 			return;
@@ -108,8 +167,34 @@ class ConsultationController {
 		$new = 0;
     if (!$row['id']) {
 			db_insert("consultation",array( 'category'=>'default', 'title'=>$title, 'url'=>$url, 'md5'=>'')); 
-			print "NEW consultation\n$title\n$url\n\n";
+      syndicate("NEW consultation: $title",$url,$url);
 		} 
+
+    $row = getDatabase()->one(" select * from consultation where url = :url ",array('url'=>$url));
+		#pr($row);
+
+		$divs = $xml->xpath('//div');
+		$phone = '';
+		$email = '';
+		for ($x = 0; $x < count($divs); $x++) {
+			#print "[$x]: >>>".$divs[$x]."<<<\n";
+			if (preg_match('/Phone:/',$divs[$x])) { $phone = trim($divs[$x+2]); }
+			if (preg_match('/Email:/',$divs[$x])) {
+				$div = $divs[$x+1];
+				$div = simplexml_load_string($div->asXML());
+				$as = $div->xpath('//a');
+				$as = $as[0];
+				$email = ''.$as;
+			}
+		}
+
+		$row['phone'] = $phone;
+		$row['email'] = $email;
+		db_update("consultation",$row,'id');
+
+#		print "-------------------------------------\n";
+#		print "\n\n$html\n\n";
+#		print "-------------------------------------\n";
 
 # 		$as = $xml->xpath('//a');
 # 
@@ -169,10 +254,14 @@ class ConsultationController {
 			$row = getDatabase()->one(" select * from publicevent where href = :href ",array('href'=>$e['href']));
 			$action = '';
 			if (!$row['id']) {
-	      db_insert("publicevent",$e);
-				$row = getDatabase()->one(" select * from publicevent where href = :href ",array('href'=>$e['href']));
-	      $message = "New consultation event: {$e['title']} ({$e['starttime']})";
-	      syndicate($message,$e['href'],$e['href']);
+				try {
+		      db_insert("publicevent",$e);
+					$row = getDatabase()->one(" select * from publicevent where href = :href ",array('href'=>$e['href']));
+		      $message = "New consultation event: {$e['title']} ({$e['starttime']})";
+		      syndicate($message,$e['href'],$e['href']);
+				} catch (Exception $e) {
+					pr($e);
+				}
 			}
 		}
 
