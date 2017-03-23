@@ -192,10 +192,13 @@ class Ott311Controller {
 			'service_code' => $sr->service_code,
 			'description' => $sr->description,
 			'requested' => self::w3DateTime($sr->requested_datetime),
-			'updated' => self::w3DateTime($sr->updated_datetime),
 			'expected' => self::w3DateTime($sr->expected_datetime),
 			'address' => $sr->address
 		);
+		if ($sr->updated_datetime != '') {
+			$dbin['updated'] = self::w3DateTime($sr->updated_datetime);
+		}
+		#pr($sr);
 		$row = db_save('sr',$dbin,'sr_id');
 		# automatically close SRs if needed; this should be made to be smarter, but whatever
 		getDatabase()->execute(" update sr set close_detected = updated where close_detected is null and status = 'Closed' ");
