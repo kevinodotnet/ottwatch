@@ -2514,6 +2514,7 @@ class MeetingController {
     if (!preg_match('/ottawa.ca/',$coordEmail)) {
       $coordEmail = '';
     }
+		$coordPhone = trim(preg_replace('/[\.a-zA-Z0-1]*@[^ ]*/','',$coordPhone));
 		try {
 	    getDatabase()->execute(" update meeting set contactName = :name, contactEmail = :email, contactPhone = :phone where id = :id ",array(
       'name' => $coordName,
