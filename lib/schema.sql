@@ -584,3 +584,20 @@ create table sr (
 ) engine = innodb;
 create unique index sr_in1 on sr (sr_id);
 
+drop table if exists ott311tweet;
+create table ott311tweet (
+  id mediumint not null auto_increment,
+	twid varchar(20) not null,
+	in_reply_to_twid varchar(20),
+	user_id varchar(20) not null,
+	user_name varchar(20) not null,
+	tweet varchar(160) not null,
+	location geometry,
+  tweeted datetime default CURRENT_TIMESTAMP,
+  created datetime default CURRENT_TIMESTAMP,
+  primary key (id)
+) engine = innodb;
+create unique index ott311_1 on ott311tweet (twid);
+
+
+

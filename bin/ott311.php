@@ -6,6 +6,7 @@ $dirname = preg_replace("/\n/","",$dirname);
 set_include_path(get_include_path() . PATH_SEPARATOR . "$dirname/../lib");
 set_include_path(get_include_path() . PATH_SEPARATOR . "$dirname/../www");
 require_once('include.php');
+require_once('twitteroauth.php');
 
 if (count($argv) > 1) {
 
@@ -29,6 +30,11 @@ if (count($argv) > 1) {
 		return;
 	}
 
+  if ($argv[1] == 'getTwitterMentions') {
+		Ott311Controller::getTwitterMentions();
+		return;
+	}
+
   if ($argv[1] == 'url') {
 		$url = $argv[2];
 
@@ -39,11 +45,11 @@ if (count($argv) > 1) {
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		$json = curl_exec ($ch);
 
-		print "\n$json\n";
+		print "$json";
 
-		$data = json_decode($json);
-		pr($data);
-		print "\n";
+		#$data = json_decode($json);
+		#pr($data);
+		#print "\n";
 		return;
 
 	}
