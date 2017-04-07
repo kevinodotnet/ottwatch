@@ -5,10 +5,18 @@ $dirname = preg_replace("/\n/","",$dirname);
 
 set_include_path(get_include_path() . PATH_SEPARATOR . "$dirname/../lib");
 set_include_path(get_include_path() . PATH_SEPARATOR . "$dirname/../www");
+set_include_path(get_include_path() . PATH_SEPARATOR . "$dirname/../vendor");
 require_once('include.php');
 require_once('twitteroauth.php');
+require_once('autoload.php');
+
 
 if (count($argv) > 1) {
+
+  if ($argv[1] == 'bylawGetReminder') {
+		bylawGetReminder();
+		return;
+	}
 
   if ($argv[1] == 'findNonRssMeetings') {
 		MeetingController::findNonRssMeetings();
@@ -254,4 +262,30 @@ foreach ($rows as $r) {
 	pr($r);
 	getDatabase()->execute(" delete from meeting where id = :id ",array('id'=>$r['id']));
 }
+
+return;
+
+function bylawGetReminder() {
+	$rows = getDatabase()->all(" select meetid,left(starttime,10) starttime from meeting where category = 'City Council' and datediff(now(),starttime) = 3 limit 1 ");
+	if (count($rows) > 0) {
+		$r = $rows[0];
+		$to = 'kevino@kevino.net';
+		$subject = "Enacted bylaws request; meeting {$r['meetid']} on {$r['starttime']}";
+		$b = getDatabase()->one(" select max(bylawnum) m from bylaw ");
+		$body = "Hello,
+
+Can you please send me the bylaws enacted during the City Council meeting #{$r['meetid']} on {$r['starttime']}, as well as any other bylaws that may have been enacted by delegated authority after {$b['m']}?
+
+re: http://ottwatch.ca/meetings/meeting/{$r['meetid']}
+
+Many thanks.
+
+Cheers,
+Kevin.";
+
+		sendEmail($to,$subject,$body);
+	}
+}
+
+
 
