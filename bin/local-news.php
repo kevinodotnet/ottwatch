@@ -39,7 +39,7 @@ function getCBC() {
 }
 
 function getRss() {
-#	getRssOttawaCitizen();
+	getRssOttawaCitizen();
 	getCBC();
 }
 
