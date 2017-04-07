@@ -30,14 +30,16 @@ function getCBC() {
 	foreach ($xml->channel->item as $i) {
 		$link = $i->{'link'};
 		$linkHash = md5($link);
+		$f = OttWatchConfig::FILE_DIR.'/localnews/cbcottawa/'.$linkHash.'.gz';
+		if (file_exists($f)) { continue; }
 		$data = file_get_contents($link);
 		$i->ottwatch_contents = $data;
-		file_put_contents(OttWatchConfig::FILE_DIR.'/localnews/cbcottawa/'.$linkHash,$i->asXML());
+		file_put_contents($f,gzcompress($i->asXML(),9));
 	}
 }
 
 function getRss() {
-	getRssOttawaCitizen();
+#	getRssOttawaCitizen();
 	getCBC();
 }
 
@@ -52,9 +54,11 @@ function getRssOttawaCitizen() {
 	foreach ($xml->channel->item as $i) {
 		$link = $i->{'link'};
 		$linkHash = md5($link);
+		$f = OttWatchConfig::FILE_DIR.'/localnews/cbc/'.$linkHash.'.gz';
+		if (file_exists($f)) { continue; }
 		$data = file_get_contents($link);
 		$i->ottwatch_contents = $data;
-		file_put_contents(OttWatchConfig::FILE_DIR.'/localnews/ottawacitizen/'.$linkHash,$i->asXML());
+		file_put_contents($f,gzcompress($i->asXML(),9));
 	}
 
 }
