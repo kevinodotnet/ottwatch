@@ -34,6 +34,7 @@ class ConsultationController {
 		$html = preg_replace("/<div/","\n<div",$html);
 		$html = preg_replace("/<p/","\n<p",$html);
 		$html = preg_replace("/<h/","\n<h",$html);
+		$html = preg_replace("/<li/","\n<li",$html);
 
 		$prevmd5 = getvar('public-meetings-and-notices.md5');
 
