@@ -3,7 +3,13 @@
 class BylawController {
 
 	static public function listAll() {
-	  $rows = getDatabase()->all(' select * from bylaw order by bylawnum desc ,meetingid  desc ');
+	  $rows = getDatabase()->all(' 
+			select * 
+			from bylaw 
+			order by 
+				left(bylawnum,4) desc, 
+				0+substr(bylawnum,6,length(bylawnum)) desc
+		');
 
 		top3("Bylaws");
 
