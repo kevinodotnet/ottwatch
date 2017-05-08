@@ -270,13 +270,11 @@ function bylawGetReminder() {
 	if (count($rows) > 0) {
 		$r = $rows[0];
 		$to = 'kevino@kevino.net';
-		$subject = "Enacted bylaws request; meeting {$r['meetid']} on {$r['starttime']}";
-		$b = getDatabase()->one(" select max(bylawnum) m from bylaw ");
+		$subject = "Enacted bylaws request";
+		$b = getDatabase()->one(" select bylawnum m from bylaw order by bn_year desc, bn_num desc limit 1 ");
 		$body = "Hello,
 
-Can you please send me the bylaws enacted during the City Council meeting #{$r['meetid']} on {$r['starttime']}, as well as any other bylaws that may have been enacted by delegated authority after {$b['m']}?
-
-re: http://ottwatch.ca/meetings/meeting/{$r['meetid']}
+Can you please send me the bylaws enacted during the City Council meetings, or under delegated authority, after {$b['m']}?
 
 Many thanks.
 
@@ -284,6 +282,7 @@ Cheers,
 Kevin.";
 
 		sendEmail($to,$subject,$body);
+		exit;
 	}
 }
 
