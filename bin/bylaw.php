@@ -38,8 +38,10 @@ function injestBylaw($pdf,$summary,$enacted) {
 		'summary' => $summary,
 		'enacted' => $enacted
 	));
-
 	print "new row: $id\n";
+
+	# extract year/num from the by law number itself
+	getDatabase()->execute(" update bylaw set bn_year = left(bylawnum,4), bn_num = 0+substr(bylawnum,6,length(bylawnum)) ");
 
 	$bylawOttWatchLink = "http://ottwatch.ca/bylaws/$num";
 
