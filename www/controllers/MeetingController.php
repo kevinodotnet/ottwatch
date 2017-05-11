@@ -2514,12 +2514,22 @@ class MeetingController {
     if (!preg_match('/ottawa.ca/',$coordEmail)) {
       $coordEmail = '';
     }
-    getDatabase()->execute(" update meeting set contactName = :name, contactEmail = :email, contactPhone = :phone where id = :id ",array(
+		$coordPhone = trim(preg_replace('/[\.a-zA-Z0-1]*@[^ ]*/','',$coordPhone));
+		try {
+	    getDatabase()->execute(" update meeting set contactName = :name, contactEmail = :email, contactPhone = :phone where id = :id ",array(
       'name' => $coordName,
       'phone' => $coordPhone,
       'email' => $coordEmail,
       'id' => $id
     ));
+		} catch (Exception $e) {
+			print $e;
+			pr(array(
+      'name' => $coordName,
+      'phone' => $coordPhone,
+      'email' => $coordEmail,
+      'id' => $id));
+		}
 
 		#
 		# ITEM parsing

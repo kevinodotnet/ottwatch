@@ -22,6 +22,28 @@ class Ott311Controller {
 #             [long] => 
 #             [media_url] => 
 
+	static public function doNew() {
+
+
+# Known fields:
+#  first_name: 35
+#  last_name: 40
+#  email: 60
+#  description: 2000
+#  phone: 11 (dashes and parentheses will be stripped; must be a valid North American number)
+#  media_url: 255
+#  cde_extension: 6
+# 
+# Attribute fields by type:
+#  string: 40
+#  number: 40
+#  text: 2000
+#  singlevaluelist: 80
+#  multivaluelist: 80
+#  datetime: 25
+
+	}
+
 	static public function scanOpenForUpdates() {
 		$rows = getDatabase()->all(" 
 			select *
@@ -192,11 +214,17 @@ class Ott311Controller {
 			'service_code' => $sr->service_code,
 			'description' => $sr->description,
 			'requested' => self::w3DateTime($sr->requested_datetime),
-			'updated' => self::w3DateTime($sr->updated_datetime),
 			'expected' => self::w3DateTime($sr->expected_datetime),
 			'address' => $sr->address
 		);
-		return db_save('sr',$dbin,'sr_id');
+		if ($sr->updated_datetime != '') {
+			$dbin['updated'] = self::w3DateTime($sr->updated_datetime);
+		}
+		#pr($sr);
+		$row = db_save('sr',$dbin,'sr_id');
+		# automatically close SRs if needed; this should be made to be smarter, but whatever
+		getDatabase()->execute(" update sr set close_detected = updated where close_detected is null and status = 'Closed' ");
+		return $row;
 	}
 
 	static public function scanStartEnd($start_date,$end_date) {
@@ -375,6 +403,66 @@ class Ott311Controller {
 		<?php
 		bottom3();
 
+	}
+
+	public static function getTwitterMentions() {
+
+	  $consumerKey = OttWatchConfig::TWITTER311_POST_CONSUMER_KEY;
+	  $consumerSecret = OttWatchConfig::TWITTER311_POST_CONSUMER_SECRET;
+	  $accessToken = OttWatchConfig::TWITTER311_POST_ACCESS_TOKEN;
+	  $accessTokenSecret = OttWatchConfig::TWITTER311_POST_TOKEN_SECRET;
+
+	  $twitter = new TwitterOAuth($consumerKey, $consumerSecret, $accessToken, $accessTokenSecret);
+		#$tweets = $twitter->get('statuses/mentions_timeline',array('since_id'=>'847885730231836672'));
+		#$tweets = $twitter->get('statuses/mentions_timeline',array());
+		$tweets = json_decode(file_get_contents('m.json'));
+		#$json = json_encode($tweets); file_put_contents("m.json",$json);
+		foreach ($tweets as $t) {
+			try {
+
+				$created_at = strtotime($t->created_at);
+				#pr(localtime($created_at));
+	
+				$created_at = gmdate("Y-m-d H:i:s", $created_at);
+	
+				#$created_at = date_parse($t->created_at);
+	#			print $created_at->format("Y"); print "\n";
+	
+				$newrow = array(
+					'twid' => $t->id_str,
+					'tweeted' => $created_at,
+					'tweet' => $t->text,
+					'in_reply_to_twid' => $t->in_reply_to_status_id_str,
+					'user_id' => $t->user->id_str,
+					'user_name' => $t->user->screen_name,
+				);
+	
+				$row = getDatabase()->one(" select * from ott311tweet where twid = :twid ",array('twid'=>$t->id_str));
+				if (isset($row['id'])) {
+					// already saved this one; skip
+					continue;
+				}
+				#pr($newrow);
+				$id = db_insert('ott311tweet',$newrow);
+	
+				file_put_contents(OttWatchConfig::FILE_DIR."/ott311/tweets/".$t->id_str,json_encode($t));
+	
+				if (isset($t->coordinates)) {
+					if ($t->coordinates->type == 'Point') {
+						$lon = $t->coordinates->coordinates[0];
+						$lat = $t->coordinates->coordinates[1];
+						getDatabase()->execute(" update ott311tweet set location = ST_GeomFromText('POINT($lon $lat)') where id = $id ");
+					}
+				}
+			} catch (Exception $e) {
+				pr($t);
+				print "\n\n";
+				print strlen($t->text);
+				print "\n";
+				print $e;
+			}
+		}
+	  #$twitter->post('statuses/update', array('status' => $tweet));
 	}
   
 }
