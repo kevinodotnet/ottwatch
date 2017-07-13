@@ -1279,6 +1279,17 @@ class MeetingController {
   }
 
   # for a given fileid, resolve the "cache" trick, then proxy download the real PDF
+  static public function getFileText ($fileid) {
+
+		file_put_contents("/tmp/a.pdf", fopen("http://beta.ottwatch.ca/meetings/file/$fileid", 'r'));
+
+		print "<pre>";
+		print `pdftotext /tmp/a.pdf -`;
+		print "</pre>";
+		unlink("/tmp/a.pdf");
+
+	}
+
   static public function getFileCacheUrl ($fileid,$desc) {
 
 		$file = getDatabase()->one(" 
