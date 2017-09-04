@@ -9,6 +9,12 @@ require_once('include.php');
 
 if (count($argv) > 1) {
 
+  if ($argv[1] == 'missing') {
+		$rows = getDatabase()->all(" select concat(b1.bn_year,'-',b1.bn_num-1) missing from bylaw b1 left join bylaw b2 on b2.bn_year = b1.bn_year and b2.bn_num = (b1.bn_num-1) where b2.id is null order by b1.bn_year desc, b1.bn_num desc ");
+		foreach ($rows as $r) {
+			print "{$r['missing']}\n";
+		}
+	}
   if ($argv[1] == 'injestBylaw') {
 		$index = 2;
   	$pdf = $argv[$index++];
@@ -38,8 +44,10 @@ function injestBylaw($pdf,$summary,$enacted) {
 		'summary' => $summary,
 		'enacted' => $enacted
 	));
-
 	print "new row: $id\n";
+
+	# extract year/num from the by law number itself
+	getDatabase()->execute(" update bylaw set bn_year = left(bylawnum,4), bn_num = 0+substr(bylawnum,6,length(bylawnum)) ");
 
 	$bylawOttWatchLink = "http://ottwatch.ca/bylaws/$num";
 

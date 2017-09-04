@@ -54,6 +54,120 @@ class StoryController {
   }
 
   public static function show($id,$restTitle) {
+		if (false && $id <= 65) {
+			self::show_bootstrap2($id,$restTitle);
+			return;
+		}
+
+
+    $story = getDatabase()->one(" 
+      select 
+				s.id as storyid,
+        s.title,s.body,
+        p.name as author,
+        left(s.updated,16) updated,
+        s.published,s.deleted,
+        p.*
+      from story s
+        join people p on p.id = s.personid
+      where 
+        s.id = :id 
+      ",array('id'=>$id));
+
+    # disallow linking to /story/X/WHATEVER_SOMEONE_TYPED by redirecting if the supplied
+    # "url_title" does not match the actual story title. Also helps if story title was 
+    # changed but links are already out there on social media
+    # title - urlencode - removed junk - lowercase
+    $titleToUrlPart = $story['title'];
+    $titleToUrlPart = preg_replace('/ /','-',$titleToUrlPart);
+    $titleToUrlPart = urlencode($titleToUrlPart);
+    $titleToUrlPart = preg_replace('/%../','',$titleToUrlPart);
+    $titleToUrlPart = strtolower($titleToUrlPart);
+    $storyUrl = OttWatchConfig::WWW."/story/{$id}/{$titleToUrlPart}";
+    if ($titleToUrlPart != $restTitle) {
+      # new title, or someone is having fun
+      header("Location: $storyUrl");
+      return;
+    }
+
+    top3($story['title']);
+
+    if ($story['deleted'] == 1) {
+      ?>
+      <h1>Error: this story has been deleted</h1>
+      <?php
+      bottom3();
+      return;
+    }
+    if ($story['published'] == 0) {
+			$ok = 0;
+			if (LoginController::isLoggedIn()) {
+		    if ($story['author'] == getSession()->get("user_id")) {
+					$ok = 1;
+				}
+			}
+			if (!$ok) {
+	      ?>
+	      <h1>Error: this story is not yet published</h1>
+	      <?php
+	      bottom3();
+	      return;
+			}
+    }
+
+    $author = getDatabase()->one(" select * from people where id = :id ",array('id'=>$story['author']));
+
+    ?>
+
+    <div class="row">
+    <div class="col-sm-6 col-sm-offset-3">
+    <center><h1 id="previewtitle"><?php print "{$story['title']}\n"; ?></h1></center>
+    </div><!-- /span -->
+    </div><!-- /row -->
+
+    <div class="row">
+    <div class="col-sm-6 col-sm-offset-3" style="">
+    <div class="ottwatchstorybody" ><?php print $story['body']; ?></div>
+    <div style="padding-top: 30px;"><?php disqus(); ?></div>
+    </div><!-- /span -->
+    <div class="col-sm-3" style="background: #f0f0f0; padding: 0px 5px; border-radius: 4px;">
+		<?php
+		if (LoginController::isLoggedIn()) {
+	    if ($story['author'] == getSession()->get("user_id")) {
+				?>
+				<a href="/story/edit/<?php print $story['storyid']; ?>">Edit Story</a>
+				<?php
+			}
+		}
+		?>
+    <center>
+		<b>Published:</b><br/><?php print $story['updated']; ?><br/><br/>
+		<b>More stories:</b><br/>
+		</center>
+		<?php
+		$rows = self::getPublished();
+		foreach ($rows as $r) {
+			if ($r['id'] == $story['storyid']) { continue; }
+			?>
+			<div class="row" style="padding-bottom: 5px;">
+			<div class="col-xs-8"> <a href="/story/<?php print $r['id']; ?>"><?php print $r['title']; ?></a> </div>
+			<div class="col-xs-4" style="text-align: right; color: #808080;"><?php print substr($r['created'],0,10); ?></div>
+			<!--
+			<h5 style="padding: 0px; margin: 0px;">
+			</h5>
+			-->
+			</div>
+			<?php
+		}
+		?>
+		</div>
+    </div><!-- /row -->
+
+    <?php
+    bottom3();
+	}
+
+  public static function show_bootstrap2($id,$restTitle) {
     $story = getDatabase()->one(" 
       select 
 				s.id as storyid,

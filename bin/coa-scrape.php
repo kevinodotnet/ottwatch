@@ -28,7 +28,18 @@ if ($argv[1] == 'coaAgendaToDevApp') {
 
 if ($argv[1] == 'recent') {
 	$match = $argv[2];
-	$rows = getDatabase()->all(" select category,starttime,meetid from meeting where (category like 'COA%' or category like 'Committee of Ad%') and meetid != '' order by starttime desc limit 9 ");
+	$rows = getDatabase()->all(" 
+	select 
+		category,starttime,meetid 
+	from 
+		meeting 
+	where 
+		(category like 'COA%' or category like 'Committee of Ad%') 
+		and meetid != '' 
+		and starttime > now()
+	order by 
+		starttime desc 
+	");
 	foreach ($rows as $r) {
 		$meetid = $r['meetid'];
 		print "##############################################\n";
