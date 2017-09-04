@@ -120,7 +120,6 @@ class ApiController {
 
 			}
 		}
-		break;
 		bottom();
 	}
 
