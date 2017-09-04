@@ -1,6 +1,7 @@
 <?php
 
-error_reporting(E_ERROR | E_PARSE);
+#error_reporting(E_ERROR | E_PARSE);
+error_reporting(E_ERROR);
 
 session_start();
 date_default_timezone_set("Canada/Eastern");
@@ -304,7 +305,7 @@ function dashboard() {
   ?>
 
   <div class="row-fluid">
-  <div class="span4">
+  <div class="span6">
 
   <p class="lead">
   <b>OttWatch</b> is dedicated to making it easier to be 
@@ -422,7 +423,7 @@ function dashboard() {
 
 
 
-  <div class="span4">
+  <div class="span6">
 
   <script>
   function devapp_search_form_submit() {
@@ -490,10 +491,12 @@ function dashboard() {
 	</ul>
 
   </div>
+	<!--
   <div class="span4">
   <h4>Recent Comments</h4>
   <?php disqusRecent(8); ?>
   </div>
+	-->
   </div>
 
 
