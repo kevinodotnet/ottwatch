@@ -122,7 +122,5 @@ License
 About Me
 ========
 
-I live in Ottawa, like Open Data, and am neck-deep in pushing for a more sustainable city, environment,
-province and planet. For a living I write code. For my future I'm Deputy Leader of the Green Party 
-of Ontario. Deets here: http://kevino.ca and http://www.gpo.ca/about/deputy-leader/kevin-odonnell
+You can find me on twitter at @odonnell_k
 
