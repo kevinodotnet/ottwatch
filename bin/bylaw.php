@@ -82,7 +82,7 @@ function injestBylaw($pdf,$summary,$enacted) {
 
 	<p>
 	When in doubt, visit
-	http://ottawa.ca/en/residents/laws-licenses-and-permits/laws/laws-z
+	https://ottawa.ca/en/residents/laws-licenses-and-permits/laws
 	</p>
 
 	<p>

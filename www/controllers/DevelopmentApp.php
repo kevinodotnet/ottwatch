@@ -1091,6 +1091,9 @@ class DevelopmentAppController {
 
 			if ($exists['c'] == 0) {
 				# insert
+				$f['title'] = preg_replace('/\x{0096}/','',$f['title']);
+				$f['title'] = preg_replace('/\x{00C2}/','',$f['title']);
+				$f['title'] = preg_replace('/  */',' ',$f['title']);
       	getDatabase()->execute(" insert into devappfile (devappid,href,title,created,updated) values (:devappid,:href,:title,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP) ",array(
 	        'devappid' => $id,
 	        'href' => $f['href'],
