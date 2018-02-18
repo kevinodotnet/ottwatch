@@ -18,6 +18,7 @@ if (count($argv) > 1) {
   if ($argv[1] == 'injestBylaw') {
 		$index = 2;
   	$pdf = $argv[$index++];
+  	$pdf = "/home/ubuntu/bylaw/$pdf";
   	$summary = $argv[$index++];
   	$enacted = $argv[$index++];
 
