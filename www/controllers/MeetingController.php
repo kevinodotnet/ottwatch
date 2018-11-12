@@ -1904,22 +1904,23 @@ class MeetingController {
     $items = getDatabase()->all(" select * from item where meetingid = :meetingid order by id ",array("meetingid"=>$m['id']));
     top($title . " on " . substr($m['starttime'],0,10));
 
-    # any places for this meeting?
-    $places = getDatabase()->all( " 
-      select 
-        concat(p.rd_num,' ', r.rd_name,' ',r.rd_suffix,' ',coalesce(r.rd_directi,'')) addr,
-        astext(p.shape) point,
-        i.itemid,
-        p.rd_num,
-        r.rd_name,
-        r.rd_suffix,
-        r.rd_directi
-      from places p
-        join roadways r on p.roadid = r.OGR_FID
-        join item i on p.itemid = i.id
-      where p.itemid in (select id from item where meetingid = :meetingid) ",array("meetingid"=>$m['id']));
-    # LEFT hand navigation, items and files links
+#     # any places for this meeting?
+#     $places = getDatabase()->all( " 
+#       select 
+#         concat(p.rd_num,' ', r.rd_name,' ',r.rd_suffix,' ',coalesce(r.rd_directi,'')) addr,
+#         astext(p.shape) point,
+#         i.itemid,
+#         p.rd_num,
+#         r.rd_name,
+#         r.rd_suffix,
+#         r.rd_directi
+#       from places p
+#         join roadways r on p.roadid = r.OGR_FID
+#         join item i on p.itemid = i.id
+#       where p.itemid in (select id from item where meetingid = :meetingid) ",array("meetingid"=>$m['id']));
+#     # LEFT hand navigation, items and files links
 
+		$places = array();
 		foreach ($places as &$p) {
 			$sql = " select * from devapp where address like '%{$p['rd_num']} ".mysql_escape_string($p['rd_name'])."%' limit 1 ";
 			$p['devapps'] = getDatabase()->all($sql);
