@@ -2,8 +2,8 @@
 
 class ElectionController {
 
-  const year = 2014;
-  const prevyear = 2010;
+  const year = 2018;
+  const prevyear = 2014;
 
 	public static function showDonor($id) {
 
@@ -1108,10 +1108,6 @@ class ElectionController {
     <div class="row-fluid">
     <div class="span4">
     <h1>Election <?php print self::year; ?></h1>
-    <p class="lead">
-    <b>October 27</b> is the day you vote.<br/>
-    <b>Everyday</b> is a good day to be involved.
-    </p>
     </div>
     <div class="span4">
     <p class="lead" style="text-align: center;">
@@ -1327,7 +1323,7 @@ class ElectionController {
 				join candidate c on c.id = r.candidateid 
 				left join ( select returnid, count(1) donations from candidate_donation group by returnid ) d on d.returnid = r.id
 			where
-				c.year in (2014)
+				c.year in (2018)
 			order by 
 				case when r.done is null or r.done = 0 then 0 else 1 end,
 				case when filename is null then 1 else 0 end,
