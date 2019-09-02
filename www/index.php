@@ -561,8 +561,6 @@ function error404() {
 
 function top3($title = '',$quiet = false, $menu = true) {
 	top_common(1,$title,$quiet,$menu);
-	?>
-	<?php
 }
 
 function top($title = '',$quiet = false, $menu = true) {
@@ -702,6 +700,14 @@ function voteOnQuestion(p,i,v) {
 </script>
 </head>
 <body>
+
+<div class="row">
+<div class="col-sm-4 text-center">
+</div>
+<div class="col-sm-4 text-center" style="font-size: 200%;">
+(Heads up! Ottwatch is frozen/unstable while it moves servers. Sep2/2019)
+</div>
+</div>
 
 <?php
 if ($quiet) { return; }
