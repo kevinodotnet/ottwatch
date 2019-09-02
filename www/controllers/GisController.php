@@ -112,7 +112,7 @@ class GisController {
 	      });
 	    </script>
 			<script> $(document).ready(function() { <?php print $js; ?> }); </script>
-		<?
+		<?php
 
 		bottom3();
 	}
