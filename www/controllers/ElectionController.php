@@ -207,6 +207,7 @@ class ElectionController {
 
 	public static function processDonationScoreboard() {
 		top3();
+		#bottom3(); return;
 		$sql = "
 			select 
 				case when name is null then 'Anonymous' else name end Name,
@@ -220,7 +221,7 @@ class ElectionController {
 					candidate_donation d
 					left join people p on p.id = d.peopleid
 				where
-					d.created > '2015-01-01' 
+					d.created > '2019-01-01' 
 					and d.amount is not null
 				group by 
 					p.id, 
@@ -524,7 +525,7 @@ class ElectionController {
 			return;
 		}
 
-		$rows = getDatabase()->all(" select * from candidate_donation where location is null and postal != '' and created > '2015-01-01' order by rand() ");
+		$rows = getDatabase()->all(" select * from candidate_donation where location is null and postal != '' and created > '2019-01-01' order by rand() ");
 		if (count($rows) == 0) {
 			print "No coding to do\n";
 			bottom();
@@ -603,9 +604,9 @@ class ElectionController {
 			# old local reference
 			return OttWatchConfig::FILE_DIR."/election/$year/financial_returns/$filename";
 		}
-		# filename is actually full URL
-		$filename = preg_replace('/.*\//','',$filename);
-		return OttWatchConfig::FILE_DIR."/election/$year/financial_returns/$electionid/$filename";
+		# filename is absolute local path
+		$filename = preg_replace('/\/pdf\//','/',$filename);
+		return $filename;
 	}
 
 	public static function getReturnPages($year,$filename,$electionid) {
@@ -1327,11 +1328,12 @@ class ElectionController {
 			order by 
 				case when r.done is null or r.done = 0 then 0 else 1 end,
 				case when filename is null then 1 else 0 end,
+				case when d.donations is null then 0 else 1 end,
 				c.winner desc,
-				d.donations,
+				d.donations desc,
 				c.ward,
 				c.year desc,
-				rand()
+				c.last
 			");
 			$returns = array();
 			foreach ($rows as $r) {
@@ -1511,12 +1513,12 @@ class ElectionController {
 			$id = $_GET['id'];
 		}
 
-		$done = getDatabase()->one(" select count(1) c from candidate_donation where created > '2015-01-01' and amount is not null ");
+		$done = getDatabase()->one(" select count(1) c from candidate_donation where created > '2019-01-01' and amount is not null ");
 		$done = $done['c'];
-		$total = getDatabase()->one(" select count(1) c from candidate_donation where created > '2015-01-01' ");
+		$total = getDatabase()->one(" select count(1) c from candidate_donation where created > '2019-01-01' ");
 		$total = $total['c'];
 
-		$remaining = getDatabase()->one(" select count(1) c from candidate_donation where created > '2015-01-01' and amount is null ");
+		$remaining = getDatabase()->one(" select count(1) c from candidate_donation where created > '2019-01-01' and amount is null ");
 		if ($id == '' && $remaining['c'] == 0) {
 			?>
 			<center>
@@ -1531,7 +1533,7 @@ class ElectionController {
 
 		$donePerc = sprintf('%0.2f',$done/$total*100);
 
-		$sql = "select timestampdiff(MINUTE,max(updated),now()) minutes, max(updated) latest,count(1) count from candidate_donation "; # where timediff(now(),updated) < '02:00:00' ";
+		$sql = "select timestampdiff(MINUTE,max(updated),now()) minutes, max(updated) latest,count(1) count from candidate_donation where created > '2019-01-01' "; # where timediff(now(),updated) < '02:00:00' ";
 		$stats = getDatabase()->one($sql);
 
 			?>
@@ -1664,8 +1666,8 @@ class ElectionController {
 		</div>
 
 		<?php if ($row['city'] == '') { 
-			// $row['city'] = 'Ottawa'; 
-			$row['city'] = 'London'; 
+			$row['city'] = 'Ottawa'; 
+			// $row['city'] = 'London'; 
 		} ?>
 		<div class="form-group">
 			<label class="col-sm-1 control-label" for="city">City</label>
@@ -1718,6 +1720,26 @@ class ElectionController {
 		</div>
 
 		<div class="form-group">
+			<label class="col-sm-1 control-label" for="donation_date">Date</label>
+			<div class="col-sm-5">
+			<input id="donation_date" class="form-control" value="<?php print $row['donation_date']; ?>" type="text" placeholder="yyyy-mm-dd" name="donation_date" />
+			</div>
+			<div class="col-sm-6 processDonation-help">
+				Each donation should have a donation_date the donation was made included. Please use yyyy-mm-dd format.
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label class="col-sm-1 control-label" for="comment">Comment</label>
+			<div class="col-sm-5">
+			<input id="comment" class="form-control" value="<?php print $row['comment']; ?>" type="text" placeholder="Returned? Other comment?" name="comment" />
+			</div>
+			<div class="col-sm-6 processDonation-help">
+				If you want to bring anything to my attention about this record, enter anything you'd like here.
+			</div>
+		</div>
+
+		<div class="form-group">
 			<div class="col-sm-5 col-sm-offset-1">
 				<input class="btn btn-large btn-success" type="submit" value="Save" />
 				&nbsp;
@@ -1740,7 +1762,7 @@ class ElectionController {
 							peopleid = ".getSession()->get("user_id")."
 							and returnid in (
 								select id from candidate_return where candidateid in ( 
-									select id from candidate where year = 2014 
+									select id from candidate where year = 2018 
 								)
 							)
 					");
@@ -1823,8 +1845,26 @@ class ElectionController {
 			$_POST['peopleid'] = null;
 		}
 		
-		// update in bulk
- 		db_update('candidate_donation',$_POST,'id');
+		// update in bulktry 
+		try {
+			db_update('candidate_donation',$_POST,'id');
+		} catch (Exception $e) {
+			top3();
+			?>
+			<h1>Oops!</h1>
+			Something went wrong. Don't worry, nothing bad has happened, but there must be a problem with the data/fields you entered?
+			<br/>
+			<br/>
+			No worries. Kevin will eventually get around to fixing the problem on this donation. 
+			If you keep getting this error, cut-n-paste the below info in an email to kevino@kevino.net (and thanks!)
+			Otherwise, no sweat, <a href="/election/processDonation">just move on to a different donation</a>.
+			<hr/>
+			<?php
+			pr($_POST);
+			print "<pre>$e</pre>";
+			bottom3();
+			return false;
+		}
 
 		// normalize, the bulk lazy way!
 		// getDatabase()->execute(" update candidate_donation set postal = replace(upper(postal),' ','') where postal != upper(postal) or postal like '% %' ");
@@ -1990,6 +2030,7 @@ class ElectionController {
 			select 
 				d.id,
 				d.type,
+				d.donation_date,
 				d.name donor,
 				d.address,
 				d.city,
@@ -2012,7 +2053,8 @@ class ElectionController {
 				r.supplemental,
 				d.donorid,
 				c.electionid,
-				e.date
+				e.date,
+				case when e.date < d.donation_date then 2 when e.date = d.donation_date then 1 else 0 end as after_election
 			from
 				candidate_donation d
 				join candidate_return r on d.returnid = r.id
@@ -2055,7 +2097,7 @@ class ElectionController {
 			header("Content-Type: application/octet-stream");
 			header("Content-Type: application/download");
 			header("Content-Description: File Transfer");             
-			$cols = array( 'id', 'type', 'donor', 'address', 'city', 'postal', 'amount', 'year', 'ward', 'first', 'last', 'incumbent', 'winner', 'page','x','y','retid','supplemental','gender','donor_gender','lat','lon');
+			$cols = array( 'id', 'type', 'donor', 'address', 'city', 'postal', 'amount', 'donation_date', 'year', 'ward', 'first', 'last', 'incumbent', 'winner', 'page','x','y','retid','supplemental','gender','donor_gender','lat','lon');
 			foreach ($cols as $c) {
 				print "{$c}\t";
 			}
@@ -2375,6 +2417,7 @@ class ElectionController {
 					<th>address</th>
 					<th>city</th>
 					<th>postal</th>
+					<th>date</th>
 					<th>type</th>
 					<th>pin<br/>(<a href="javascript:clearPinIds()">clear</a>)</th>
 			</tr>
@@ -2406,6 +2449,12 @@ class ElectionController {
 				print "<td>{$r['address']}</td>";
 				print "<td>{$r['city']}</td>";
 				print "<td><a href=\"/election/listDonations?postal={$r['postal']}\">{$r['postal']}</a></td>";
+				if ($r['after_election'] == 0) { $style = ''; }
+				if ($r['after_election'] == 1) { $style = 'style="color: orange;"'; }
+				if ($r['after_election'] == 2) { $style = 'style="color: red;"'; }
+				print "<td {$style}>";
+				print "<nobr>{$r['donation_date']}</nobr>";
+				print "</td>";
 				print "<td>";
 				print "{$r['type']}";
 				if ($r['supplemental'] == 1) {
@@ -2499,7 +2548,7 @@ class ElectionController {
 					left join candidate_donation d on d.returnid = r.id
 				group by c.id, c.last, c.first 
 				having sum(case when d.id is null then 0 else 1 end) > 0
-				order by max(c.year) desc, c.last, c.first ";
+				order by max(c.year) desc, c.winner desc, c.last, c.first ";
 			$rows = getDatabase()->all($sql);
 			foreach ($rows as &$r) {
 				print "<tr>
@@ -2541,6 +2590,7 @@ class ElectionController {
 				d.postal,
 				d.amount,
 				d.page,
+				d.donation_date,
 				d.x,
 				d.y,
 				astext(d.location) as geo,
@@ -2627,6 +2677,7 @@ class ElectionController {
 
 			print "<tr><th>Donor Name</th><td><a href=\"/election/donor/{$r['donorid']}\">{$r['donor']}</a></td></tr>";
 			print "<tr><th>Donor Type</th><td>{$r['type']}</td></tr>";
+			print "<tr><th>Donation Date</th><td>{$r['donation_date']}</td></tr>";
 			print "<tr><th>Amount</th><td>{$r['amount']}</td></tr>";
 			print "<tr><th>Address</th><td>{$r['address']}</td></tr>";
 			print "<tr><th>City</th><td>{$r['city']}</td></tr>";
@@ -2642,8 +2693,10 @@ class ElectionController {
 					<a target="_blank" href="http://documents.ottawa.ca/sites/documents.ottawa.ca/files/documents/<?php print $r['filename']; ?>"><?php print $r['filename']; ?></a>,
 					<?php
 				} else {
+					$path = preg_replace('/.*\//','',$r['filename']);
+					$path = "https://documents.ottawa.ca/sites/default/files/".$path;
 					?>
-					<a target="_blank" href="<?php print $r['filename']; ?>"><?php print preg_replace('/.*\//','',$r['filename']); ?></a>,
+					<a target="_blank" href="<?php print $path; ?>"><?php print preg_replace('/.*\//','',$r['filename']); ?></a>,
 					<?php
 				}
 				?>
