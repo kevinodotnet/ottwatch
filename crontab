@@ -1,9 +1,4 @@
 # OttWatch
-# ottwatch keep 00,30 * * * * php /mnt/www/ottwatch/bin/meeting-parser.php
-# ottwatch keep 02 8,16 * * * php /mnt/www/ottwatch/bin/meeting-parser.php coaMeetingScrapeAndParse
-# ottwatch keep 05 5-20 * * * php /mnt/www/ottwatch/bin/meeting-parser.php hardScan
-# ottwatch keep 34 */2 * * * php /mnt/www/ottwatch/bin/lobby-scaper.php 90
-# ottwatch keep */5 * * * * php /mnt/www/ottwatch/bin/syndicate.php
 
 ######### # OttWatch DO NOT RUN
 # ottwatch keep 34 11 * * * php /mnt/www/ottwatch/bin/meeting-parser.php findNonRssMeetings
