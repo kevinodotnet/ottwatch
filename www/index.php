@@ -701,14 +701,6 @@ function voteOnQuestion(p,i,v) {
 </head>
 <body>
 
-<div class="row">
-<div class="col-sm-4 text-center">
-</div>
-<div class="col-sm-4 text-center" style="font-size: 200%;">
-(Heads up! Ottwatch is frozen/unstable while it moves servers. Sep2/2019)
-</div>
-</div>
-
 <?php
 if ($quiet) { return; }
 $remaining = getDatabase()->one(" select count(1) c from candidate_donation where amount is null ");
