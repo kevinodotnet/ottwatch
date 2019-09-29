@@ -313,6 +313,7 @@ function dashboard() {
 
 	<h4>Election Debate!</h4>
 	Tune in on Oct 15th, at 7pm (stream starts at 6:50pm) to watch the Ottawa Centre Candidates debate.
+	(<a href="https://youtu.be/ir9ZXULE7Bo">Open on Youtube</a>)
 	<iframe width="100%" height="315" src="https://www.youtube.com/embed/ir9ZXULE7Bo" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
   <div style="margin-top: 10px; background: #08c; color: #ffffff; padding: 20px; font-size: 125%; border-radius: 4px;">
