@@ -299,24 +299,9 @@ function DEPRECATED_adsense_adaptive() {
 }
 
 function dashboard() {
+  global $OTT_WWW;
   top("OttWatch - watching ottawa.ca to save you time",false,false)
 	?>
-  <div class="row-fluid">
-  <div class="span6">
-	<h4>Election Debate!</h4>
-	Tune in on Oct 15th, at 7pm (stream starts at 6:50pm) to watch the Ottawa Centre Candidates debate.
-	</div>
-  <div class="span6">
-	<iframe width="100%" height="315" src="https://www.youtube.com/embed/ir9ZXULE7Bo" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-	</div>
-	</div>
-	<?php
-	dashboard_t();
-}
-
-function dashboard_t() {
-  global $OTT_WWW;
-  ?>
 
   <div class="row-fluid">
   <div class="span4">
@@ -325,6 +310,10 @@ function dashboard_t() {
   <b>OttWatch</b> is dedicated to making it easier to be 
   part of the political conversation in Ottawa. 
   <a href="about">Read about all the features</a>.
+
+	<h4>Election Debate!</h4>
+	Tune in on Oct 15th, at 7pm (stream starts at 6:50pm) to watch the Ottawa Centre Candidates debate.
+	<iframe width="100%" height="315" src="https://www.youtube.com/embed/ir9ZXULE7Bo" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
   <div style="margin-top: 10px; background: #08c; color: #ffffff; padding: 20px; font-size: 125%; border-radius: 4px;">
   <center>
