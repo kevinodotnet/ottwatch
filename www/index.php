@@ -199,7 +199,7 @@ getRoute()->get('/election/processDonation/*', array('ElectionController','proce
 getRoute()->post('/election/processDonation/*', array('ElectionController','processDonationSave'));
 getRoute()->get('/election/listDonations', array('ElectionController','listDonations'));
 getRoute()->get('/election/donor/(\d+)', array('ElectionController','showDonor'));
-getRoute()->get('/election/donation/(\d+)', array('ElectionController','showDonation'));
+#getRoute()->get('/election/donation/(\d+)', array('ElectionController','showDonation'));
 getRoute()->get('/election/tmp', array('ElectionController','tmp'));
 
 getRoute()->get('/election/candidate/(\d+)', array('ElectionController','showCandidate'));
