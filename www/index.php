@@ -850,7 +850,7 @@ function bottom_common($v3, $quiet) {
 				Created by <a href="http://kevino.ca"><b>Kevin O'Donnell</b></a>
 			</div>
 			<div class="col-sm-3 text-center">
-				Follow <a href="http://twitter.com/OttWatch">@OttWatch</a></b> and <b><a href="http://twitter.com/ODonnell_K">@ODonnell_K</a>
+				Follow <a href="http://twitter.com/OttWatch">@OttWatch</a></b> and <b><a href="http://twitter.com/kevinodotnet">@kevinodotnet</a>
 			</div>
 			<div class="col-sm-3 text-center">
 				<!--<a href="<?php print $OTT_WWW; ?>"><img style="width: 50px; height: 50px;" src="<?php print $OTT_WWW; ?>/img/ottwatch.png"/></a><br/>-->
@@ -865,7 +865,7 @@ function bottom_common($v3, $quiet) {
 		<div class="well" style="margin-top: 10px;" >
 		<a href="<?php print $OTT_WWW; ?>"><img style="float: right; padding-left: 5px; width: 50px; height: 50px;" src="<?php print $OTT_WWW; ?>/img/ottwatch.png"/></a>
 		<i>Created by <a href="http://kevino.ca"><b>Kevin O'Donnell</b></a> to make it easier to be part of the political conversation in Ottawa.</i><br/>
-		On Twitter? Follow <b><a href="http://twitter.com/OttWatch">@OttWatch</a></b> and <b><a href="http://twitter.com/ODonnell_K">@ODonnell_K</a></b><br/>
+		On Twitter? Follow <b><a href="http://twitter.com/OttWatch">@OttWatch</a></b> and <b><a href="http://twitter.com/kevinodotnet">@kevinodotnet</a></b><br/>
 		<a href="https://docs.google.com/document/d/1E8hLg41O-CFYHVTtiTRXdo52ltD5uXeNkVDTmAPmwFA/edit?usp=sharing">Privacy Policy</a>
 		<div class="clearfix"></div>
 		</div>
@@ -961,7 +961,7 @@ function md5hist ($md5) {
 		return;
 	}
 	if (count($rows) > 1) {
-		print "Collision on MD5 hash happened, which shouldn't, so Kevin screwed up; maybe tweet this URL to @odonnell_k please?";
+		print "Collision on MD5 hash happened, which shouldn't, so Kevin screwed up; maybe tweet this URL to @kevinodotnet please?";
 		bottom3();
 		return;
 	}
