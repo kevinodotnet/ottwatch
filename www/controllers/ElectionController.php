@@ -615,7 +615,7 @@ class ElectionController {
 			return;
 		}
 
-		if ($year < 2014) {
+		if ($year < 2018) {
 			return;
 		}
 
@@ -2622,6 +2622,7 @@ class ElectionController {
 		$r['city'] = htmlentities($r['city']);
 		$r['postal'] = htmlentities($r['postal']);
 		$r['amount'] = htmlentities($r['amount']);
+
 
 		$next = getDatabase()->one(" select min(y) y from candidate_donation where returnid = {$r['retid']} and page = {$r['page']} and y > {$r['y']} ");
 

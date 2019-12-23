@@ -199,7 +199,7 @@ getRoute()->get('/election/processDonation/*', array('ElectionController','proce
 getRoute()->post('/election/processDonation/*', array('ElectionController','processDonationSave'));
 getRoute()->get('/election/listDonations', array('ElectionController','listDonations'));
 getRoute()->get('/election/donor/(\d+)', array('ElectionController','showDonor'));
-#getRoute()->get('/election/donation/(\d+)', array('ElectionController','showDonation'));
+getRoute()->get('/election/donation/(\d+)', array('ElectionController','showDonation'));
 getRoute()->get('/election/tmp', array('ElectionController','tmp'));
 
 getRoute()->get('/election/candidate/(\d+)', array('ElectionController','showCandidate'));
@@ -310,11 +310,6 @@ function dashboard() {
   <b>OttWatch</b> is dedicated to making it easier to be 
   part of the political conversation in Ottawa. 
   <a href="about">Read about all the features</a>.
-
-	<h4>Election Debate!</h4>
-	Tune in on Oct 15th, at 7pm (stream starts at 6:50pm) to watch the Ottawa Centre Candidates debate.
-	(<a href="https://youtu.be/ir9ZXULE7Bo">Open on Youtube</a>)
-	<iframe width="100%" height="315" src="https://www.youtube.com/embed/ir9ZXULE7Bo" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
   <div style="margin-top: 10px; background: #08c; color: #ffffff; padding: 20px; font-size: 125%; border-radius: 4px;">
   <center>
