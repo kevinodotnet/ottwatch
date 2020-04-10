@@ -22,6 +22,7 @@ include_once 'controllers/LoginController.php';
 include_once 'controllers/UserController.php';
 include_once 'controllers/ChartController.php';
 include_once 'controllers/ElectionController.php';
+include_once 'controllers/CampaignController.php';
 include_once 'controllers/OpenDataController.php';
 include_once 'controllers/StoryController.php';
 include_once 'controllers/MfippaController.php';
@@ -206,12 +207,17 @@ getRoute()->get('/election/candidate/(\d+)', array('ElectionController','showCan
 
 getRoute()->get('/election/question/(\d+)/(.*)', array('ElectionController','showQuestion'));
 getRoute()->get('/election/question/add', array('ElectionController','questionAdd'));
-getRoute()->get('/election/question/list', array('ElectionController','questionList'));
+#getRoute()->get('/election/question/list', array('ElectionController','questionList'));
 getRoute()->post('/election/question/add', array('ElectionController','questionAddPost'));
 getRoute()->post('/election/question/vote', array('ElectionController','questionVote'));
 getRoute()->post('/election/question/answer', array('ElectionController','saveAnswer'));
 
 getRoute()->get('/election/(\d+)/race/(\d+)/results/', array('ElectionController','raceResults'));
+
+getRoute()->get('/campaign', array('CampaignController','index'));
+getRoute()->get('/campaign/', array('CampaignController','index'));
+getRoute()->get('/campaign/(\d+)', array('CampaignController','show'));
+getRoute()->post('/campaign/submit', array('CampaignController','submit'));
 
 getRoute()->get('/gis/viewLayer', array('GisController','viewLayer'));
 
