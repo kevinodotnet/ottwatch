@@ -2,7 +2,24 @@
 
 class CampaignController {
 
+	public static function showSubmission($id) {
+    $submission = getDatabase()->one(" select * from campaign_submission where id = :id ", array('id'=> $id));
+    $values = getDatabase()->all(" select * from campaign_submission_value where submission_id = :id order by id ", array('id'=> $id));
+    $campaign = getDatabase()->one(" select * from campaign where id = :id order by id ", array('id'=> $submission['campaign_id']));
+
+    top3();
+    ?>
+    <h1><?php print $campaign['title']; ?></h1>
+    <h5><?php print $campaign['sub_title']; ?></h5>
+    <?php
+    # pr($submission);
+    # pr($values);
+    # pr($campaign);
+    bottom3();
+  }
+
 	public static function submit() {
+    $mode = $_POST['mode'];
     $values = array();
     $values['campaign_id'] = $_POST['campaign_id'];
     $values['status'] = $_POST['mode'];
@@ -14,7 +31,14 @@ class CampaignController {
       $values['submission_id'] = $submission_id;
       $values['name'] = $k;
       $values['value'] = $v;
+      if (preg_match('/^question_(?<id>\d+)/', $k, $matches)) {
+        $values['question_id'] = $matches['id'];
+      }
       $id = db_insert('campaign_submission_value',$values);
+    }
+
+    if ($mode == 'preview') {
+      header("Location: /campaign/submission/$submission_id");
     }
   }
 
@@ -56,6 +80,8 @@ class CampaignController {
           <input type="text" class="form-control" id="email" name="email" placeholder="Email (required)"><br/>
           <input type="text" class="form-control" id="twitter" name="twitter" placeholder="@twitter (optional)"><br/>
         </div>
+      </div>
+      <div class="row">
         <div class="col-sm-4">
           This petition will be sent to:
         </div>
@@ -77,7 +103,7 @@ class CampaignController {
             <b><?php print $q['title']; ?></b>. <?php print $q['text']; ?>
           </div>
           <div class="col-sm-8">
-            <textarea class="form-control" name="answer_<?php print $q['id']; ?>" rows="3"></textarea>
+            <textarea class="form-control" name="question_<?php print $q['id']; ?>" rows="3"></textarea>
           </div>
         </div>
         <?php

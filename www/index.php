@@ -217,6 +217,7 @@ getRoute()->get('/election/(\d+)/race/(\d+)/results/', array('ElectionController
 getRoute()->get('/campaign', array('CampaignController','index'));
 getRoute()->get('/campaign/', array('CampaignController','index'));
 getRoute()->get('/campaign/(\d+)', array('CampaignController','show'));
+getRoute()->get('/campaign/submission/(\d+)', array('CampaignController','showSubmission'));
 getRoute()->post('/campaign/submit', array('CampaignController','submit'));
 
 getRoute()->get('/gis/viewLayer', array('GisController','viewLayer'));

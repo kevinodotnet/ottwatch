@@ -201,8 +201,6 @@ class DevelopmentAppController {
 				getDatabase()->execute(" update devapp set coadesc = '".preg_replace("/'/","''",implode("<br/>",$a['lines']))."' where devid = '$d' ");
 	    }
 	  }
-
-
 	}
 
   static public function scrapeCommitteeOfAdjustmentHeader($date,$panel,$text) {

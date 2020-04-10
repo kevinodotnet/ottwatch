@@ -69,6 +69,7 @@ DROP TABLE if exists `campaign_submission_value`;
 CREATE TABLE `campaign_submission_value` (
   `id` mediumint(9) NOT NULL AUTO_INCREMENT,
   `submission_id` mediumint(9) NOT NULL,
+  `question_id` mediumint(9) DEFAULT NULL,
   `name` varchar(128) DEFAULT NULL,
   `value` varchar(2048) DEFAULT NULL,
   PRIMARY KEY (`id`)
