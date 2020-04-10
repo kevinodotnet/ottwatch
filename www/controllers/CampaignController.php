@@ -70,40 +70,26 @@ class CampaignController {
     <form method="post" action="submit">
       <input type="hidden" name="mode" value="preview"/>
       <input type="hidden" name="campaign_id" value="<?php print $id; ?>"/>
-      <div class="row">
-        <div class="col-sm-4">
-          Your Information:
-        </div>
-        <div class="col-sm-8">
-          <input type="text" class="form-control" id="first_name" name="first_name" placeholder="First name (required)"><br/>
-          <input type="text" class="form-control" id="last_name" name="last_name" placeholder="Last name (required)"><br/>
-          <input type="text" class="form-control" id="email" name="email" placeholder="Email (required)"><br/>
-          <input type="text" class="form-control" id="twitter" name="twitter" placeholder="@twitter (optional)"><br/>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-sm-4">
-          This petition will be sent to:
-        </div>
-        <div class="col-sm-8">
-          <ul>
-          <?php
-          foreach ($recipients as $r) {
-            print "<li>{$r['name']} &lt;{$r['email']}&gt;, {$r['role']}</li>";
-          }
-          ?>
-          </ul>
-        </div>
-      </div>
       <?php
       foreach ($questions as $q) {
         ?>
         <div class="row" style="padding-top: 10px;">
           <div class="col-sm-4">
-            <b><?php print $q['title']; ?></b>. <?php print $q['text']; ?>
+            <b><?php print $q['title']; ?></b>
+            <?php print $q['text']; ?>
           </div>
           <div class="col-sm-8">
-            <textarea class="form-control" name="question_<?php print $q['id']; ?>" rows="3"></textarea>
+            <?php
+              if ($q['type'] == 'text') {
+                ?>
+                <input type="text" class="form-control" name="question_<?php print $q['id']; ?>"/>
+                <?php
+              }
+              if ($q['type'] == 'textarea') {
+                ?><textarea class="form-control" name="question_<?php print $q['id']; ?>" rows="3"></textarea><?php
+              }
+            ?>
+
           </div>
         </div>
         <?php
