@@ -803,10 +803,10 @@ class ApiController {
     }
 
 		# riding
-    $row = getDatabase()->one(" select enname,frname,provcode,fednum from ridings_2011 where ST_Contains(shape,PointFromText('POINT($lon $lat)')) ");
-		if ($row['enname']) {
-			$result['fed_riding'] = $row;
-		}
+    #$row = getDatabase()->one(" select enname,frname,provcode,fednum from ridings_2011 where ST_Contains(shape,PointFromText('POINT($lon $lat)')) ");
+		#if ($row['enname']) {
+		#	$result['fed_riding'] = $row;
+		#}
 
     return $result;
   }
