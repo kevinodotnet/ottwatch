@@ -47,3 +47,59 @@ if ($argv[1] == 'createReturn') {
 }
 
 
+if ($argv[1] == 'foo') {
+  $sql = " 
+    select * 
+    from candidate_donation 
+    where 
+      location is null 
+      and city = 'Ottawa'
+      and postal like 'K%'
+      and created > '2019-01-01' 
+      and id = 14778
+    order by rand() limit 1 ";
+  $row = getDatabase()->one($sql);
+  $single_line = $row['address'].', '.$row['city'].', '.$row['prov'].', '.$row['postal'];
+  pr($row);
+  $url="https://city-of-ottawa-dev.apigee.net/gis/v1/findAddressCandidates?SingleLine=".$single_line."&outFields=User_fld&f=json";
+  $json = json_decode(file_get_contents($url));
+  print "\n";
+  if (count($json->candidates) == 1) {
+    pr($json->candidates);
+    $loc = mercatorToLatLon(
+      $json->candidates[0]->location->x,
+      $json->candidates[0]->location->y
+    );
+    pr($loc);
+  } else {
+    print "too many/fiew:\n";
+    pr($json);
+  }
+}
+
+/*
+<pre>Array
+(
+    [id] => 12722
+    [returnid] => 1054
+    [type] => 
+    [name] => Fransham, Richard
+    [address] => 788 de Salaberry St
+    [city] => Ottawa
+    [prov] => 
+    [postal] => K1J6L1
+    [amount] => 100.00
+    [page] => 3
+    [x] => 52
+    [y] => 755
+    [updated] => 2019-04-09 19:16:57
+    [created] => 2019-03-31 12:30:30
+    [location] => 
+    [peopleid] => 
+    [donorid] => 
+    [donor_gender] => 
+    [donation_date] => 2018-09-09
+    [comment] => 
+    [ward] => 
+)
+1</pre>
