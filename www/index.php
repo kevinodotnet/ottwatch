@@ -320,29 +320,18 @@ function dashboard() {
 
   <div style="margin-top: 10px; background: #08c; color: #ffffff; padding: 20px; font-size: 125%; border-radius: 4px;">
   <center>
-	<?php
-  $row = getDatabase()->one(" select * from story where deleted = 0 and published = 1 order by updated desc limit 1 ");
-	$row['body'] = '';
-	print "<a style=\"color: #ffffff;\" href=\"/story/{$row['id']}\">";
-	print "<b>Latest Story</b>: {$row['title']}";
-	print "</a>";
-	?>
-  </center>
-  </a>
+  <p>
+  <b>Who is my councillor?</b>
+  Enter your postal code for more information.
+  </p>
+  <iframe style="width: 100%; height: 200px; border: 1px solid #c0c0c0;" src="http://ottwatch.ca/api/widget/findward"></iframe>
   </div>
 
-  <div style="margin-top: 10px; background: #08c; color: #ffffff; padding: 20px; font-size: 125%; border-radius: 4px;">
-  <center>
-	<?php
-  $row = getDatabase()->one(" select * from story where deleted = 0 and published = 1 order by updated desc limit 1 ");
-	$row['body'] = '';
-	print "<a style=\"color: #ffffff;\" href=\"/election/listDonations\">";
-	print "Campaign Donation Database";
-	print "</a>";
-	?>
-  </center>
-  </a>
-  </div>
+  </div><!-- span -->
+
+  <div class="span4">
+
+  <h4>Meetings</h4>
 
   <table class="table table-bordered table-hover table-condensed" style="width: 100%; margin-top: 20px;">
   <?php 
@@ -351,7 +340,7 @@ function dashboard() {
 	  ?>
 	  <tr>
 	  <td colspan="3">
-	  <h4>Today's Meetings</h4>
+	  <h4>Today</h4>
 	  </td>
 	  </tr>
 	  <?php
@@ -379,7 +368,7 @@ function dashboard() {
 	  ?>
 	  <tr>
 	  <td colspan="3">
-	  <h4>Upcoming Meetings</h4>
+	  <h4>Upcoming</h4>
 	  </td>
 	  </tr>
 	  <?php
@@ -397,7 +386,7 @@ function dashboard() {
   ?>
   <tr>
   <td colspan="3">
-  <h4>Previous Meetings</h4>
+  <h4>Previous</h4>
   </td>
   </tr>
   <?php
@@ -425,11 +414,32 @@ function dashboard() {
   // ottawaMediaRSS();
   ?>
 
-  </div>
-
-
+  </div><!-- span -->
 
   <div class="span4">
+  <div style="margin-top: 10px; background: #08c; color: #ffffff; padding: 20px; font-size: 125%; border-radius: 4px;">
+  <center>
+	<?php
+  $row = getDatabase()->one(" select * from story where deleted = 0 and published = 1 order by updated desc limit 1 ");
+	$row['body'] = '';
+	print "<a style=\"color: #ffffff;\" href=\"/election/listDonations\">";
+	print "Campaign Donation Database";
+	print "</a>";
+	?>
+  </center>
+  </div>
+  <div style="margin-top: 10px; background: #08c; color: #ffffff; padding: 20px; font-size: 125%; border-radius: 4px;">
+  <center>
+	<?php
+  $row = getDatabase()->one(" select * from story where deleted = 0 and published = 1 order by updated desc limit 1 ");
+	$row['body'] = '';
+	print "<a style=\"color: #ffffff;\" href=\"/story/{$row['id']}\">";
+	print "<b>Latest Story</b>: {$row['title']}";
+	print "</a>";
+	?>
+  </center>
+  </a>
+  </div>
 
   <script>
   function devapp_search_form_submit() {
@@ -462,6 +472,11 @@ function dashboard() {
   </div><!-- /search devapps -->
 	<br/>
 
+  </div><!-- span -->
+
+  </div>
+  <div class="row-fluid">
+  <div class="span4">
 
   <h4>More Reports and Data</h4>
 	<ul>
