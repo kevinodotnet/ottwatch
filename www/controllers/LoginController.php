@@ -270,10 +270,11 @@ class LoginController {
     <div class="span4 offset4" style="text-align: center;">
     <h3>Sign in with Social Media</h3>
     <a class="btn btn-primary" href="login/twitter">Sign in with Twitter</a><br/><br/>
-    <a class="btn btn-primary" href="login/facebook">Sign in with Facebook</a>
+    <!-- <a class="btn btn-primary" href="login/facebook">Sign in with Facebook</a> -->
     </div>
 
     </div>
+		<!--
     <div class="row-fluid">
 
     <div class="span4 offset4" style="margin-top: 50px;">
@@ -310,8 +311,8 @@ class LoginController {
 
     </form>
     </div>
-
     </div>
+		-->
     <?php
     bottom();
     return;

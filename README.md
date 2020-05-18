@@ -122,5 +122,5 @@ License
 About Me
 ========
 
-You can find me on twitter at @odonnell_k
+You can find me on twitter at @kevinodotnet
 

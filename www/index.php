@@ -22,6 +22,7 @@ include_once 'controllers/LoginController.php';
 include_once 'controllers/UserController.php';
 include_once 'controllers/ChartController.php';
 include_once 'controllers/ElectionController.php';
+include_once 'controllers/CampaignController.php';
 include_once 'controllers/OpenDataController.php';
 include_once 'controllers/StoryController.php';
 include_once 'controllers/MfippaController.php';
@@ -206,12 +207,18 @@ getRoute()->get('/election/candidate/(\d+)', array('ElectionController','showCan
 
 getRoute()->get('/election/question/(\d+)/(.*)', array('ElectionController','showQuestion'));
 getRoute()->get('/election/question/add', array('ElectionController','questionAdd'));
-getRoute()->get('/election/question/list', array('ElectionController','questionList'));
+#getRoute()->get('/election/question/list', array('ElectionController','questionList'));
 getRoute()->post('/election/question/add', array('ElectionController','questionAddPost'));
 getRoute()->post('/election/question/vote', array('ElectionController','questionVote'));
 getRoute()->post('/election/question/answer', array('ElectionController','saveAnswer'));
 
 getRoute()->get('/election/(\d+)/race/(\d+)/results/', array('ElectionController','raceResults'));
+
+getRoute()->get('/campaign', array('CampaignController','index'));
+getRoute()->get('/campaign/', array('CampaignController','index'));
+getRoute()->get('/campaign/(\d+)', array('CampaignController','show'));
+getRoute()->get('/campaign/submission/(\d+)', array('CampaignController','showSubmission'));
+getRoute()->post('/campaign/submit', array('CampaignController','submit'));
 
 getRoute()->get('/gis/viewLayer', array('GisController','viewLayer'));
 
@@ -301,7 +308,7 @@ function DEPRECATED_adsense_adaptive() {
 function dashboard() {
   global $OTT_WWW;
   top("OttWatch - watching ottawa.ca to save you time",false,false)
-  ?>
+	?>
 
   <div class="row-fluid">
   <div class="span4">
@@ -313,29 +320,18 @@ function dashboard() {
 
   <div style="margin-top: 10px; background: #08c; color: #ffffff; padding: 20px; font-size: 125%; border-radius: 4px;">
   <center>
-	<?php
-  $row = getDatabase()->one(" select * from story where deleted = 0 and published = 1 order by updated desc limit 1 ");
-	$row['body'] = '';
-	print "<a style=\"color: #ffffff;\" href=\"/story/{$row['id']}\">";
-	print "<b>Latest Story</b>: {$row['title']}";
-	print "</a>";
-	?>
-  </center>
-  </a>
+  <p>
+  <b>Who is my councillor?</b>
+  Enter your postal code for more information.
+  </p>
+  <iframe style="width: 100%; height: 200px; border: 1px solid #c0c0c0;" src="http://ottwatch.ca/api/widget/findward"></iframe>
   </div>
 
-  <div style="margin-top: 10px; background: #08c; color: #ffffff; padding: 20px; font-size: 125%; border-radius: 4px;">
-  <center>
-	<?php
-  $row = getDatabase()->one(" select * from story where deleted = 0 and published = 1 order by updated desc limit 1 ");
-	$row['body'] = '';
-	print "<a style=\"color: #ffffff;\" href=\"/election/listDonations\">";
-	print "Campaign Donation Database";
-	print "</a>";
-	?>
-  </center>
-  </a>
-  </div>
+  </div><!-- span -->
+
+  <div class="span4">
+
+  <h4>Meetings</h4>
 
   <table class="table table-bordered table-hover table-condensed" style="width: 100%; margin-top: 20px;">
   <?php 
@@ -344,7 +340,7 @@ function dashboard() {
 	  ?>
 	  <tr>
 	  <td colspan="3">
-	  <h4>Today's Meetings</h4>
+	  <h4>Today</h4>
 	  </td>
 	  </tr>
 	  <?php
@@ -372,7 +368,7 @@ function dashboard() {
 	  ?>
 	  <tr>
 	  <td colspan="3">
-	  <h4>Upcoming Meetings</h4>
+	  <h4>Upcoming</h4>
 	  </td>
 	  </tr>
 	  <?php
@@ -390,7 +386,7 @@ function dashboard() {
   ?>
   <tr>
   <td colspan="3">
-  <h4>Previous Meetings</h4>
+  <h4>Previous</h4>
   </td>
   </tr>
   <?php
@@ -418,11 +414,32 @@ function dashboard() {
   // ottawaMediaRSS();
   ?>
 
-  </div>
-
-
+  </div><!-- span -->
 
   <div class="span4">
+  <div style="margin-top: 10px; background: #08c; color: #ffffff; padding: 20px; font-size: 125%; border-radius: 4px;">
+  <center>
+	<?php
+  $row = getDatabase()->one(" select * from story where deleted = 0 and published = 1 order by updated desc limit 1 ");
+	$row['body'] = '';
+	print "<a style=\"color: #ffffff;\" href=\"/election/listDonations\">";
+	print "Campaign Donation Database";
+	print "</a>";
+	?>
+  </center>
+  </div>
+  <div style="margin-top: 10px; background: #08c; color: #ffffff; padding: 20px; font-size: 125%; border-radius: 4px;">
+  <center>
+	<?php
+  $row = getDatabase()->one(" select * from story where deleted = 0 and published = 1 order by updated desc limit 1 ");
+	$row['body'] = '';
+	print "<a style=\"color: #ffffff;\" href=\"/story/{$row['id']}\">";
+	print "<b>Latest Story</b>: {$row['title']}";
+	print "</a>";
+	?>
+  </center>
+  </a>
+  </div>
 
   <script>
   function devapp_search_form_submit() {
@@ -455,6 +472,11 @@ function dashboard() {
   </div><!-- /search devapps -->
 	<br/>
 
+  </div><!-- span -->
+
+  </div>
+  <div class="row-fluid">
+  <div class="span4">
 
   <h4>More Reports and Data</h4>
 	<ul>
@@ -491,8 +513,6 @@ function dashboard() {
 
   </div>
   <div class="span4">
-  <h4>Recent Comments</h4>
-  <?php disqusRecent(8); ?>
   </div>
   </div>
 
@@ -561,8 +581,6 @@ function error404() {
 
 function top3($title = '',$quiet = false, $menu = true) {
 	top_common(1,$title,$quiet,$menu);
-	?>
-	<?php
 }
 
 function top($title = '',$quiet = false, $menu = true) {
@@ -849,7 +867,7 @@ function bottom_common($v3, $quiet) {
 				Created by <a href="http://kevino.ca"><b>Kevin O'Donnell</b></a>
 			</div>
 			<div class="col-sm-3 text-center">
-				Follow <a href="http://twitter.com/OttWatch">@OttWatch</a></b> and <b><a href="http://twitter.com/ODonnell_K">@ODonnell_K</a>
+				Follow <a href="http://twitter.com/OttWatch">@OttWatch</a></b> and <b><a href="http://twitter.com/kevinodotnet">@kevinodotnet</a>
 			</div>
 			<div class="col-sm-3 text-center">
 				<!--<a href="<?php print $OTT_WWW; ?>"><img style="width: 50px; height: 50px;" src="<?php print $OTT_WWW; ?>/img/ottwatch.png"/></a><br/>-->
@@ -864,7 +882,7 @@ function bottom_common($v3, $quiet) {
 		<div class="well" style="margin-top: 10px;" >
 		<a href="<?php print $OTT_WWW; ?>"><img style="float: right; padding-left: 5px; width: 50px; height: 50px;" src="<?php print $OTT_WWW; ?>/img/ottwatch.png"/></a>
 		<i>Created by <a href="http://kevino.ca"><b>Kevin O'Donnell</b></a> to make it easier to be part of the political conversation in Ottawa.</i><br/>
-		On Twitter? Follow <b><a href="http://twitter.com/OttWatch">@OttWatch</a></b> and <b><a href="http://twitter.com/ODonnell_K">@ODonnell_K</a></b><br/>
+		On Twitter? Follow <b><a href="http://twitter.com/OttWatch">@OttWatch</a></b> and <b><a href="http://twitter.com/kevinodotnet">@kevinodotnet</a></b><br/>
 		<a href="https://docs.google.com/document/d/1E8hLg41O-CFYHVTtiTRXdo52ltD5uXeNkVDTmAPmwFA/edit?usp=sharing">Privacy Policy</a>
 		<div class="clearfix"></div>
 		</div>
@@ -960,7 +978,7 @@ function md5hist ($md5) {
 		return;
 	}
 	if (count($rows) > 1) {
-		print "Collision on MD5 hash happened, which shouldn't, so Kevin screwed up; maybe tweet this URL to @odonnell_k please?";
+		print "Collision on MD5 hash happened, which shouldn't, so Kevin screwed up; maybe tweet this URL to @kevinodotnet please?";
 		bottom3();
 		return;
 	}

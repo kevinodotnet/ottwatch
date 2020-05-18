@@ -306,7 +306,7 @@ function renderShareLinks($text,$url) {
     "?url=".urlencode($url).
     "&text=".urlencode($text).
     "&via=OttWatch".
-    "&related=odonnell_k".
+    "&related=kevinodotnet".
     "&hashtags=ottpoli".
     "";
 

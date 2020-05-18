@@ -325,6 +325,8 @@ class MfippaController {
       return;
     }
     }
+		print "(disabled)";
+		return;
     $pagesdir = OttWatchConfig::FILE_DIR."/mfippa/{$row['source']}";
     $thumb = "$pagesdir/mfippa_crop_{$row['id']}.png";
     if (!file_exists($thumb)) {
