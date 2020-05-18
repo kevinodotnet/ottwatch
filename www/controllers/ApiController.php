@@ -432,7 +432,6 @@ class ApiController {
           $('#wardmsg').html('... loading ward information ...');
           url = '<?php print OttWatchConfig::WWW ; ?>/api/point?lat=' + lat + '&lon=' + lon;
           $.getJSON(url,function(data){
-            console.log(data);
             console.log(JSON.stringify(data));
             if (data.ward.ward == undefined) {
 	            $('#wardmsg').html( postal + ' seems to be outside of Ottawa (<a href="javascript:findwardagain(); return false;">again</a>)');
@@ -449,16 +448,18 @@ class ApiController {
                 window.location.href = url;
 							} else {
 		            $('#wardmsg').html(
-		              postal.toUpperCase() + 
-										' is in <b>' + data.ward.ward + '</b><br/>' + 
-										' Councillor: ' + data.ward.councillor.first + ' ' + data.ward.councillor.last + '<br/>' +
-										' Email: ' + data.ward.councillor.email + '<br/>' +
-										' Twitter: <a target="_blank" href="http://twitter.com/'+data.ward.councillor.twitter+'">' + data.ward.councillor.twitter + '</a></b><br/>' + 
-										' <br/>' +
-                    ' <a href="https://twitter.com/messages/compose?recipient_id=' + data.ward.councillor.twitter_id + '">Send ' + data.ward.councillor.twitter + 'DM!</a>' +
-                    ' <br/>' +
-										' <a href="http://ottwatch.ca/api/widget/findward">Search Again</a>' +
-                    ''
+                  '<center>' +
+                  '<p><b>' + postal.toUpperCase() + '</b>' + 
+                  ' is in <b>' + data.ward.ward + '</b></p>' + 
+                  ' <table border="0" cellspacing="2"> ' + 
+                  ' <tr><th>Councillor</th><td>' + data.ward.councillor.first + ' ' + data.ward.councillor.last + '</td></tr>' +
+                  ' <tr><th>Email</th><td>' + data.ward.councillor.email + '</td></tr>' +
+                  ' <tr><th>Twitter</td><td><a target="_blank" href="http://twitter.com/'+data.ward.councillor.twitter+'">' + data.ward.councillor.twitter + '</a></td></tr>' +
+                  ' </table>' +
+                  '</center>' +
+                  ' <p>&nbsp;</p>' + 
+                  ' <p><a href="http://ottwatch.ca/api/widget/findward">Search Again</a></p>' +
+                  ''
 		            );
 							}
             }
