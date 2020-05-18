@@ -376,8 +376,9 @@ class ApiController {
 	}
 
 	public static function widgetFindWardInner($branded) {
-
+		$postal = urlencode($_GET['postal']);
 		$return_url = urlencode($_GET['return_url']);
+		$tweet_text = urlencode($_GET['tweet_text']);
 		$return_param_num = urlencode($_GET['return_param_num']);
 		$return_param_name = urlencode($_GET['return_param_name']);
 		$return_param_email = urlencode($_GET['return_param_email']);
@@ -432,22 +433,32 @@ class ApiController {
           url = '<?php print OttWatchConfig::WWW ; ?>/api/point?lat=' + lat + '&lon=' + lon;
           $.getJSON(url,function(data){
             console.log(data);
+            console.log(JSON.stringify(data));
             if (data.ward.ward == undefined) {
 	            $('#wardmsg').html( postal + ' seems to be outside of Ottawa (<a href="javascript:findwardagain(); return false;">again</a>)');
             } else {
 							if (return_url != '') {
 								url = decodeURI(return_url);
-								url += '?'; url += decodeURI(return_param_num); url += '='; url += data.ward.wardnum;
-								url += '&'; url += decodeURI(return_param_name); url += '='; url += data.ward.ward;
-								url += '&'; url += decodeURI(return_param_email); url += '='; url += data.ward.councillor.email;
-								window.location.href = url;
+								url += '?'; url += decodeURI('ward_num'); url += '='; url += data.ward.wardnum;
+								url += '&'; url += decodeURI('ward_name'); url += '='; url += data.ward.ward;
+								url += '&'; url += decodeURI('councillor_email'); url += '='; url += data.ward.councillor.email;
+								url += '&'; url += decodeURI('councillor_twitter'); url += '='; url += data.ward.councillor.twitter;
+								url += '&'; url += decodeURI('councillor_twitter_id'); url += '='; url += data.ward.councillor.twitter_id;
+								url += '&'; url += decodeURI('postal'); url += '='; url += postal;
+								url += '&'; url += decodeURI('raw'); url += '='; url += encodeURI(JSON.stringify(data));
+                window.location.href = url;
 							} else {
 		            $('#wardmsg').html(
-		              postal + 
-										' is in <b><a target="_blank" href="<?php print OttWatchConfig::WWW; ?>/election/ward/'+data.ward.wardnum+'">' + data.ward.ward + '</a></b><br/>' + 
+		              postal.toUpperCase() + 
+										' is in <b>' + data.ward.ward + '</b><br/>' + 
 										' Councillor: ' + data.ward.councillor.first + ' ' + data.ward.councillor.last + '<br/>' +
-										' Email: ' + data.ward.councillor.email +
-										' '
+										' Email: ' + data.ward.councillor.email + '<br/>' +
+										' Twitter: <a target="_blank" href="http://twitter.com/'+data.ward.councillor.twitter+'">' + data.ward.councillor.twitter + '</a></b><br/>' + 
+										' <br/>' +
+                    ' <a href="https://twitter.com/messages/compose?recipient_id=' + data.ward.councillor.twitter_id + '">Send ' + data.ward.councillor.twitter + 'DM!</a>' +
+                    ' <br/>' +
+										' <a href="http://ottwatch.ca/api/widget/findward">Search Again</a>' +
+                    ''
 		            );
 							}
             }
