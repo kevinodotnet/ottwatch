@@ -3,7 +3,8 @@
 class LobbyistController {
 
 	# base URL of the lobbyist registry
-	const URL = "https://apps107.ottawa.ca/LobbyistRegistry/search/searchlobbyist.aspx?lang=en";
+	# const URL = "https://apps107.ottawa.ca/LobbyistRegistry/search/searchlobbyist.aspx?lang=en";
+	const URL = "https://lobbyist.ottawa.ca/search/searchlobbyist.aspx?lang=en";
 
   #################################################################################################
   # GUI
@@ -883,6 +884,7 @@ class LobbyistController {
 			return;
 		}
 	  $viewstate = getViewState($html);
+    print $viewstate;
 	  $eventvalidation = getEventValidation($html);
 		
 		$fields = array(
