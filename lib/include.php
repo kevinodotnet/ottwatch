@@ -148,26 +148,24 @@ function tweet($tweet) {
 	return 0;
 }
 
-function getViewState($html) {
+function getViewDetail($key,$html) {
 	$lines = explode("\n",$html);
 	foreach ($lines as $line) {
-	  if (preg_match("/__VIEWSTATE/",$line)) {
-	    $viewstate = preg_replace('/.*value="/',"",$line);
-	    $viewstate = preg_replace('/".*/',"",$viewstate);
-	    return $viewstate;
+    print $line;
+	  if (preg_match("/$key/",$line)) {
+	    $val = preg_replace('/.*value="/',"",$line);
+	    $val = preg_replace('/".*/',"",$val);
+	    return $val;
 	  }
 	}
 }
 
+function getViewState($html) {
+  return getViewDetail('__VIEWSTATE',$html);
+}
+
 function getEventValidation($html) {
-	$lines = explode("\n",$html);
-	foreach ($lines as $line) {
-	  if (preg_match("/__EVENTVALIDATION/",$line)) {
-	    $viewstate = preg_replace('/.*value="/',"",$line);
-	    $viewstate = preg_replace('/".*/',"",$viewstate);
-	    return $viewstate;
-	  }
-	}
+  return getViewDetail('__EVENTVALIDATION',$html);
 }
 
 function sendPost($url,$fields) {

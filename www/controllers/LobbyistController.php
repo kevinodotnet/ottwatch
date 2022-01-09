@@ -3,7 +3,8 @@
 class LobbyistController {
 
 	# base URL of the lobbyist registry
-	const URL = "https://apps107.ottawa.ca/LobbyistRegistry/search/searchlobbyist.aspx?lang=en";
+	# const URL = "https://apps107.ottawa.ca/LobbyistRegistry/search/searchlobbyist.aspx?lang=en";
+	const URL = "https://lobbyist.ottawa.ca/search/searchlobbyist.aspx?lang=en";
 
   #################################################################################################
   # GUI
@@ -637,6 +638,7 @@ class LobbyistController {
 					$name = preg_replace("/.*__doPostBack\('/","",$name);
 					$name = preg_replace("/'.*/","",$name);
 					$fields = array(
+            'ctl00_scriptManager_HiddenField' => getViewDetail('ctl00_scriptManager_HiddenField', $html),
 					  '__VIEWSTATE' => $viewstate,
 					  '__EVENTVALIDATION' => $eventvalidation,
 					  '__EVENTTARGET' => $name,
@@ -886,12 +888,16 @@ class LobbyistController {
 	  $eventvalidation = getEventValidation($html);
 		
 		$fields = array(
+      'ctl00_scriptManager_HiddenField' => ';;AjaxControlToolkit, Version=3.5.51116.0, Culture=neutral, PublicKeyToken=28f01b0e84b6d53e:en-CA:2a06c7e2-728e-4b15-83d6-9b269fb7261e:de1feab2:f9cec9bc:35576c48:f2c8e708:720a52bf:589eaa30:698129cf:7a92f56c:fcf0e993:fb9b4c57:ccb96cf9',
+      '__VIEWSTATEGENERATOR' => getViewDetail('__VIEWSTATEGENERATOR',$html),
 		  '__VIEWSTATE' => $viewstate,
 		  '__EVENTVALIDATION' => $eventvalidation,
 		  'ctl00$MainContent$dpFromDate_txtbox' => $from,
 		  'ctl00$MainContent$dpToDate_txtbox' => $to,
 		  'ctl00$MainContent$btnSearch' => 'Search'
 		);
+
+    pr($fields);
 	
 	  $response = sendPost(self::URL,$fields);
 	  return $response;
