@@ -1,0 +1,90 @@
+# This Docker file is used to create an isolated environment for local development of OttWatch
+#
+# - create an Ubuntu based image
+# - clone the latest `main` branch of OttWatch
+# - bundle install
+#
+# Use this image by first building the image locally:
+# docker build -t ottwatch-dev -f Dockerfile.dev .
+
+# Then run the image (create a container), via: 
+# docker run -v `pwd`:/app -p 33000:3000 -i -t --name ottwatch-dev ottwatch-dev
+# docker run -v `pwd`:/app -i -t --name ottwatch-dev ottwatch-dev
+# docker run -v `pwd`:/app -i -t ottwatch-dev
+
+FROM ubuntu:20.04
+
+WORKDIR /app
+
+RUN apt-get update
+RUN DEBIAN_FRONTEND=noninteractive apt-get -y install \
+        ruby-dev \
+        less \
+        curl \
+        vim \
+        sudo \
+        mysql-client \
+        git \
+        rbenv
+
+RUN groupadd -g 1000 -r app && \
+    useradd -u 1000 --no-log-init -r -g app app && \
+    mkdir /home/app && \
+    chown app:app /home/app && \
+    adduser app sudo
+
+USER app
+
+RUN mkdir -p "$(rbenv root)"/plugins
+RUN git clone https://github.com/rbenv/ruby-build.git "$(rbenv root)"/plugins/ruby-build
+RUN rbenv install 3.1.0
+
+#RUN echo 'eval "$(rbenv init -)"' >> /root/.bashrc
+#RUN echo 'export RBENV_VERSION=3.1.0' >> /root/.bashrc
+
+RUN echo 'eval "$(rbenv init -)"' >> /home/app/.bashrc
+RUN echo 'export RBENV_VERSION=3.1.0' >> /home/app/.bashrc
+
+USER app
+
+RUN bundle
+
+# RUN curl -fsSL https://github.com/rbenv/rbenv-installer/raw/HEAD/bin/rbenv-installer | bash
+
+
+
+#     rails \
+#     vim \
+#     curl \
+#     gnumeric \
+#     less \
+#     git \
+#     mysql-server \
+#     mysql-client \
+#     libmysqlclient-dev \
+#     build-essential \
+#     npm && \
+
+# RUN apt-get update && \
+#   DEBIAN_FRONTEND=noninteractive apt-get -y install \
+#     rails \
+#     ruby-dev \
+#     vim \
+#     curl \
+#     gnumeric \
+#     less \
+#     git \
+#     mysql-server \
+#     mysql-client \
+#     libmysqlclient-dev \
+#     build-essential \
+#     npm && \
+#   curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - && \
+#   echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list && \
+#   apt-get update && \
+#   DEBIAN_FRONTEND=noninteractive apt-get -y install yarn && \
+#   dpkg -r --force-depends ruby-thor && \
+#   gem install thor && \
+#   gem install rails && \
+#   gem install mysql2 && \
+#   (cd /tmp; rails new app)

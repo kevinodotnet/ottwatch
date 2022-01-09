@@ -1,0 +1,18 @@
+# This Docker file is used to create an isolated environment for local development of OttWatch
+#
+# - create an Ubuntu based image
+# - clone the latest `main` branch of OttWatch
+# - bundle install
+#
+# Use this image by first building the image locally:
+# docker build -t ottwatch-dev -f Dockerfile.dev .
+
+# Then run the image (create a container), via: 
+# docker run -v `pwd`:/app -p 33000:3000 -i -t --name ottwatch-dev ottwatch-dev
+# docker run -v `pwd`:/app -i -t --name ottwatch-dev ottwatch-dev
+# docker run -v `pwd`:/app -i -t ottwatch-dev
+
+FROM FROM ottwatch-base
+
+USER app
+
