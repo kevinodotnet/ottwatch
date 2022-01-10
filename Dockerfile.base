@@ -1,10 +1,11 @@
 # 
-# docker build -t ottwatch-base -f Dockerfile.base . && docker run -v `pwd`:/app -i -t ottwatch-base
+# docker build -t ottwatch-base -f Dockerfile.base . 
+# docker run -v `pwd`:/app -i -t ottwatch-base
 #
 
 FROM ubuntu:20.04
 
-WORKDIR /app
+WORKDIR /ottwatch
 
 RUN apt-get update
 RUN DEBIAN_FRONTEND=noninteractive apt-get -y install \
