@@ -3,9 +3,7 @@
 # docker run -v `pwd`:/app -i -t ottwatch-base
 #
 
-FROM ubuntu:20.04
-
-WORKDIR /ottwatch
+FROM ubuntu:21.10
 
 RUN apt-get update
 RUN DEBIAN_FRONTEND=noninteractive apt-get -y install \
@@ -24,13 +22,5 @@ RUN groupadd -g 1000 -r app && \
     chown app:app /home/app && \
     adduser app sudo
 
-USER app
+RUN gem install bundler
 
-RUN mkdir -p "$(rbenv root)"/plugins
-RUN git clone https://github.com/rbenv/ruby-build.git "$(rbenv root)"/plugins/ruby-build
-RUN rbenv install 3.1.0
-
-RUN echo 'eval "$(rbenv init -)"' >> /home/app/.bashrc
-RUN echo 'export RBENV_VERSION=3.1.0' >> /home/app/.bashrc
-
-USER app
