@@ -13,3 +13,5 @@ USER app
 
 # bundle config set --local path 'vendor/bundle'
 # bundle install
+# bin/rails server -b 0.0.0.0
+#
