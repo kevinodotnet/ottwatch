@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_01_13_145615) do
+ActiveRecord::Schema.define(version: 2022_01_13_151701) do
 
   create_table "candidate", id: { type: :integer, limit: 3 }, charset: "latin1", force: :cascade do |t|
     t.integer "year", limit: 2
