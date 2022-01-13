@@ -1,5 +1,6 @@
 class CreateCandidateReturns < ActiveRecord::Migration[7.0]
   def change
+    return if CandidateReturn.table_exists?
     create_table :candidate_returns do |t|
       t.integer "candidateid", limit: 3, null: false
       t.string "filename", limit: 512

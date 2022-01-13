@@ -1,5 +1,6 @@
 class CreateCandidateDonations < ActiveRecord::Migration[7.0]
   def change
+    return if CandidateDonation.table_exists?
     create_table :candidate_donations do |t|
       t.integer "returnid", limit: 3, null: false
       t.integer "type", limit: 1
