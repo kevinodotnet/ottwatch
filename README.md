@@ -1,24 +1,16 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+# Exporting Ottwatch.v1 database
 
-Things you may want to cover:
+```
+MYUSER="root"
+MYPASS="XXX"
+MYSQLDUMP=" mysqldump --complete-insert --extended-insert=false -u $MYUSER --password=$MYPASS "
 
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+$MYSQLDUMP ottwatch \
+	election \
+	candidate \
+	candidate_return \
+	candidate_donation \
+	> ottwatch_v1_snapshot.sql
+```

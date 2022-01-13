@@ -36,3 +36,4 @@ tmp/storage/*
 
 /vendor/bundle
 
+db/ottwatch_v1_snapshot.sql

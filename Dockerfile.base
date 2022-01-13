@@ -5,14 +5,16 @@
 
 FROM ubuntu:21.10
 
-RUN apt-get update
-RUN DEBIAN_FRONTEND=noninteractive apt-get -y install \
+RUN apt-get update && \
+    DEBIAN_FRONTEND=noninteractive apt-get -y install \
         ruby-dev \
         less \
         curl \
         vim \
         sudo \
         mysql-client \
+        mysql-server \
+        libmysqlclient-dev \
         git \
         rbenv
 
@@ -23,4 +25,3 @@ RUN groupadd -g 1000 -r app && \
     adduser app sudo
 
 RUN gem install bundler
-
