@@ -2,10 +2,6 @@
 # Build the image
 #   docker build -t ottwatch-prod -f Dockerfile.prod .
 #
-# Run the container and load the current directory at /ottwatch
-#   docker run --name ottwatch-dev -v `pwd`:/ottwatch -i -t ottwatch-dev
-#   docker start -i ottwatch-dev
-#
 FROM ottwatch-base
 
 RUN mkdir /app && chown app:app /app
