@@ -5,6 +5,7 @@
 
 echo ""
 echo "/etc/init.d/mysql start"
+echo "alias m='mysql ottwatch_dev'"
 echo "mysql ottwatch_dev < db/ottwatch_v1_snapshot.sql"
 echo ""
 
