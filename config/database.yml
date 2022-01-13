@@ -27,5 +27,7 @@ test:
 
 production:
   <<: *default
-  adapter: sqlite3
-  database: db/TODO_CLOUDSQL_production.sqlite3
+  database: <%= ENV.fetch("DB_NAME") %>
+  host: <%= ENV.fetch("DB_HOST") %>
+  username: <%= ENV.fetch("DB_USER") %>
+  password: <%= ENV.fetch("DB_PASS") %>
