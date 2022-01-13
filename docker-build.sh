@@ -1,5 +1,7 @@
 #!/bin/bash
 
-docker build --progress=plain -t ottwatch-base -f Dockerfile.base . && \
-  docker build --progress=plain -t ottwatch-dev -f Dockerfile.dev . && \
-  docker build --progress=plain -t ottwatch-prod -f Dockerfile.prod .
+# --progress=plain
+
+docker build -t ottwatch-base -f Dockerfile.base . && \
+  docker build -t ottwatch-dev -f Dockerfile.dev . && \
+  docker build -t ottwatch-prod -f Dockerfile.prod .
