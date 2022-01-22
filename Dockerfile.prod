@@ -1,11 +1,10 @@
 #
 # Build the image
-#   docker build -t ottwatch-prod -f Dockerfile.prod .
+#   sudo docker build -t ottwatch-prod -f Dockerfile.prod .
 #
 FROM ottwatch-base
 
 RUN mkdir /app && chown app:app /app
-
 WORKDIR /app
 USER app
 
@@ -16,3 +15,6 @@ RUN ls -lF
 RUN pwd
 RUN bundle config set --local path 'vendor/bundle'
 RUN bundle install
+RUN bin/rails assets:precompile
+
+ENTRYPOINT ["bin/rails", "server"]
