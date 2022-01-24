@@ -6,6 +6,12 @@ local:
   service: Disk
   root: <%= Rails.root.join("storage") %>
 
+gcs:
+  service: GCS
+  project: ottwatch
+  credentials: <%= ENV["GCS_KEYFILE"] %>
+  bucket: ottwatch_<%= Rails.env %>
+
 # Use bin/rails credentials:edit to set the AWS secrets (as aws:access_key_id|secret_access_key)
 # amazon:
 #   service: S3
