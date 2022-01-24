@@ -8,13 +8,12 @@ RUN mkdir /app && chown app:app /app
 WORKDIR /app
 USER app
 
+ADD --chown=app:app https://api.github.com/repos/kevinodotnet/ottwatch/git/refs/heads/main /tmp/version.json
+
 RUN git clone https://github.com/kevinodotnet/ottwatch.git
 
 WORKDIR /app/ottwatch
-RUN ls -lF
-RUN pwd
+ADD --chown=app:app https://api.github.com/repos/kevinodotnet/ottwatch/git/refs/heads/main version.json
 RUN bundle config set --local path 'vendor/bundle'
 RUN bundle install
 RUN bin/rails assets:precompile
-
-ENTRYPOINT ["bin/rails", "server"]
