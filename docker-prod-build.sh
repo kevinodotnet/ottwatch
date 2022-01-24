@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# reminder:
-# sudo docker exec -it ottwatch-XXX /bin/bash
-
 . ~/src/infra/ottwatch.sh
 
 DOCKER_FILES="

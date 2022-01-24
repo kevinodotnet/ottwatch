@@ -12,9 +12,6 @@
 sudo docker container rm ottwatch-web
 sudo docker container rm ottwatch-migrate
 
-#
-# TODO: automate running the MIGRATE image
-#
-
-./docker-prod-web-run.sh
+./docker-prod-migrate.sh
+./docker-prod-start.sh
 
