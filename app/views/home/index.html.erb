@@ -5,5 +5,9 @@
 Version: <%= Version.current %><br/>
 <br/>
 Time: <%= Time.now.utc %><br/>
+<br/>
+<%=
+link_to("Random Campaign Donation", :controller => "elections", :action => "donation", :id => CandidateDonation.order("rand()").limit(1).first.id)
+%>
 </center>
 </div>
