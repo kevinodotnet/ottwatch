@@ -14,7 +14,7 @@ class CreateCandidateDonations < ActiveRecord::Migration[7.0]
       t.integer "x", limit: 2, unsigned: true
       t.integer "y", limit: 2, unsigned: true
       t.datetime "updated"
-      t.datetime "created", default: -> { "CURRENT_TIMESTAMP" }
+      t.datetime "created"
       t.integer "location"
       t.integer "peopleid", limit: 3
       t.integer "donorid", limit: 3, unsigned: true

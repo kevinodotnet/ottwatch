@@ -40,30 +40,7 @@ ActiveRecord::Schema.define(version: 2022_01_22_130113) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
-  create_table "candidate", id: { type: :integer, limit: 3 }, charset: "latin1", force: :cascade do |t|
-    t.integer "year", limit: 2
-    t.integer "ward", limit: 1
-    t.string "first", limit: 50
-    t.string "middle", limit: 50
-    t.string "last", limit: 50
-    t.string "url", limit: 300
-    t.string "email", limit: 50
-    t.string "twitter", limit: 50
-    t.string "facebook", limit: 100
-    t.datetime "nominated"
-    t.boolean "incumbent", default: false
-    t.string "phone", limit: 30
-    t.datetime "withdrew"
-    t.integer "personid", limit: 3
-    t.string "gender", limit: 1
-    t.integer "retiring", limit: 1
-    t.integer "winner", limit: 1
-    t.integer "votes", limit: 3, unsigned: true
-    t.integer "electionid", limit: 3
-    t.index ["personid"], name: "personid"
-  end
-
-  create_table "candidate_donation", id: { type: :integer, limit: 3 }, charset: "latin1", force: :cascade do |t|
+  create_table "candidate_donations", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.integer "returnid", limit: 3, null: false
     t.integer "type", limit: 1
     t.string "name", limit: 100
@@ -75,8 +52,8 @@ ActiveRecord::Schema.define(version: 2022_01_22_130113) do
     t.integer "page", limit: 2, unsigned: true
     t.integer "x", limit: 2, unsigned: true
     t.integer "y", limit: 2, unsigned: true
-    t.datetime "updated"
-    t.datetime "created", default: -> { "CURRENT_TIMESTAMP" }
+    t.datetime "updated", precision: 6
+    t.datetime "created", precision: 6
     t.integer "location"
     t.integer "peopleid", limit: 3
     t.integer "donorid", limit: 3, unsigned: true
@@ -84,26 +61,52 @@ ActiveRecord::Schema.define(version: 2022_01_22_130113) do
     t.date "donation_date"
     t.string "comment", limit: 1024
     t.integer "ward", limit: 2, unsigned: true
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
     t.index ["postal"], name: "postal"
     t.index ["returnid"], name: "returnid"
   end
 
-  create_table "candidate_return", id: { type: :integer, limit: 3 }, charset: "latin1", force: :cascade do |t|
+  create_table "candidate_returns", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.integer "candidateid", limit: 3, null: false
     t.string "filename", limit: 512
     t.boolean "supplemental"
     t.integer "done", limit: 1
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
     t.index ["candidateid"], name: "candidateid"
   end
 
-  create_table "election", id: { type: :integer, limit: 3 }, charset: "latin1", force: :cascade do |t|
+  create_table "candidates", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.integer "year", limit: 2
+    t.integer "ward", limit: 1
+    t.string "first", limit: 50
+    t.string "middle", limit: 50
+    t.string "last", limit: 50
+    t.string "url", limit: 300
+    t.string "email", limit: 50
+    t.string "twitter", limit: 50
+    t.string "facebook", limit: 100
+    t.datetime "nominated", precision: 6
+    t.boolean "incumbent", default: false
+    t.string "phone", limit: 30
+    t.datetime "withdrew", precision: 6
+    t.integer "personid", limit: 3
+    t.string "gender", limit: 1
+    t.integer "retiring", limit: 1
+    t.integer "winner", limit: 1
+    t.integer "votes", limit: 3, unsigned: true
+    t.integer "electionid", limit: 3
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["personid"], name: "personid"
+  end
+
+  create_table "election", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.date "date"
-    t.string "city", limit: 64
+    t.string "city"
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
-  add_foreign_key "candidate", "people", column: "personid", name: "candidate_ibfk_1"
-  add_foreign_key "candidate_donation", "candidate_return", column: "returnid", name: "candidate_donation_ibfk_1", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "candidate_return", "candidate", column: "candidateid", name: "candidate_return_ibfk_1", on_update: :cascade, on_delete: :cascade
 end
