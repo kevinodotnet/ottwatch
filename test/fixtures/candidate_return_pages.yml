@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  candidate_return: one
+  page: 1
+  rotation: 1
+
+two:
+  candidate_return: two
+  page: 1
+  rotation: 1

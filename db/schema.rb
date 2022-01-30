@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_01_22_130113) do
+ActiveRecord::Schema.define(version: 2022_01_30_150518) do
 
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
@@ -67,6 +67,15 @@ ActiveRecord::Schema.define(version: 2022_01_22_130113) do
     t.index ["returnid"], name: "returnid"
   end
 
+  create_table "candidate_return_pages", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "candidate_return_id", null: false
+    t.integer "page"
+    t.integer "rotation"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["candidate_return_id"], name: "index_candidate_return_pages_on_candidate_return_id"
+  end
+
   create_table "candidate_returns", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.integer "candidateid", limit: 3, null: false
     t.string "filename", limit: 512
@@ -109,4 +118,5 @@ ActiveRecord::Schema.define(version: 2022_01_22_130113) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "candidate_return_pages", "candidate_returns"
 end
