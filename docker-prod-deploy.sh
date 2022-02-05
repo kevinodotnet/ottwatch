@@ -10,8 +10,7 @@
 ./docker-prod-stop.sh
 
 sudo docker container rm ottwatch-web
-sudo docker container rm ottwatch-migrate
 
-./docker-prod-migrate.sh
+./docker-prod-exec.sh bin/rails db:migrate
 ./docker-prod-start.sh
 
