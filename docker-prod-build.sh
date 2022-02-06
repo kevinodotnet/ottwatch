@@ -5,7 +5,6 @@
 DOCKER_FILES="
   Dockerfile.base
   Dockerfile.prod
-  Dockerfile.migrate
   Dockerfile.web
 "
 
