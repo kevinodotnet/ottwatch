@@ -4,6 +4,7 @@
 
 sudo docker run \
   --rm \
+	--network prodweb \
 	-e RAILS_ENV=production \
 	-e DB_HOST=$DB_HOST \
 	-e DB_NAME=$DB_NAME \

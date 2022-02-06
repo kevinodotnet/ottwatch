@@ -5,6 +5,8 @@
 sudo docker run \
   --rm \
   -d \
+	--network prodweb \
+  --log-driver=gcplogs \
 	-e RAILS_ENV=production \
 	-e DB_HOST=$DB_HOST \
 	-e DB_NAME=$DB_NAME \
