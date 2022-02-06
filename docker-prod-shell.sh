@@ -9,8 +9,8 @@ sudo docker run \
 	-e DB_NAME=$DB_NAME \
 	-e DB_USER=$DB_USER \
 	-e DB_PASS=$DB_PASS \
+	-e REDIS_URL=$REDIS_URL \
 	-e RAILS_MASTER_KEY=$RAILS_MASTER_KEY \
   -i -t \
-	--name ottwatch-shell \
 	ottwatch-prod
 
