@@ -17,6 +17,8 @@ class PingJob < ApplicationJob
   # GuestsCleanupJob.perform_later(guest1, guest2, filter: 'some_filter')
 
   def perform(*args)
-    Rails.logger.info("ping")
+    Rails.logger.info("#" * 50)
+    Rails.logger.info("ping: #{job_id}")
+    Rails.logger.info("#" * 50)
   end
 end
