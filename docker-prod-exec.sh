@@ -11,6 +11,7 @@ sudo docker run \
 	-e DB_USER=$DB_USER \
 	-e DB_PASS=$DB_PASS \
 	-e RAILS_MASTER_KEY=$RAILS_MASTER_KEY \
+  -e REDIS_URL=$REDIS_URL \
   -i -t \
 	ottwatch-prod $*
 
