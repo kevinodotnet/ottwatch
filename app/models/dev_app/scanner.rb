@@ -33,6 +33,23 @@ class DevApp::Scanner
 	end
 
 	def self.scan_application(app_number)
+		url = "https://devapps-restapi.ottawa.ca/devapps/search?authKey=#{authkey}&appStatus=all&searchText=#{app_number}&appType=all&ward=all&bounds=0,0,0,0"
+
+		d = JSON.parse(Net::HTTP.get(URI(url)))
+		data = d["devApps"].first
+
+		attributes = {}
+		attributes[:app_id] = data["devAppId"]
+		attributes[:app_number] = data["applicationNumber"]
+		attributes[:app_type] = data.dig("applicationType","en")
+		# these need to be in a join/array table to track state over time
+		# attributes[:status] = data.dig("applicationStatus", "en")
+		# attributes[:statusDetail] = data.dig("objectStatus", "objectCurrentStatus", "en")
+		# attributes[:foo] = data.dig("objectStatus", "objectCurrentStatusDateYMD")
+		entry = DevApp::Entry.find_by(app_id: data["devAppId"]) || DevApp::Entry.new
+		entry.assign_attributes(attributes)
+		entry.save!
+		entry
 	end
 
 	def self.latest
@@ -48,4 +65,8 @@ class DevApp::Scanner
 	def self.open_data_url
 		"https://devapps-restapi.ottawa.ca/devapps/ExportData"
 	end
+
+	def self.authkey
+    '4r5T2egSmKm5'
+  end
 end
