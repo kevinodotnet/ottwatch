@@ -11,21 +11,33 @@ class DevApp::ScannerTest < ActiveSupport::TestCase
 
   test "structure of open data entries" do
     expected = [
-      :app_number
-      :date
-      :type
-      :road_number
-      :road_name
-      :road_type
-      :status_type
-      :status
-      :file_lead
-      :description
-      :status_date
-      :ward_num
+      :app_number,
+      :date,
+      :type,
+      :road_number,
+      :road_name,
+      :road_type,
+      :status_type,
+      :status,
+      :file_lead,
+      :description,
+      :status_date,
+      :ward_num,
       :ward_name
     ]
     assert @scanner.to_a.all?{|d| expected == d.keys}
+  end
+
+  test "scanning an application generates an entry; 2nd can updates previous entry" do
+    entry = assert_difference -> { DevApp::Entry.all.count} do
+      DevApp::Scanner.scan_application("D07-12-22-0010")
+    end
+    entry.update!(app_type: "foo")
+    assert_no_difference -> { DevApp::Entry.all.count} do
+      assert_changes -> { entry.reload.app_type }, from: "foo", to: "Site Plan Control" do
+        DevApp::Scanner.scan_application("D07-12-22-0010")
+      end
+    end
   end
 
   private
