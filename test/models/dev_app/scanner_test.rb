@@ -11,21 +11,20 @@ class DevApp::ScannerTest < ActiveSupport::TestCase
 
   test "structure of open data entries" do
     expected = [
-      "Application Number",
-      "Application Date",
-      "Application Type",
-      "Address Number",
-      "Road Name",
-      "Road Type",
-      "Object Status Type",
-      "Application Status",
-      "File Lead",
-      "Brief Description",
-      "Object Status Date",
-      "Ward #",
-      "Ward",
+      :app_number
+      :date
+      :type
+      :road_number
+      :road_name
+      :road_type
+      :status_type
+      :status
+      :file_lead
+      :description
+      :status_date
+      :ward_num
+      :ward_name
     ]
-    expected = [:number, :date, :type, :road_number, :road_name, :road_type, :status_type, :status, :file_lead, :description, :status_date, :ward_num, :ward_name]
     assert @scanner.to_a.all?{|d| expected == d.keys}
   end
 

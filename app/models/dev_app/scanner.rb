@@ -11,7 +11,7 @@ class DevApp::Scanner
 		@data = []
 		sheet.each_row do |row|
       d = {}
-			d[:number] = row["Application Number"]
+			d[:app_number] = row["Application Number"]
       d[:date] = row["Application Date"]
       d[:type] = row["Application Type"]
       d[:road_number] = row["Address Number"]
@@ -30,6 +30,9 @@ class DevApp::Scanner
 
 	def to_a
 		@data.dup
+	end
+
+	def self.scan_application(app_number)
 	end
 
 	def self.latest
