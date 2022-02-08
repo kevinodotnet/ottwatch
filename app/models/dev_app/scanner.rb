@@ -46,10 +46,39 @@ class DevApp::Scanner
 		# attributes[:status] = data.dig("applicationStatus", "en")
 		# attributes[:statusDetail] = data.dig("objectStatus", "objectCurrentStatus", "en")
 		# attributes[:foo] = data.dig("objectStatus", "objectCurrentStatusDateYMD")
-		entry = DevApp::Entry.find_by(app_id: data["devAppId"]) || DevApp::Entry.new
-		entry.assign_attributes(attributes)
-		entry.save!
-		entry
+		DevApp::Entry.transaction do 
+			entry = DevApp::Entry.find_by(app_id: data["devAppId"]) || DevApp::Entry.new
+			entry.assign_attributes(attributes)
+			entry.save!
+	
+			address_attr_mapping = {
+				"addressReferenceId" => "ref_id",
+				"addressNumber" => "road_number",
+				"addressQualifier" => "qualifier",
+				"legalUnit" => "legal_unit",
+				"roadName" => "road_name",
+				"cardinalDirection" => "direction",
+				"roadType" => "road_type",
+				"municipality" => "municipality",
+				"addressType" => "address_type",
+				"addressLatitude" => "lat",
+				"addressLongitude" => "lon",
+				"parcelPinNumber" => "parcel_pin"
+			}
+			data["devAppAddresses"].each do |a|
+				attributes = {}
+				address_attr_mapping.each do |k,v|
+					attributes[v] = a[k]
+				end
+	
+				addr = DevApp::Address.find_by(ref_id: attributes["ref_id"]) || DevApp::Address.new
+				addr.assign_attributes(attributes)
+				addr.entry = entry
+				addr.save!
+			end
+	
+			entry
+		end
 	end
 
 	def self.latest

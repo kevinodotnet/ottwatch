@@ -40,6 +40,12 @@ class DevApp::ScannerTest < ActiveSupport::TestCase
     end
   end
 
+  test "addresses get saved" do
+    assert_difference -> { DevApp::Address.all.count}, 35 do
+      DevApp::Scanner.scan_application("D07-12-20-0186")
+    end
+  end
+
   private
 
   def cached_devapps_file
