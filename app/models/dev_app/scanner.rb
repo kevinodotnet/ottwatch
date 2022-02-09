@@ -36,6 +36,8 @@ class DevApp::Scanner
 		url = "https://devapps-restapi.ottawa.ca/devapps/search?authKey=#{authkey}&appStatus=all&searchText=#{app_number}&appType=all&ward=all&bounds=0,0,0,0"
 
 		d = JSON.parse(Net::HTTP.get(URI(url)))
+		# return nil if d["totalDevApps"] == 0
+
 		data = d["devApps"].first
 
 		attributes = {}
@@ -50,7 +52,7 @@ class DevApp::Scanner
 			entry = DevApp::Entry.find_by(app_id: data["devAppId"]) || DevApp::Entry.new
 			entry.assign_attributes(attributes)
 			entry.save!
-	
+
 			address_attr_mapping = {
 				"addressReferenceId" => "ref_id",
 				"addressNumber" => "road_number",
@@ -65,18 +67,39 @@ class DevApp::Scanner
 				"addressLongitude" => "lon",
 				"parcelPinNumber" => "parcel_pin"
 			}
+
 			data["devAppAddresses"].each do |a|
 				attributes = {}
 				address_attr_mapping.each do |k,v|
 					attributes[v] = a[k]
 				end
-	
-				addr = DevApp::Address.find_by(ref_id: attributes["ref_id"]) || DevApp::Address.new
+				addr = DevApp::Address.find_by(ref_id: attributes["ref_id"], entry: entry) || DevApp::Address.new
 				addr.assign_attributes(attributes)
 				addr.entry = entry
 				addr.save!
 			end
-	
+
+			# file level data isn't in the search results; so hit the other api endpoint
+			url = "https://devapps-restapi.ottawa.ca/devapps/#{app_number}?authKey=#{authkey}"
+			data = JSON.parse(Net::HTTP.get(URI(url)))
+			data["devAppDocuments"].each do |doc|
+				
+				url = "http://webcast.ottawa.ca/plan/All_Image%20Referencing_#{URI.escape(doc["filePath"])}"
+				# content = Net::HTTP.get(URI(url)) # downnload file content itself
+				
+				attributes = {
+					ref_id: doc["docReferenceId"],
+					name: doc["documentName"],
+					path: doc["filePath"],
+					url: url
+				}
+
+				doc = DevApp::Document.find_by(ref_id: attributes[:ref_id], entry: entry) || DevApp::Document.new
+				doc.assign_attributes(attributes)
+				doc.entry = entry
+				doc.save!
+			end
+
 			entry
 		end
 	end
