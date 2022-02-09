@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_02_08_170430) do
+ActiveRecord::Schema.define(version: 2022_02_09_221445) do
 
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
@@ -59,6 +59,17 @@ ActiveRecord::Schema.define(version: 2022_02_08_170430) do
     t.index ["entry_id"], name: "index_dev_app_addresses_on_entry_id"
   end
 
+  create_table "dev_app_documents", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "entry_id", null: false
+    t.string "ref_id"
+    t.string "name"
+    t.string "path"
+    t.string "url"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["entry_id"], name: "index_dev_app_documents_on_entry_id"
+  end
+
   create_table "dev_app_entries", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "app_id"
     t.string "app_number"
@@ -69,4 +80,5 @@ ActiveRecord::Schema.define(version: 2022_02_08_170430) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "dev_app_documents", "dev_app_entries", column: "entry_id"
 end

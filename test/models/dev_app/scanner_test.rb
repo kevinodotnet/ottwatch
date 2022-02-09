@@ -1,6 +1,8 @@
 require "test_helper"
 
 class DevApp::ScannerTest < ActiveSupport::TestCase
+
+  APP_NUMBER = "D07-12-15-0017"
   setup do
     @scanner = DevApp::Scanner.new(cached_devapps_file)
   end
@@ -30,19 +32,25 @@ class DevApp::ScannerTest < ActiveSupport::TestCase
 
   test "scanning an application generates an entry; 2nd can updates previous entry" do
     entry = assert_difference -> { DevApp::Entry.all.count} do
-      DevApp::Scanner.scan_application("D07-12-22-0010")
+      DevApp::Scanner.scan_application(APP_NUMBER)
     end
     entry.update!(app_type: "foo")
     assert_no_difference -> { DevApp::Entry.all.count} do
       assert_changes -> { entry.reload.app_type }, from: "foo", to: "Site Plan Control" do
-        DevApp::Scanner.scan_application("D07-12-22-0010")
+        DevApp::Scanner.scan_application(APP_NUMBER)
       end
     end
   end
 
   test "addresses get saved" do
-    assert_difference -> { DevApp::Address.all.count}, 35 do
-      DevApp::Scanner.scan_application("D07-12-20-0186")
+    assert_difference -> { DevApp::Address.all.count}, 1 do
+      entry = DevApp::Scanner.scan_application(APP_NUMBER)
+    end
+  end
+
+  test "files get saved" do
+    assert_difference -> { DevApp::Document.all.count}, 10 do
+      DevApp::Scanner.scan_application(APP_NUMBER)
     end
   end
 
