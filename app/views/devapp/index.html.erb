@@ -1,0 +1,27 @@
+<h1>Development Applications</h1>
+
+<hr/>
+
+<table>
+<tr>
+  <th>Number</th>
+  <th>Type</th>
+</tr>
+<% 
+@devapps.each do |d| 
+  %>
+  <tr>
+  <td><%= link_to(d.app_number, "/devapp/#{d.app_number}") %></td>
+  <td><%= d.app_type %></td>
+  </tr>
+  <% 
+end
+%>
+</table>
+
+<hr/>
+
+<center>
+<%= link_to "More...", devapp_index_path(before_id: @devapps.last.id) %>
+</center>
+
