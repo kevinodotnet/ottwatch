@@ -6,7 +6,7 @@ class DevappController < ApplicationController
       DevApp::Entry.all
     end
 
-    @devapps = relation.order(id: :desc).limit(10)
+    @devapps = relation.order(id: :desc).limit(100)
 
     # binding.pry
   end
