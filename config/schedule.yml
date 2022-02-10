@@ -13,5 +13,5 @@ ping_job:
    class: "PingJob"
 
 dev_app_scan_job:
-   cron: "0 4 * * *"
+   cron: "0 */4 * * *"
    class: "DevAppScanJob"
