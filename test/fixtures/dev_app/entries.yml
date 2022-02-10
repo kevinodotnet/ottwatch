@@ -1,11 +1,9 @@
-# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+one:
+ app_id: "__01N3AR"
+ app_number: "D07-12-15-0205"
+ app_type: "Site Plan Control"
 
-# This model initially had no columns defined. If you add columns to the
-# model remove the "{}" from the fixture names and add the columns immediately
-# below each fixture, per the syntax in the comments below
-#
-one: {}
-# column: value
-#
-two: {}
-# column: value
+two:
+  app_id: "__00XKVT"
+  app_number: "D07-05-16-0003"
+  app_type: "Demolition Control"

@@ -1,15 +1,17 @@
-# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
-
 one:
   entry: one
-  ref_id: MyString
-  name: MyString
-  path: MyString
-  url: MyString
+  ref_id: "__0EZY7E"
+  name: "October 2016 - D07-12-15-0205 Stormwater Management Plan"
+  path: "Site Plan Application_Image Reference_October 2016 - D07-12-15-0205 Stormwater Management Plan.PDF"
+  url:
+   "http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_October%202016%20-%20D07-12-15-0205%20Stormwater%20Management%20Plan.PDF"
+  created_at: Thu, 10 Feb 2022 02:40:31.621695000 UTC +00:00
+  updated_at: Thu, 10 Feb 2022 02:40:31.621695000 UTC +00:00>
 
 two:
   entry: two
-  ref_id: MyString
-  name: MyString
-  path: MyString
-  url: MyString
+  ref_id: "__0EZY10"
+  name: "October 2016 - D07-12-15-0205 - Stormwater Management and Servicing Study"
+  path: "Site Plan Application_Image Reference_October 2016 - D07-12-15-0205 - Stormwater Management and Servicing Study.PDF"
+  url:
+   "http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_October%202016%20-%20D07-12-15-0205%20-%20Stormwater%20Management%20and%20Servicing%20Study.PDF"

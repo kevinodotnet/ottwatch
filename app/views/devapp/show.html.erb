@@ -1,0 +1,37 @@
+<% content_for(:html_title, "#{@entry.app_number} - Development Application") %>
+<h1><%= @entry.app_number %></h1>
+<table border="1">
+<tr><th>Number</th><td><%= @entry.app_number %></td></tr>
+<tr><th>Type</th><td><%= @entry.app_type %></td></tr>
+<tr>
+  <th>Addresses</th>
+  <td>
+    <ul>
+    <%
+    @entry.addresses.each do |a|
+      %>
+      <li><%= a.slice(:road_number, :road_name, :road_type, :direction, :municipality).values.join(" ") %></li>
+      <%
+    end
+    %>
+    </ul>
+  </td>
+</tr>
+<tr>
+  <th>Documents</th>
+  <td>
+    <ul>
+    <%
+    @entry.documents.each do |d|
+      %>
+      <li><%= link_to(d.name.gsub(@entry.app_number, " "), d.url) %></li>
+      <%
+    end
+    %>
+    </ul>
+  </td>
+</tr>
+</table>
+<% 
+# binding.pry 
+%>
