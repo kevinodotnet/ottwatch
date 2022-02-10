@@ -1,7 +1,0 @@
-#
-# Build the image
-#   sudo docker build -t ottwatch-prod -f Dockerfile.prod .
-#
-FROM ottwatch-prod
-
-ENTRYPOINT ["bin/rails", "server"]

@@ -18,5 +18,5 @@ sudo docker run \
   -v $INFRA_FOLDER:/infra \
   -p 3000:3000 \
 	--name ottwatch-web \
-	ottwatch-web
+	ottwatch-prod bin/rails server
 
