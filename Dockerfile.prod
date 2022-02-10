@@ -17,3 +17,5 @@ ADD --chown=app:app https://api.github.com/repos/kevinodotnet/ottwatch/git/refs/
 RUN bundle config set --local path 'vendor/bundle'
 RUN bundle install
 RUN bin/rails assets:precompile
+
+ENV RAILS_LOG_TO_STDOUT true

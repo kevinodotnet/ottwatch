@@ -5,7 +5,6 @@
 DOCKER_FILES="
   Dockerfile.base
   Dockerfile.prod
-  Dockerfile.web
 "
 
 for i in $DOCKER_FILES; do
