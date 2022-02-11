@@ -82,8 +82,14 @@ class DevApp::Scanner
 			# file level data isn't in the search results; so hit the other api endpoint
 			url = "https://devapps-restapi.ottawa.ca/devapps/#{app_number}?authKey=#{authkey}"
 			data = JSON.parse(Net::HTTP.get(URI(url)))
+
+			desc = data.dig("applicationBriefDesc", "en")
+			entry.desc = desc
+			entry.save!
+
+			# data.dig("applicationStatus", "en")
+
 			data["devAppDocuments"].each do |doc|
-				
 				url = "http://webcast.ottawa.ca/plan/All_Image%20Referencing_#{URI.escape(doc["filePath"])}"
 				# content = Net::HTTP.get(URI(url)) # downnload file content itself
 				
