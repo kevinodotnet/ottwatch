@@ -87,7 +87,12 @@ class DevApp::Scanner
 			entry.desc = desc
 			entry.save!
 
-			# data.dig("applicationStatus", "en")
+			status = data.dig("applicationStatus", "en")
+			if current_status = entry.current_status
+				entry.statuses << DevApp::Status.new(status: status) unless current_status.status == status
+			else
+				entry.statuses << DevApp::Status.new(status: status)
+			end
 
 			data["devAppDocuments"].each do |doc|
 				url = "http://webcast.ottawa.ca/plan/All_Image%20Referencing_#{URI.escape(doc["filePath"])}"

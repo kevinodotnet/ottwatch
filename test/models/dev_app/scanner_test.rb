@@ -48,6 +48,21 @@ class DevApp::ScannerTest < ActiveSupport::TestCase
     end
   end
 
+  test "status gets saved" do
+    entry = assert_difference -> { DevApp::Status.all.count}, 1 do
+      DevApp::Scanner.scan_application(APP_NUMBER)
+    end
+    # double-read of same status does not insert duplicate
+    assert_no_difference -> { DevApp::Status.all.count} do
+      DevApp::Scanner.scan_application(APP_NUMBER)
+    end
+    # but additional statuses are tracked when they change
+    entry.reload.current_status.update!(status: "fake state")
+    assert_difference -> { DevApp::Status.all.count}, 1 do
+      DevApp::Scanner.scan_application(APP_NUMBER)
+    end
+  end
+
   test "files get saved" do
     assert_difference -> { DevApp::Document.all.count}, 10 do
       DevApp::Scanner.scan_application(APP_NUMBER)

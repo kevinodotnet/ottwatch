@@ -1,0 +1,7 @@
+one:
+  entry: :one
+  status: Active
+
+two:
+  entry: :two
+  status: Inactive
