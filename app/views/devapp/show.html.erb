@@ -3,9 +3,24 @@
 <table border="1">
 <tr><th>Number</th><td><%= @entry.app_number %></td></tr>
 <tr><th>Type</th><td><%= @entry.app_type %></td></tr>
-<tr><th>Updated</th><td><%= @entry.updated_at %></td></tr>
+<tr><th>Indexed</th><td><%= @entry.created_at %></td></tr>
+<tr><th>Description</th><td><%= @entry.desc %></td></tr>
 <tr><th>External</th><td><%= link_to("View application on ottawa.ca", "https://devapps.ottawa.ca/en/applications/#{@entry.app_number}/details") %></td></tr>
 
+<tr>
+  <th>Status</th>
+  <td>
+    <ul>
+    <%
+    @entry.statuses.each do |a|
+      %>
+      <li><%= a.slice(:created_at, :status).values.join(" ") %></li>
+      <%
+    end
+    %>
+    </ul>
+  </td>
+</tr>
 <tr>
   <th>Addresses</th>
   <td>

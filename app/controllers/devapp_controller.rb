@@ -12,6 +12,6 @@ class DevappController < ApplicationController
   end
 
   def show
-    @entry = DevApp::Entry.where(app_number: params[:app_number]).includes(:addresses, :documents).first
+    @entry = DevApp::Entry.where(app_number: params[:app_number]).includes(:statuses, :addresses, :documents).first
   end
 end
