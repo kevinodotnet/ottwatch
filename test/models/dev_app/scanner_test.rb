@@ -42,6 +42,26 @@ class DevApp::ScannerTest < ActiveSupport::TestCase
     end
   end
 
+  test "new devapp is announced as new" do
+    entry = assert_difference -> { Announcement.all.count} do
+      DevApp::Scanner.scan_application(APP_NUMBER)
+    end
+    announcement = Announcement.last
+    assert_equal "New DevApp: D07-12-15-0017", announcement.message
+  end
+
+  test "devapp status changes are announced" do
+    entry = DevApp::Scanner.scan_application(APP_NUMBER)
+    s = entry.statuses.first
+    s.status = "fake"
+    s.save!
+    entry = assert_difference -> { Announcement.all.count} do
+      DevApp::Scanner.scan_application(APP_NUMBER)
+    end
+    announcement = Announcement.last
+    assert_equal "DevApp D07-12-15-0017 changed status from fake to Active", announcement.message
+  end
+
   test "addresses get saved" do
     assert_difference -> { DevApp::Address.all.count}, 1 do
       entry = DevApp::Scanner.scan_application(APP_NUMBER)

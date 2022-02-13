@@ -32,88 +32,108 @@ class DevApp::Scanner
 		@data.dup
 	end
 
-	def self.scan_application(app_number)
-		url = "https://devapps-restapi.ottawa.ca/devapps/search?authKey=#{authkey}&appStatus=all&searchText=#{app_number}&appType=all&ward=all&bounds=0,0,0,0"
+  def self.scan_application(app_number)
+    url = "https://devapps-restapi.ottawa.ca/devapps/search?authKey=#{authkey}&appStatus=all&searchText=#{app_number}&appType=all&ward=all&bounds=0,0,0,0"
 
-		d = JSON.parse(Net::HTTP.get(URI(url)))
-		# return nil if d["totalDevApps"] == 0
+    d = JSON.parse(Net::HTTP.get(URI(url)))
+    # return nil if d["totalDevApps"] == 0
 
-		data = d["devApps"].first
+    announcements = []
 
-		attributes = {}
-		attributes[:app_id] = data["devAppId"]
-		attributes[:app_number] = data["applicationNumber"]
-		attributes[:app_type] = data.dig("applicationType","en")
-		# these need to be in a join/array table to track state over time
-		# attributes[:status] = data.dig("applicationStatus", "en")
-		# attributes[:statusDetail] = data.dig("objectStatus", "objectCurrentStatus", "en")
-		# attributes[:foo] = data.dig("objectStatus", "objectCurrentStatusDateYMD")
-		DevApp::Entry.transaction do 
-			entry = DevApp::Entry.find_by(app_id: data["devAppId"]) || DevApp::Entry.new
-			entry.assign_attributes(attributes)
-			entry.save!
+    data = d["devApps"].first
 
-			address_attr_mapping = {
-				"addressReferenceId" => "ref_id",
-				"addressNumber" => "road_number",
-				"addressQualifier" => "qualifier",
-				"legalUnit" => "legal_unit",
-				"roadName" => "road_name",
-				"cardinalDirection" => "direction",
-				"roadType" => "road_type",
-				"municipality" => "municipality",
-				"addressType" => "address_type",
-				"addressLatitude" => "lat",
-				"addressLongitude" => "lon",
-				"parcelPinNumber" => "parcel_pin"
-			}
+    attributes = {}
+    attributes[:app_id] = data["devAppId"]
+    attributes[:app_number] = data["applicationNumber"]
+    attributes[:app_type] = data.dig("applicationType","en")
+    # these need to be in a join/array table to track state over time
+    # attributes[:status] = data.dig("applicationStatus", "en")
+    # attributes[:statusDetail] = data.dig("objectStatus", "objectCurrentStatus", "en")
+    # attributes[:foo] = data.dig("objectStatus", "objectCurrentStatusDateYMD")
+    DevApp::Entry.transaction do 
+      entry = DevApp::Entry.find_by(app_id: data["devAppId"]) || DevApp::Entry.new
+      entry.assign_attributes(attributes)
+      unless entry.persisted?
+        announcements << {type: :new_dev_app}
+      end
+      entry.save!
 
-			data["devAppAddresses"].each do |a|
-				attributes = {}
-				address_attr_mapping.each do |k,v|
-					attributes[v] = a[k]
+      address_attr_mapping = {
+        "addressReferenceId" => "ref_id",
+        "addressNumber" => "road_number",
+        "addressQualifier" => "qualifier",
+        "legalUnit" => "legal_unit",
+        "roadName" => "road_name",
+        "cardinalDirection" => "direction",
+        "roadType" => "road_type",
+        "municipality" => "municipality",
+        "addressType" => "address_type",
+        "addressLatitude" => "lat",
+        "addressLongitude" => "lon",
+        "parcelPinNumber" => "parcel_pin"
+      }
+
+      data["devAppAddresses"].each do |a|
+        attributes = {}
+        address_attr_mapping.each do |k,v|
+          attributes[v] = a[k]
+        end
+        addr = DevApp::Address.find_by(ref_id: attributes["ref_id"], entry: entry) || DevApp::Address.new
+        addr.assign_attributes(attributes)
+        addr.entry = entry
+        addr.save!
+      end
+
+      # file level data isn't in the search results; so hit the other api endpoint
+      url = "https://devapps-restapi.ottawa.ca/devapps/#{app_number}?authKey=#{authkey}"
+      data = JSON.parse(Net::HTTP.get(URI(url)))
+
+      desc = data.dig("applicationBriefDesc", "en")
+      entry.desc = desc
+      entry.save!
+
+      status = data.dig("applicationStatus", "en")
+      if current_status = entry.current_status
+        unless current_status.status == status
+          announcements << { type: :status_change, from: current_status.status, to: status}
+          entry.statuses << DevApp::Status.new(status: status)
+        end
+
+      else
+        entry.statuses << DevApp::Status.new(status: status)
+      end
+
+      data["devAppDocuments"].each do |doc|
+        url = "http://webcast.ottawa.ca/plan/All_Image%20Referencing_#{URI.escape(doc["filePath"])}"
+        # content = Net::HTTP.get(URI(url)) # downnload file content itself
+        
+        attributes = {
+          ref_id: doc["docReferenceId"],
+          name: doc["documentName"],
+          path: doc["filePath"],
+          url: url
+        }
+
+        doc = DevApp::Document.find_by(ref_id: attributes[:ref_id], entry: entry) || DevApp::Document.new
+        doc.assign_attributes(attributes)
+        doc.entry = entry
+        doc.save!
+      end
+
+      # TODO: new documents to announce?
+      if announcements.any?
+				msg = announcements.first
+				message = if msg[:type] == :new_dev_app
+					"New DevApp: #{entry.app_number}"
+				else
+					"DevApp #{entry.app_number} changed status from #{msg[:from]} to #{msg[:to]}"
 				end
-				addr = DevApp::Address.find_by(ref_id: attributes["ref_id"], entry: entry) || DevApp::Address.new
-				addr.assign_attributes(attributes)
-				addr.entry = entry
-				addr.save!
-			end
+				entry.announcements << Announcement.new(message: message)
+      end
 
-			# file level data isn't in the search results; so hit the other api endpoint
-			url = "https://devapps-restapi.ottawa.ca/devapps/#{app_number}?authKey=#{authkey}"
-			data = JSON.parse(Net::HTTP.get(URI(url)))
-
-			desc = data.dig("applicationBriefDesc", "en")
-			entry.desc = desc
-			entry.save!
-
-			status = data.dig("applicationStatus", "en")
-			if current_status = entry.current_status
-				entry.statuses << DevApp::Status.new(status: status) unless current_status.status == status
-			else
-				entry.statuses << DevApp::Status.new(status: status)
-			end
-
-			data["devAppDocuments"].each do |doc|
-				url = "http://webcast.ottawa.ca/plan/All_Image%20Referencing_#{URI.escape(doc["filePath"])}"
-				# content = Net::HTTP.get(URI(url)) # downnload file content itself
-				
-				attributes = {
-					ref_id: doc["docReferenceId"],
-					name: doc["documentName"],
-					path: doc["filePath"],
-					url: url
-				}
-
-				doc = DevApp::Document.find_by(ref_id: attributes[:ref_id], entry: entry) || DevApp::Document.new
-				doc.assign_attributes(attributes)
-				doc.entry = entry
-				doc.save!
-			end
-
-			entry
-		end
-	end
+      entry
+    end
+  end
 
 	def self.latest
 		data = Net::HTTP.get(URI(open_data_url))
