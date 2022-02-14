@@ -95,7 +95,8 @@ class DevApp::Scanner
       status = data.dig("applicationStatus", "en")
       Rails.logger.info(msg: "scanning devapp", app_number: app_number, api_status: status)
       if current_status = entry.current_status
-        Rails.logger.info(msg: "scanning devapp", app_number: app_number, api_status: status, db_status_id: current_status.id, db_status: current_status.status)
+        same = (current_status.status == status)
+        Rails.logger.info(msg: "scanning devapp", app_number: app_number, same: same, api_status: status, db_status_id: current_status.id, db_status: current_status.status)
         unless current_status.status == status
           announcements << { type: :status_change, from: current_status.status, to: status}
           entry.statuses << DevApp::Status.new(status: status)
