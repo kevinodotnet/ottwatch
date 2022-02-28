@@ -79,4 +79,6 @@ group :test do
   gem "webdrivers"
   gem "mocha"
   gem "minitest-focus"
+  gem "webmock"
+  gem "vcr"
 end
