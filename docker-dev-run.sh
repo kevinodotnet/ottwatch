@@ -5,8 +5,7 @@
 
 echo ""
 echo "/etc/init.d/mysql start"
-echo "alias m='mysql ottwatch_dev'"
-echo "mysql ottwatch_dev < db/ottwatch_v1_snapshot.sql"
+echo "bin/rails db:setup"
 echo ""
 
 docker run --name ottwatch-dev -p 33000:3000 -v `pwd`:/ottwatch -i -t ottwatch-dev || \

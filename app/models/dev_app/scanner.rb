@@ -33,6 +33,7 @@ class DevApp::Scanner
 	end
 
   def self.scan_application(app_number)
+    return if app_number == "D02-02-20-0033"
     url = "https://devapps-restapi.ottawa.ca/devapps/search?authKey=#{authkey}&appStatus=all&searchText=#{app_number}&appType=all&ward=all&bounds=0,0,0,0"
 
     d = JSON.parse(Net::HTTP.get(URI(url)))
@@ -92,21 +93,22 @@ class DevApp::Scanner
       entry.desc = desc
       entry.save!
 
-      status = data.dig("applicationStatus", "en")
-      Rails.logger.info(msg: "scanning devapp", app_number: app_number, api_status: status)
-      if current_status = entry.current_status
-        same = (current_status.status == status)
-        Rails.logger.info(msg: "scanning devapp", app_number: app_number, same: same, api_status: status, db_status_id: current_status.id, db_status: current_status.status)
+      api_status = data.dig("applicationStatus", "en")
+      if db_status = entry.current_status
+        same = (db_status.status == api_status)
+        Rails.logger.info(msg: "scanning devapp", app_number: app_number, same: same, api_status: api_status, db_status_id: db_status.id, db_status: db_status.status)
         if same
-					Rails.logger.info(msg: "scanning devapp OUTCOME 1 (same=true)", app_number: app_number, same: same, api_status: status, db_status_id: current_status.id, db_status: current_status.status)
+					Rails.logger.info(msg: "scanning devapp OUTCOME SAME", app_number: app_number, same: same, api_status: api_status, db_status_id: db_status.id, db_status: db_status.status)
 				else
-					Rails.logger.info(msg: "scanning devapp OUTCOME 2 (same=false)", app_number: app_number, same: same, api_status: status, db_status_id: current_status.id, db_status: current_status.status)
-          announcements << { type: :status_change, from: current_status.status, to: status}
-          # entry.statuses << DevApp::Status.new(status: status)
+					Rails.logger.info(msg: "scanning devapp OUTCOME CHANGED 1", app_number: app_number, same: same, api_status: api_status, db_status_id: db_status.id, db_status: db_status.status)
+          announcements << { type: :status_change, from: db_status.status, to: api_status}
+          new_status = DevApp::Status.new(status: api_status)
+          entry.statuses << new_status
+          Rails.logger.info(msg: "scanning devapp OUTCOME CHANGED 2", app_number: app_number, same: same, api_status: api_status, new_status_id: new_status.id, new_status_status: new_status.status)
         end
       else
-				Rails.logger.info(msg: "scanning devapp OUTCOME 3 (same=false)", app_number: app_number, status: status)
-        #  << DevApp::Status.new(status: status)
+        Rails.logger.info(msg: "scanning devapp OUTCOME FIRST", app_number: app_number, api_status: api_status)
+        entry.statuses << DevApp::Status.new(status: api_status)
       end
 
       data["devAppDocuments"].each do |doc|
