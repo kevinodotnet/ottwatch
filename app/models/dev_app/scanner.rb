@@ -95,22 +95,20 @@ class DevApp::Scanner
       status = data.dig("applicationStatus", "en")
       Rails.logger.info(msg: "scanning devapp", app_number: app_number, api_status: status)
       if current_status = entry.current_status
-        same = (current_status.status == status)
-        Rails.logger.info(msg: "scanning devapp", app_number: app_number, same: same, api_status: status, db_status_id: current_status.id, db_status: current_status.status)
-        if same
-					Rails.logger.info(msg: "scanning devapp OUTCOME 1 (same=true)", app_number: app_number, same: same, api_status: status, db_status_id: current_status.id, db_status: current_status.status)
+        if current_status.status == status
+          Rails.logger.info(msg: "scanning devapp NO_CHANGE_NO_DB", app_number: app_number, api_status: status, db_status_id: current_status.id, db_status: current_status.status)
 				else
-					Rails.logger.info(msg: "scanning devapp OUTCOME 2 (same=false)", app_number: app_number, same: same, api_status: status, db_status_id: current_status.id, db_status: current_status.status)
+          Rails.logger.info(msg: "scanning devapp CHANGED_UPDATING", app_number: app_number, api_status: status, db_status_id: current_status.id, db_status: current_status.status)
           announcements << { type: :status_change, from: current_status.status, to: status}
-          # entry.statuses << DevApp::Status.new(status: status)
+          entry.statuses << DevApp::Status.new(status: status)
         end
       else
-				Rails.logger.info(msg: "scanning devapp OUTCOME 3 (same=false)", app_number: app_number, status: status)
-        #  << DevApp::Status.new(status: status)
+        Rails.logger.info(msg: "scanning devapp INSERT NEW", app_number: app_number, status: status)
+        entry.statuses << DevApp::Status.new(status: status)
       end
 
       data["devAppDocuments"].each do |doc|
-        url = "http://webcast.ottawa.ca/plan/All_Image%20Referencing_#{URI.escape(doc["filePath"])}"
+        url = "http://webcast.ottawa.ca/plan/All_Image%20Referencing_#{CGI.escape(doc["filePath"])}"
         # content = Net::HTTP.get(URI(url)) # downnload file content itself
         
         attributes = {
