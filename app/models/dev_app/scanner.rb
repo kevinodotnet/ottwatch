@@ -40,7 +40,7 @@ class DevApp::Scanner
 
     announcements = []
 
-    data = d["devApps"].first
+    data = d["devApps"].select{ |data| data["applicationNumber"] == app_number}.first
 
     attributes = {}
     attributes[:app_id] = data["devAppId"]
@@ -51,7 +51,7 @@ class DevApp::Scanner
     # attributes[:statusDetail] = data.dig("objectStatus", "objectCurrentStatus", "en")
     # attributes[:foo] = data.dig("objectStatus", "objectCurrentStatusDateYMD")
     DevApp::Entry.transaction do 
-      entry = DevApp::Entry.find_by(app_id: data["devAppId"]) || DevApp::Entry.new
+      entry = DevApp::Entry.where(app_number: app_number, app_id: data["devAppId"]).first || DevApp::Entry.new
       entry.assign_attributes(attributes)
       unless entry.persisted?
         announcements << {type: :new_dev_app}
@@ -97,7 +97,7 @@ class DevApp::Scanner
       if current_status = entry.current_status
         if current_status.status == status
           Rails.logger.info(msg: "scanning devapp NO_CHANGE_NO_DB", app_number: app_number, api_status: status, db_status_id: current_status.id, db_status: current_status.status)
-				else
+        else
           Rails.logger.info(msg: "scanning devapp CHANGED_UPDATING", app_number: app_number, api_status: status, db_status_id: current_status.id, db_status: current_status.status)
           announcements << { type: :status_change, from: current_status.status, to: status}
           entry.statuses << DevApp::Status.new(status: status)

@@ -53,11 +53,20 @@ class DevApp::ScannerTest < ActiveSupport::TestCase
     end
   end
 
+  test "ensure app_id collisions are handled" do
+    VCR.use_cassette("#{class_name}_#{method_name}") do
+      assert_difference -> { DevApp::Entry.count }, 2 do
+        ["D07-12-20-0058", "D07-16-19-0015"].each {|app_number| DevAppScanJob.perform_now(app_number: app_number)}
+      end
+      assert_no_difference -> { DevApp::Entry.count } do
+        ["D07-12-20-0058", "D07-16-19-0015"].each {|app_number| DevAppScanJob.perform_now(app_number: app_number)}
+      end
+    end
+  end
+
   test "devapp status changes are announced" do
-    skip "while debugging status problems"
     VCR.use_cassette("#{class_name}_#{method_name}") do
       entry = DevApp::Scanner.scan_application(APP_NUMBER)
-      binding.pry
       s = entry.statuses.first
       s.status = "fake"
       s.save!
@@ -78,7 +87,6 @@ class DevApp::ScannerTest < ActiveSupport::TestCase
   end
 
   test "status gets saved" do
-    skip "while debugging status problems"
     VCR.use_cassette("#{class_name}_#{method_name}") do
       entry = assert_difference -> { DevApp::Status.all.count}, 1 do
         DevApp::Scanner.scan_application(APP_NUMBER)
