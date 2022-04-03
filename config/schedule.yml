@@ -11,7 +11,7 @@
 :schedule:
    ping_job:
       cron: "* * * * * *"
-      class: HelloWorld
+      class: PingJob
    dev_app_scan_job:
       cron: "0 */4 * * * *"
       class: "DevAppScanJob"
