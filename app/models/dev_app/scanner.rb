@@ -10,6 +10,7 @@ class DevApp::Scanner
 		sheet.mode # => :hash
 		@data = []
 		sheet.each_row do |row|
+      next if row["Application Number"] == "D07-16-15-0001 (Phase 2)" # broken API edge-case; cut down exception noise
       d = {}
 			d[:app_number] = row["Application Number"]
       d[:date] = row["Application Date"]
