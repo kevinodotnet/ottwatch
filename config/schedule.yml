@@ -1,17 +1,7 @@
-# ┌───────────── minute (0 - 59)
-# │ ┌───────────── hour (0 - 23)
-# │ │ ┌───────────── day of the month (1 - 31)
-# │ │ │ ┌───────────── month (1 - 12)
-# │ │ │ │ ┌───────────── day of the week (0 - 6) (Sunday to Saturday;
-# │ │ │ │ │                                   7 is also Sunday on some systems)
-# │ │ │ │ │
-# │ │ │ │ │
-# * * * * * <command to execute>
-
+# https://github.com/moove-it/sidekiq-scheduler#schedule-configuration
 :schedule:
-   ping_job:
-      cron: "* * * * * *"
+   PingJob:
+      cron: "0 * * * * *"
       class: PingJob
-   dev_app_scan_job:
+   DevAppScanJob:
       cron: "0 */4 * * * *"
-      class: "DevAppScanJob"
