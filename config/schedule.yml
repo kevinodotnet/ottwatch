@@ -8,10 +8,10 @@
 # │ │ │ │ │
 # * * * * * <command to execute>
 
-ping_job:
-   cron: "*/5 * * * *"
-   class: "PingJob"
-
-dev_app_scan_job:
-   cron: "0 */4 * * *"
-   class: "DevAppScanJob"
+:schedule:
+   ping_job:
+      cron: "* * * * * *"
+      class: HelloWorld
+   dev_app_scan_job:
+      cron: "0 */4 * * * *"
+      class: "DevAppScanJob"

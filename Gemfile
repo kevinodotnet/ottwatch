@@ -52,7 +52,7 @@ gem "bootsnap", require: false
 
 gem "google-cloud-storage", require: false
 gem "sidekiq"
-gem "sidekiq-cron"
+gem "sidekiq-scheduler"
 gem "xsv"
 
 group :development, :test do
