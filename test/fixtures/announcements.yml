@@ -2,10 +2,10 @@
 
 one:
   message: This is an announcement
-  reference_id: 
-  reference_type: MyString
+  reference_id: <%= DevApp::Entry.find_by(app_number: "D07-05-16-0003").id %> 
+  reference_type: DevApp::Entry
 
 two:
   message: This is another announcement
-  reference_id: 
-  reference_type: MyString
+  reference_id: <%= DevApp::Entry.find_by(app_number: "D07-12-15-0205").id %> 
+  reference_type: DevApp::Entry

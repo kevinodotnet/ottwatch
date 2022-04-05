@@ -7,7 +7,7 @@ class DevApp::ScannerTest < ActiveSupport::TestCase
   end
 
   test "expected number of devapps in fixture file" do
-    assert_equal 2436, @scanner.to_a.count
+    assert_equal 2435, @scanner.to_a.count
   end
 
   test "structure of open data entries" do

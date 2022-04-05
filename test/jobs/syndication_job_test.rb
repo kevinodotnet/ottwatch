@@ -18,4 +18,9 @@ class SyndicationJobTest < ActiveJob::TestCase
     TwitterClient.expects(:update).times(Announcement.count)
     SyndicationJob.perform_now
   end
+
+  test "in twitter, messages include links back to the reference" do
+    TwitterClient.expects(:update).with("This is another announcement https://v2.ottwatch.ca/devapp/D07-12-15-0205")
+    SyndicationJob.new.syndicate(Announcement.first)
+  end
 end

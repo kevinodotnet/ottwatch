@@ -4,7 +4,8 @@ class SyndicationJob < ApplicationJob
   GLOBAL_CONFIG_KEY = "syndication_job_last_id"
 
   def syndicate(a)
-    TwitterClient.update(a.message)
+    msg = "#{a.message} #{a.link_to_reference}"
+    TwitterClient.update(msg)
   end
 
   def perform
