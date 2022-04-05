@@ -1,11 +1,11 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  message: MyString
+  message: This is an announcement
   reference_id: 
   reference_type: MyString
 
 two:
-  message: MyString
+  message: This is another announcement
   reference_id: 
   reference_type: MyString

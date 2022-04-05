@@ -15,3 +15,7 @@ ping_job:
 dev_app_scan_job:
    cron: "0 */4 * * *"
    class: "DevAppScanJob"
+
+# syndication_job:
+#    cron: "0/5 * * * *"
+#    class: "SyndicationJob"
