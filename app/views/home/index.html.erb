@@ -9,3 +9,17 @@ Time: <%= Time.now.utc %><br/>
 <%= link_to "Development Applications", devapp_index_path %>
 </center>
 </div>
+
+<h1>Recent announcements</h1>
+<table>
+<tr>
+<th>Time</th>
+<th>Message</th>
+</tr>
+<% @announcements.each do |a| %>
+  <tr>
+  <td><%= a.created_at.in_time_zone("America/New_York").strftime("%Y-%m-%d %H:%M:%S") %></td>
+  <td><%= link_to(a.message, a.link_to_reference) %></td>
+  </tr>
+<% end %>
+</table>
