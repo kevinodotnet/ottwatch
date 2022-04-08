@@ -127,13 +127,13 @@ class DevApp::Scanner
 
       # TODO: new documents to announce?
       if announcements.any?
-				msg = announcements.first
-				message = if msg[:type] == :new_dev_app
-					"New DevApp: #{entry.app_number}"
-				else
-					"DevApp #{entry.app_number} changed status from #{msg[:from]} to #{msg[:to]}"
-				end
-				entry.announcements << Announcement.new(message: message)
+        msg = announcements.first
+        message = if msg[:type] == :new_dev_app
+        "New DevApp: #{entry.app_number}"
+      else
+        "DevApp #{entry.app_number} changed status from #{msg[:from]} to #{msg[:to]}"
+      end
+      entry.announcements << Announcement.new(message: message)
       end
 
       entry

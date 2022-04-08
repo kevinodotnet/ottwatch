@@ -4,7 +4,9 @@ class SyndicationJob < ApplicationJob
   GLOBAL_CONFIG_KEY = "syndication_job_last_id"
 
   def syndicate(a)
-    msg = "#{a.message} #{a.link_to_reference}"
+    msg = a.message
+    msg << " (#{a.link_to_context})" if a.link_to_context
+    msg << " #{a.link_to_reference}"
     TwitterClient.update(msg)
   end
 
