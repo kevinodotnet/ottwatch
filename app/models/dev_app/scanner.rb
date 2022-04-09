@@ -119,6 +119,16 @@ class DevApp::Scanner
           url: url
         }
 
+        begin
+          uri = URI(attributes[:url])
+          Net::HTTP.start(uri.host, uri.port) do |http|
+            response = http.head(uri.path)
+            attributes[:state] = response.code
+          end
+        rescue => e
+          Rails.logger.warn("error on HTTP HEAD for #{attributes[:url]}; #{e.message}")
+        end
+
         doc = DevApp::Document.find_by(ref_id: attributes[:ref_id], entry: entry) || DevApp::Document.new
         doc.assign_attributes(attributes)
         doc.entry = entry
