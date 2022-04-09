@@ -19,7 +19,7 @@ Time: <%= Time.now.utc %><br/>
 <% @announcements.each do |a| %>
   <tr>
   <td><%= a.created_at.in_time_zone("America/New_York").strftime("%Y-%m-%d %H:%M:%S") %></td>
-  <td><%= link_to(a.message, a.link_to_reference) %></td>
+  <td><%= link_to(a.message, a.link_to_reference) %> <%= a.link_to_context %></td>
   </tr>
 <% end %>
 </table>

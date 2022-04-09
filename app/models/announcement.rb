@@ -4,7 +4,9 @@ class Announcement < ApplicationRecord
   def link_to_context
     if reference.is_a?(DevApp::Entry)
       if addr = reference.addresses.first
-        [addr.road_number, addr.road_name, addr.road_type, addr.direction].reject{|c| c == ""}.join(" ")
+        parts = [addr.road_number, addr.road_name, addr.road_type, addr.direction].reject{|c| c == ""}
+        return nil if parts.count < 2
+        parts.join(" ")
       end
     end
   end
