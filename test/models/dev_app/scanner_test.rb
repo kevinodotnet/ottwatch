@@ -119,6 +119,15 @@ class DevApp::ScannerTest < ActiveSupport::TestCase
     end    
   end
 
+  test "file urls are encoded properly" do
+    VCR.use_cassette("#{class_name}_#{method_name}") do
+      entry = DevApp::Scanner.scan_application(APP_NUMBER)
+      expected = "http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2017%20revised%20grading.PDF"
+      actual = entry.documents.map{|d| d.url}.select{|u| u.match(/grading/)}.first
+      assert_equal expected, actual
+    end
+  end
+
   private
 
   def cached_devapps_file

@@ -109,8 +109,7 @@ class DevApp::Scanner
       end
 
       data["devAppDocuments"].each do |doc|
-        url = "http://webcast.ottawa.ca/plan/All_Image%20Referencing_#{CGI.escape(doc["filePath"])}"
-        # content = Net::HTTP.get(URI(url)) # downnload file content itself
+        url = "http://webcast.ottawa.ca/plan/All_Image%20Referencing_#{doc["filePath"].gsub(/ /, "%20")}"
         
         attributes = {
           ref_id: doc["docReferenceId"],
