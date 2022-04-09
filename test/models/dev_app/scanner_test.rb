@@ -64,6 +64,14 @@ class DevApp::ScannerTest < ActiveSupport::TestCase
     end
   end
 
+  test "documents have HTTP_HEAD state results cached in the db" do
+    VCR.use_cassette("#{class_name}_#{method_name}") do
+      entry = DevApp::Scanner.scan_application("D07-12-21-0040")
+      assert_equal 35, entry.documents.map{|d| d.state}.count
+      assert_equal ["404"], entry.documents.map{|d| d.state}.uniq
+    end
+  end
+
   test "devapp status changes are announced" do
     VCR.use_cassette("#{class_name}_#{method_name}") do
       entry = DevApp::Scanner.scan_application(APP_NUMBER)
