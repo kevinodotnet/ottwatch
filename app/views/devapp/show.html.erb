@@ -42,7 +42,16 @@
     <%
     @entry.documents.each do |d|
       %>
-      <li><%= link_to(d.name.gsub(@entry.app_number, " "), d.url) %></li>
+      <li>
+      <%= link_to(d.name.gsub(@entry.app_number, " "), d.url) %>
+      <%
+      if d.state != "200"
+        %>
+        (<span style="color: #ff0000">Missing/broken document: <%= d.state %></span>)
+        <%
+      end
+      %>
+      </li>
       <%
     end
     %>
