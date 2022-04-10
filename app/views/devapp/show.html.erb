@@ -36,6 +36,14 @@
   </td>
 </tr>
 <tr>
+  <th>City Staff Contact</th>
+  <td>
+    <%= @entry.planner_first_name %> <%= @entry.planner_last_name %><br/>
+    <a href="mailto:<%= @entry.planner_email %>"><%= @entry.planner_email %></a><br/>
+    <a href="tel:<%= @entry.planner_phone %>"><%= @entry.planner_phone %></a><br/>
+  </td>
+</tr>
+<tr>
   <th>Documents</th>
   <td>
     <ul>
