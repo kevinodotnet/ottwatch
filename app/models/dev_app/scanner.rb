@@ -91,6 +91,10 @@ class DevApp::Scanner
 
       desc = data.dig("applicationBriefDesc", "en")
       entry.desc = desc
+      entry.planner_first_name = data["plannerFirstName"]
+      entry.planner_last_name = data["plannerLastName"]
+      entry.planner_phone = data["plannerPhone"]
+      entry.planner_email = data["plannerEmail"]
       entry.save!
 
       status = data.dig("applicationStatus", "en")

@@ -7,8 +7,6 @@ class DevappController < ApplicationController
     end
 
     @devapps = relation.order(updated_at: :desc).limit(100)
-
-    # binding.pry
   end
 
   def show

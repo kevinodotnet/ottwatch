@@ -128,6 +128,16 @@ class DevApp::ScannerTest < ActiveSupport::TestCase
     end
   end
 
+  test "planner contact data is collected" do
+    VCR.use_cassette("#{class_name}_#{method_name}") do
+      entry = DevApp::Scanner.scan_application(APP_NUMBER)
+      assert_equal "Simon", entry.planner_first_name
+      assert_equal "Deiaco", entry.planner_last_name
+      assert_equal "613-580-2424 x15641", entry.planner_phone
+      assert_equal "simon.deiaco@ottawa.ca", entry.planner_email
+    end
+  end
+
   private
 
   def cached_devapps_file
