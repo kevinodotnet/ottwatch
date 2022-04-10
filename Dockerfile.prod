@@ -8,14 +8,16 @@ RUN mkdir /app && chown app:app /app
 WORKDIR /app
 USER app
 
-ADD --chown=app:app https://api.github.com/repos/kevinodotnet/ottwatch/git/refs/heads/main /tmp/version.json
-
+# clone early, bundle, to avoid always repeating main bundle install on each deploy
 RUN git clone https://github.com/kevinodotnet/ottwatch.git
-
 WORKDIR /app/ottwatch
-ADD --chown=app:app https://api.github.com/repos/kevinodotnet/ottwatch/git/refs/heads/main version.json
 RUN bundle config set --local path 'vendor/bundle'
 RUN bundle install
-RUN bin/rails assets:precompile
 
+# only once per commit to main
+ADD --chown=app:app https://api.github.com/repos/kevinodotnet/ottwatch/git/refs/heads/main /tmp/version.json
+ADD --chown=app:app https://api.github.com/repos/kevinodotnet/ottwatch/git/refs/heads/main version.json
+RUN git pull
+RUN bundle install
+RUN bin/rails assets:precompile
 ENV RAILS_LOG_TO_STDOUT true
