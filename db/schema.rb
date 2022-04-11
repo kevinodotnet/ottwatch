@@ -107,6 +107,35 @@ ActiveRecord::Schema[7.0].define(version: 2022_04_10_023931) do
     t.index ["name"], name: "index_global_controls_on_name", unique: true
   end
 
+  create_table "parcels", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.integer "objectid"
+    t.string "pin"
+    t.decimal "easting", precision: 15, scale: 3
+    t.decimal "northing", precision: 15, scale: 3
+    t.string "publicland"
+    t.string "parceltype"
+    t.string "pi_municipal_address_id"
+    t.string "record_owner_id"
+    t.string "rt_road_name_id"
+    t.string "address_number"
+    t.string "road_name"
+    t.string "suffix"
+    t.string "dir"
+    t.string "municipality_name"
+    t.string "legal_unit"
+    t.string "address_qualifier"
+    t.string "postal_code"
+    t.string "address_status"
+    t.string "address_type_id"
+    t.string "pin_number"
+    t.integer "feat_num"
+    t.string "pi_parcel_id"
+    t.decimal "shape_length", precision: 25, scale: 15
+    t.decimal "shape_area", precision: 25, scale: 15
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "dev_app_documents", "dev_app_entries", column: "entry_id"
