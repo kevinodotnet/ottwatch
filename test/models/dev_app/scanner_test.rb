@@ -49,7 +49,7 @@ class DevApp::ScannerTest < ActiveSupport::TestCase
         DevApp::Scanner.scan_application(APP_NUMBER)
       end
       announcement = Announcement.last
-      assert_equal "New DevApp: D07-12-15-0017", announcement.message
+      assert_equal "DevApp: D07-12-15-0017 has been born", announcement.message
     end
   end
 
@@ -68,7 +68,7 @@ class DevApp::ScannerTest < ActiveSupport::TestCase
     VCR.use_cassette("#{class_name}_#{method_name}") do
       entry = DevApp::Scanner.scan_application("D07-12-21-0040")
       assert_equal 35, entry.documents.map{|d| d.state}.count
-      assert_equal ["404"], entry.documents.map{|d| d.state}.uniq
+      assert_equal ["200"], entry.documents.map{|d| d.state}.uniq
     end
   end
 
@@ -82,7 +82,7 @@ class DevApp::ScannerTest < ActiveSupport::TestCase
         DevApp::Scanner.scan_application(APP_NUMBER)
       end
       announcement = Announcement.last
-      assert_equal "DevApp D07-12-15-0017 changed status from fake to Active", announcement.message
+      assert_equal "DevApp: D07-12-15-0017 changed its relationship status from 'fake' to 'Active'", announcement.message
     end    
   end
 

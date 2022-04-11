@@ -142,9 +142,9 @@ class DevApp::Scanner
       if announcements.any?
         msg = announcements.first
         message = if msg[:type] == :new_dev_app
-        "New DevApp: #{entry.app_number}"
+        "DevApp: #{entry.app_number} has been born"
       else
-        "DevApp #{entry.app_number} changed status from #{msg[:from]} to #{msg[:to]}"
+        "DevApp: #{entry.app_number} changed its relationship status from '#{msg[:from]}' to '#{msg[:to]}'"
       end
       entry.announcements << Announcement.new(message: message)
       end
