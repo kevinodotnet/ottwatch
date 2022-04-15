@@ -21,8 +21,8 @@ class LobbyistController {
 
 			<h5>This report is no longer available.</h5>
 
-			<p>Ottawa's Integrity Commissioner has confirmed for Ottwatch that at least two "reported on"
-			dates for lobbying activities were wrong in the Ottwatch data. This puts the entire "late lobbying
+			<p>Ottawa's Integrity Commissioner has confirmed for OttWatch that at least two "reported on"
+			dates for lobbying activities were wrong in the OttWatch data. This puts the entire "late lobbying
 			report" on thin ice since I can't know what other records could be wrong.</p>
 
 			<p>I would like to believe the overwhelming majority of the activities were correct (<a href="/story/7/inside-the-lobbyist-registry">my own was</a>).</p>

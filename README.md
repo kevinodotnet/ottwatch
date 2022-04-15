@@ -1,6 +1,6 @@
 # README
 
-# Exporting Ottwatch.v1 database
+# Exporting ottwatch.v1 database
 
 ```
 MYUSER="root"
