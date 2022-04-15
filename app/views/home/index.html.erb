@@ -1,22 +1,35 @@
-<p class="lead">
-  <b>OttWatch</b> is dedicated to making it easier to be part of the political conversation in Ottawa.<br/>
-</p>
+<div class="row">
+  <div class="col-sm-6">
+    <b>OttWatch</b> is dedicated to making it easier to be part of the political conversation in Ottawa.<br/>
+  </div>
+  <div class="col-sm-6">
+    This is "version2" of OttWatch. Check out <a href="http://ottwatch.ca">version 1</a> which has a lot
+    more content available. Version 2 will continue to grow in scope, as time allows.
+  </div>
+</div>
 
-<h1>Recent announcements</h1>
-<table>
-<tr>
-<th>Time</th>
-<th>Message</th>
-</tr>
+<div style="margin-top: 10px; margin-bottom: 10px;">
+  <h1>Recent announcements</h1>
+</div>
+<div class="owrows">
 <% @announcements.each do |a| %>
-  <tr>
-  <td><%= a.created_at.in_time_zone("America/New_York").strftime("%Y-%m-%d %H:%M:%S") %></td>
-  <td><%= link_to(a.message, a.link_to_reference) %> <%= a.link_to_context %></td>
-  </tr>
+  <div class="row">
+    <div class="col-sm-2 col-md-1">
+      <%= a.created_at.in_time_zone("America/New_York").strftime("%Y-%m-%d") %>
+    </div>
+    <div class="col-sm-6 col-md-6">
+      <%= link_to(a.message, a.link_to_reference) %>
+    </div>
+    <div class="col-sm-4 col-md-5">
+      <%= a.link_to_context %>
+    </div>
+  </div>
 <% end %>
-</table>
+</div>
 
-<a id="about"></a>
-<h1>About/Contact</h1>
+<div style="margin-top: 10px; margin-bottom: 10px;">
+  <a id="about"></a>
+  <h1>About/Contact</h1>
+</div>
 
 Twitter: @ottwatch or @kevinodotnet
