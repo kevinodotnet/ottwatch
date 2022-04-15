@@ -12,3 +12,4 @@ for i in $DOCKER_FILES; do
   sudo docker build -t $name -f $i .
 done
 
+sudo docker image prune -f
