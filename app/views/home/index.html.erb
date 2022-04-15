@@ -14,14 +14,14 @@
 <div class="owrows">
 <% @announcements.each do |a| %>
   <div class="row">
-    <div class="col-sm-2 col-md-1">
+    <div class="col-sm-3">
+      <%= link_to(a.link_to_context, a.link_to_reference) %>
+    </div>
+    <div class="col-md-7">
+      <%= a.message %>
+    </div>
+    <div class="col-md-2" style="text-align: right;">
       <%= a.created_at.in_time_zone("America/New_York").strftime("%Y-%m-%d") %>
-    </div>
-    <div class="col-sm-6 col-md-6">
-      <%= link_to(a.message, a.link_to_reference) %>
-    </div>
-    <div class="col-sm-4 col-md-5">
-      <%= a.link_to_context %>
     </div>
   </div>
 <% end %>
