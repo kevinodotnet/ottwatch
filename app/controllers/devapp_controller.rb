@@ -11,5 +11,6 @@ class DevappController < ApplicationController
 
   def show
     @entry = DevApp::Entry.where(app_number: params[:app_number]).includes(:statuses, :addresses, :documents).first
+    raise ActionController::RoutingError.new('Development Application Not Found') unless @entry
   end
 end
