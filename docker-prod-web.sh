@@ -14,6 +14,7 @@ sudo docker run \
   -e RAILS_MASTER_KEY=$RAILS_MASTER_KEY \
   -e REDIS_URL=$REDIS_URL \
   -e GCS_KEYFILE=/infra/gcs-prodweb-service-account.json \
+  -e RAILS_SERVE_STATIC_FILES=1 \
   -e GOOGLE_MAPS_API_KEY=$GOOGLE_MAPS_API_KEY \
   -v $INFRA_FOLDER:/infra \
   -p 3000:3000 \
