@@ -16,6 +16,10 @@ dev_app_scan_job:
    cron: "0 */4 * * *"
    class: "DevAppScanJob"
 
+meeting_scan_job:
+   cron: "0 */4 * * *"
+   class: "MeetingScanJob"
+
 syndication_job:
    cron: "* * * * *"
    class: "SyndicationJob"
