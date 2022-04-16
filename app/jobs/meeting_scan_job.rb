@@ -1,3 +1,4 @@
+require 'net/http'
 class MeetingScanJob < ApplicationJob
   queue_as :default
 
@@ -50,5 +51,7 @@ class MeetingScanJob < ApplicationJob
         Rails.logger.error("Failure parsing meeting details: #{e.message} #{m}")
       end
     end
+
+    nil
   end
 end
