@@ -46,6 +46,20 @@ class MeetingScanJob < ApplicationJob
           meeting = Meeting.where(reference_id: reference_id).first || Meeting.create!(committee: committee, reference_id: reference_id)
           meeting.assign_attributes(attributes)
           meeting.save!
+          
+          data = Net::HTTP.get(URI("https://app05.ottawa.ca/sirepub/agview.aspx?agviewmeetid=#{reference_id}&agviewdoctype=AGENDA"))
+          agenda_cache_url = data.match(/<a href=..(?<url>.*htm).>here<.a>/)[:url]
+          data = Net::HTTP.get(URI("https://app05.ottawa.ca/#{agenda_cache_url}"))
+          data = data.gsub(/[\r\n\t]/, ' ').gsub(/  */, ' ')
+
+          doc = Nokogiri::HTML(data)
+          doc.xpath('//a').each do |l|
+            if l.attributes.values.map{|m| m.to_s}.join(" ").match(/itemid=/)
+              reference_id = l.attributes["href"].value.match(/itemid=(?<reference_id>\d+)/)[:reference_id]
+              title = l.content
+              item = MeetingItem.find_by_reference_id(reference_id) || MeetingItem.create!(title: title, reference_id: reference_id, meeting: meeting)
+            end
+          end
         end
       rescue => e
         Rails.logger.error("Failure parsing meeting details: #{e.message} #{m}")

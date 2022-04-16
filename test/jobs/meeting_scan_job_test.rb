@@ -2,7 +2,6 @@ require "test_helper"
 
 class MeetingScanJobTest < ActiveJob::TestCase
   test "meetings can be scanned and all fields are found" do
-    Meeting.delete_all
     VCR.use_cassette("#{class_name}_#{method_name}") do
       MeetingScanJob.perform_now
     end
@@ -13,5 +12,15 @@ class MeetingScanJobTest < ActiveJob::TestCase
     assert Meeting.where(contact_email: nil).none?
     assert Meeting.where(contact_phone: nil).none?
     assert Meeting.where(reference_id: nil).none?
+  end
+
+  test "meetings inhale agenda items" do
+    VCR.use_cassette("#{class_name}_#{method_name}") do
+      MeetingScanJob.perform_now
+    end
+    assert MeetingItem.all.count > 10 # we found at least a few
+    assert MeetingItem.where(title: nil).none?
+    assert MeetingItem.where(title: "").none?
+    assert MeetingItem.where(reference_id: nil).none?
   end
 end
