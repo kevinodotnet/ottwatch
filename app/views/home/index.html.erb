@@ -18,11 +18,8 @@
       <div class="col-sm-3">
         <%= link_to(m.start_time.in_time_zone("America/New_York").strftime("%Y-%m-%d %H:%M"), meeting_url) %>
       </div>
-      <div class="col-md-7">
+      <div class="col-md-9">
         <%= m.committee.name %><br/>
-        
-      </div>
-      <div class="col-md-2" style="text-align: right;">
       </div>
     </div>
   <% end %>
