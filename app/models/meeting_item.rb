@@ -1,0 +1,2 @@
+class MeetingItem < ApplicationRecord
+end
