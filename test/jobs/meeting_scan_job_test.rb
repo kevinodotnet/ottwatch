@@ -2,6 +2,7 @@ require "test_helper"
 
 class MeetingScanJobTest < ActiveJob::TestCase
   test "meetings can be scanned and all fields are found" do
+    Meeting.delete_all
     VCR.use_cassette("#{class_name}_#{method_name}") do
       MeetingScanJob.perform_now
     end
