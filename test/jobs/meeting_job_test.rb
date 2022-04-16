@@ -8,6 +8,7 @@ class MeetingScanJobTest < ActiveJob::TestCase
     end
     assert Meeting.where(committee_id: nil).none?
     assert Meeting.where(start_time: nil).none?
+    assert Meeting.where(start_time: 'Sat, 01 Jan 2000 14:30:00.000000000 UTC +00:00').none?
     assert Meeting.where(contact_name: nil).none?
     assert Meeting.where(contact_email: nil).none?
     assert Meeting.where(contact_phone: nil).none?

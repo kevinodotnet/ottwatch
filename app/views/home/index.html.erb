@@ -9,20 +9,39 @@
 </div>
 
 <div style="margin-top: 10px; margin-bottom: 10px;">
-  <h1>Recent announcements</h1>
+  <h2>Upcoming Meetings</h2>
 </div>
 <div class="owrows">
-<% @announcements.each do |a| %>
-  <div class="row">
-    <div class="col-sm-3">
-      <%= link_to(a.link_to_context, a.link_to_reference) %>
+  <% @meetings.each do |m| %>
+    <% meeting_url = "https://app05.ottawa.ca/sirepub/mtgviewer.aspx?meetid=#{m.reference_id}&doctype=AGENDA" %>
+    <div class="row">
+      <div class="col-sm-3">
+        <%= link_to(m.start_time.in_time_zone("America/New_York").strftime("%Y-%m-%d %H:%M"), meeting_url) %>
+      </div>
+      <div class="col-md-7">
+        <%= m.committee.name %><br/>
+        
+      </div>
+      <div class="col-md-2" style="text-align: right;">
+      </div>
     </div>
-    <div class="col-md-7">
-      <%= a.message %>
+  <% end %>
+</div>
+<div style="margin-top: 10px; margin-bottom: 10px;">
+  <h2>Recent announcements</h2>
+</div>
+<div class="owrows">
+  <% @announcements.each do |a| %>
+    <div class="row">
+      <div class="col-sm-3">
+        <%= link_to(a.link_to_context, a.link_to_reference) %>
+      </div>
+      <div class="col-md-7">
+        <%= a.message %>
+      </div>
+      <div class="col-md-2" style="text-align: right;">
+        <%= a.created_at.in_time_zone("America/New_York").strftime("%Y-%m-%d") %>
+      </div>
     </div>
-    <div class="col-md-2" style="text-align: right;">
-      <%= a.created_at.in_time_zone("America/New_York").strftime("%Y-%m-%d") %>
-    </div>
-  </div>
-<% end %>
+  <% end %>
 </div>

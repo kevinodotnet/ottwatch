@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_04_16_031611) do
+ActiveRecord::Schema[7.0].define(version: 2022_04_16_042402) do
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -122,7 +122,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_04_16_031611) do
 
   create_table "meetings", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "committee_id", null: false
-    t.time "start_time"
+    t.datetime "start_time", precision: nil
     t.string "contact_name"
     t.string "contact_email"
     t.string "contact_phone"
@@ -130,6 +130,35 @@ ActiveRecord::Schema[7.0].define(version: 2022_04_16_031611) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["committee_id"], name: "index_meetings_on_committee_id"
+  end
+
+  create_table "parcels", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.integer "objectid"
+    t.string "pin"
+    t.decimal "easting", precision: 15, scale: 3
+    t.decimal "northing", precision: 15, scale: 3
+    t.string "publicland"
+    t.string "parceltype"
+    t.string "pi_municipal_address_id"
+    t.string "record_owner_id"
+    t.string "rt_road_name_id"
+    t.string "address_number"
+    t.string "road_name"
+    t.string "suffix"
+    t.string "dir"
+    t.string "municipality_name"
+    t.string "legal_unit"
+    t.string "address_qualifier"
+    t.string "postal_code"
+    t.string "address_status"
+    t.string "address_type_id"
+    t.string "pin_number"
+    t.integer "feat_num"
+    t.string "pi_parcel_id"
+    t.decimal "shape_length", precision: 25, scale: 15
+    t.decimal "shape_area", precision: 25, scale: 15
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
