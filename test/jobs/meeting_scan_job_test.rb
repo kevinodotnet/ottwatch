@@ -12,6 +12,14 @@ class MeetingScanJobTest < ActiveJob::TestCase
     assert Meeting.where(contact_email: nil).none?
     assert Meeting.where(contact_phone: nil).none?
     assert Meeting.where(reference_id: nil).none?
+    assert_equal [1], Meeting.all.map{|m| m.announcements.count}.uniq
+    assert_equal Meeting.all.count, Meeting.all.map{|m| m.announcements.count}.sum
+
+    announcement = Announcement.last
+    assert announcement.reference.instance_of?(Meeting)
+    assert announcement.message.match(/New Meeting: ............/)
+    assert announcement.link_to_context
+    assert announcement.link_to_reference
   end
 
   test "meetings inhale agenda items" do

@@ -41,12 +41,18 @@ class MeetingScanJob < ApplicationJob
 
         next if reference_id.nil? # no agenda yet; choose not to care yet
 
+
         Meeting.transaction do
+          announcements = []
           committee = Committee.where(name: name).first || Committee.create!(name: name)
-          meeting = Meeting.where(reference_id: reference_id).first || Meeting.create!(committee: committee, reference_id: reference_id)
+          meeting = Meeting.where(reference_id: reference_id).first
+          unless meeting
+            meeting = Meeting.create!(committee: committee, reference_id: reference_id)
+            announcements << {type: :new_meeting}
+          end
           meeting.assign_attributes(attributes)
           meeting.save!
-          
+
           data = Net::HTTP.get(URI("https://app05.ottawa.ca/sirepub/agview.aspx?agviewmeetid=#{reference_id}&agviewdoctype=AGENDA"))
           agenda_cache_url = data.match(/<a href=..(?<url>.*htm).>here<.a>/)[:url]
           data = Net::HTTP.get(URI("https://app05.ottawa.ca/#{agenda_cache_url}"))
@@ -59,6 +65,11 @@ class MeetingScanJob < ApplicationJob
               title = l.content
               item = MeetingItem.find_by_reference_id(reference_id) || MeetingItem.create!(title: title, reference_id: reference_id, meeting: meeting)
             end
+          end
+
+          if announcements.any?
+            msg = "New Meeting: #{meeting.committee.name}" if announcements.first[:type] == :new_meeting
+            meeting.announcements << Announcement.new(message: msg) if msg
           end
         end
       rescue => e

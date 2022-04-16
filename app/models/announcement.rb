@@ -6,9 +6,10 @@ class Announcement < ApplicationRecord
       if addr = reference.addresses.first
         parts = [addr.road_number, addr.road_name, addr.road_type, addr.direction].reject{|c| c == ""}
         return nil if parts.count < 2
-        parts.join(" ")
+        return parts.join(" ")
       end
     end
+    return "#{reference.start_time.in_time_zone("America/New_York").strftime("%b %d %H:%M")}" if reference.is_a?(Meeting)
   end
 
   def link_to_reference
@@ -18,7 +19,7 @@ class Announcement < ApplicationRecord
     else
       "http://localhost:33000"
     end
-    url << "/devapp/#{reference.app_number}" if reference.is_a?(DevApp::Entry)
-    url
+    return "#{url}/devapp/#{reference.app_number}" if reference.is_a?(DevApp::Entry)
+    return "https://app05.ottawa.ca/sirepub/mtgviewer.aspx?meetid=#{reference.reference_id}&doctype=AGENDA" if reference.is_a?(Meeting)
   end
 end
