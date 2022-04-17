@@ -1,0 +1,24 @@
+<div class="owrows">
+  <% @meetings.each do |m| %>
+    <% meeting_url = "/meeting/#{m.reference_id}" %>
+    <div class="row">
+      <div class="col-sm-3">
+        <%= link_to(m.start_time.in_time_zone("America/New_York").strftime("%b %d %H:%M"), meeting_url) %>
+      </div>
+      <div class="col-md-7">
+        <%= m.committee.name %>
+      </div>
+      <div class="col-md-2" style="text-align: right;">
+        <%= m.items.count %> items
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<div style="padding-top: 20px;">
+<center>
+<% if @meetings.any? %>
+<%= link_to "More...", meeting_index_path(before_id: @meetings.last.id) %>
+<% end %>
+</center>
+</div>

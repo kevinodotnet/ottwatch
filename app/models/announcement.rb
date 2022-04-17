@@ -20,6 +20,6 @@ class Announcement < ApplicationRecord
       "http://localhost:33000"
     end
     return "#{url}/devapp/#{reference.app_number}" if reference.is_a?(DevApp::Entry)
-    return "https://app05.ottawa.ca/sirepub/mtgviewer.aspx?meetid=#{reference.reference_id}&doctype=AGENDA" if reference.is_a?(Meeting)
+    return "/meeting/#{reference.reference_id}" if reference.is_a?(Meeting)
   end
 end

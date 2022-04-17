@@ -6,6 +6,9 @@ Rails.application.routes.draw do
   get 'devapp/index'
   get 'devapp/:app_number', to: 'devapp#show'
 
-  # Defines the root path route ("/")
+  get 'meeting/index'
+  get 'meeting/:reference_id', to: 'meeting#show'
+
+  # Defines the root path rout  e ("/")
   root "home#index"
 end
