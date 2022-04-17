@@ -2,6 +2,8 @@
 
 . ~/src/infra/ottwatch.sh
 
+sudo docker container rm ottwatch-web
+
 sudo docker run \
   --restart always \
   -d \
