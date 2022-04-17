@@ -3,7 +3,7 @@
 . ~/src/infra/ottwatch.sh
 
 sudo docker run \
-  --rm \
+  --restart always \
   -d \
   --network prodweb \
   -e RAILS_ENV=production \
