@@ -128,6 +128,13 @@ class DevApp::ScannerTest < ActiveSupport::TestCase
     end
   end
 
+  test "file descriptions are normalized" do
+    VCR.use_cassette("#{class_name}_#{method_name}") do
+      entry = DevApp::Scanner.scan_application("D07-12-22-0055")
+      assert entry.documents.map{|d| d.name}.include?("2022-04-19 - Application Summary")
+    end
+  end
+
   test "planner contact data is collected" do
     VCR.use_cassette("#{class_name}_#{method_name}") do
       entry = DevApp::Scanner.scan_application(APP_NUMBER)

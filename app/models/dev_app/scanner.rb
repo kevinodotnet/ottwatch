@@ -122,6 +122,9 @@ class DevApp::Scanner
           url: url
         }
 
+        # "2022-04-19 - Application Summary - D07-12-22-0055"
+        attributes[:name] = attributes[:name].gsub(/#{entry.app_number}/, '').gsub(/ - $/, '')
+
         begin
           uri = URI(attributes[:url])
           Net::HTTP.start(uri.host, uri.port) do |http|
@@ -138,7 +141,6 @@ class DevApp::Scanner
         doc.save!
       end
 
-      # TODO: new documents to announce?
       if announcements.any?
         msg = announcements.first
         message = if msg[:type] == :new_dev_app

@@ -1,0 +1,1139 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://devapps-restapi.ottawa.ca/devapps/search?appStatus=all&appType=all&authKey=4r5T2egSmKm5&bounds=0,0,0,0&searchText=D07-12-22-0055&ward=all
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+      Host:
+      - devapps-restapi.ottawa.ca
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx
+      Date:
+      - Tue, 19 Apr 2022 21:24:20 GMT
+      Content-Type:
+      - application/json; charset=utf-8
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      Vary:
+      - Accept-Encoding
+      Strict-Transport-Security:
+      - max-age=15724800; includeSubDomains
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Ott-Cache:
+      - '10'
+      Set-Cookie:
+      - NSC_QH_NzTP_ohjoy=ffffffffc3a0bc3845525d5f4f58455e445a4a42378b;expires=Tue,
+        19-Apr-2022 21:54:20 GMT;path=/;httponly
+      - incap_ses_305_2348304=6O07cdC0agRUnDWMFZQ7BIQoX2IAAAAAGGnrRxfn458144mAnH8Dyw==;
+        path=/; Domain=.ottawa.ca
+      - nlbi_2348304=nOx7JSNtUCHWTjWSl2uJLQAAAADthj1bhHQTVidvpEchRIFM; path=/; Domain=.ottawa.ca
+      - visid_incap_2348304=FnHLzCTWTY+7kDHOWVfy1PAnX2IAAAAAQUIPAAAAAAAXKfm1bbCQV/Ie9OF0p8yh;
+        expires=Wed, 19 Apr 2023 12:03:21 GMT; HttpOnly; path=/; Domain=.ottawa.ca
+      X-Cdn:
+      - Imperva
+      X-Iinfo:
+      - 10-25706581-25706594 NNYN CT(14 47 0) RT(1650403460210 39) q(0 0 1 0) r(2
+        2) U5
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        eyJkZXZBcHBzIjpbeyJkZXZBcHBJZCI6Il9fQ0tLVlg3IiwiYXBwbGljYXRpb25OdW1iZXIiOiJEMDctMTItMjItMDA1NSIsImFwcGxpY2F0aW9uRGF0ZSI6NjM3ODQ2NTQwMzkwMDAwMDAwLCJhcHBsaWNhdGlvbkRhdGVZTUQiOiIyMDIyLTA0LTA0IiwiYXBwbGljYXRpb25UeXBlSWQiOiJfX19fNUNDViIsImFwcGxpY2F0aW9uVHlwZSI6eyJlbiI6IlNpdGUgUGxhbiBDb250cm9sIiwiZnIiOiJSw6lnbGVtZW50YXRpb24gZHUgcGxhbiBkJ2ltcGxhbnRhdGlvbiJ9LCJhcHBsaWNhdGlvbkJyaWVmRGVzYyI6e30sImFwcGxpY2F0aW9uU3RhdHVzIjp7ImVuIjoiQWN0aXZlIiwiZnIiOiJBY3RpZiJ9LCJkZXZBcHBBZGRyZXNzZXMiOlt7ImFkZHJlc3NSZWZlcmVuY2VJZCI6Il9fQ0tLVlhBIiwiYWRkcmVzc051bWJlciI6MzEzMCwiYWRkcmVzc1F1YWxpZmllciI6IiIsImxlZ2FsVW5pdCI6IiIsInJvYWROYW1lIjoiV09PRFJPRkZFIiwiY2FyZGluYWxEaXJlY3Rpb24iOiIiLCJyb2FkVHlwZSI6IkF2ZW51ZSIsIm11bmljaXBhbGl0eSI6Ik5lcGVhbiIsImFkZHJlc3NUeXBlIjoiTUFJTiIsImFkZHJlc3NMYXRpdHVkZSI6NDUuMjgwODI0LCJhZGRyZXNzTG9uZ2l0dWRlIjotNzUuNzIyMTQyLCJhZGRyZXNzTnVtYmVyUm9hZE5hbWUiOiIzMTMwIFdPT0RST0ZGRSIsInBhcmNlbFBpbk51bWJlciI6NDU5Njc2NDN9XSwiZGV2QXBwRG9jdW1lbnRzIjpbXSwib2JqZWN0U3RhdHVzIjp7Im9iamVjdFN0YXR1c1R5cGVJZCI6Ik9TVFNQMDAzIiwib2JqZWN0Q3VycmVudFN0YXR1cyI6eyJlbiI6IkNpcmN1bGF0aW9uIFBhY2thZ2UgUHJlcGFyZWQiLCJmciI6IkVuc2VtYmxlIGRlIGRvY3VtZW50cyBwcsOqdCBwb3VyIGRpZmZ1c2lvbiJ9LCJvYmplY3RDdXJyZW50U3RhdHVzRGF0ZSI6NjM3ODU4Nzk0MDYwMDAwMDAwLCJvYmplY3RDdXJyZW50U3RhdHVzRGF0ZVlNRCI6IjIwMjItMDQtMTgifSwiZGV2QXBwV2FyZCI6eyJjb21tdW5pdHlJZCI6bnVsbCwid2FyZE51bWJlciI6e30sIndhcmROYW1lIjp7fSwiY291bmNpbGxvckxhc3ROYW1lIjpudWxsLCJjb3VuY2lsbG9yRmlyc3ROYW1lIjpudWxsLCJ3YXJkQ291bmNpbGxvckVtYWlsIjpudWxsfSwiZW5kT2ZDaXJjdWxhdGlvbkRhdGUiOjAsImVuZE9mQ2lyY3VsYXRpb25EYXRlWU1EIjoiMDAwMS0wMS0wMSIsImNhbkNvbW1lbnQiOiJZIiwic2hvd0ZlZWRiYWNrTGluayI6IlkiLCJwbGFubmVyRmlyc3ROYW1lIjpudWxsLCJwbGFubmVyTGFzdE5hbWUiOm51bGwsInBsYW5uZXJQaG9uZSI6bnVsbCwicGxhbm5lckVtYWlsIjpudWxsLCJzZWFyY2hhYmxlVGV4dCI6bnVsbCwic3RyZWV0QWRyZXNzIjoiV09PRFJPRkZFIiwic3RyZWV0TnVtYmVyIjozMTMwfV0sInRvdGFsRGV2QXBwcyI6MSwiaW5kZXgiOjAsImxpbWl0Ijo1MH0=
+  recorded_at: Tue, 19 Apr 2022 21:24:20 GMT
+- request:
+    method: get
+    uri: https://devapps-restapi.ottawa.ca/devapps/D07-12-22-0055?authKey=4r5T2egSmKm5
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+      Host:
+      - devapps-restapi.ottawa.ca
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx
+      Date:
+      - Tue, 19 Apr 2022 21:24:21 GMT
+      Content-Type:
+      - application/json; charset=utf-8
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      Vary:
+      - Accept-Encoding
+      Strict-Transport-Security:
+      - max-age=15724800; includeSubDomains
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Ott-Cache:
+      - '10'
+      Set-Cookie:
+      - NSC_QH_NzTP_ohjoy=ffffffffc3a0bc3845525d5f4f58455e445a4a42378b;expires=Tue,
+        19-Apr-2022 21:54:21 GMT;path=/;httponly
+      - incap_ses_305_2348304=E5t9LdtH4iuQwTaMFZQ7BIQoX2IAAAAAOF87RKnVnM7dhVL4fKVTfg==;
+        path=/; Domain=.ottawa.ca
+      - nlbi_2348304=nnyqZ+zKQ1or0b9jl2uJLQAAAACBJ3iFRMZByCvhV8+gV2js; path=/; Domain=.ottawa.ca
+      - visid_incap_2348304=jSJ1ueTkRQmUzCw9ubD31oQoX2IAAAAAQUIPAAAAAACvvaAz9LqfXWeQ/34XK5IA;
+        expires=Wed, 19 Apr 2023 12:03:21 GMT; HttpOnly; path=/; Domain=.ottawa.ca
+      X-Cdn:
+      - Imperva
+      X-Iinfo:
+      - 14-51028703-51028716 NNYN CT(11 41 0) RT(1650403460544 46) q(0 0 1 -1) r(1
+        1) U5
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        eyJkZXZBcHBJZCI6Il9fQ0tLVlg3IiwiYXBwbGljYXRpb25OdW1iZXIiOiJEMDctMTItMjItMDA1NSIsImFwcGxpY2F0aW9uRGF0ZSI6NjM3ODQ2NTQwMzkwMDAwMDAwLCJhcHBsaWNhdGlvbkRhdGVZTUQiOiIyMDIyLTA0LTA0IiwiYXBwbGljYXRpb25UeXBlSWQiOiJfX19fNUNDViIsImFwcGxpY2F0aW9uVHlwZSI6eyJlbiI6IlNpdGUgUGxhbiBDb250cm9sIiwiZnIiOiJSw6lnbGVtZW50YXRpb24gZHUgcGxhbiBkJ2ltcGxhbnRhdGlvbiJ9LCJhcHBsaWNhdGlvbkJyaWVmRGVzYyI6eyJlbiI6IlRvIGJ1aWxkIGEgbmV3IGRlbnRhbCBjbGluaWMgb24gdGhlIHN1YmplY3QgbGFuZHMgYW5kIHRvIGFsc28gYnVpbGQgMiBwYWlycyBvZiBzZW1pLWRldGFjaGVkIHJlc2lkZW50aWFsIHVuaXRzIG9uIHRoZSBwcm9wZXJ0eSAoNCByZXNpZGVudGlhbCB1bml0cyBpbiB0b3RhbCkuICBOb3RlIHRoYXQgYSBzaXRlIHBsYW4gYWdyZWVtZW50IGhhcyBiZWVuIGlzc3VlZCAoYnV0IG5vdCBleGVjdXRlZCkgZm9yIHRoZXNlIGxhbmRzIGZvciBhIGRlbnRhbCBjbGluaWMgYW5kIHRlbmFudCBvZmZpY2Ugc3BhY2UuICBUaGUgcGxhbnMgYXJlIHRvIGJlIG1vZGlmaWllZCB3aXRoIGEgbmV3IHNlcnZpY2luZyB3aXRoaW4gdGhlIFdvb2Ryb2ZmZSBSaWdodCBvZiBXYXkgYW5kIHRob3NlIGRyYXdpbmdzIGFyZSBiZWluaW5nIGluY2x1ZGVkIGluIHRoaXMgc2l0ZSBwbGFuIHN1Ym1pc3Npb24uICAzMTEyIFdvb2Ryb2ZmZSwgMzEzMCBXb29kcm9mZmUgKGZ1dHVyZSBkZW50aXN0IGFuZCBzZW1pcyksIDMxNTAgV29vZHJvZmZlLCAzMTYyIFdvb2Ryb2ZmZS8xNSBEZWVyZm94IiwiZnIiOiJBbcOpbmFnZXIgbGVzIHRlcnJhaW5zIHBvdXIgY29uc3RydWlyZSB1bmUgbm91dmVsbGUgY2xpbmlxdWUgZGUgc29pbnMgZGVudGFpcmVzIGV0IGRldXggcGFpcmVzIGQnaGFiaXRhdGlvbnMganVtZWzDqWVzLiBMZXMgaW5mcmFzdHJ1Y3R1cmVzIGRlIHNlcnZpY2UgbXVuaWNpcGFsIHNlcm9udCDDqWdhbGVtZW50IHByb2xvbmfDqWVzIHBvdXIgZGVzc2VydmlyIGxhIHByb3ByacOpdMOpLlxyXG5cclxuTGUgcHJvamV0IHByw6l2b2l0IGxhIGNvbnN0cnVjdGlvbiBkJ3VuZSBub3V2ZWxsZSBjbGluaXF1ZSBkZSBzb2lucyBkZW50YWlyZXMgZCd1biDDqXRhZ2UgZXQgZGUgZGV1eCBwYWlyZXMgZCdoYWJpdGF0aW9ucyBsb2NhdGl2ZXMganVtZWzDqWVzIGRlIGRldXggw6l0YWdlcywgcG91ciB1biB0b3RhbCBkZSBxdWF0cmUgdW5pdMOpcyByw6lzaWRlbnRpZWxsZXMuIEwnYWNjw6hzIGF1eCB2w6loaWN1bGVzIHNlcmFpdCBwb3NzaWJsZSBkYW5zIHRvdXRlcyBsZXMgZGlyZWN0aW9ucyDDoCBwYXJ0aXIgZGUgbGEgcHJvbWVuYWRlIERlZXJmb3ggZXQgaWwgc2VyYWl0IHBvc3NpYmxlIGQnZW50cmVyIGV0IGRlIHNvcnRpciDDoCBkcm9pdGUgc3VyIGwnYXZlbnVlIFdvb2Ryb2ZmZS4gQ2hhcXVlIGhhYml0YXRpb24ganVtZWzDqWUgZGlzcG9zZXJhIGQndW5lIGFpcmUgZCdhZ3LDqW1lbnQgZGFucyBsYSBjb3VyIGFycmnDqHJlIGV0IGQndW5lIHBsYWNlIGRlIHN0YXRpb25uZW1lbnQgZGFucyB1biBnYXJhZ2UgYXR0ZW5hbnQuIExhIGNsaW5pcXVlIGRlIHNvaW5zIGRlbnRhaXJlcyBkaXNwb3NlcmEgZGVzIDE5IHBsYWNlcyBkZSBzdGF0aW9ubmVtZW50IHBvdXIgdsOpaGljdWxlcyBldCBkdSBzdGF0aW9ubmVtZW50IHBvdXIgdsOpbG9zIHJlcXVpcy5cclxuXHJcbkNldHRlIGRlbWFuZGUgZGUgcsOpZ2xlbWVudGF0aW9uIGR1IHBsYW4gZCdpbXBsYW50YXRpb24gcGVybWV0IMOpZ2FsZW1lbnQgbCdleGFtZW4gZGVzIHRyYXZhdXggZCdpbmfDqW5pZXJpZSByZXF1aXMgcG91ciBsZSBwcm9sb25nZW1lbnQgZGVzIGluZnJhc3RydWN0dXJlcyBkZSBzZXJ2aWNlIGQnw6lnb3V0IHNhbml0YWlyZSBtdW5pY2lwYWwgZGUgbGEgcHJvbWVuYWRlIFN0b25ld2F5IHNvdXMgbCdhdmVudWUgV29vZHJvZmZlIGFmaW4gZGUgZGVzc2VydmlyIGwnZW1wbGFjZW1lbnQgZW4gcXVlc3Rpb24gYWluc2kgcXVlIGxlcyAzMTEyLCAzMTUwIGV0IDMxNjIsIGF2ZW51ZSBXb29kcm9mZmUsIGV0IGxlIDE1LCBwcm9tZW5hZGUgRGVlcmZveCwgcXVpIHNvbnQgYWN0dWVsbGVtZW50IGRlc3NlcnZpcyBwYXIgZGVzIGluc3RhbGxhdGlvbnMgcHJpdsOpZXMuIExlcyBzZXJ2aWNlcyBkJ2FxdWVkdWMgZXQgZCfDqWdvdXRzIHBsdXZpYXV4IGRlIGxhIFZpbGxlIHNlcm9udCBmb3VybmlzIMOgIHBhcnRpciBkZSBsYSBwcm9tZW5hZGUgRGVlcmZveC4ifSwiYXBwbGljYXRpb25TdGF0dXMiOnsiZW4iOiJBY3RpdmUiLCJmciI6IkFjdGlmIn0sImRldkFwcEFkZHJlc3NlcyI6W3siYWRkcmVzc1JlZmVyZW5jZUlkIjoiX19DS0tWWEEiLCJhZGRyZXNzTnVtYmVyIjozMTMwLCJhZGRyZXNzUXVhbGlmaWVyIjoiIiwibGVnYWxVbml0IjoiIiwicm9hZE5hbWUiOiJXT09EUk9GRkUiLCJjYXJkaW5hbERpcmVjdGlvbiI6IiIsInJvYWRUeXBlIjoiQXZlbnVlIiwibXVuaWNpcGFsaXR5IjoiTmVwZWFuIiwiYWRkcmVzc1R5cGUiOiJNQUlOIiwiYWRkcmVzc0xhdGl0dWRlIjo0NS4yODA4MjQsImFkZHJlc3NMb25naXR1ZGUiOi03NS43MjIxNDIsImFkZHJlc3NOdW1iZXJSb2FkTmFtZSI6IjMxMzAgV09PRFJPRkZFIiwicGFyY2VsUGluTnVtYmVyIjo0NTk2NzY0M31dLCJkZXZBcHBEb2N1bWVudHMiOlt7ImRvY1JlZmVyZW5jZUlkIjoiX19DS1Y5Wk4iLCJkb2N1bWVudE5hbWUiOiIyMDIyLTA0LTE5IC0gQXBwbGljYXRpb24gU3VtbWFyeSAtIEQwNy0xMi0yMi0wMDU1IiwiZmlsZVNpemUiOiIwLjQwIE1CIiwiZmlsZVBhdGgiOiJTaXRlIFBsYW4gQXBwbGljYXRpb25fSW1hZ2UgUmVmZXJlbmNlXzIwMjItMDQtMTkgLSBBcHBsaWNhdGlvbiBTdW1tYXJ5IC0gRDA3LTEyLTIyLTAwNTUuUERGIn0seyJkb2NSZWZlcmVuY2VJZCI6Il9fQ0tLV1BBIiwiZG9jdW1lbnROYW1lIjoiMjAyMi0wNC0wNCAtIFdlc3QgRWxldmF0aW9uIC0gRDA3LTEyLTIyLTAwNTUiLCJmaWxlU2l6ZSI6IjAuNDggTUIiLCJmaWxlUGF0aCI6IlNpdGUgUGxhbiBBcHBsaWNhdGlvbl9JbWFnZSBSZWZlcmVuY2VfMjAyMi0wNC0wNCAtIFdlc3QgRWxldmF0aW9uIC0gRDA3LTEyLTIyLTAwNTUuUERGIn0seyJkb2NSZWZlcmVuY2VJZCI6Il9fQ0tLV1A0IiwiZG9jdW1lbnROYW1lIjoiMjAyMi0wNC0wNCAtIFZpZXcgUmVuZGVyaW5ncyAtIEQwNy0xMi0yMi0wMDU1IiwiZmlsZVNpemUiOiIwLjczIE1CIiwiZmlsZVBhdGgiOiJTaXRlIFBsYW4gQXBwbGljYXRpb25fSW1hZ2UgUmVmZXJlbmNlXzIwMjItMDQtMDQgLSBWaWV3IFJlbmRlcmluZ3MgLSBEMDctMTItMjItMDA1NS5QREYifSx7ImRvY1JlZmVyZW5jZUlkIjoiX19DS0tXUE0iLCJkb2N1bWVudE5hbWUiOiIyMDIyLTA0LTA0IC0gVG9wb2dyYXBoaWMgQm91bmRhcnkgU3VydmV5IC0gRDA3LTEyLTIyLTAwNTUiLCJmaWxlU2l6ZSI6IjAuOTMgTUIiLCJmaWxlUGF0aCI6IlNpdGUgUGxhbiBBcHBsaWNhdGlvbl9JbWFnZSBSZWZlcmVuY2VfMjAyMi0wNC0wNCAtIFRvcG9ncmFwaGljIEJvdW5kYXJ5IFN1cnZleSAtIEQwNy0xMi0yMi0wMDU1LlBERiJ9LHsiZG9jUmVmZXJlbmNlSWQiOiJfX0NLS1dPUSIsImRvY3VtZW50TmFtZSI6IjIwMjItMDQtMDQgLSBTaXRlIFNlcnZpY2luZyBTdHVkeSAmIFN0b3Jtd2F0ZXIgTWFuYWdlbWVudCBSZXBvcnQgLSBEMDctMTItMjItMDA1NSIsImZpbGVTaXplIjoiMS4wMSBNQiIsImZpbGVQYXRoIjoiU2l0ZSBQbGFuIEFwcGxpY2F0aW9uX0ltYWdlIFJlZmVyZW5jZV8yMDIyLTA0LTA0IC0gU2l0ZSBTZXJ2aWNpbmcgU3R1ZHkgJiBTdG9ybXdhdGVyIE1hbmFnZW1lbnQgUmVwb3J0IC0gRDA3LTEyLTIyLTAwNTUuUERGIn0seyJkb2NSZWZlcmVuY2VJZCI6Il9fQ0tLV044IiwiZG9jdW1lbnROYW1lIjoiMjAyMi0wNC0wNCAtIFNpdGUgU2VydmljaW5nIFBsYW4gLSBEMDctMTItMjItMDA1NSIsImZpbGVTaXplIjoiMS41OCBNQiIsImZpbGVQYXRoIjoiU2l0ZSBQbGFuIEFwcGxpY2F0aW9uX0ltYWdlIFJlZmVyZW5jZV8yMDIyLTA0LTA0IC0gU2l0ZSBTZXJ2aWNpbmcgUGxhbiAtIEQwNy0xMi0yMi0wMDU1LlBERiJ9LHsiZG9jUmVmZXJlbmNlSWQiOiJfX0NLS1dOUyIsImRvY3VtZW50TmFtZSI6IjIwMjItMDQtMDQgLSBTaXRlIFBsYW4gLSBEMDctMTItMjItMDA1NSIsImZpbGVTaXplIjoiMS4yNCBNQiIsImZpbGVQYXRoIjoiU2l0ZSBQbGFuIEFwcGxpY2F0aW9uX0ltYWdlIFJlZmVyZW5jZV8yMDIyLTA0LTA0IC0gU2l0ZSBQbGFuIC0gRDA3LTEyLTIyLTAwNTUuUERGIn0seyJkb2NSZWZlcmVuY2VJZCI6Il9fQ0tLV0xCIiwiZG9jdW1lbnROYW1lIjoiMjAyMi0wNC0wNCAtIFNjcmVlbmluZyBhbmQgU2NvcGluZyBSZXBvcnQgLSBEMDctMTItMjItMDA1NSIsImZpbGVTaXplIjoiNi41MCBNQiIsImZpbGVQYXRoIjoiU2l0ZSBQbGFuIEFwcGxpY2F0aW9uX0ltYWdlIFJlZmVyZW5jZV8yMDIyLTA0LTA0IC0gU2NyZWVuaW5nIGFuZCBTY29waW5nIFJlcG9ydCAtIEQwNy0xMi0yMi0wMDU1LlBERiJ9LHsiZG9jUmVmZXJlbmNlSWQiOiJfX0NLS1dLQSIsImRvY3VtZW50TmFtZSI6IjIwMjItMDQtMDQgLSBTYW5pdGFyeSBTZXdlciBFeHRlbnNpb24gU2VydmljaW5nIFN0dWR5IC0gRDA3LTEyLTIyLTAwNTUiLCJmaWxlU2l6ZSI6IjAuNTUgTUIiLCJmaWxlUGF0aCI6IlNpdGUgUGxhbiBBcHBsaWNhdGlvbl9JbWFnZSBSZWZlcmVuY2VfMjAyMi0wNC0wNCAtIFNhbml0YXJ5IFNld2VyIEV4dGVuc2lvbiBTZXJ2aWNpbmcgU3R1ZHkgLSBEMDctMTItMjItMDA1NS5QREYifSx7ImRvY1JlZmVyZW5jZUlkIjoiX19DS0tXSkUiLCJkb2N1bWVudE5hbWUiOiIyMDIyLTA0LTA0IC0gU2FuaXRhcnkgRXh0ZW5zaW9uIFBsYW4gQy0xIC0gRDA3LTEyLTIyLTAwNTUiLCJmaWxlU2l6ZSI6IjIuMTcgTUIiLCJmaWxlUGF0aCI6IlNpdGUgUGxhbiBBcHBsaWNhdGlvbl9JbWFnZSBSZWZlcmVuY2VfMjAyMi0wNC0wNCAtIFNhbml0YXJ5IEV4dGVuc2lvbiBQbGFuIEMtMSAtIEQwNy0xMi0yMi0wMDU1LlBERiJ9LHsiZG9jUmVmZXJlbmNlSWQiOiJfX0NLS1dKOSIsImRvY3VtZW50TmFtZSI6IjIwMjItMDQtMDQgLSBTYW5pdGFyeSBEcmFpbmFnZSBQbGFuIEMtOSAtIEQwNy0xMi0yMi0wMDU1IiwiZmlsZVNpemUiOiIyLjYwIE1CIiwiZmlsZVBhdGgiOiJTaXRlIFBsYW4gQXBwbGljYXRpb25fSW1hZ2UgUmVmZXJlbmNlXzIwMjItMDQtMDQgLSBTYW5pdGFyeSBEcmFpbmFnZSBQbGFuIEMtOSAtIEQwNy0xMi0yMi0wMDU1LlBERiJ9LHsiZG9jUmVmZXJlbmNlSWQiOiJfX0NLS1dKTiIsImRvY3VtZW50TmFtZSI6IjIwMjItMDQtMDQgLSBSZW5kZXJpbmcgKDIpIC0gRDA3LTEyLTIyLTAwNTUiLCJmaWxlU2l6ZSI6IjAuNjIgTUIiLCJmaWxlUGF0aCI6IlNpdGUgUGxhbiBBcHBsaWNhdGlvbl9JbWFnZSBSZWZlcmVuY2VfMjAyMi0wNC0wNCAtIFJlbmRlcmluZyAoMikgLSBEMDctMTItMjItMDA1NS5QREYifSx7ImRvY1JlZmVyZW5jZUlkIjoiX19DS0tXSjIiLCJkb2N1bWVudE5hbWUiOiIyMDIyLTA0LTA0IC0gUmVuZGVyaW5nIC0gRDA3LTEyLTIyLTAwNTUiLCJmaWxlU2l6ZSI6IjAuNzAgTUIiLCJmaWxlUGF0aCI6IlNpdGUgUGxhbiBBcHBsaWNhdGlvbl9JbWFnZSBSZWZlcmVuY2VfMjAyMi0wNC0wNCAtIFJlbmRlcmluZyAtIEQwNy0xMi0yMi0wMDU1LlBERiJ9LHsiZG9jUmVmZXJlbmNlSWQiOiJfX0NLS1ZHVCIsImRvY3VtZW50TmFtZSI6IjIwMjItMDQtMDQgLSBQbGFubmluZyBSYXRpb25hbGUgLSBEMDctMTItMjItMDA1NSIsImZpbGVTaXplIjoiNy4zMCBNQiIsImZpbGVQYXRoIjoiU2l0ZSBQbGFuIEFwcGxpY2F0aW9uX0ltYWdlIFJlZmVyZW5jZV8yMDIyLTA0LTA0IC0gUGxhbm5pbmcgUmF0aW9uYWxlIC0gRDA3LTEyLTIyLTAwNTUuUERGIn0seyJkb2NSZWZlcmVuY2VJZCI6Il9fQ0tLVkdLIiwiZG9jdW1lbnROYW1lIjoiMjAyMi0wNC0wNCAtIFBsYW4gJiBQcm9maWxlIEMtNyAtIEQwNy0xMi0yMi0wMDU1IiwiZmlsZVNpemUiOiIwLjc2IE1CIiwiZmlsZVBhdGgiOiJTaXRlIFBsYW4gQXBwbGljYXRpb25fSW1hZ2UgUmVmZXJlbmNlXzIwMjItMDQtMDQgLSBQbGFuICYgUHJvZmlsZSBDLTcgLSBEMDctMTItMjItMDA1NS5QREYifSx7ImRvY1JlZmVyZW5jZUlkIjoiX19DS0tWRkIiLCJkb2N1bWVudE5hbWUiOiIyMDIyLTA0LTA0IC0gUGxhbiAmIFByb2ZpbGUgQy02IC0gRDA3LTEyLTIyLTAwNTUiLCJmaWxlU2l6ZSI6IjAuNzQgTUIiLCJmaWxlUGF0aCI6IlNpdGUgUGxhbiBBcHBsaWNhdGlvbl9JbWFnZSBSZWZlcmVuY2VfMjAyMi0wNC0wNCAtIFBsYW4gJiBQcm9maWxlIEMtNiAtIEQwNy0xMi0yMi0wMDU1LlBERiJ9LHsiZG9jUmVmZXJlbmNlSWQiOiJfX0NLS1ZFOCIsImRvY3VtZW50TmFtZSI6IjIwMjItMDQtMDQgLSBQbGFuICYgUHJvZmlsZSBDLTUgLSBEMDctMTItMjItMDA1NSIsImZpbGVTaXplIjoiMC43NSBNQiIsImZpbGVQYXRoIjoiU2l0ZSBQbGFuIEFwcGxpY2F0aW9uX0ltYWdlIFJlZmVyZW5jZV8yMDIyLTA0LTA0IC0gUGxhbiAmIFByb2ZpbGUgQy01IC0gRDA3LTEyLTIyLTAwNTUuUERGIn0seyJkb2NSZWZlcmVuY2VJZCI6Il9fQ0tLVkVSIiwiZG9jdW1lbnROYW1lIjoiMjAyMi0wNC0wNCAtIFBsYW4gJiBQcm9maWxlIEMtNCAtIEQwNy0xMi0yMi0wMDU1IiwiZmlsZVNpemUiOiIwLjgxIE1CIiwiZmlsZVBhdGgiOiJTaXRlIFBsYW4gQXBwbGljYXRpb25fSW1hZ2UgUmVmZXJlbmNlXzIwMjItMDQtMDQgLSBQbGFuICYgUHJvZmlsZSBDLTQgLSBEMDctMTItMjItMDA1NS5QREYifSx7ImRvY1JlZmVyZW5jZUlkIjoiX19DS0tXSU4iLCJkb2N1bWVudE5hbWUiOiIyMDIyLTA0LTA0IC0gUGxhbiAmIFByb2ZpbGUgQy0zIC0gRDA3LTEyLTIyLTAwNTUiLCJmaWxlU2l6ZSI6IjAuNzQgTUIiLCJmaWxlUGF0aCI6IlNpdGUgUGxhbiBBcHBsaWNhdGlvbl9JbWFnZSBSZWZlcmVuY2VfMjAyMi0wNC0wNCAtIFBsYW4gJiBQcm9maWxlIEMtMyAtIEQwNy0xMi0yMi0wMDU1LlBERiJ9LHsiZG9jUmVmZXJlbmNlSWQiOiJfX0NLS1ZENyIsImRvY3VtZW50TmFtZSI6IjIwMjItMDQtMDQgLSBQbGFuICYgUHJvZmlsZSBDLTIgLSBEMDctMTItMjItMDA1NSIsImZpbGVTaXplIjoiMC44MCBNQiIsImZpbGVQYXRoIjoiU2l0ZSBQbGFuIEFwcGxpY2F0aW9uX0ltYWdlIFJlZmVyZW5jZV8yMDIyLTA0LTA0IC0gUGxhbiAmIFByb2ZpbGUgQy0yIC0gRDA3LTEyLTIyLTAwNTUuUERGIn0seyJkb2NSZWZlcmVuY2VJZCI6Il9fQ0tLVkNZIiwiZG9jdW1lbnROYW1lIjoiMjAyMi0wNC0wNCAtIFBoYXNlIEkgRW52aXJvbm1lbnRhbCBTaXRlIEFzc2Vzc21lbnQgLSBEMDctMTItMjItMDA1NSIsImZpbGVTaXplIjoiNi4zMyBNQiIsImZpbGVQYXRoIjoiU2l0ZSBQbGFuIEFwcGxpY2F0aW9uX0ltYWdlIFJlZmVyZW5jZV8yMDIyLTA0LTA0IC0gUGhhc2UgSSBFbnZpcm9ubWVudGFsIFNpdGUgQXNzZXNzbWVudCAtIEQwNy0xMi0yMi0wMDU1LlBERiJ9LHsiZG9jUmVmZXJlbmNlSWQiOiJfX0NLS1ZCUCIsImRvY3VtZW50TmFtZSI6IjIwMjItMDQtMDQgLSBOb3RlcyBhbmQgRGV0YWlscyAtIEQwNy0xMi0yMi0wMDU1IiwiZmlsZVNpemUiOiIyLjI3IE1CIiwiZmlsZVBhdGgiOiJTaXRlIFBsYW4gQXBwbGljYXRpb25fSW1hZ2UgUmVmZXJlbmNlXzIwMjItMDQtMDQgLSBOb3RlcyBhbmQgRGV0YWlscyAtIEQwNy0xMi0yMi0wMDU1LlBERiJ9LHsiZG9jUmVmZXJlbmNlSWQiOiJfX0NLS1ZBRSIsImRvY3VtZW50TmFtZSI6IjIwMjItMDQtMDQgLSBOb3RlcyAmIFNjaGVkdWxlcyBDLTggLSBEMDctMTItMjItMDA1NSIsImZpbGVTaXplIjoiMS4xMiBNQiIsImZpbGVQYXRoIjoiU2l0ZSBQbGFuIEFwcGxpY2F0aW9uX0ltYWdlIFJlZmVyZW5jZV8yMDIyLTA0LTA0IC0gTm90ZXMgJiBTY2hlZHVsZXMgQy04IC0gRDA3LTEyLTIyLTAwNTUuUERGIn0seyJkb2NSZWZlcmVuY2VJZCI6Il9fQ0tLVkExIiwiZG9jdW1lbnROYW1lIjoiMjAyMi0wNC0wNCAtIE5vcnRoIGFuZCBTb3V0aCBFbGV2YXRpb25zIC0gRDA3LTEyLTIyLTAwNTUiLCJmaWxlU2l6ZSI6IjAuNTcgTUIiLCJmaWxlUGF0aCI6IlNpdGUgUGxhbiBBcHBsaWNhdGlvbl9JbWFnZSBSZWZlcmVuY2VfMjAyMi0wNC0wNCAtIE5vcnRoIGFuZCBTb3V0aCBFbGV2YXRpb25zIC0gRDA3LTEyLTIyLTAwNTUuUERGIn0seyJkb2NSZWZlcmVuY2VJZCI6Il9fQ0tLVkFaIiwiZG9jdW1lbnROYW1lIjoiMjAyMi0wNC0wNCAtIEdyYWRpbmcgUGxhbiBhbmQgUmV0YWluaW5nIFdhbGwgUGxhbiAtIEQwNy0xMi0yMi0wMDU1IiwiZmlsZVNpemUiOiIyLjA3IE1CIiwiZmlsZVBhdGgiOiJTaXRlIFBsYW4gQXBwbGljYXRpb25fSW1hZ2UgUmVmZXJlbmNlXzIwMjItMDQtMDQgLSBHcmFkaW5nIFBsYW4gYW5kIFJldGFpbmluZyBXYWxsIFBsYW4gLSBEMDctMTItMjItMDA1NS5QREYifSx7ImRvY1JlZmVyZW5jZUlkIjoiX19DS0tWOTMiLCJkb2N1bWVudE5hbWUiOiIyMDIyLTA0LTA0IC0gR2VvdGVjaG5pY2FsIEludmVzdGlnYXRpb24gLSBEMDctMTItMjItMDA1NSIsImZpbGVTaXplIjoiMi4xMCBNQiIsImZpbGVQYXRoIjoiU2l0ZSBQbGFuIEFwcGxpY2F0aW9uX0ltYWdlIFJlZmVyZW5jZV8yMDIyLTA0LTA0IC0gR2VvdGVjaG5pY2FsIEludmVzdGlnYXRpb24gLSBEMDctMTItMjItMDA1NS5QREYifSx7ImRvY1JlZmVyZW5jZUlkIjoiX19DS0tWOVAiLCJkb2N1bWVudE5hbWUiOiIyMDIyLTA0LTA0IC0gRnJvbnQgVmlldyAoMikgLSBEMDctMTItMjItMDA1NSIsImZpbGVTaXplIjoiMC42NyBNQiIsImZpbGVQYXRoIjoiU2l0ZSBQbGFuIEFwcGxpY2F0aW9uX0ltYWdlIFJlZmVyZW5jZV8yMDIyLTA0LTA0IC0gRnJvbnQgVmlldyAoMikgLSBEMDctMTItMjItMDA1NS5QREYifSx7ImRvY1JlZmVyZW5jZUlkIjoiX19DS0tWOE0iLCJkb2N1bWVudE5hbWUiOiIyMDIyLTA0LTA0IC0gRnJvbnQgVmlldyAtIEQwNy0xMi0yMi0wMDU1IiwiZmlsZVNpemUiOiIwLjY5IE1CIiwiZmlsZVBhdGgiOiJTaXRlIFBsYW4gQXBwbGljYXRpb25fSW1hZ2UgUmVmZXJlbmNlXzIwMjItMDQtMDQgLSBGcm9udCBWaWV3IC0gRDA3LTEyLTIyLTAwNTUuUERGIn0seyJkb2NSZWZlcmVuY2VJZCI6Il9fQ0tLVjZFIiwiZG9jdW1lbnROYW1lIjoiMjAyMi0wNC0wNCAtIEZyb250IEVsZXZhdGlvbnMgYm90aCBidWlsZGluZ3MgLSBEMDctMTItMjItMDA1NSIsImZpbGVTaXplIjoiMC41NiBNQiIsImZpbGVQYXRoIjoiU2l0ZSBQbGFuIEFwcGxpY2F0aW9uX0ltYWdlIFJlZmVyZW5jZV8yMDIyLTA0LTA0IC0gRnJvbnQgRWxldmF0aW9ucyBib3RoIGJ1aWxkaW5ncyAtIEQwNy0xMi0yMi0wMDU1LlBERiJ9LHsiZG9jUmVmZXJlbmNlSWQiOiJfX0NLS1Y0MCIsImRvY3VtZW50TmFtZSI6IjIwMjItMDQtMDQgLSBmbG9vciBwbGFucyBhbmQgZWxldmF0aW9ucyAtIEQwNy0xMi0yMi0wMDU1IiwiZmlsZVNpemUiOiIwLjc3IE1CIiwiZmlsZVBhdGgiOiJTaXRlIFBsYW4gQXBwbGljYXRpb25fSW1hZ2UgUmVmZXJlbmNlXzIwMjItMDQtMDQgLSBmbG9vciBwbGFucyBhbmQgZWxldmF0aW9ucyAtIEQwNy0xMi0yMi0wMDU1LlBERiJ9LHsiZG9jUmVmZXJlbmNlSWQiOiJfX0NLS1Y0WiIsImRvY3VtZW50TmFtZSI6IjIwMjItMDQtMDQgLSBFcm9zaW9uIGFuZCBTZWRpbWVudCBDb250cm9sIFBsYW4gJiBEcmFpbmFnZSBQbGFuIC0gRDA3LTEyLTIyLTAwNTUiLCJmaWxlU2l6ZSI6IjEuNzIgTUIiLCJmaWxlUGF0aCI6IlNpdGUgUGxhbiBBcHBsaWNhdGlvbl9JbWFnZSBSZWZlcmVuY2VfMjAyMi0wNC0wNCAtIEVyb3Npb24gYW5kIFNlZGltZW50IENvbnRyb2wgUGxhbiAmIERyYWluYWdlIFBsYW4gLSBEMDctMTItMjItMDA1NS5QREYifSx7ImRvY1JlZmVyZW5jZUlkIjoiX19DS0tWNFkiLCJkb2N1bWVudE5hbWUiOiIyMDIyLTA0LTA0IC0gRGV0YWlscyBhbmQgU2NoZWR1bGVzIC0gRDA3LTEyLTIyLTAwNTUiLCJmaWxlU2l6ZSI6IjEuNDggTUIiLCJmaWxlUGF0aCI6IlNpdGUgUGxhbiBBcHBsaWNhdGlvbl9JbWFnZSBSZWZlcmVuY2VfMjAyMi0wNC0wNCAtIERldGFpbHMgYW5kIFNjaGVkdWxlcyAtIEQwNy0xMi0yMi0wMDU1LlBERiJ9LHsiZG9jUmVmZXJlbmNlSWQiOiJfX0NLS1Y0VSIsImRvY3VtZW50TmFtZSI6IjIwMjItMDQtMDQgLSBEZXNpZ25hdGVkIFN1YnN0YW5jZXMgU3VydmV5IC0gRDA3LTEyLTIyLTAwNTUiLCJmaWxlU2l6ZSI6IjIuMTMgTUIiLCJmaWxlUGF0aCI6IlNpdGUgUGxhbiBBcHBsaWNhdGlvbl9JbWFnZSBSZWZlcmVuY2VfMjAyMi0wNC0wNCAtIERlc2lnbmF0ZWQgU3Vic3RhbmNlcyBTdXJ2ZXkgLSBEMDctMTItMjItMDA1NS5QREYifSx7ImRvY1JlZmVyZW5jZUlkIjoiX19DS0tWM0MiLCJkb2N1bWVudE5hbWUiOiIyMDIyLTA0LTA0IC0gRGVzaWduIEJyaWVmIC0gRDA3LTEyLTIyLTAwNTUiLCJmaWxlU2l6ZSI6IjkuNjAgTUIiLCJmaWxlUGF0aCI6IlNpdGUgUGxhbiBBcHBsaWNhdGlvbl9JbWFnZSBSZWZlcmVuY2VfMjAyMi0wNC0wNCAtIERlc2lnbiBCcmllZiAtIEQwNy0xMi0yMi0wMDU1LlBERiJ9XSwib2JqZWN0U3RhdHVzIjp7Im9iamVjdFN0YXR1c1R5cGVJZCI6Ik9TVFNQMDAzIiwib2JqZWN0Q3VycmVudFN0YXR1cyI6eyJlbiI6IkNpcmN1bGF0aW9uIFBhY2thZ2UgUHJlcGFyZWQiLCJmciI6IkVuc2VtYmxlIGRlIGRvY3VtZW50cyBwcsOqdCBwb3VyIGRpZmZ1c2lvbiJ9LCJvYmplY3RDdXJyZW50U3RhdHVzRGF0ZSI6NjM3ODU4Nzk0MDYwMDAwMDAwLCJvYmplY3RDdXJyZW50U3RhdHVzRGF0ZVlNRCI6IjIwMjItMDQtMTgifSwiZGV2QXBwV2FyZCI6eyJjb21tdW5pdHlJZCI6Il9fMzA1VDUxIiwid2FyZE51bWJlciI6eyJlbiI6IldhcmQgMyIsImZyIjoiUXVhcnRpZXIgMDMifSwid2FyZE5hbWUiOnsiZW4iOiJCQVJSSEFWRU4iLCJmciI6IkJBUlJIQVZFTiJ9LCJjb3VuY2lsbG9yTGFzdE5hbWUiOiJIYXJkZXIiLCJjb3VuY2lsbG9yRmlyc3ROYW1lIjoiSmFuIiwid2FyZENvdW5jaWxsb3JFbWFpbCI6Ikphbi5IYXJkZXJAb3R0YXdhLmNhIn0sImVuZE9mQ2lyY3VsYXRpb25EYXRlIjowLCJlbmRPZkNpcmN1bGF0aW9uRGF0ZVlNRCI6IjAwMDEtMDEtMDEiLCJjYW5Db21tZW50IjoiWSIsInNob3dGZWVkYmFja0xpbmsiOiJZIiwicGxhbm5lckZpcnN0TmFtZSI6IlRyYWNleSIsInBsYW5uZXJMYXN0TmFtZSI6IlNjYXJhbW96emlubyIsInBsYW5uZXJQaG9uZSI6IjYxMy01ODAtMjQyNCB4MTI1NDUiLCJwbGFubmVyRW1haWwiOiJ0cmFjZXkuc2NhcmFtb3p6aW5vQG90dGF3YS5jYSIsInNlYXJjaGFibGVUZXh0IjoiMzEzMCBXT09EUk9GRkUgQXZlbnVlIFNpdGUgUGxhbiBDb250cm9sIFLDqWdsZW1lbnRhdGlvbiBkdSBwbGFuIGQnaW1wbGFudGF0aW9uIFRvIGJ1aWxkIGEgbmV3IGRlbnRhbCBjbGluaWMgb24gdGhlIHN1YmplY3QgbGFuZHMgYW5kIHRvIGFsc28gYnVpbGQgMiBwYWlycyBvZiBzZW1pLWRldGFjaGVkIHJlc2lkZW50aWFsIHVuaXRzIG9uIHRoZSBwcm9wZXJ0eSAoNCByZXNpZGVudGlhbCB1bml0cyBpbiB0b3RhbCkuICBOb3RlIHRoYXQgYSBzaXRlIHBsYW4gYWdyZWVtZW50IGhhcyBiZWVuIGlzc3VlZCAoYnV0IG5vdCBleGVjdXRlZCkgZm9yIHRoZXNlIGxhbmRzIGZvciBhIGRlbnRhbCBjbGluaWMgYW5kIHRlbmFudCBvZmZpY2Ugc3BhY2UuICBUaGUgcGxhbnMgYXJlIHRvIGJlIG1vZGlmaWllZCB3aXRoIGEgbmV3IHNlcnZpY2luZyB3aXRoaW4gdGhlIFdvb2Ryb2ZmZSBSaWdodCBvZiBXYXkgYW5kIHRob3NlIGRyYXdpbmdzIGFyZSBiZWluaW5nIGluY2x1ZGVkIGluIHRoaXMgc2l0ZSBwbGFuIHN1Ym1pc3Npb24uICAzMTEyIFdvb2Ryb2ZmZSwgMzEzMCBXb29kcm9mZmUgKGZ1dHVyZSBkZW50aXN0IGFuZCBzZW1pcyksIDMxNTAgV29vZHJvZmZlLCAzMTYyIFdvb2Ryb2ZmZS8xNSBEZWVyZm94IEFtw6luYWdlciBsZXMgdGVycmFpbnMgcG91ciBjb25zdHJ1aXJlIHVuZSBub3V2ZWxsZSBjbGluaXF1ZSBkZSBzb2lucyBkZW50YWlyZXMgZXQgZGV1eCBwYWlyZXMgZCdoYWJpdGF0aW9ucyBqdW1lbMOpZXMuIExlcyBpbmZyYXN0cnVjdHVyZXMgZGUgc2VydmljZSBtdW5pY2lwYWwgc2Vyb250IMOpZ2FsZW1lbnQgcHJvbG9uZ8OpZXMgcG91ciBkZXNzZXJ2aXIgbGEgcHJvcHJpw6l0w6kuXHJcblxyXG5MZSBwcm9qZXQgcHLDqXZvaXQgbGEgY29uc3RydWN0aW9uIGQndW5lIG5vdXZlbGxlIGNsaW5pcXVlIGRlIHNvaW5zIGRlbnRhaXJlcyBkJ3VuIMOpdGFnZSBldCBkZSBkZXV4IHBhaXJlcyBkJ2hhYml0YXRpb25zIGxvY2F0aXZlcyBqdW1lbMOpZXMgZGUgZGV1eCDDqXRhZ2VzLCBwb3VyIHVuIHRvdGFsIGRlIHF1YXRyZSB1bml0w6lzIHLDqXNpZGVudGllbGxlcy4gTCdhY2PDqHMgYXV4IHbDqWhpY3VsZXMgc2VyYWl0IHBvc3NpYmxlIGRhbnMgdG91dGVzIGxlcyBkaXJlY3Rpb25zIMOgIHBhcnRpciBkZSBsYSBwcm9tZW5hZGUgRGVlcmZveCBldCBpbCBzZXJhaXQgcG9zc2libGUgZCdlbnRyZXIgZXQgZGUgc29ydGlyIMOgIGRyb2l0ZSBzdXIgbCdhdmVudWUgV29vZHJvZmZlLiBDaGFxdWUgaGFiaXRhdGlvbiBqdW1lbMOpZSBkaXNwb3NlcmEgZCd1bmUgYWlyZSBkJ2FncsOpbWVudCBkYW5zIGxhIGNvdXIgYXJyacOocmUgZXQgZCd1bmUgcGxhY2UgZGUgc3RhdGlvbm5lbWVudCBkYW5zIHVuIGdhcmFnZSBhdHRlbmFudC4gTGEgY2xpbmlxdWUgZGUgc29pbnMgZGVudGFpcmVzIGRpc3Bvc2VyYSBkZXMgMTkgcGxhY2VzIGRlIHN0YXRpb25uZW1lbnQgcG91ciB2w6loaWN1bGVzIGV0IGR1IHN0YXRpb25uZW1lbnQgcG91ciB2w6lsb3MgcmVxdWlzLlxyXG5cclxuQ2V0dGUgZGVtYW5kZSBkZSByw6lnbGVtZW50YXRpb24gZHUgcGxhbiBkJ2ltcGxhbnRhdGlvbiBwZXJtZXQgw6lnYWxlbWVudCBsJ2V4YW1lbiBkZXMgdHJhdmF1eCBkJ2luZ8OpbmllcmllIHJlcXVpcyBwb3VyIGxlIHByb2xvbmdlbWVudCBkZXMgaW5mcmFzdHJ1Y3R1cmVzIGRlIHNlcnZpY2UgZCfDqWdvdXQgc2FuaXRhaXJlIG11bmljaXBhbCBkZSBsYSBwcm9tZW5hZGUgU3RvbmV3YXkgc291cyBsJ2F2ZW51ZSBXb29kcm9mZmUgYWZpbiBkZSBkZXNzZXJ2aXIgbCdlbXBsYWNlbWVudCBlbiBxdWVzdGlvbiBhaW5zaSBxdWUgbGVzIDMxMTIsIDMxNTAgZXQgMzE2MiwgYXZlbnVlIFdvb2Ryb2ZmZSwgZXQgbGUgMTUsIHByb21lbmFkZSBEZWVyZm94LCBxdWkgc29udCBhY3R1ZWxsZW1lbnQgZGVzc2VydmlzIHBhciBkZXMgaW5zdGFsbGF0aW9ucyBwcml2w6llcy4gTGVzIHNlcnZpY2VzIGQnYXF1ZWR1YyBldCBkJ8OpZ291dHMgcGx1dmlhdXggZGUgbGEgVmlsbGUgc2Vyb250IGZvdXJuaXMgw6AgcGFydGlyIGRlIGxhIHByb21lbmFkZSBEZWVyZm94LiBBY3RpdmUgQWN0aWYgQ2lyY3VsYXRpb24gUGFja2FnZSBQcmVwYXJlZCBFbnNlbWJsZSBkZSBkb2N1bWVudHMgcHLDqnQgcG91ciBkaWZmdXNpb24gIFdhcmQgMyBRdWFydGllciAwMyBCQVJSSEFWRU4gQkFSUkhBVkVOIEphbiBIYXJkZXIgRDA3LTEyLTIyLTAwNTUiLCJzdHJlZXRBZHJlc3MiOiJXT09EUk9GRkUiLCJzdHJlZXROdW1iZXIiOjMxMzB9
+  recorded_at: Tue, 19 Apr 2022 21:24:21 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2022-04-19%20-%20Application%20Summary%20-%20D07-12-22-0055.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Content-Length:
+      - '1245'
+      Content-Type:
+      - text/html
+      Server:
+      - Microsoft-IIS/8.5
+      X-Powered-By:
+      - ASP.NET
+      Date:
+      - Tue, 19 Apr 2022 21:24:21 GMT
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Tue, 19 Apr 2022 21:24:21 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2022-04-04%20-%20West%20Elevation%20-%20D07-12-22-0055.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Content-Length:
+      - '1245'
+      Content-Type:
+      - text/html
+      Server:
+      - Microsoft-IIS/8.5
+      X-Powered-By:
+      - ASP.NET
+      Date:
+      - Tue, 19 Apr 2022 21:24:21 GMT
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Tue, 19 Apr 2022 21:24:21 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2022-04-04%20-%20View%20Renderings%20-%20D07-12-22-0055.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Content-Length:
+      - '1245'
+      Content-Type:
+      - text/html
+      Server:
+      - Microsoft-IIS/8.5
+      X-Powered-By:
+      - ASP.NET
+      Date:
+      - Tue, 19 Apr 2022 21:24:21 GMT
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Tue, 19 Apr 2022 21:24:21 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2022-04-04%20-%20Topographic%20Boundary%20Survey%20-%20D07-12-22-0055.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Content-Length:
+      - '1245'
+      Content-Type:
+      - text/html
+      Server:
+      - Microsoft-IIS/8.5
+      X-Powered-By:
+      - ASP.NET
+      Date:
+      - Tue, 19 Apr 2022 21:24:21 GMT
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Tue, 19 Apr 2022 21:24:21 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2022-04-04%20-%20Site%20Servicing%20Study%20&%20Stormwater%20Management%20Report%20-%20D07-12-22-0055.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Content-Length:
+      - '1245'
+      Content-Type:
+      - text/html
+      Server:
+      - Microsoft-IIS/8.5
+      X-Powered-By:
+      - ASP.NET
+      Date:
+      - Tue, 19 Apr 2022 21:24:21 GMT
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Tue, 19 Apr 2022 21:24:21 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2022-04-04%20-%20Site%20Servicing%20Plan%20-%20D07-12-22-0055.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Content-Length:
+      - '1245'
+      Content-Type:
+      - text/html
+      Server:
+      - Microsoft-IIS/8.5
+      X-Powered-By:
+      - ASP.NET
+      Date:
+      - Tue, 19 Apr 2022 21:24:21 GMT
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Tue, 19 Apr 2022 21:24:21 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2022-04-04%20-%20Site%20Plan%20-%20D07-12-22-0055.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Content-Length:
+      - '1245'
+      Content-Type:
+      - text/html
+      Server:
+      - Microsoft-IIS/8.5
+      X-Powered-By:
+      - ASP.NET
+      Date:
+      - Tue, 19 Apr 2022 21:24:21 GMT
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Tue, 19 Apr 2022 21:24:21 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2022-04-04%20-%20Screening%20and%20Scoping%20Report%20-%20D07-12-22-0055.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Content-Length:
+      - '1245'
+      Content-Type:
+      - text/html
+      Server:
+      - Microsoft-IIS/8.5
+      X-Powered-By:
+      - ASP.NET
+      Date:
+      - Tue, 19 Apr 2022 21:24:21 GMT
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Tue, 19 Apr 2022 21:24:21 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2022-04-04%20-%20Sanitary%20Sewer%20Extension%20Servicing%20Study%20-%20D07-12-22-0055.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Content-Length:
+      - '1245'
+      Content-Type:
+      - text/html
+      Server:
+      - Microsoft-IIS/8.5
+      X-Powered-By:
+      - ASP.NET
+      Date:
+      - Tue, 19 Apr 2022 21:24:21 GMT
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Tue, 19 Apr 2022 21:24:21 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2022-04-04%20-%20Sanitary%20Extension%20Plan%20C-1%20-%20D07-12-22-0055.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Content-Length:
+      - '1245'
+      Content-Type:
+      - text/html
+      Server:
+      - Microsoft-IIS/8.5
+      X-Powered-By:
+      - ASP.NET
+      Date:
+      - Tue, 19 Apr 2022 21:24:21 GMT
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Tue, 19 Apr 2022 21:24:21 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2022-04-04%20-%20Sanitary%20Drainage%20Plan%20C-9%20-%20D07-12-22-0055.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Content-Length:
+      - '1245'
+      Content-Type:
+      - text/html
+      Server:
+      - Microsoft-IIS/8.5
+      X-Powered-By:
+      - ASP.NET
+      Date:
+      - Tue, 19 Apr 2022 21:24:21 GMT
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Tue, 19 Apr 2022 21:24:22 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2022-04-04%20-%20Rendering%20(2)%20-%20D07-12-22-0055.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Content-Length:
+      - '1245'
+      Content-Type:
+      - text/html
+      Server:
+      - Microsoft-IIS/8.5
+      X-Powered-By:
+      - ASP.NET
+      Date:
+      - Tue, 19 Apr 2022 21:24:21 GMT
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Tue, 19 Apr 2022 21:24:22 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2022-04-04%20-%20Rendering%20-%20D07-12-22-0055.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Content-Length:
+      - '1245'
+      Content-Type:
+      - text/html
+      Server:
+      - Microsoft-IIS/8.5
+      X-Powered-By:
+      - ASP.NET
+      Date:
+      - Tue, 19 Apr 2022 21:24:22 GMT
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Tue, 19 Apr 2022 21:24:22 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2022-04-04%20-%20Planning%20Rationale%20-%20D07-12-22-0055.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Content-Length:
+      - '1245'
+      Content-Type:
+      - text/html
+      Server:
+      - Microsoft-IIS/8.5
+      X-Powered-By:
+      - ASP.NET
+      Date:
+      - Tue, 19 Apr 2022 21:24:22 GMT
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Tue, 19 Apr 2022 21:24:22 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2022-04-04%20-%20Plan%20&%20Profile%20C-7%20-%20D07-12-22-0055.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Content-Length:
+      - '1245'
+      Content-Type:
+      - text/html
+      Server:
+      - Microsoft-IIS/8.5
+      X-Powered-By:
+      - ASP.NET
+      Date:
+      - Tue, 19 Apr 2022 21:24:22 GMT
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Tue, 19 Apr 2022 21:24:22 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2022-04-04%20-%20Plan%20&%20Profile%20C-6%20-%20D07-12-22-0055.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Content-Length:
+      - '1245'
+      Content-Type:
+      - text/html
+      Server:
+      - Microsoft-IIS/8.5
+      X-Powered-By:
+      - ASP.NET
+      Date:
+      - Tue, 19 Apr 2022 21:24:22 GMT
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Tue, 19 Apr 2022 21:24:22 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2022-04-04%20-%20Plan%20&%20Profile%20C-5%20-%20D07-12-22-0055.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Content-Length:
+      - '1245'
+      Content-Type:
+      - text/html
+      Server:
+      - Microsoft-IIS/8.5
+      X-Powered-By:
+      - ASP.NET
+      Date:
+      - Tue, 19 Apr 2022 21:24:22 GMT
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Tue, 19 Apr 2022 21:24:22 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2022-04-04%20-%20Plan%20&%20Profile%20C-4%20-%20D07-12-22-0055.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Content-Length:
+      - '1245'
+      Content-Type:
+      - text/html
+      Server:
+      - Microsoft-IIS/8.5
+      X-Powered-By:
+      - ASP.NET
+      Date:
+      - Tue, 19 Apr 2022 21:24:22 GMT
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Tue, 19 Apr 2022 21:24:22 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2022-04-04%20-%20Plan%20&%20Profile%20C-3%20-%20D07-12-22-0055.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Content-Length:
+      - '1245'
+      Content-Type:
+      - text/html
+      Server:
+      - Microsoft-IIS/8.5
+      X-Powered-By:
+      - ASP.NET
+      Date:
+      - Tue, 19 Apr 2022 21:24:22 GMT
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Tue, 19 Apr 2022 21:24:22 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2022-04-04%20-%20Plan%20&%20Profile%20C-2%20-%20D07-12-22-0055.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Content-Length:
+      - '1245'
+      Content-Type:
+      - text/html
+      Server:
+      - Microsoft-IIS/8.5
+      X-Powered-By:
+      - ASP.NET
+      Date:
+      - Tue, 19 Apr 2022 21:24:22 GMT
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Tue, 19 Apr 2022 21:24:22 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2022-04-04%20-%20Phase%20I%20Environmental%20Site%20Assessment%20-%20D07-12-22-0055.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Content-Length:
+      - '1245'
+      Content-Type:
+      - text/html
+      Server:
+      - Microsoft-IIS/8.5
+      X-Powered-By:
+      - ASP.NET
+      Date:
+      - Tue, 19 Apr 2022 21:24:22 GMT
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Tue, 19 Apr 2022 21:24:22 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2022-04-04%20-%20Notes%20and%20Details%20-%20D07-12-22-0055.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Content-Length:
+      - '1245'
+      Content-Type:
+      - text/html
+      Server:
+      - Microsoft-IIS/8.5
+      X-Powered-By:
+      - ASP.NET
+      Date:
+      - Tue, 19 Apr 2022 21:24:22 GMT
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Tue, 19 Apr 2022 21:24:22 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2022-04-04%20-%20Notes%20&%20Schedules%20C-8%20-%20D07-12-22-0055.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Content-Length:
+      - '1245'
+      Content-Type:
+      - text/html
+      Server:
+      - Microsoft-IIS/8.5
+      X-Powered-By:
+      - ASP.NET
+      Date:
+      - Tue, 19 Apr 2022 21:24:22 GMT
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Tue, 19 Apr 2022 21:24:23 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2022-04-04%20-%20North%20and%20South%20Elevations%20-%20D07-12-22-0055.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Content-Length:
+      - '1245'
+      Content-Type:
+      - text/html
+      Server:
+      - Microsoft-IIS/8.5
+      X-Powered-By:
+      - ASP.NET
+      Date:
+      - Tue, 19 Apr 2022 21:24:22 GMT
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Tue, 19 Apr 2022 21:24:23 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2022-04-04%20-%20Grading%20Plan%20and%20Retaining%20Wall%20Plan%20-%20D07-12-22-0055.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Content-Length:
+      - '1245'
+      Content-Type:
+      - text/html
+      Server:
+      - Microsoft-IIS/8.5
+      X-Powered-By:
+      - ASP.NET
+      Date:
+      - Tue, 19 Apr 2022 21:24:22 GMT
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Tue, 19 Apr 2022 21:24:23 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2022-04-04%20-%20Geotechnical%20Investigation%20-%20D07-12-22-0055.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Content-Length:
+      - '1245'
+      Content-Type:
+      - text/html
+      Server:
+      - Microsoft-IIS/8.5
+      X-Powered-By:
+      - ASP.NET
+      Date:
+      - Tue, 19 Apr 2022 21:24:23 GMT
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Tue, 19 Apr 2022 21:24:23 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2022-04-04%20-%20Front%20View%20(2)%20-%20D07-12-22-0055.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Content-Length:
+      - '1245'
+      Content-Type:
+      - text/html
+      Server:
+      - Microsoft-IIS/8.5
+      X-Powered-By:
+      - ASP.NET
+      Date:
+      - Tue, 19 Apr 2022 21:24:23 GMT
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Tue, 19 Apr 2022 21:24:23 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2022-04-04%20-%20Front%20View%20-%20D07-12-22-0055.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Content-Length:
+      - '1245'
+      Content-Type:
+      - text/html
+      Server:
+      - Microsoft-IIS/8.5
+      X-Powered-By:
+      - ASP.NET
+      Date:
+      - Tue, 19 Apr 2022 21:24:23 GMT
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Tue, 19 Apr 2022 21:24:23 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2022-04-04%20-%20Front%20Elevations%20both%20buildings%20-%20D07-12-22-0055.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Content-Length:
+      - '1245'
+      Content-Type:
+      - text/html
+      Server:
+      - Microsoft-IIS/8.5
+      X-Powered-By:
+      - ASP.NET
+      Date:
+      - Tue, 19 Apr 2022 21:24:23 GMT
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Tue, 19 Apr 2022 21:24:23 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2022-04-04%20-%20floor%20plans%20and%20elevations%20-%20D07-12-22-0055.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Content-Length:
+      - '1245'
+      Content-Type:
+      - text/html
+      Server:
+      - Microsoft-IIS/8.5
+      X-Powered-By:
+      - ASP.NET
+      Date:
+      - Tue, 19 Apr 2022 21:24:23 GMT
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Tue, 19 Apr 2022 21:24:23 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2022-04-04%20-%20Erosion%20and%20Sediment%20Control%20Plan%20&%20Drainage%20Plan%20-%20D07-12-22-0055.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Content-Length:
+      - '1245'
+      Content-Type:
+      - text/html
+      Server:
+      - Microsoft-IIS/8.5
+      X-Powered-By:
+      - ASP.NET
+      Date:
+      - Tue, 19 Apr 2022 21:24:23 GMT
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Tue, 19 Apr 2022 21:24:23 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2022-04-04%20-%20Details%20and%20Schedules%20-%20D07-12-22-0055.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Content-Length:
+      - '1245'
+      Content-Type:
+      - text/html
+      Server:
+      - Microsoft-IIS/8.5
+      X-Powered-By:
+      - ASP.NET
+      Date:
+      - Tue, 19 Apr 2022 21:24:23 GMT
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Tue, 19 Apr 2022 21:24:23 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2022-04-04%20-%20Designated%20Substances%20Survey%20-%20D07-12-22-0055.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Content-Length:
+      - '1245'
+      Content-Type:
+      - text/html
+      Server:
+      - Microsoft-IIS/8.5
+      X-Powered-By:
+      - ASP.NET
+      Date:
+      - Tue, 19 Apr 2022 21:24:23 GMT
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Tue, 19 Apr 2022 21:24:23 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2022-04-04%20-%20Design%20Brief%20-%20D07-12-22-0055.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Content-Length:
+      - '1245'
+      Content-Type:
+      - text/html
+      Server:
+      - Microsoft-IIS/8.5
+      X-Powered-By:
+      - ASP.NET
+      Date:
+      - Tue, 19 Apr 2022 21:24:23 GMT
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Tue, 19 Apr 2022 21:24:23 GMT
+recorded_with: VCR 6.1.0
