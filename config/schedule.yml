@@ -8,16 +8,12 @@
 # │ │ │ │ │
 # * * * * * <command to execute>
 
-ping_job:
-   cron: "*/5 * * * *"
-   class: "PingJob"
-
 dev_app_scan_job:
-   cron: "0 */4 * * *"
+   cron: "30 10-20 * * *"
    class: "DevAppScanJob"
 
 meeting_scan_job:
-   cron: "0 */4 * * *"
+   cron: "0 10-20 * * *"
    class: "MeetingScanJob"
 
 syndication_job:
