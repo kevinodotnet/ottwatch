@@ -15,14 +15,16 @@
   </div>
 </div>
 
-<h3>Items</h3>
-<ul>
-<% @meeting.items.each do |item| %>
-  <li>
-    <a href="https://app05.ottawa.ca/sirepub/agdocs.aspx?doctype=agenda&itemid=<%= item.reference_id %>"><%= item.title %></a>
-  </li>
+<% if @meeting.items.any? %>
+  <h3>Items</h3>
+  <ul>
+  <% @meeting.items.each do |item| %>
+    <li>
+      <a href="https://app05.ottawa.ca/sirepub/agdocs.aspx?doctype=agenda&itemid=<%= item.reference_id %>"><%= item.title %></a>
+    </li>
+  <% end %>
+  </ul>
 <% end %>
-</ul>
 
 <h3>Agenda</h3>
 <i>(note: this section doesn't work on mobile; blame the city)</i>
