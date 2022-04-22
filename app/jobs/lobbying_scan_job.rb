@@ -4,31 +4,74 @@ require 'uri'
 class LobbyingScanJob < ApplicationJob
   queue_as :default
 
-  def perform
-    # lobbying_for_date("2022-04-07".to_date)
-    (-30..0).map do |i|
-      date = Date.today + i.days
-      lobbying_for_date(Date.today + i.days)
+  def perform(date: nil)
+    if date.nil?
+      (-30..0).map do |i|
+        date = Date.today + i.days
+        lobbying_for_date(Date.today + i.days)
+      end
+    else
+      lobbying_for_date(date.to_date)
     end
   end
 
   private
 
   def lobbying_for_date(date)
-    puts ""
-    puts "#" * 50
-    puts "date: #{date}"
-    puts ""
     doc = Nokogiri::HTML(search_results_for_date(date))
     doc.xpath('//input').select{|i| i.attributes['name'].value.match(/btnView$/)}.each do |i|
       btn_view = i.attributes['name'].value
-      puts "  #{btn_view}"
       params = {
         '__VIEWSTATE' => view_state(doc),
         '__EVENTVALIDATION' => event_validation(doc),
         btn_view => 'View'
       }
-      entry = Nokogiri::HTML(lobbying_entry(params))
+      html = lobbying_entry(params)
+      entry = Nokogiri::HTML(html)
+
+      # lobbyist_name = entry.xpath('//*[@id="ctl00_MainContent_lblName"]').first.children.to_s
+      # lobbyist_position = entry.xpath('//*[@id="ctl00_MainContent_lblPosition"]').first.children.to_s
+      # lobbyist_type = entry.xpath('//*[@id="ctl00_MainContent_lblRegType"]').first.children.to_s
+
+      details = {}
+
+      fields = %w(
+        ctl00_MainContent_lblName
+        ctl00_MainContent_lblPosition
+        ctl00_MainContent_lblRegType
+
+        ctl00_MainContent_lblOrg
+        ctl00_MainContent_lblAddr
+        ctl00_MainContent_lblCity
+        ctl00_MainContent_lblProv
+        ctl00_MainContent_lblPC
+        ctl00_MainContent_lblStatus
+
+        ctl00_MainContent_lblClient
+        ctl00_MainContent_lblClientOrg
+        ctl00_MainContent_lblClientAddr
+        ctl00_MainContent_lblClientCity
+        ctl00_MainContent_lblClientProv
+        ctl00_MainContent_lblClientPC
+
+        ctl00_MainContent_lblSubjects
+        ctl00_MainContent_lblUndertakingStatus
+        ctl00_MainContent_lblIssue
+      ).each do |f|
+        key = f.gsub(/ctl00_MainContent_lbl/, '').underscore
+        details[key] = entry.xpath("//*[@id=\"#{f}\"]").first.children.to_s.gsub('<br>', ' ').gsub(/  */, ' ').gsub(/  *$/, '')
+      end
+
+      activities = entry.xpath('//*[@id="ctl00_MainContent_gvActivity"]/tr')
+      activities.shift # burn header
+      details[:activities] = activities.map do |a|
+        {
+          date: a.xpath('td')[0].children.to_s.to_date,
+          type: a.xpath('td')[1].children.to_s,
+          lobbied: CGI.unescapeHTML(a.xpath('td')[2].children.to_s)
+        }
+      end
+
     end
   end
 
