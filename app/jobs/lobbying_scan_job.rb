@@ -5,21 +5,27 @@ class LobbyingScanJob < ApplicationJob
   queue_as :default
 
   def perform(date: nil)
-    if date.nil?
+    # get the data
+    entries = if date.nil?
       (-30..0).map do |i|
         date = Date.today + i.days
         lobbying_for_date(Date.today + i.days)
       end
     else
-      lobbying_for_date(date.to_date)
+      [lobbying_for_date(date.to_date)]
     end
+    # persist the data
+    entries.flatten.each do |e|
+      binding.pry
+    end
+    nil
   end
 
   private
 
   def lobbying_for_date(date)
     doc = Nokogiri::HTML(search_results_for_date(date))
-    doc.xpath('//input').select{|i| i.attributes['name'].value.match(/btnView$/)}.each do |i|
+    doc.xpath('//input').select{|i| i.attributes['name'].value.match(/btnView$/)}.map do |i|
       btn_view = i.attributes['name'].value
       params = {
         '__VIEWSTATE' => view_state(doc),
@@ -28,10 +34,6 @@ class LobbyingScanJob < ApplicationJob
       }
       html = lobbying_entry(params)
       entry = Nokogiri::HTML(html)
-
-      # lobbyist_name = entry.xpath('//*[@id="ctl00_MainContent_lblName"]').first.children.to_s
-      # lobbyist_position = entry.xpath('//*[@id="ctl00_MainContent_lblPosition"]').first.children.to_s
-      # lobbyist_type = entry.xpath('//*[@id="ctl00_MainContent_lblRegType"]').first.children.to_s
 
       details = {}
 
@@ -65,13 +67,19 @@ class LobbyingScanJob < ApplicationJob
       activities = entry.xpath('//*[@id="ctl00_MainContent_gvActivity"]/tr')
       activities.shift # burn header
       details[:activities] = activities.map do |a|
-        {
-          date: a.xpath('td')[0].children.to_s.to_date,
-          type: a.xpath('td')[1].children.to_s,
-          lobbied: CGI.unescapeHTML(a.xpath('td')[2].children.to_s)
-        }
+        CGI.unescapeHTML(a.xpath('td')[2].children.to_s).split("<br>").map do |p|
+          i = p.index(" : ")
+          name = p[0..(i-1)]
+          title = p[(i+3)..]
+          {
+            date: a.xpath('td')[0].children.to_s.to_date,
+            type: a.xpath('td')[1].children.to_s,
+            lobbied_name: name,
+            lobbied_title: title
+          }
+        end
       end
-
+      details
     end
   end
 
