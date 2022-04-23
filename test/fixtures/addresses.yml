@@ -4,10 +4,10 @@ one:
   number_name: MyString
   city: MyString
   province: MyString
-  postal_string: MyString
+  postal: MyString
 
 two:
   number_name: MyString
   city: MyString
   province: MyString
-  postal_string: MyString
+  postal: MyString
