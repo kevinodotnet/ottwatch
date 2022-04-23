@@ -114,3 +114,50 @@ class LobbyingScanJob < ApplicationJob
     doc.xpath('//input[@name="__EVENTVALIDATION"]/@value').first.value
   end
 end
+
+# person: {
+#   "name"
+# }
+
+# address
+# {
+#   "addr": "1540A Beaverpond Drive",
+#   "city": "Ottawa",
+#   "prov": "ON",
+#   "pc": "K1B 3R9",
+# }
+
+# lobbyist {
+#   {"name": "Alix Packard",
+#     "position": "Founder",
+#     "reg_type": "Voluntary Unpaid",
+#     "org": "Ontario Coalition Against BSL",
+#     "address": "lobby_address_model",
+#     "status": "Approved",  
+# }
+
+# lobbying_client {
+#   "client": "Alix Packard",  
+#   "client_org": "Ontario Coalition Against BSL",
+#   "client_address": "lobby_address_record",
+# }
+
+# lobbying_subject {
+#   lobbyist_id,
+#   client_id,
+#   "subjects": "By-law/Regulation",
+#   "undertaking_status": "ACTIVE",
+#   "issue": "Dog bite prevention program for children",
+#   activities: {
+#     date: xxx,
+#     type: xxx, 
+#     lobbied_id: xxx
+#   }
+
+#   lobbied_person {
+#     name: "",
+#     title: "",
+#   }
+
+  
+

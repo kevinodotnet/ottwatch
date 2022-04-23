@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  occured_at: 2022-04-23
+  type: 
+  person: one
+
+two:
+  occured_at: 2022-04-23
+  type: 
+  person: two

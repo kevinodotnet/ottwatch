@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_04_16_183233) do
+ActiveRecord::Schema[7.0].define(version: 2022_04_23_022949) do
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -37,6 +37,15 @@ ActiveRecord::Schema[7.0].define(version: 2022_04_16_183233) do
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
+  create_table "addresses", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "number_name"
+    t.string "city"
+    t.string "province"
+    t.string "postal_string"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "announcements", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -113,6 +122,46 @@ ActiveRecord::Schema[7.0].define(version: 2022_04_16_183233) do
     t.index ["name"], name: "index_global_controls_on_name", unique: true
   end
 
+  create_table "lobbying_activities", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.date "occured_at"
+    t.string "type"
+    t.bigint "person_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["person_id"], name: "index_lobbying_activities_on_person_id"
+  end
+
+  create_table "lobbying_clients", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name"
+    t.bigint "organization_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["organization_id"], name: "index_lobbying_clients_on_organization_id"
+  end
+
+  create_table "lobbying_subjects", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "lobbyist_id", null: false
+    t.bigint "lobbying_client_id", null: false
+    t.string "subject"
+    t.text "issue"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["lobbying_client_id"], name: "index_lobbying_subjects_on_lobbying_client_id"
+    t.index ["lobbyist_id"], name: "index_lobbying_subjects_on_lobbyist_id"
+  end
+
+  create_table "lobbyists", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "person_id", null: false
+    t.string "position"
+    t.string "reg_type"
+    t.bigint "organization_id", null: false
+    t.string "status"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["organization_id"], name: "index_lobbyists_on_organization_id"
+    t.index ["person_id"], name: "index_lobbyists_on_person_id"
+  end
+
   create_table "meeting_items", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "title"
     t.integer "reference_id"
@@ -134,31 +183,16 @@ ActiveRecord::Schema[7.0].define(version: 2022_04_16_183233) do
     t.index ["committee_id"], name: "index_meetings_on_committee_id"
   end
 
-  create_table "parcels", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.integer "objectid"
-    t.string "pin"
-    t.decimal "easting", precision: 15, scale: 3
-    t.decimal "northing", precision: 15, scale: 3
-    t.string "publicland"
-    t.string "parceltype"
-    t.string "pi_municipal_address_id"
-    t.string "record_owner_id"
-    t.string "rt_road_name_id"
-    t.string "address_number"
-    t.string "road_name"
-    t.string "suffix"
-    t.string "dir"
-    t.string "municipality_name"
-    t.string "legal_unit"
-    t.string "address_qualifier"
-    t.string "postal_code"
-    t.string "address_status"
-    t.string "address_type_id"
-    t.string "pin_number"
-    t.integer "feat_num"
-    t.string "pi_parcel_id"
-    t.decimal "shape_length", precision: 25, scale: 15
-    t.decimal "shape_area", precision: 25, scale: 15
+  create_table "organizations", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name"
+    t.bigint "address_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["address_id"], name: "index_organizations_on_address_id"
+  end
+
+  create_table "people", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -167,6 +201,13 @@ ActiveRecord::Schema[7.0].define(version: 2022_04_16_183233) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "dev_app_documents", "dev_app_entries", column: "entry_id"
   add_foreign_key "dev_app_statuses", "dev_app_entries", column: "entry_id"
+  add_foreign_key "lobbying_activities", "people"
+  add_foreign_key "lobbying_clients", "organizations"
+  add_foreign_key "lobbying_subjects", "lobbying_clients"
+  add_foreign_key "lobbying_subjects", "lobbyists"
+  add_foreign_key "lobbyists", "organizations"
+  add_foreign_key "lobbyists", "people"
   add_foreign_key "meeting_items", "meetings"
   add_foreign_key "meetings", "committees"
+  add_foreign_key "organizations", "addresses"
 end

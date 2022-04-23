@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  person: one
+  position: MyString
+  reg_type: MyString
+  organization: one
+  status: MyString
+
+two:
+  person: two
+  position: MyString
+  reg_type: MyString
+  organization: two
+  status: MyString
