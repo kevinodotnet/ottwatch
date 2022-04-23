@@ -1,6 +1,10 @@
 require "test_helper"
 
 class SyndicationJobTest < ActiveJob::TestCase
+  setup do
+    Announcement.create!(message: "A first message", reference: DevApp::Entry.first)
+  end
+
   test "syndication job updates last_id pointer" do
     assert_changes -> { GlobalControl.get("syndication_job_last_id") }, from: nil, to: Announcement.last.id.to_s do
       SyndicationJob.perform_now
@@ -8,7 +12,7 @@ class SyndicationJobTest < ActiveJob::TestCase
   end
 
   test "syndication job does not double announce" do
-    SyndicationJob.any_instance.expects(:syndicate).times(2)
+    SyndicationJob.any_instance.expects(:syndicate).times(1)
     SyndicationJob.perform_now
     SyndicationJob.any_instance.expects(:syndicate).times(0)
     SyndicationJob.perform_now
@@ -20,7 +24,8 @@ class SyndicationJobTest < ActiveJob::TestCase
   end
 
   test "in twitter, messages include links back to the reference" do
-    TwitterClient.expects(:update).with("This is another announcement (101 WURTEMBURG Street) http://localhost:33000/devapp/D07-12-15-0205")
+    expected = "A first message (3020 HAWTHORNE Road) http://localhost:33000/devapp/D07-05-16-0003"
+    TwitterClient.expects(:update).with(expected)
     SyndicationJob.new.syndicate(Announcement.first)
   end
 end
