@@ -1,3 +1,3 @@
 class Person < ApplicationRecord
-  has_many: addresses
+  has_many :addresses
 end
