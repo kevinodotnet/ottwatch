@@ -20,6 +20,6 @@ class Announcement < ApplicationRecord
       "http://localhost:33000"
     end
     return "#{url}/devapp/#{reference.app_number}" if reference.is_a?(DevApp::Entry)
-    return "/meeting/#{reference.reference_id}" if reference.is_a?(Meeting)
+    return "#{url}/meeting/#{reference.reference_id}" if reference.is_a?(Meeting)
   end
 end
