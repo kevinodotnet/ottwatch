@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_04_16_183233) do
+ActiveRecord::Schema[7.0].define(version: 2022_04_25_004321) do
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -113,6 +113,28 @@ ActiveRecord::Schema[7.0].define(version: 2022_04_16_183233) do
     t.index ["name"], name: "index_global_controls_on_name", unique: true
   end
 
+  create_table "lobbying_activities", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "lobbying_undertaking_id", null: false
+    t.date "activity_date"
+    t.string "activity_type"
+    t.string "lobbied_name"
+    t.string "lobbied_title"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["lobbying_undertaking_id"], name: "index_lobbying_activities_on_lobbying_undertaking_id"
+  end
+
+  create_table "lobbying_undertakings", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "subject"
+    t.text "issue"
+    t.string "lobbyist_name"
+    t.string "lobbyist_position"
+    t.string "lobbyist_reg_type"
+    t.text "view_details"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "meeting_items", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "title"
     t.integer "reference_id"
@@ -134,39 +156,11 @@ ActiveRecord::Schema[7.0].define(version: 2022_04_16_183233) do
     t.index ["committee_id"], name: "index_meetings_on_committee_id"
   end
 
-  create_table "parcels", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.integer "objectid"
-    t.string "pin"
-    t.decimal "easting", precision: 15, scale: 3
-    t.decimal "northing", precision: 15, scale: 3
-    t.string "publicland"
-    t.string "parceltype"
-    t.string "pi_municipal_address_id"
-    t.string "record_owner_id"
-    t.string "rt_road_name_id"
-    t.string "address_number"
-    t.string "road_name"
-    t.string "suffix"
-    t.string "dir"
-    t.string "municipality_name"
-    t.string "legal_unit"
-    t.string "address_qualifier"
-    t.string "postal_code"
-    t.string "address_status"
-    t.string "address_type_id"
-    t.string "pin_number"
-    t.integer "feat_num"
-    t.string "pi_parcel_id"
-    t.decimal "shape_length", precision: 25, scale: 15
-    t.decimal "shape_area", precision: 25, scale: 15
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "dev_app_documents", "dev_app_entries", column: "entry_id"
   add_foreign_key "dev_app_statuses", "dev_app_entries", column: "entry_id"
+  add_foreign_key "lobbying_activities", "lobbying_undertakings"
   add_foreign_key "meeting_items", "meetings"
   add_foreign_key "meetings", "committees"
 end
