@@ -1,0 +1,39 @@
+<h1>Lobbying Activities</h1>
+
+<div class="owrows">
+<% @undertakings.each do |u| %>
+  <div class="row">
+    <div class="col-sm-1">
+      <form method="post" action="<%= LobbyingScanJob::SEARCH_URL%>">
+        <%
+        j = JSON.parse(u.view_details)
+        j.keys.each do |k|
+          %>
+          <input type="hidden" name="<%= k %>" value="<%= j[k] %>"/>
+          <%
+        end
+        %>
+        <input type="submit" name="Submit" value="View" class="btn btn-primary"/>
+      </form>
+    </div>
+    <div class="col-sm-3">
+      <b><%= u.lobbyist_name %></b><br/>
+      <%= u.lobbyist_position %><br/>
+      <%= u.lobbyist_reg_type %>
+    </div>
+    <div class="col-sm-8">
+      <b><%= u.subject %></b>: <%= u.issue %>
+    </div>
+  </div>
+<% end %>
+</div>
+
+<% if @undertakings.count > 0 %>
+<center>
+<%= link_to "More...", lobbying_index_path(before_id: @undertakings.last.id) %>
+</center>
+<% end %>
+
+<script>
+
+</script>

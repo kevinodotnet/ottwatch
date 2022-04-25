@@ -12,6 +12,10 @@ dev_app_scan_job:
    cron: "30 10-20 * * *"
    class: "DevAppScanJob"
 
+lobbying_scan_job:
+   cron: "45 10-20 * * *"
+   class: "LobbyingScanJob"
+
 meeting_scan_job:
    cron: "0 10-20 * * *"
    class: "MeetingScanJob"

@@ -6,6 +6,9 @@ Rails.application.routes.draw do
   get 'devapp/index'
   get 'devapp/:app_number', to: 'devapp#show'
 
+  get 'lobbying/index'
+  get 'lobbying/:id', to: 'lobbying#show'
+
   get 'meeting/index'
   get 'meeting/:reference_id', to: 'meeting#show'
 
