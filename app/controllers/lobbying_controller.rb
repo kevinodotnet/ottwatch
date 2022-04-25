@@ -10,7 +10,7 @@ class LobbyingController < ApplicationController
   end
 
   def show
-    @undertaking = LobbyingUndertaking.find(id: params[:id])
+    @undertaking = LobbyingUndertaking.find(params[:id])
     raise ActionController::RoutingError.new('Lobbying Entry Not Found') unless @undertaking
   end
 end

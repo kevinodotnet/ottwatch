@@ -9,6 +9,7 @@ class LobbyingScanJob < ApplicationJob
 
   def perform(date: nil)
     if date.nil?
+      # (-5500..-2400).each { |i| LobbyingScanJob.perform_later(date: Date.today + i.days) }
       (-HISTORY_DAYS..0).each { |i| LobbyingScanJob.perform_later(date: Date.today + i.days) }
     else
       lobbying_for_date(date.to_date).each do |e|
@@ -27,7 +28,6 @@ class LobbyingScanJob < ApplicationJob
       lobbyist_reg_type: e["reg_type"],
     }
     undertaking = LobbyingUndertaking.where(attr).first || LobbyingUndertaking.create(**attr, view_details: e[:params].to_json)
-
     e[:activities].each do |a|
       attr = {
         activity_date: a[:date],
@@ -86,8 +86,8 @@ class LobbyingScanJob < ApplicationJob
 
       activities = entry.xpath('//*[@id="ctl00_MainContent_gvActivity"]/tr')
       activities.shift # burn header
-      activities.map do |a|
-        details[:activities] = CGI.unescapeHTML(a.xpath('td')[2].children.to_s).split("<br>").map do |p|
+      details[:activities] = activities.map do |a|
+         CGI.unescapeHTML(a.xpath('td')[2].children.to_s).split("<br>").map do |p|
           i = p.index(" : ")
           name = p[0..(i-1)]
           title = p[(i+3)..]
@@ -98,7 +98,7 @@ class LobbyingScanJob < ApplicationJob
             lobbied_title: title
           }
         end
-      end
+      end.flatten
       details
     end.flatten
   end

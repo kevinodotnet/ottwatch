@@ -1,1 +1,53 @@
 <% content_for(:html_title, "Lobbying Undertaking") %>
+
+<form method="post" action="<%= LobbyingScanJob::SEARCH_URL%>">
+  <%
+  j = JSON.parse(@undertaking.view_details)
+  j.keys.each do |k|
+    %>
+    <input type="hidden" name="<%= k %>" value="<%= j[k] %>"/>
+    <%
+  end
+  %>
+  <input type="submit" name="Submit" value="View on Ottawa.ca" class="btn btn-primary"/>
+</form>
+
+<h4>Details</h4>
+
+<div class="row">
+  <div class="col-sm-4">
+    <b>Subject:</b>
+    <%= @undertaking.subject %>
+  </div>
+  <div class="col-sm-8">
+    <b>Issue:</b>
+    <%= @undertaking.issue %>
+  </div>
+</div>
+
+<h4>Lobbyist</h4>
+
+<div class="row">
+  <div class="col-sm-4">
+    <%= @undertaking.lobbyist_name %><br/>
+  </div>
+  <div class="col-sm-4">
+    <%= @undertaking.lobbyist_position %><br/>
+  </div>
+  <div class="col-sm-4">
+    <%= @undertaking.lobbyist_reg_type %>
+  </div>
+</div>
+
+<h4>Activities</h4>
+
+<div class="owrows">
+<% @undertaking.activities.order(activity_date: :desc).each do |a| %>
+  <div class="row">
+    <div class="col-sm-2"><%= a.activity_date %></div>
+    <div class="col-sm-2"><%= a.activity_type %></div>
+    <div class="col-sm-4"><%= a.lobbied_name %></div>
+    <div class="col-sm-4"><%= a.lobbied_title %></div>
+  </div>
+<% end %>
+</div>

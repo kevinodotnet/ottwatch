@@ -21,6 +21,15 @@ class LobbyingScanJobTest < ActiveJob::TestCase
     end
   end
 
+  test "lobbying activity dates are parsed and saved correctly" do
+    VCR.use_cassette("#{class_name}_#{method_name}", :match_requests_on => [:body]) do
+      LobbyingScanJob.perform_now(date: "2022-03-23")
+    end
+    u = LobbyingUndertaking.last
+    binding.pry
+    assert_equal 11, u.activities.count
+  end
+
   private
 
   def assert_records
