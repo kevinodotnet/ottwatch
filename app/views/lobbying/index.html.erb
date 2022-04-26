@@ -17,6 +17,6 @@
 
 <% if @undertakings.count > 0 %>
 <center>
-<%= link_to "More...", lobbying_index_path(before_id: @undertakings.last.id) %>
+<%= link_to "More...", lobbying_index_path(before_id: @undertakings.last.id, before_created_at: @undertakings.last.created_at) %>
 </center>
 <% end %>

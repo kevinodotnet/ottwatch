@@ -1,12 +1,13 @@
 class LobbyingController < ApplicationController
   def index
-    relation = if params["before_id"]
-      LobbyingUndertaking.where("id < ?", params["before_id"])
-    else
-      LobbyingUndertaking.all
+    relation = LobbyingUndertaking.all
+    if params["before_id"]
+      relation = relation.where("id < ?", params["before_id"])
     end
-
-    @undertakings = relation.order(updated_at: :desc).limit(100)
+    if params["before_created_at"]
+      relation = relation.where("created_at <= ?", params["before_created_at"])
+    end
+    @undertakings = relation.order(created_at: :desc, id: :desc).limit(100)
   end
 
   def show
