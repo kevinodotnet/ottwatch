@@ -1,6 +1,17 @@
 <h1>Lobbying Activities</h1>
 
 <div class="owrows">
+<div class="row">
+  <div class="col-sm-3">
+    <p class="lead">Lobbyist</p>
+  </div>
+  <div class="col-sm-7">
+    <p class="lead">Subject/Issue</p>
+  </div>
+  <div class="col-sm-2">
+    <p class="lead">Activities</p>
+  </div>
+</div>
 <% @undertakings.each do |u| %>
   <div class="row">
     <div class="col-sm-3">
@@ -8,8 +19,12 @@
       <%= u.lobbyist_position %><br/>
       <%= u.lobbyist_reg_type %>
     </div>
-    <div class="col-sm-9">
+    <div class="col-sm-7">
       <b><%= link_to u.subject, "/lobbying/#{u.id}" %></b>: <%= u.issue %>
+    </div>
+    <div class="col-sm-2">
+      Latest: <%= @latest[u.id].strftime("%Y-%m-%d") %>
+      Total: <%= @counts[u.id] %><br/>
     </div>
   </div>
 <% end %>
