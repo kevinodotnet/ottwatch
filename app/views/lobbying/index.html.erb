@@ -22,7 +22,7 @@
     <div class="col-sm-7">
       <b><%= link_to u.subject, "/lobbying/#{u.id}" %></b>: <%= u.issue %>
     </div>
-    <div class="col-sm-2">
+    <div class="col-sm-2" style="text-align: right;">
       Latest: <%= @latest[u.id].strftime("%Y-%m-%d") %>
       First: <%= @first[u.id].strftime("%Y-%m-%d") %>
       Total: <%= @counts[u.id] %><br/>
