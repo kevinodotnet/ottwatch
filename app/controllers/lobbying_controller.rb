@@ -11,6 +11,7 @@ class LobbyingController < ApplicationController
     agg_relation = LobbyingActivity.group(:lobbying_undertaking_id).where(lobbying_undertaking_id: @undertakings.map(&:id))
     @counts = agg_relation.count
     @latest = agg_relation.maximum(:activity_date)
+    @first = agg_relation.minimum(:activity_date)
   end
 
   def show
