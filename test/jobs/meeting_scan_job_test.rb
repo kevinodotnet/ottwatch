@@ -18,8 +18,8 @@ class MeetingScanJobTest < ActiveJob::TestCase
     announcement = Announcement.last
     assert announcement.reference.instance_of?(Meeting)
     assert announcement.message.match(/New Meeting: ............/)
-    assert announcement.link_to_context
-    assert announcement.link_to_reference
+    assert announcement.reference_context
+    assert announcement.reference_link
   end
 
   test "meetings inhale agenda items" do

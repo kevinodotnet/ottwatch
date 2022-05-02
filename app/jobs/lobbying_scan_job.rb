@@ -27,15 +27,29 @@ class LobbyingScanJob < ApplicationJob
       lobbyist_position: e["position"],
       lobbyist_reg_type: e["reg_type"],
     }
-    undertaking = LobbyingUndertaking.where(attr).first || LobbyingUndertaking.create(**attr, view_details: e[:params].to_json)
-    e[:activities].each do |a|
-      attr = {
-        activity_date: a[:date],
-        activity_type: a[:type],
-        lobbied_name: a[:lobbied_name],
-        lobbied_title: a[:lobbied_title],
-      }
-      activity = undertaking.activities.where(attr).first || undertaking.activities.create!(attr)
+    LobbyingUndertaking.transaction do
+      undertaking = LobbyingUndertaking.where(attr).first || LobbyingUndertaking.new(**attr, view_details: e[:params].to_json)
+      announcements = []
+      unless undertaking.persisted?
+        undertaking.save!
+        announcements << Announcement.new(message: "New Lobbying undertaking")
+      end
+      e[:activities].each do |a|
+        attr = {
+          activity_date: a[:date],
+          activity_type: a[:type],
+          lobbied_name: a[:lobbied_name],
+          lobbied_title: a[:lobbied_title],
+        }
+        activity = undertaking.activities.where(attr).first || undertaking.activities.new(attr)
+        unless activity.persisted?
+          activity.save!
+          announcements << Announcement.new(message: "Additional Lobbying activity")
+        end
+      end
+      if announcements.any?
+        undertaking.announcements << announcements.first
+      end
     end
   end
 

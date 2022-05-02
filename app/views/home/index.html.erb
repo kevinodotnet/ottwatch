@@ -34,7 +34,7 @@
   <% @announcements.each do |a| %>
     <div class="row">
       <div class="col-sm-3">
-        <%= link_to(a.link_to_context, a.link_to_reference) %>
+        <%= link_to(a.reference_context, a.reference_link) %>
       </div>
       <div class="col-md-7">
         <%= a.message %>

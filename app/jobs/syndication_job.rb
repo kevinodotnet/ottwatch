@@ -5,8 +5,8 @@ class SyndicationJob < ApplicationJob
 
   def syndicate(a)
     msg = a.message
-    msg << " (#{a.link_to_context})" if a.link_to_context
-    msg << " #{a.link_to_reference}"
+    msg << " (#{a.reference_context})" if a.reference_context
+    msg << " #{a.reference_link}"
     TwitterClient.update(msg)
   end
 

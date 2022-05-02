@@ -26,8 +26,42 @@ class LobbyingScanJobTest < ActiveJob::TestCase
       LobbyingScanJob.perform_now(date: "2022-03-23")
     end
     u = LobbyingUndertaking.last
-    binding.pry
     assert_equal 11, u.activities.count
+  end
+
+  focus
+  test "new lobbying activities are announced" do
+    VCR.use_cassette("#{class_name}_#{method_name}", :match_requests_on => [:body]) do
+      LobbyingScanJob.perform_now(date: "2022-03-23") # "new lobbying file"
+      u = LobbyingUndertaking.where("issue like ?", "%Kaaj%").first
+      assert_equal 1, u.announcements.count
+      assert_equal 11, u.activities.count
+      u.activities.where('activity_date > ?', '2022-04-10').delete_all
+      LobbyingScanJob.perform_now(date: "2022-03-23") # "new activity on file"
+      assert_equal 11, u.activities.count
+      assert_equal 2, u.announcements.count
+
+      a = u.announcements.first
+      assert_equal "New Lobbying undertaking", a.message
+      assert_equal a.reference_context, "Reza Lotfalian (CTO): Kaaj Energy Inc. is in the planning stage to propose ..."
+      assert_equal a.reference_link, "http://localhost:33000/lobbying/#{u.id}"
+
+      a = u.announcements.last
+      assert_equal "Additional Lobbying activity", a.message
+      assert_equal a.reference_context, "Reza Lotfalian (CTO): Kaaj Energy Inc. is in the planning stage to propose ..."
+      assert_equal a.reference_link, "http://localhost:33000/lobbying/#{u.id}"
+    end
+  end
+
+  test "existing lobbying w/o an announcement dont get announced on re-scan" do
+    VCR.use_cassette("#{class_name}_#{method_name}", :match_requests_on => [:body]) do
+      LobbyingScanJob.perform_now(date: "2022-03-23")
+      binding.pry
+      Announcement.delete_all
+      assert_no_changes -> { Announcement.count } do
+        LobbyingScanJob.perform_now(date: "2022-03-23")
+      end
+    end
   end
 
   private
