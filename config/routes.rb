@@ -12,6 +12,7 @@ Rails.application.routes.draw do
   get 'meeting/index'
   get 'meeting/:reference_id', to: 'meeting#show'
 
+  get 'election/:id', to: 'election#show'
   # Defines the root path rout  e ("/")
   root "home#index"
 end

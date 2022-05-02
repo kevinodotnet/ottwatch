@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_04_25_004321) do
+ActiveRecord::Schema[7.0].define(version: 2022_05_02_213209) do
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -45,6 +45,19 @@ ActiveRecord::Schema[7.0].define(version: 2022_04_25_004321) do
     t.string "reference_type"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "candidates", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "election_id", null: false
+    t.integer "ward"
+    t.string "name"
+    t.date "nomination_date"
+    t.string "telephone"
+    t.string "email"
+    t.string "website"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["election_id"], name: "index_candidates_on_election_id"
   end
 
   create_table "committees", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -105,6 +118,12 @@ ActiveRecord::Schema[7.0].define(version: 2022_04_25_004321) do
     t.index ["entry_id"], name: "index_dev_app_statuses_on_entry_id"
   end
 
+  create_table "elections", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.date "date"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "global_controls", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
     t.string "value"
@@ -158,6 +177,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_04_25_004321) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "candidates", "elections"
   add_foreign_key "dev_app_documents", "dev_app_entries", column: "entry_id"
   add_foreign_key "dev_app_statuses", "dev_app_entries", column: "entry_id"
   add_foreign_key "lobbying_activities", "lobbying_undertakings"
