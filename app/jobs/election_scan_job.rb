@@ -37,7 +37,10 @@ class ElectionScanJob < ApplicationJob
 
     candidates.each do |attr|
       c = Candidate.where(election: election, name: attr[:name], ward: attr[:ward]).first || Candidate.new(election: election, **attr)
-      unless c.persisted?
+      if c.persisted?
+        c.assign_attributes(attr)
+        c.save!
+      else
         c.save!
         message = if c.ward == 0
           "New Mayoral Candidate: #{c.name}"
