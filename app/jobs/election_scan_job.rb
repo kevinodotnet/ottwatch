@@ -45,7 +45,7 @@ class ElectionScanJob < ApplicationJob
         message = if c.ward == 0
           "New Mayoral Candidate: #{c.name}"
         else
-          "New Candidate in Ward #{c.ward}: #{c.name}"
+          "New Candidate in ward #{c.ward} - #{Election.ward_name(c.ward)}: #{c.name}"
         end
         Announcement.create!(message: message, reference: election)
         # new_candidates << c

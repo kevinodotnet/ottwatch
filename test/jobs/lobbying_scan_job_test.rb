@@ -29,7 +29,6 @@ class LobbyingScanJobTest < ActiveJob::TestCase
     assert_equal 11, u.activities.count
   end
 
-  focus
   test "new lobbying activities are announced" do
     VCR.use_cassette("#{class_name}_#{method_name}", :match_requests_on => [:body]) do
       LobbyingScanJob.perform_now(date: "2022-03-23") # "new lobbying file"
@@ -56,7 +55,6 @@ class LobbyingScanJobTest < ActiveJob::TestCase
   test "existing lobbying w/o an announcement dont get announced on re-scan" do
     VCR.use_cassette("#{class_name}_#{method_name}", :match_requests_on => [:body]) do
       LobbyingScanJob.perform_now(date: "2022-03-23")
-      binding.pry
       Announcement.delete_all
       assert_no_changes -> { Announcement.count } do
         LobbyingScanJob.perform_now(date: "2022-03-23")
