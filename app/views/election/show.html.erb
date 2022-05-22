@@ -1,13 +1,21 @@
 <h3>Election <%= @election.date %></h3>
 
-<div class="owrows">
+<% prev_ward = nil %>
 <% @election.candidates.order(:ward, :name).each do |c| %>
+  <%
+  if prev_ward != c.ward
+    %>
+    <div class="row" style="background: #c0c0c0;">
+      <div class="col-sm-12"><h5><%= c.ward == 0 ? "Mayor" : "Ward #{c.ward}: #{Election.ward_name(c.ward)}" %></h5></div>
+    </div>
+    <%
+  end
+  prev_ward = c.ward
+  %>
   <div class="row">
-    <div class="col-sm-1"><%= c.ward == 0 ? "Mayor" : "Ward #{c.ward}" %></div>
-    <div class="col-sm-3"><%= c.name %></div>
+    <div class="col-sm-3" style="background: #f0f0f0;"><%= c.name %></div>
     <div class="col-sm-2"><%= c.telephone %>&nbsp;</div>
     <div class="col-sm-3"><%= c.email %>&nbsp;</div>
     <div class="col-sm-3"><%= c.website %>&nbsp;</div>
   </div>
 <% end %>
-</div>
