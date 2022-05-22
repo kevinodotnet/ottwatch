@@ -25,7 +25,7 @@ election_scan_job:
    class: "ElectionScanJob"
 
 parcel_scanner:
-   cron: "15,35,55 * * * *"
+   cron: "*/5 * * * *"
    class: "ParcelScanner"
 
 syndication_job:
