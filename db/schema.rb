@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_05_22_030307) do
+ActiveRecord::Schema[7.0].define(version: 2022_05_22_031853) do
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -202,7 +202,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_22_030307) do
     t.decimal "shape_area", precision: 25, scale: 15
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.text "geometry_json"
+    t.text "geometry_json", size: :medium
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
