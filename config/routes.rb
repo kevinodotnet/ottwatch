@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get 'parcels/:objectid', to: 'parcels#show'
   get 'home/index'
 
   get '/election/donation/:id', to: 'elections#donation'
