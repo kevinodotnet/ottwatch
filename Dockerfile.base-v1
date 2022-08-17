@@ -1,0 +1,23 @@
+FROM php:7.2-apache
+
+# RUN apt-get update && \
+#     DEBIAN_FRONTEND=noninteractive apt-get -y install \
+#         ruby-dev \
+#         less \
+#         curl \
+#         vim \
+#         sudo \
+#         apache2 \
+#         mysql-client \
+#         mysql-server \
+#         libmysqlclient-dev \
+#         git \
+#         rbenv
+
+# RUN groupadd -g 1000 -r app && \
+#     useradd -u 1000 --no-log-init -r -g app app && \
+#     mkdir /home/app && \
+#     chown app:app /home/app && \
+#     adduser app sudo
+
+# RUN gem install bundler

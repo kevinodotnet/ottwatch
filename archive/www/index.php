@@ -5,11 +5,14 @@ error_reporting(E_ERROR | E_PARSE);
 session_start();
 date_default_timezone_set("Canada/Eastern");
 
-require '../vendor/autoload.php';
+require 'vendor/autoload.php';
 
-include_once '../lib/include.php';
 include_once 'epiphany/src/Epi.php';
+include_once 'epiphany/src/EpiDatabase.php';
+include_once 'lib/include.php';
+print "HERE";
 include_once 'controllers/ApiController.php';
+print "THERE";
 include_once 'controllers/ScrapeApiController.php';
 include_once 'controllers/MeetingController.php';
 include_once 'controllers/Ott311Controller.php';
@@ -39,7 +42,6 @@ getRoute()->get('/story/list', array('StoryController', 'doList'));
 getRoute()->get('/story/add', array('StoryController', 'add'));
 getRoute()->get('/story/edit/(\d+)', array('StoryController', 'edit'));
 getRoute()->post('/story/save', array('StoryController', 'save'));
-
 getApi()->get('/api/search', array('ApiController', 'search'), EpiApi::external);
 
 getApi()->get('/api/about', array('ApiController', 'about'), EpiApi::external);
@@ -224,6 +226,8 @@ getRoute()->get('/gis/viewLayer', array('GisController','viewLayer'));
 
 getRoute()->get('.*', 'error404');
 getRoute()->run();
+
+
 
 function ottawaMediaRSS() {
   $url = "http://ottawa.ca/rss/news_en.xml";
