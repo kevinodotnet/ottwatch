@@ -1,7 +1,7 @@
 <h3>Election <%= @election.date %></h3>
 
 <% prev_ward = nil %>
-<% @election.candidates.order(:ward, :name).each do |c| %>
+<% @election.candidates.order(:ward, :name, :withdrew).each do |c| %>
   <%
   if prev_ward != c.ward
     %>
@@ -11,9 +11,11 @@
     <%
   end
   prev_ward = c.ward
+  withdrew_style = ""
+  withdrew_style = "text-decoration: line-through; " if c.withdrew
   %>
   <div class="row">
-    <div class="col-sm-3" style="background: #f0f0f0;"><%= c.name %></div>
+    <div class="col-sm-3" style="<%= withdrew_style %> background: #f0f0f0;"><%= c.name %></div>
     <div class="col-sm-2"><%= c.telephone %>&nbsp;</div>
     <div class="col-sm-3"><%= c.email %>&nbsp;</div>
     <div class="col-sm-3"><%= c.website %>&nbsp;</div>
