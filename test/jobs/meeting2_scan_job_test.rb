@@ -28,6 +28,8 @@ class Meeting2ScanJobTest < ActiveJob::TestCase
 
         announcement = Announcement.last
         assert "New Meeting: #{m[:title]}", announcement.message
+        assert announcement.reference_link
+        assert announcement.reference_context
 
         # scanning again does not create new records, nor re-announce
 

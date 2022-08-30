@@ -9,6 +9,8 @@ class MeetingController < ApplicationController
   end
 
   def show
-    @meeting = Meeting.find_by_reference_id(params[:reference_id])
+    @meeting = Meeting.where(reference_id: params[:reference_id]).or(
+      Meeting.where(reference_guid: params[:reference_id])
+    ).first
   end
 end
