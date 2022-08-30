@@ -16,9 +16,9 @@ lobbying_scan_job:
    cron: "45 10-20 * * *"
    class: "LobbyingScanJob"
 
-meeting_scan_job:
+meeting2_scan_job:
    cron: "0 10-20 * * *"
-   class: "MeetingScanJob"
+   class: "Meeting2ScanJob"
 
 # election_scan_job:
 #    cron: "10,30,50 * * * *"

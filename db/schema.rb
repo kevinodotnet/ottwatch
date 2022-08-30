@@ -173,6 +173,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_08_21_234844) do
     t.integer "reference_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "reference_guid"
     t.index ["committee_id"], name: "index_meetings_on_committee_id"
   end
 
