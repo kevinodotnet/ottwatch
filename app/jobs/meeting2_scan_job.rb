@@ -39,7 +39,7 @@ class Meeting2ScanJob < ApplicationJob
         meeting_time: meeting_time
       }
       # puts attrs.to_json
-      Meeting2ScanJob.perform_later(attrs)
+      Meeting2ScanJob.perform_later(attrs: attrs)
     end
 
     nil
