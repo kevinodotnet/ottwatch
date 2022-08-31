@@ -14,21 +14,38 @@ default: &default
   timeout: 5000
 
 development:
-  <<: *default
-  database: ottwatch_dev
-  host: localhost
+  primary:
+    <<: *default
+    database: ottwatch_dev
+    host: localhost
+  v1:
+    <<: *default
+    database: ottwatch_dev_v1
+    host: localhost
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
 # Do not set this db to the same as development or production.
 test:
-  <<: *default
-  database: ottwatch_test
-  host: localhost
+  primary:
+    <<: *default
+    database: ottwatch_test
+    host: localhost
+  v1:
+    <<: *default
+    database: ottwatch_test_v1
+    host: localhost
 
 production:
-  <<: *default
-  database: <%= ENV["DB_NAME"] %>
-  host: <%= ENV["DB_HOST"] %>
-  username: <%= ENV["DB_USER"] %>
-  password: <%= ENV["DB_PASS"] %>
+  primary:
+    <<: *default
+    database: <%= ENV["DB_NAME"] %>
+    host: <%= ENV["DB_HOST"] %>
+    username: <%= ENV["DB_USER"] %>
+    password: <%= ENV["DB_PASS"] %>
+  v1:
+    <<: *default
+    database: <%= ENV["DB_NAME_V1"] %>
+    host: <%= ENV["DB_HOST"] %>
+    username: <%= ENV["DB_USER"] %>
+    password: <%= ENV["DB_PASS"] %>
