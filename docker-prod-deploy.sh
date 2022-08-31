@@ -22,7 +22,7 @@ echo "############################"
 date
 echo "Migrating..."
 echo ""
-./docker-prod-exec.sh bin/rails db:migrate
+./docker-prod-exec.sh bin/rails db:migrate:primary
 
 echo ""
 echo "############################"
