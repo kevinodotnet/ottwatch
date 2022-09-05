@@ -15,7 +15,11 @@
 @donations.each do |d|
   %>
   <tr>
-    <td><%= d.amount %></td>
+    <td>
+      <a href="legacy/donation/<%= d.id %>">
+      <%= d.amount %>
+      </a>
+    </td>
     <td>
       <a href="?name=<%= d.name %>">
       <%= d.name %>

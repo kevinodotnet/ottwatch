@@ -3,6 +3,10 @@ class ElectionController < ApplicationController
     @election = Election.find(params[:id])
   end
 
+  def show_legacy_donation
+    @donation = V1::CandidateDonation.find(params[:id])
+  end
+
   def legacy_index
     @donations = []
     relation = V1::CandidateDonation.all
