@@ -23,7 +23,7 @@ class ElectionController < ApplicationController
     end
 
     if filtered
-      @donations = relation.includes(candidate_return: [candidate: [:election]]).order("rand()").limit(100)
+      @donations = relation.includes(candidate_return: [candidate: [:election]]).order("rand()")
     end
   end
 end
