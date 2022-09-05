@@ -23,4 +23,16 @@
   <th>Amount</th>
   <td><%= @donation.amount %></td>
 </tr>
+<tr>
+  <th>Candidate</th>
+  <td><%= @donation.candidate_return.candidate.last %>, <%= @donation.candidate_return.candidate.first %></td>
+</tr>
+<tr>
+  <th>Election</th>
+  <td><%= @donation.candidate_return.candidate.election.date %></td>
+</tr>
+<tr>
+  <th>Ward</th>
+  <td><%= @donation.candidate_return.candidate.ward %></td>
+</tr>
 </table>
