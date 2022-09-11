@@ -72,7 +72,6 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.string "city", limit: 64
   end
 
-  add_foreign_key "candidate", "people", column: "personid", name: "candidate_ibfk_1"
   add_foreign_key "candidate_donation", "candidate_return", column: "returnid", name: "candidate_donation_ibfk_1", on_update: :cascade, on_delete: :cascade
   add_foreign_key "candidate_return", "candidate", column: "candidateid", name: "candidate_return_ibfk_1", on_update: :cascade, on_delete: :cascade
 end
