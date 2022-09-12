@@ -16,6 +16,10 @@ Rails.application.routes.draw do
   get 'election/legacy', to: 'election#legacy_index'
   get 'election/:id', to: 'election#show'
   get 'election/legacy/donation/:id', to: 'election#show_legacy_donation'
+
+  post 'auth/:provider/callback', to: 'sessions#create'
+  get '/login', to: 'sessions#new'
+   
   # Defines the root path rout  e ("/")
   root "home#index"
 end
