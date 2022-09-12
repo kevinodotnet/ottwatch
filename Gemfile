@@ -56,6 +56,7 @@ gem "sidekiq-cron"
 gem "xsv"
 gem "twitter"
 gem 'tzinfo-data'
+gem 'devise'
 
 
 group :development, :test do
