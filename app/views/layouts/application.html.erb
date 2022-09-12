@@ -50,8 +50,6 @@
   </head>
 
   <body>
-    <p class="notice"><%= notice %></p>
-    <p class="alert"><%= alert %></p>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
       <div class="container">
         <a class="navbar-brand" href="/">OttWatch</a>
@@ -80,6 +78,8 @@
       </div>
     </nav>
     <div class="container">
+      <% if notice.present? %><div class="notice"><%= notice %></div></div><% end %>
+      <% if alert.present? %><div class="alert"><%= alert %></div></div><% end %>
       <%= yield %>
 
       <div class="row ow_footer" style="">
