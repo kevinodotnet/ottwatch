@@ -1,5 +1,5 @@
 class ElectionController < ApplicationController
-  before_action :authenticate_user!
+  # before_action :authenticate_user!
 
   def show
     @election = Election.find(params[:id])
