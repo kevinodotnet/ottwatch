@@ -77,24 +77,29 @@
         </div>
       </div>
     </nav>
+      <div><%= notice %></div>
+      <div><%= alert %></div>
     <div class="container">
-      <div class="notice"><%= notice %></div>
-      <div class="alert"><%= alert %></div>
       <%= yield %>
 
       <div class="row ow_footer" style="">
-        <div class="col-sm-9">
+        <div class="col-sm-6">
           Created by Kevin O'Donnell to make it easier to be part of the political conversation in Ottawa.<br/>
           On Twitter? Follow 
           <a href="https://twitter.com/ottwatch">@OttWatch</a> and 
           <a href="https://twitter.com/kevinodotnet">@kevinodotnet</a>
         </div>
         <div class="col-sm-3" style="text-align: right;">
+          user_signed_in?: <%= user_signed_in? %><br/>
+          current_user: <%= current_user&.email %><br/>
+          user_session: <%= user_session %><br/>
+          <%= link_to "Sign Out", destroy_user_session_path, method: :delete %>
+        </div>
+        <div class="col-sm-3" style="text-align: right;">
           <%= image_tag "logo_50.png" %>
         </div>
       </div>
     </div>
-
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
   </body>
