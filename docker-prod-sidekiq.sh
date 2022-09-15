@@ -19,6 +19,7 @@ sudo docker run \
   -e TWITTER_POST_CONSUMER_SECRET=$TWITTER_POST_CONSUMER_SECRET \
   -e TWITTER_POST_TOKEN_SECRET=$TWITTER_POST_TOKEN_SECRET \
   -e RAILS_MASTER_KEY=$RAILS_MASTER_KEY \
+  -e SENDGRID_API_KEY=$SENDGRID_PRODWEB_FULL \
   --name ottwatch-sidekiq \
   ottwatch-prod \
   bundle exec sidekiq -q ottwatch_production_default

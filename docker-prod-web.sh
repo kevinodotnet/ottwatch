@@ -19,6 +19,7 @@ sudo docker run \
   -e GCS_KEYFILE=/infra/gcs-prodweb-service-account.json \
   -e RAILS_SERVE_STATIC_FILES=1 \
   -e GOOGLE_MAPS_API_KEY=$GOOGLE_MAPS_API_KEY \
+  -e SENDGRID_API_KEY=$SENDGRID_PRODWEB_FULL \
   -v $INFRA_FOLDER:/infra \
   -p 3000:3000 \
   --name ottwatch-web \
