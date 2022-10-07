@@ -229,10 +229,9 @@ GEM
       version_gem (~> 1.1)
     oauth-tty (1.0.3)
       version_gem (~> 1.1)
-    omniauth (2.1.0)
+    omniauth (1.9.2)
       hashie (>= 3.4.6)
-      rack (>= 2.2.3)
-      rack-protection
+      rack (>= 1.6.2, < 3)
     omniauth-oauth (1.2.0)
       oauth
       omniauth (>= 1.0, < 3)
@@ -253,8 +252,6 @@ GEM
     raabro (1.4.0)
     racc (1.6.0)
     rack (2.2.3)
-    rack-protection (2.2.2)
-      rack
     rack-test (1.1.0)
       rack (>= 1.0, < 3)
     rails (7.0.2.3)
@@ -412,7 +409,7 @@ DEPENDENCIES
   minitest-focus
   mocha
   mysql2
-  omniauth
+  omniauth (~> 1.9.1)
   omniauth-twitter
   pry
   puma (~> 5.0)
