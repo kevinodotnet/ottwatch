@@ -24,6 +24,6 @@ end
 <hr/>
 
 <center>
-<%= link_to "More...", devapp_index_path(before_id: @devapps.last.id) %>
+<%= link_to "More...", devapp_index_path(before_id: @devapps.last&.id) %>
 </center>
 
