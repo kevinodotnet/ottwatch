@@ -1,12 +1,13 @@
 class DevappController < ApplicationController
   def index
+    limit = params["limit"] || 10
     relation = if params["before_id"]
       DevApp::Entry.where("id < ?", params["before_id"])
     else
       DevApp::Entry.all
     end
 
-    @devapps = relation.order(updated_at: :desc).limit(100)
+    @devapps = relation.includes(:addresses).order(updated_at: :desc).limit(limit)
   end
 
   def show
