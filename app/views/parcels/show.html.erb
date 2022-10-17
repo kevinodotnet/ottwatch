@@ -38,13 +38,23 @@ function initMap() {
     paths: coords,
     strokeColor: "#FF0000",
     strokeOpacity: 0.8,
-    strokeWeight: 5,
+    strokeWeight: 2,
     fillColor: "#FF0000",
-    fillOpacity: 0.8,
+    fillOpacity: 0.5,
   });
+  
+  var latlngbounds = new google.maps.LatLngBounds();
+  <%
+  @parcel.tmp_polygon.each do |p|
+    %>
+    latlngbounds.extend(new google.maps.LatLng(<%= p[0] %>, <%= p[1] %>));
+    <%
+  end
+  %>
 
   parcel_polygon.setMap(map);  
   map.setCenter(new google.maps.LatLng(<%= @parcel.center[0] %>, <%= @parcel.center[1] %>));
+  map.fitBounds(latlngbounds);
 }
                     
 window.initMap = initMap;
