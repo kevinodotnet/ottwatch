@@ -56,15 +56,24 @@ function initMap() {
   
   const addresses = document.querySelectorAll("li.devapp-address-list-item");
   addresses.forEach(address => {
-    console.log(address);
-    console.log(address.getAttribute("data-latitude"));
-    console.log(address.getAttribute("data-longitude"));
     const marker = new google.maps.Marker({
       position: {
         lat: parseFloat(address.getAttribute("data-latitude")),
         lng: parseFloat(address.getAttribute("data-longitude"))
       },
-      map: map
+      map: map,
+      title: address.getAttribute("data-devapp-number")
+    });
+    // infowindow_content = address.getAttribute("data-devapp-link");
+    const infowindow = new google.maps.InfoWindow({
+      content: "<a target='_new' href='/devapp/" + address.getAttribute("data-devapp-number") + "'>" + address.getAttribute("data-devapp-number") + "</a>"
+    });
+    marker.addListener("click", () => {
+      infowindow.open({
+        anchor: marker,
+        map,
+        shouldFocus: false,
+      });
     });
   });
 }
