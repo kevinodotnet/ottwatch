@@ -1,4 +1,10 @@
 namespace :ottwatch do
+
+  desc "Seed data"
+  task seed: :environment do
+    ParcelScanner.perform_now
+  end
+
   desc "Iterate over all candidate returns and attach the legacy PDFs to the active storage resource"
   task attach_legacy_candidate_return_pdfs: :environment do
     CandidateReturn.all.each do |cr|
