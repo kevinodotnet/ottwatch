@@ -9,6 +9,7 @@ Rails.application.configure do
   config.cache_classes = false
 
   config.hosts << "dev.local"
+  config.hosts << "dev.ottwatch.ca"
 
   # Do not eager load code on boot.
   config.eager_load = false
