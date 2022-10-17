@@ -1,4 +1,8 @@
-<table>
+<div class="map-container">
+  <div id="map" style="width:100%; height:500px;"></div>
+</div>
+
+<table class="table table-bordered table-hover table-condensed">
 <%
 @parcel.attributes.each do |k,v|
   %>
@@ -10,3 +14,41 @@
 end
 %>
 </table>
+
+
+<script>
+function initMap() {
+  const map = new google.maps.Map(document.getElementById("map"), {
+    zoom: 15,
+    center: new google.maps.LatLng(45.420833,-75.69), 
+    mapTypeId: google.maps.MapTypeId.ROADMAP 
+  });
+
+  const coords = [
+    <% 
+    @parcel.tmp_polygon.each do |p|
+      %>
+      { lat: <%= p[0] %>, lng: <%= p[1] %>},
+      <%
+    end
+    %>
+  ];
+
+  const parcel_polygon = new google.maps.Polygon({
+    paths: coords,
+    strokeColor: "#FF0000",
+    strokeOpacity: 0.8,
+    strokeWeight: 5,
+    fillColor: "#FF0000",
+    fillOpacity: 0.8,
+  });
+
+  parcel_polygon.setMap(map);  
+  map.setCenter(new google.maps.LatLng(<%= @parcel.center[0] %>, <%= @parcel.center[1] %>));
+}
+                    
+window.initMap = initMap;
+</script>
+
+<%= javascript_include_tag "https://maps.googleapis.com/maps/api/js?key=#{ENV["GOOGLE_MAPS_API_KEY"]}&callback=initMap", defer: true %>
+
