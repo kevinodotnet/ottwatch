@@ -26,19 +26,23 @@ class LobbyingScanJobTest < ActiveJob::TestCase
       LobbyingScanJob.perform_now(date: "2022-03-23")
     end
     u = LobbyingUndertaking.last
-    assert_equal 11, u.activities.count
+    assert u.activities.count > 1
   end
 
+  focus
   test "new lobbying activities are announced" do
     VCR.use_cassette("#{class_name}_#{method_name}", :match_requests_on => [:body]) do
       LobbyingScanJob.perform_now(date: "2022-03-23") # "new lobbying file"
       u = LobbyingUndertaking.where("issue like ?", "%Kaaj%").first
-      assert_equal 1, u.announcements.count
-      assert_equal 11, u.activities.count
       u.activities.where('activity_date > ?', '2022-04-10').delete_all
+      u.reload
+      assert_equal 1, u.announcements.count
+      count_1 = u.activities.count
+      assert count_1 > 1
       LobbyingScanJob.perform_now(date: "2022-03-23") # "new activity on file"
-      assert_equal 11, u.activities.count
       assert_equal 2, u.announcements.count
+      count_2 = u.activities.count
+      assert count_2 > count_1
 
       a = u.announcements.first
       assert_equal "New Lobbying undertaking", a.message
