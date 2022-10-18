@@ -171,6 +171,9 @@ GEM
       ffi-compiler (>= 1.0, < 2.0)
     http_parser.rb (0.6.0)
     httpclient (2.8.3)
+    httplog (1.6.0)
+      rack (>= 2.0)
+      rainbow (>= 2.0.0)
     i18n (1.10.0)
       concurrent-ruby (~> 1.0)
     importmap-rails (1.0.3)
@@ -404,6 +407,7 @@ DEPENDENCIES
   debug
   devise
   google-cloud-storage
+  httplog
   importmap-rails
   jbuilder
   minitest-focus
