@@ -49,7 +49,8 @@ class DevApp::ScannerTest < ActiveSupport::TestCase
         DevApp::Scanner.scan_application(APP_NUMBER)
       end
       announcement = Announcement.last
-      assert_equal "DevApp: D07-12-15-0017 has been born", announcement.message
+      expected = "DevApp D07-12-15-0017 (Site Plan Control for 196 BEECHWOOD) has been born: A new three storey commercial building."
+      assert_equal expected, announcement.message
     end
   end
 
@@ -82,7 +83,7 @@ class DevApp::ScannerTest < ActiveSupport::TestCase
         DevApp::Scanner.scan_application(APP_NUMBER)
       end
       announcement = Announcement.last
-      assert_equal "DevApp: D07-12-15-0017 changed its relationship status from 'fake' to 'Active'", announcement.message
+      assert_equal "DevApp D07-12-15-0017 changed its relationship status from 'fake' to 'Active'", announcement.message
     end    
   end
 
@@ -150,7 +151,7 @@ class DevApp::ScannerTest < ActiveSupport::TestCase
   def cached_devapps_file
     VCR.use_cassette("#{class_name}_#{method_name}") do
       filename = Rails.root.join("test/fixtures/files/dev_apps.xlsx").to_s
-      return filename if File.exists?(filename)
+      return filename if File.exist?(filename)
       data = Net::HTTP.get(URI(DevApp::Scanner.open_data_url))
       File.write(filename, data.force_encoding("UTF-8"))
       filename
