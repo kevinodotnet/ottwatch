@@ -98,7 +98,7 @@
         </div>
         <div class="col-sm-3" style="text-align: right;">
           user_signed_in?: <%= user_signed_in? %><br/>
-          current_user: <%= current_user&.email %><br/>
+          current_user: @<%= current_user&.username %><br/>
           user_session: <%= user_session %><br/>
           <%= link_to "Sign Out", destroy_user_session_path, method: :delete %>
           <%= link_to "Sign In", '/users/sign_in'  %>
