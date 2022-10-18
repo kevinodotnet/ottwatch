@@ -78,9 +78,15 @@
         </div>
       </div>
     </nav>
-      <div><%= notice %></div>
-      <div><%= alert %></div>
     <div class="container">
+
+      <% if notice.presence %>
+        <div class="app-notice"><%= notice %></div>
+      <% end %>
+      <% if alert.presence %>
+        <div class="app-alert"><%= alert %></div>
+      <% end %>
+
       <%= yield %>
 
       <div class="row ow_footer" style="">

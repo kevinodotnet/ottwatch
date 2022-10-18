@@ -13,3 +13,23 @@
  *= require_tree .
  *= require_self
  */
+
+ .app-notice {
+  margin-top: 5px;
+  margin-bottom: 5px;
+  padding: 5px;
+  font-size: 150%;
+  font-weight: bold;
+  border: solid 3px #f5a442;
+  background: #f0f0f0;
+ }
+
+ .app-alert {
+  margin-top: 5px;
+  margin-bottom: 5px;
+  padding: 5px;
+  font-size: 150%;
+  font-weight: bold;
+  background: #f0f0f0;
+  border: solid 3px #f54842;
+ }
