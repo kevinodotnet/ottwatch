@@ -2,6 +2,9 @@ class Announcement < ApplicationRecord
   belongs_to :reference, polymorphic: true
 
   def reference_context
+    if reference.is_a?(Consultation)
+      reference.title
+    end
     if reference.is_a?(DevApp::Entry)
       if addr = reference.addresses.first
         parts = [addr.road_number, addr.road_name, addr.road_type, addr.direction].reject{|c| c == ""}
@@ -17,12 +20,15 @@ class Announcement < ApplicationRecord
   end
 
   def reference_link
+    return reference.full_href if reference.is_a?(Consultation)
+
     # TODO: this should move to a helper that can be used in the UI as well
     url = if Rails.env.production?
       "https://v2.ottwatch.ca"
     else
       "http://localhost:33000"
     end
+
     return "#{url}/devapp/#{reference.app_number}" if reference.is_a?(DevApp::Entry)
     if reference.is_a?(Meeting)
       return "#{url}/meeting/#{reference.reference_id}" if reference.reference_id

@@ -12,7 +12,7 @@ class ConsultationScannerTest < ActiveSupport::TestCase
       assert_equal "Beryl Gaffney Off-Leash Dog Park", c.title
       assert_equal "archived", c.status
       assert_equal 1, c.announcements.count
-      expected = "New Consultation: Beryl Gaffney Off-Leash Dog Park https://engage.ottawa.ca/beryl-gaffney-off-leash-dog-park"
+      expected = "New Consultation: Beryl Gaffney Off-Leash Dog Park"
       assert_equal expected, c.announcements.first.message
 
       # confirm only two known states
