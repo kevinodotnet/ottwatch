@@ -1,0 +1,23 @@
+<p>
+<b>Congrats @<%= current_user.username %></b><br/>
+You're a member of the team!
+</p>
+
+<p>
+<b>How many users are there?</b><br/>
+There are <%= User.count %> users.
+</p>
+
+<p>
+<b>How long since the latest user joined?</b><br/>
+The last user joined at <%= User.last.created_at %> (<%= ((Time.now - User.last.created_at).seconds / 60 ).round(2) %> minutes ago)
+</p>
+
+<p>
+<b>What's next?</b><br/>
+<ul>
+  <li>rebuilding the donation data-entry feature (fall 2023 completion)</li>
+  <li>submit to 311, maybe via conversational DMs in Twitter</li>
+  <li>something someone suggests: what do you think is a priority?</li>
+</ul>
+</p>

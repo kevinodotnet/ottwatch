@@ -74,6 +74,9 @@
             <li class="nav-item">
               <a class="nav-link" href="https://shop.ottwatch.ca/">Shop</a>
             </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/team/index">Team</a>
+            </li>
           </ul>
         </div>
       </div>
@@ -97,11 +100,11 @@
           <a href="https://twitter.com/kevinodotnet">@kevinodotnet</a>
         </div>
         <div class="col-sm-3" style="text-align: right;">
-          user_signed_in?: <%= user_signed_in? %><br/>
-          current_user: @<%= current_user&.username %><br/>
-          user_session: <%= user_session %><br/>
-          <%= link_to "Sign Out", destroy_user_session_path, method: :delete %>
-          <%= link_to "Sign In", '/users/sign_in'  %>
+          <% if user_signed_in? %>
+            <%= link_to "Sign Out as @#{current_user&.username}", destroy_user_session_path, method: :delete %>
+          <% else %>
+            <%= link_to "Sign In", '/users/sign_in'  %>
+          <% end %>
         </div>
         <div class="col-sm-3" style="text-align: right;">
           <%= image_tag "logo_50.png" %>

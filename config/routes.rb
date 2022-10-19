@@ -19,4 +19,6 @@ Rails.application.routes.draw do
   get 'election/legacy', to: 'election#legacy_index'
   get 'election/:id', to: 'election#show'
   get 'election/legacy/donation/:id', to: 'election#show_legacy_donation'
+
+  get 'team/index'
 end
