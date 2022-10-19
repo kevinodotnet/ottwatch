@@ -35,10 +35,13 @@ class ConsultationScanner < ApplicationJob
       }
     end.compact
 
-    tiles.each do |t|
-      Consultation.where(href: t[:href]).first_or_create do |c|
-        c.title = t[:title]
-        c.status = t[:status]
+    Consultation.transaction do
+      tiles.each do |t|
+        Consultation.where(href: t[:href]).first_or_create do |c|
+          c.title = t[:title]
+          c.status = t[:status]
+          # c.announcements << Announcement.new(message: "New Consultation: #{c.title} https://engage.ottawa.ca#{c.href}")
+        end
       end
     end
 
