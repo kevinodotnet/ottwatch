@@ -28,9 +28,9 @@ meeting2_scan_job:
 #    cron: "*/5 * * * *"
 #    class: "ParcelScanner"
 
-consultation_scanner:
-   cron: "10 10-20 * * *"
-   class: "ConsultationScanner"
+# consultation_scanner:
+#    cron: "10 10-20 * * *"
+#    class: "ConsultationScanner"
 
 syndication_job:
    cron: "* * * * *"
