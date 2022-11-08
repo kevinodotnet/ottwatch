@@ -95,7 +95,7 @@ Rails.application.configure do
   config.action_mailer.default_url_options = { host: 'v2.ottwatch.ca', port: 443 }
 
   Open311.configure do |config|
-    config.endpoint     = 'https://city-of-ottawa-dev.apigee.net/open311/v2/' # TODO swap for prod url
+    config.endpoint     = 'https://city-of-ottawa-prod.apigee.net/open311/v2/'
     config.api_key      = 'TODO find test key' # TODO source API_KEY from ENV
     config.jurisdiction = ''
   end
