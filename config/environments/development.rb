@@ -1,5 +1,5 @@
 require "active_support/core_ext/integer/time"
-# require "httplog"
+require "open311"
 
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
@@ -73,6 +73,12 @@ Rails.application.configure do
   # config.action_cable.disable_request_forgery_protection = true
 
   config.action_mailer.default_url_options = { host: 'localhost', port: 33000 }
+
+  Open311.configure do |config|
+    config.endpoint     = 'https://city-of-ottawa-dev.apigee.net/open311/v2/'
+    config.api_key      = 'TODO find test key'
+    config.jurisdiction = ''
+  end
 
   # config.after_initialize do
   #   HttpLog.configure do |c|
