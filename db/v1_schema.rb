@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_11_07_140208) do
+ActiveRecord::Schema[7.0].define(version: 2022_11_08_022353) do
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -286,9 +286,9 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_07_140208) do
     t.string "description"
     t.string "agency_responsible"
     t.string "service_notice"
-    t.time "requested_datetime"
-    t.time "updated_datetime"
-    t.time "expected_datetime"
+    t.datetime "requested_datetime", precision: nil
+    t.datetime "updated_datetime", precision: nil
+    t.datetime "expected_datetime", precision: nil
     t.string "address"
     t.string "address_id"
     t.string "zipcode"

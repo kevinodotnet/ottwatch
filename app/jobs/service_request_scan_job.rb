@@ -26,6 +26,9 @@ class ServiceRequestScanJob < ApplicationJob
   def from_open_data(sr)
     sr["lon"] = sr["long"]
     sr.delete("long")
+    sr["requested_datetime"] = sr["requested_datetime"]&.to_time
+    sr["updated_datetime"] = sr["updated_datetime"]&.to_time
+    sr["expected_datetime"] = sr["expected_datetime"]&.to_time
     sr.to_h
   end
 end
