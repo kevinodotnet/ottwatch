@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_10_19_023256) do
+ActiveRecord::Schema[7.0].define(version: 2022_11_07_140208) do
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -214,6 +214,28 @@ ActiveRecord::Schema[7.0].define(version: 2022_10_19_023256) do
     t.datetime "updated_at", null: false
     t.text "geometry_json", size: :medium
     t.index ["objectid"], name: "index_parcels_on_objectid", unique: true
+  end
+
+  create_table "service_requests", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "service_request_id"
+    t.string "status"
+    t.string "status_notes"
+    t.string "service_name"
+    t.string "service_code"
+    t.string "description"
+    t.string "agency_responsible"
+    t.string "service_notice"
+    t.time "requested_datetime"
+    t.time "updated_datetime"
+    t.time "expected_datetime"
+    t.string "address"
+    t.string "address_id"
+    t.string "zipcode"
+    t.decimal "lat", precision: 15, scale: 10
+    t.decimal "lon", precision: 15, scale: 10
+    t.string "media_url"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "users", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
