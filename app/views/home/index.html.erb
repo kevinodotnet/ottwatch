@@ -3,8 +3,20 @@
     <b>OttWatch</b> is dedicated to making it easier to be part of the political conversation in Ottawa.<br/>
   </div>
   <div class="col-sm-6">
+    <p>
     This is "version2" of OttWatch. Check out <a href="http://ottwatch.ca">version 1</a> which has a lot
     more content available. Version 2 will continue to grow in scope, as time allows.
+    </p>
+    <p>
+    <%
+    service_code = "2000040-1"
+    # service_code = "2000186-1"
+    last_bike_update = ServiceRequest.where(service_code: service_code).order(requested_datetime: :desc).first.requested_datetime
+    %>
+    It has been <b><%= (Time.now - last_bike_update).to_i/60 %> minutes</b> 
+    since the last "parked/stopped in bike-lane" 311 request was reported, in 
+    case you were wondering.
+    </p>
   </div>
 </div>
 
