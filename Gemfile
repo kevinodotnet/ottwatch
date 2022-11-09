@@ -61,11 +61,11 @@ gem 'devise'
 # gem 'omniauth'
 gem "omniauth", "~> 1.9.1" # Can not move to 2.0 because of devise - https://github.com/heartcombo/devise/pull/5327
 gem 'omniauth-twitter'
-gem "httplog"
 gem "open311"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
+  # gem "httplog"
   gem "debug", platforms: %i[ mri mingw x64_mingw ]
   gem "pry"
 end
