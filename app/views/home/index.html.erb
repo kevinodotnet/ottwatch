@@ -11,11 +11,15 @@
     <%
     service_code = "2000040-1"
     # service_code = "2000186-1"
-    last_bike_update = ServiceRequest.where(service_code: service_code).order(requested_datetime: :desc).first.requested_datetime
+    sr = ServiceRequest.where(service_code: service_code).order(requested_datetime: :desc).first
+    last_bike_update = sr.requested_datetime
     %>
     It has been <b><%= (Time.now - last_bike_update).to_i/60 %> minutes</b> 
-    since the last "parked/stopped in bike-lane" 311 request was reported, in 
-    case you were wondering.
+    since the last "parked/stopped in bike-lane" 311 request was reported.
+
+    <b>SR<%= sr.service_request_id %></b> was filed at 
+    <%= sr.requested_datetime.in_time_zone("America/New_York").strftime("%Y-%m-%d %H:%M") %>     
+    for <a href="https://www.google.com/maps/@<%= sr.lat %>,<%= sr.lon %>,99m/data=!3m1!1e3"><%= sr.address %></a>.
     </p>
   </div>
 </div>
