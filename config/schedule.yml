@@ -28,6 +28,10 @@ meeting2_scan_job:
 #    cron: "*/5 * * * *"
 #    class: "ParcelScanner"
 
+zoning_scanner:
+   cron: "*/5 * * * *"
+   class: "ZoningScanner"
+
 consultation_scanner:
    cron: "10 10-20 * * *"
    class: "ConsultationScanner"
