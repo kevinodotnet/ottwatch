@@ -9,7 +9,7 @@ class ParcelScanner < ApplicationJob
   end
 
   def objects_after(objectid)
-    json = maps_ottawa_http_get("https://maps.ottawa.ca/proxy/proxy.ashx?https://maps.ottawa.ca/arcgis/rest/services/Property_Parcels/MapServer/2/query?where=OBJECTID>#{objectid}&outFields=*&f=json")
+    json = maps_ottawa_http_get("https://maps.ottawa.ca/proxy/proxy.ashx?https://maps.ottawa.ca/arcgis/rest/services/Property_Parcels/MapServer/2/query?where=OBJECTID>#{objectid}&orderByFields=OBJECTID&outFields=*&f=json")
     result = JSON.parse(json)
     result.fetch("features")
   end

@@ -4,6 +4,8 @@
 # use 'docker container rm ottwatch-dev' to reset from the beginning
 
 echo ""
+echo ""
+echo "cd ottwatch; bin/rails db:setup"
 echo "/etc/init.d/mysql start"
 echo "alias m='mysql ottwatch_dev'"
 echo "mysql ottwatch_dev < db/ottwatch_v1_snapshot.sql"
