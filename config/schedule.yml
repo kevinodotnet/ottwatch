@@ -24,9 +24,9 @@ meeting2_scan_job:
 #    cron: "10,30,50 * * * *"
 #    class: "ElectionScanJob"
 
-# parcel_scanner:
-#    cron: "*/5 * * * *"
-#    class: "ParcelScanner"
+parcel_scanner:
+   cron: "*/5 * * * *"
+   class: "ParcelScanner"
 
 zoning_scanner:
    cron: "*/5 * * * *"
