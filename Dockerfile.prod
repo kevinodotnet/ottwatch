@@ -9,7 +9,7 @@ WORKDIR /app
 USER app
 
 # clone early, bundle, to avoid always repeating main bundle install on each deploy
-RUN git clone https://github.com/kevinodotnet/ottwatch.git
+RUN git clone https://github.com/kevinodotnet/ottwatch.git --single-branch
 WORKDIR /app/ottwatch
 RUN bundle config set --local path 'vendor/bundle'
 RUN bundle install
