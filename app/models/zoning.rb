@@ -1,0 +1,2 @@
+class Zoning < ApplicationRecord
+end

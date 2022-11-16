@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_11_08_022353) do
+ActiveRecord::Schema[7.0].define(version: 2022_11_15_154752) do
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -45,6 +45,14 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_08_022353) do
     t.string "reference_type"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "campaign_returns", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "candidate_id", null: false
+    t.string "return_href"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["candidate_id"], name: "index_campaign_returns_on_candidate_id"
   end
 
   create_table "candidates", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -258,8 +266,38 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_08_022353) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  create_table "zonings", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.integer "objectid"
+    t.decimal "shape_area", precision: 25, scale: 15
+    t.decimal "shape_length", precision: 25, scale: 15
+    t.string "bylaw_num"
+    t.string "cons_date"
+    t.string "cons_datef"
+    t.string "fp_group"
+    t.string "height"
+    t.string "heightinfo"
+    t.string "history"
+    t.string "label"
+    t.string "label_en"
+    t.string "label_fr"
+    t.string "link_en"
+    t.string "link_fr"
+    t.string "parentzone"
+    t.string "subtype"
+    t.string "url"
+    t.string "village_op"
+    t.string "zone_code"
+    t.string "zone_main"
+    t.string "zoningtype"
+    t.text "geometry_json", size: :long
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["objectid"], name: "index_zonings_on_objectid", unique: true
+  end
+
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "campaign_returns", "candidates"
   add_foreign_key "candidates", "elections"
   add_foreign_key "dev_app_documents", "dev_app_entries", column: "entry_id"
   add_foreign_key "dev_app_statuses", "dev_app_entries", column: "entry_id"
