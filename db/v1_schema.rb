@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_11_15_154752) do
+ActiveRecord::Schema[7.0].define(version: 2022_11_24_125250) do
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -47,68 +47,20 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_15_154752) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "campaign_return_pages", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "campaign_return_id", null: false
+    t.integer "page"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["campaign_return_id"], name: "index_campaign_return_pages_on_campaign_return_id"
+  end
+
   create_table "campaign_returns", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "candidate_id", null: false
     t.string "return_href"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["candidate_id"], name: "index_campaign_returns_on_candidate_id"
-  end
-
-  create_table "candidate", id: { type: :integer, limit: 3 }, charset: "latin1", force: :cascade do |t|
-    t.integer "year", limit: 2
-    t.integer "ward", limit: 1
-    t.string "first", limit: 50
-    t.string "middle", limit: 50
-    t.string "last", limit: 50
-    t.string "url", limit: 300
-    t.string "email", limit: 50
-    t.string "twitter", limit: 50
-    t.string "facebook", limit: 100
-    t.datetime "nominated", precision: nil
-    t.boolean "incumbent", default: false
-    t.string "phone", limit: 30
-    t.datetime "withdrew", precision: nil
-    t.integer "personid", limit: 3
-    t.string "gender", limit: 1
-    t.integer "retiring", limit: 1
-    t.integer "winner", limit: 1
-    t.integer "votes", limit: 3, unsigned: true
-    t.integer "electionid", limit: 3
-    t.index ["personid"], name: "personid"
-  end
-
-  create_table "candidate_donation", id: { type: :integer, limit: 3 }, charset: "latin1", force: :cascade do |t|
-    t.integer "returnid", limit: 3, null: false
-    t.integer "type", limit: 1
-    t.string "name", limit: 100
-    t.string "address", limit: 100
-    t.string "city", limit: 100
-    t.string "prov", limit: 100
-    t.string "postal", limit: 15
-    t.decimal "amount", precision: 10, scale: 2
-    t.integer "page", limit: 2, unsigned: true
-    t.integer "x", limit: 2, unsigned: true
-    t.integer "y", limit: 2, unsigned: true
-    t.datetime "updated", precision: nil
-    t.datetime "created", precision: nil, default: -> { "CURRENT_TIMESTAMP" }
-    t.integer "location"
-    t.integer "peopleid", limit: 3
-    t.integer "donorid", limit: 3, unsigned: true
-    t.string "donor_gender", limit: 1
-    t.date "donation_date"
-    t.string "comment", limit: 1024
-    t.integer "ward", limit: 2, unsigned: true
-    t.index ["postal"], name: "postal"
-    t.index ["returnid"], name: "returnid"
-  end
-
-  create_table "candidate_return", id: { type: :integer, limit: 3 }, charset: "latin1", force: :cascade do |t|
-    t.integer "candidateid", limit: 3, null: false
-    t.string "filename", limit: 512
-    t.boolean "supplemental"
-    t.integer "done", limit: 1
-    t.index ["candidateid"], name: "candidateid"
   end
 
   create_table "candidates", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -189,11 +141,6 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_15_154752) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["entry_id"], name: "index_dev_app_statuses_on_entry_id"
-  end
-
-  create_table "election", id: { type: :integer, limit: 3 }, charset: "latin1", force: :cascade do |t|
-    t.date "date"
-    t.string "city", limit: 64
   end
 
   create_table "elections", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -300,8 +247,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_15_154752) do
     t.string "address"
     t.string "address_id"
     t.string "zipcode"
-    t.float "lat"
-    t.float "lon"
+    t.decimal "lat", precision: 15, scale: 10
+    t.decimal "lon", precision: 15, scale: 10
     t.string "media_url"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -331,26 +278,26 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_15_154752) do
     t.integer "objectid"
     t.decimal "shape_area", precision: 25, scale: 15
     t.decimal "shape_length", precision: 25, scale: 15
-    t.text "bylaw_num"
-    t.text "cons_date"
-    t.text "cons_datef"
-    t.text "fp_group"
-    t.text "height"
-    t.text "heightinfo"
-    t.text "history"
-    t.text "label"
-    t.text "label_en"
-    t.text "label_fr"
-    t.text "link_en"
-    t.text "link_fr"
-    t.text "parentzone"
-    t.text "subtype"
-    t.text "url"
-    t.text "village_op"
-    t.text "zone_code"
-    t.text "zone_main"
-    t.text "zoningtype"
-    t.text "geometry_json"
+    t.string "bylaw_num"
+    t.string "cons_date"
+    t.string "cons_datef"
+    t.string "fp_group"
+    t.string "height"
+    t.string "heightinfo"
+    t.string "history"
+    t.string "label"
+    t.string "label_en"
+    t.string "label_fr"
+    t.string "link_en"
+    t.string "link_fr"
+    t.string "parentzone"
+    t.string "subtype"
+    t.string "url"
+    t.string "village_op"
+    t.string "zone_code"
+    t.string "zone_main"
+    t.string "zoningtype"
+    t.text "geometry_json", size: :long
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["objectid"], name: "index_zonings_on_objectid", unique: true
@@ -358,9 +305,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_15_154752) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "campaign_return_pages", "campaign_returns"
   add_foreign_key "campaign_returns", "candidates"
-  add_foreign_key "candidate_donation", "candidate_return", column: "returnid", name: "candidate_donation_ibfk_1", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "candidate_return", "candidate", column: "candidateid", name: "candidate_return_ibfk_1", on_update: :cascade, on_delete: :cascade
   add_foreign_key "candidates", "elections"
   add_foreign_key "dev_app_documents", "dev_app_entries", column: "entry_id"
   add_foreign_key "dev_app_statuses", "dev_app_entries", column: "entry_id"

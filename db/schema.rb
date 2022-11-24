@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_11_15_154752) do
+ActiveRecord::Schema[7.0].define(version: 2022_11_24_125250) do
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -45,6 +45,14 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_15_154752) do
     t.string "reference_type"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "campaign_return_pages", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "campaign_return_id", null: false
+    t.integer "page"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["campaign_return_id"], name: "index_campaign_return_pages_on_campaign_return_id"
   end
 
   create_table "campaign_returns", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -297,6 +305,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_15_154752) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "campaign_return_pages", "campaign_returns"
   add_foreign_key "campaign_returns", "candidates"
   add_foreign_key "candidates", "elections"
   add_foreign_key "dev_app_documents", "dev_app_entries", column: "entry_id"

@@ -5,6 +5,10 @@ namespace :ottwatch do
     ParcelScanner.perform_now
   end
 
+  desc "Injest candidate return" do
+    # https://documents.ottawa.ca/sites/documents/files/Watson_Jim_Mayor.pdf
+  end
+
   desc "Iterate over all candidate returns and attach the legacy PDFs to the active storage resource"
   task attach_legacy_candidate_return_pdfs: :environment do
     CandidateReturn.all.each do |cr|
