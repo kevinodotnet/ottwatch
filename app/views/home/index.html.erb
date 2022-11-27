@@ -11,8 +11,8 @@
     <%
     service_code = "2000040-1"
     # service_code = "2000186-1"
-    sr = ServiceRequest.where(service_code: service_code).order(requested_datetime: :desc).first
-    last_bike_update = sr.requested_datetime
+    sr = ServiceRequest.where(service_code: service_code).order(requested_datetime: :desc).first || ServiceRequest.new(requested_datetime: Time.now)
+    last_bike_update = sr&.requested_datetime || Time.now
     %>
     It has been <b><%= (Time.now - last_bike_update).to_i/60 %> minutes</b> 
     since the last "parked/stopped in bike-lane" 311 request was reported.
