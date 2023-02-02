@@ -1,0 +1,3 @@
+
+bin/rails generate model CandidateReturn candidate:references pdf:attachment
+
