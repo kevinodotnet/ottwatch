@@ -1,26 +1,29 @@
 namespace :ottwatch do
-
   desc "Seed data"
   task seed: :environment do
     ParcelScanner.perform_now
   end
 
-  desc "Injest candidate return" do
-    # https://documents.ottawa.ca/sites/documents/files/Watson_Jim_Mayor.pdf
+  desc "Generate fake election data"
+  task fake_election_data: :environment do
+    e = Election.create!(date: Date.today)
+    5.times do
+      e.candidates.create!(ward: 0, name: "Someone #{Random.rand(100...999)} Lastname")
+    end
   end
 
-  desc "Iterate over all candidate returns and attach the legacy PDFs to the active storage resource"
-  task attach_legacy_candidate_return_pdfs: :environment do
-    CandidateReturn.all.each do |cr|
-      legacy_fn = cr.legacy_pdf_filename
-      puts "cr:#{cr.id} legacy_path: #{legacy_fn}"
-      next if legacy_fn.nil?
-      if cr.pdf.attached?
-        puts "  already attached"
-      else
-        new_fn = legacy_fn.split("/").last
-        cr.pdf.attach(io: File.open(legacy_fn), filename: new_fn)
-      end
+  desc "Injest candidate return"
+  task injest_candidate_return: :environment do
+    file_name = 'candidate_return_example.pdf'
+    pdf_data = if File.exists?(file_name)
+      File.read(file_name)
+    else
+      url = "https://documents.ottawa.ca/sites/documents/files/Watson_Jim_Mayor.pdf"
+      Net::HTTP.get(URI(url))
     end
+
+    binding.pry
+
+
   end
 end
