@@ -22,6 +22,8 @@ namespace :ottwatch do
       Net::HTTP.get(URI(url))
     end
 
+    c = Candidate.last
+
     binding.pry
 
 
