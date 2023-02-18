@@ -16,8 +16,7 @@ RUN apt-get update && \
         mysql-server \
         libmysqlclient-dev \
         git \
-        rbenv \
-        poppler-utils
+        rbenv
 
 RUN groupadd -g 1000 -r app && \
     useradd -u 1000 --no-log-init -r -g app app && \
