@@ -1,6 +1,6 @@
 require "test_helper"
 
-class CampaignReturnPageTest < ActiveSupport::TestCase
+class CampaignDonationTest < ActiveSupport::TestCase
   setup do
     binding.pry
   end
