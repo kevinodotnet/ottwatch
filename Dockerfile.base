@@ -17,7 +17,9 @@ RUN apt-get update && \
         libmysqlclient-dev \
         git \
         rbenv \
-        poppler-utils
+        poppler-utils \
+        imagemagick \
+        libmagick++-dev
 
 RUN groupadd -g 1000 -r app && \
     useradd -u 1000 --no-log-init -r -g app app && \
