@@ -170,9 +170,6 @@ GEM
       ffi-compiler (>= 1.0, < 2.0)
     http_parser.rb (0.6.0)
     httpclient (2.8.3)
-    httplog (1.6.0)
-      rack (>= 2.0)
-      rainbow (>= 2.0.0)
     i18n (1.12.0)
       concurrent-ruby (~> 1.0)
     importmap-rails (1.1.5)
@@ -246,6 +243,7 @@ GEM
     parallel (1.22.1)
     parser (3.1.2.1)
       ast (~> 2.4.1)
+    pkg-config (1.5.1)
     pry (0.14.1)
       coderay (~> 1.1)
       method_source (~> 1.0)
@@ -298,6 +296,8 @@ GEM
       railties (>= 5.0)
     retriable (3.1.2)
     rexml (3.2.5)
+    rmagick (5.1.0)
+      pkg-config (~> 1.4)
     rubocop (1.38.0)
       json (~> 2.3)
       parallel (~> 1.10)
@@ -410,7 +410,6 @@ DEPENDENCIES
   debug
   devise
   google-cloud-storage
-  httplog
   importmap-rails
   jbuilder
   minitest-focus
@@ -422,6 +421,7 @@ DEPENDENCIES
   pry
   puma (~> 5.0)
   rails (~> 7.0.0)
+  rmagick
   rubocop
   selenium-webdriver
   sidekiq (< 7)
