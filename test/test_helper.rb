@@ -21,3 +21,7 @@ class ActiveSupport::TestCase
     config.hook_into :webmock
   end
 end
+
+class Minitest::Unit::TestCase
+  include FactoryBot::Syntax::Methods
+end
