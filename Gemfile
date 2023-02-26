@@ -59,7 +59,7 @@ gem "twitter"
 gem 'tzinfo-data'
 gem 'devise'
 # gem 'omniauth'
-gem "omniauth", "~> 2.0.0" # Can not move to 2.0 because of devise - https://github.com/heartcombo/devise/pull/5327
+gem "omniauth", "~> 1.9.1" # Can not move to 2.0 because of devise - https://github.com/heartcombo/devise/pull/5327
 gem 'omniauth-twitter'
 gem "open311"
 gem "rmagick"
