@@ -1,0 +1,16 @@
+Elections!
+
+<ul>
+<%
+@elections.each do |e|
+  %>
+  <li>
+  <%= link_to(e.date, "/election/#{e.id}") %>
+  </li>
+  <%
+end
+%>
+
+</ul>
+
+<a href="/election/legacy">2018 and earlier donation data</a>

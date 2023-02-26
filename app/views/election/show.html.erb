@@ -15,7 +15,9 @@
   withdrew_style = "text-decoration: line-through; " if c.withdrew
   %>
   <div class="row">
-    <div class="col-sm-3" style="<%= withdrew_style %> background: #f0f0f0;"><%= c.name %></div>
+    <div class="col-sm-3" style="<%= withdrew_style %> background: #f0f0f0;">
+      <%= link_to(c.name, candidate_path(c)) %>
+    </div>
     <div class="col-sm-2">
       <% if c.telephone.present? %>
         <a href="tel:<%= c.telephone %>"><%= c.telephone %></a>

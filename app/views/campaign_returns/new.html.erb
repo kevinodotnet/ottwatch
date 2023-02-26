@@ -1,0 +1,5 @@
+<%= form_with model: @cr do |form| %>
+  <%= form.hidden_field :candidate_id %>
+  <%= form.file_field :pdf %>
+  <%= form.submit "Upload" %>
+<% end %>

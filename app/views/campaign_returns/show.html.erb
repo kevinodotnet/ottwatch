@@ -1,0 +1,14 @@
+<h1>Campaign return for <%= link_to(@campaign_return.candidate.name, candidate_url(@campaign_return.candidate)) %></h1>
+
+<table>
+<%
+@campaign_return.attributes.keys.reject{|k| k == "name" }.each do |k|
+  %>
+  <tr>
+  <td><%= k %>
+  <td><%= @campaign_return.send(k.to_sym) %></td>
+  </tr>
+  <%
+end
+%>
+</table>

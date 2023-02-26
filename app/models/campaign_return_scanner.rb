@@ -4,6 +4,7 @@ include Magick
 
 class CampaignReturnScanner
   def self.scan(candidate:, pdf_file:)
+    cr = nil
     CampaignReturn.transaction do
       cr = candidate.campaign_returns.create!
       cr.pdf.attach(io: File.open(pdf_file), filename: pdf_file, content_type: 'application/pdf')
@@ -18,5 +19,6 @@ class CampaignReturnScanner
         cr_page.img.attach(io: File.open(p), filename: "page_#{i+1}.png", content_type: '	image/x-png')
       end
     end
+    cr
   end
 end
