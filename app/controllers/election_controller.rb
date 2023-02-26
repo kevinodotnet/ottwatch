@@ -5,6 +5,10 @@ class ElectionController < ApplicationController
     @election = Election.find(params[:id])
   end
 
+  def index
+    @elections = Election.all.order(date: :desc, created_at: :desc)
+  end
+
   def show_legacy_donation
     @donation = V1::CandidateDonation.find(params[:id])
   end
