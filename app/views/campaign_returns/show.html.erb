@@ -12,3 +12,14 @@
 end
 %>
 </table>
+
+pages:
+<%
+@campaign_return.campaign_return_pages.each do |p|
+  %>
+  &nbsp;
+  &nbsp;
+  <%= link_to(p.id, campaign_return_page_path(p)) %>
+  <%
+end
+%>
