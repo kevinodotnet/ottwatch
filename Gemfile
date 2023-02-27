@@ -48,7 +48,7 @@ gem "bootsnap", require: false
 # gem "sassc-rails"
 
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
-# gem "image_processing", "~> 1.2"
+gem "image_processing"
 gem "mini_magick", "~> 4.12"
 
 gem "google-cloud-storage", require: false
