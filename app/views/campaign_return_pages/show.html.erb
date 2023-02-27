@@ -13,5 +13,13 @@
 </div>
 <hr/>
 
-<%= image_tag(url_for(@cr_page.img)) %>
+<center>
+<%= link_to('left', rotate_campaign_return_page_path(@cr_page, dir: -90), data: { turbo_method: "post" }) %>
+Rotate
+<%= link_to('right', rotate_campaign_return_page_path(@cr_page, dir: 90), data: { turbo_method: "post" }) %>
+<center>
 
+<%
+img_blob = @cr_page.rotation == 0 ? @cr_page.img : @cr_page.img.variant(rotate: @cr_page.rotation)
+%>
+<%= image_tag(url_for(img_blob), class: "img-fluid") %>
