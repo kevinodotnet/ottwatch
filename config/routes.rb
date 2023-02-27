@@ -24,6 +24,7 @@ Rails.application.routes.draw do
   get 'election/legacy/donation/:id', to: 'election#show_legacy_donation'
 
   resources :campaign_returns
+  get 'campaign_return_pages/show'
 
   get 'team/index'
 end

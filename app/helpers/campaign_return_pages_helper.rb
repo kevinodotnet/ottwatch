@@ -1,0 +1,2 @@
+module CampaignReturnPagesHelper
+end
