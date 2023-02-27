@@ -1,6 +1,17 @@
-
-Campaign Return Page (id: <%= @cr_page.id %>) for <%= @cr_page.campaign_return.candidate.name %>.
-Back to <%= link_to('campaign return', campaign_return_path(@cr_page.campaign_return)) %>.
 <hr/>
+<div class="row">
+  <div class="col-sm-4 text-center">
+    <%= @prev_cr_page ? link_to('prev', campaign_return_page_path(@prev_cr_page)) : "prev" %>
+  </div>
+  <div class="col-sm-4 text-center">
+    Campaign Return Page (id: <%= @cr_page.id %>) for <%= @cr_page.campaign_return.candidate.name %>.<br/>
+    Back to <%= link_to('campaign return', campaign_return_path(@cr_page.campaign_return)) %>.
+  </div>
+  <div class="col-sm-4 text-center">
+    <%= @next_cr_page ? link_to('next', campaign_return_page_path(@next_cr_page)) : "next" %>
+  </div>
+</div>
+<hr/>
+
 <%= image_tag(url_for(@cr_page.img)) %>
 
