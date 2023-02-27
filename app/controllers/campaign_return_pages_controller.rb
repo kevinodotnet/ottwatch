@@ -1,5 +1,5 @@
 class CampaignReturnPagesController < ApplicationController
   def show
-    binding.pry
+    @cr_page = CampaignReturnPage.find(params[:id])
   end
 end

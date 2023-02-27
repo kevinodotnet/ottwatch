@@ -1,2 +1,6 @@
-<h1>CampaignReturnPages#show</h1>
-<p>Find me in app/views/campaign_return_pages/show.html.erb</p>
+
+Campaign Return Page (id: <%= @cr_page.id %>) for <%= @cr_page.campaign_return.candidate.name %>.
+Back to <%= link_to('campaign return', campaign_return_path(@cr_page.campaign_return)) %>.
+<hr/>
+<%= image_tag(url_for(@cr_page.img)) %>
+
