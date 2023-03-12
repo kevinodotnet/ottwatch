@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_02_27_025209) do
+ActiveRecord::Schema[7.0].define(version: 2023_02_27_134154) do
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -52,12 +52,13 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_27_025209) do
     t.string "name"
     t.string "address"
     t.string "city"
-    t.string "province"
+    t.string "prov"
     t.string "postal"
-    t.float "x"
-    t.float "y"
     t.decimal "amount", precision: 10, scale: 2
-    t.date "donation_date"
+    t.decimal "x", precision: 10, scale: 4
+    t.decimal "y", precision: 10, scale: 4
+    t.date "donated_on"
+    t.boolean "redacted"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["campaign_return_page_id"], name: "index_campaign_donations_on_campaign_return_page_id"
