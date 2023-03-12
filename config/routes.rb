@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get 'campaign_donations/new'
   resources :candidates, only: [:show] #  'candidates/show'
   get 'service_requests/index'
   devise_for :users, controllers: { omniauth_callbacks: 'users/omniauth_callbacks' }
@@ -23,10 +24,12 @@ Rails.application.routes.draw do
   get 'election/:id', to: 'election#show'
   get 'election/legacy/donation/:id', to: 'election#show_legacy_donation'
 
+  resources :campaign_donations
   resources :campaign_returns
   resources :campaign_return_pages, only: [:show] do
     member do
-      post :rotate
+      get :rotate
+      post :create_donation
     end
   end
 

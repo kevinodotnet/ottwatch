@@ -5,12 +5,13 @@ class CreateCampaignDonations < ActiveRecord::Migration[7.0]
       t.string :name
       t.string :address
       t.string :city
-      t.string :province
+      t.string :prov
       t.string :postal
-      t.float :x
-      t.float :y
       t.decimal :amount, precision: 10, scale: 2
-      t.date :donation_date
+      t.decimal :x, precision: 10, scale: 4
+      t.decimal :y, precision: 10, scale: 4
+      t.date :donated_on
+      t.boolean :redacted
 
       t.timestamps
     end

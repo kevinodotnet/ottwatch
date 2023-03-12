@@ -19,7 +19,7 @@ pages:
   %>
   &nbsp;
   &nbsp;
-  <%= link_to(p.id, campaign_return_page_path(p)) %>
+  <%= link_to(p.id, campaign_return_page_path(p), data: { turbo: "false" }) %>
   <%
 end
 %>

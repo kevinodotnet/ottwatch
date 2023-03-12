@@ -11,7 +11,12 @@ class CampaignReturnPagesController < ApplicationController
     @cr_page = CampaignReturnPage.find(params[:id])
     @cr_page.rotation += params[:dir].to_i
     @cr_page.save!
-    
+
     redirect_to campaign_return_page_path(@cr_page)
+  end
+
+  def create_donation
+    crp = CampaignReturnPage.find(params.require(:id))
+    crp.campaign_donations.create!(x: params.require(:x).to_i, y: params.require(:y).to_i)
   end
 end

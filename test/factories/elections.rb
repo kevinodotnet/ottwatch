@@ -2,7 +2,7 @@ FactoryBot.define do
   factory :election do
     date { Date.today - 1.year }
     after :create do |e|
-      3.times do
+      3.times do |i|
         c = e.candidates.create!(
           ward: 0, 
           name: "Fake Candidate", 
