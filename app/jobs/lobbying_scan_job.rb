@@ -95,7 +95,9 @@ class LobbyingScanJob < ApplicationJob
         ctl00_MainContent_lblIssue
       ).each do |f|
         key = f.gsub(/ctl00_MainContent_lbl/, '').underscore
-        details[key] = entry.xpath("//*[@id=\"#{f}\"]").first.children.to_s.gsub('<br>', ' ').gsub(/  */, ' ').gsub(/  *$/, '')
+        details[key] = if entry.xpath("//*[@id=\"#{f}\"]").first
+          entry.xpath("//*[@id=\"#{f}\"]").first.children.to_s.gsub('<br>', ' ').gsub(/  */, ' ').gsub(/  *$/, '')
+        end
       end
 
       activities = entry.xpath('//*[@id="ctl00_MainContent_gvActivity"]/tr')

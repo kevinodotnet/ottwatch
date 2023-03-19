@@ -29,6 +29,12 @@ class LobbyingScanJobTest < ActiveJob::TestCase
     assert u.activities.count > 1
   end
 
+  test "fix failure occurring for date:2023-01-30" do
+    VCR.use_cassette("#{class_name}_#{method_name}", :match_requests_on => [:body]) do
+      LobbyingScanJob.perform_now(date: "2023-01-30")
+    end
+  end
+
   test "new lobbying activities are announced" do
     VCR.use_cassette("#{class_name}_#{method_name}", :match_requests_on => [:body]) do
       LobbyingScanJob.perform_now(date: "2022-03-23") # "new lobbying file"
