@@ -95,3 +95,5 @@ group :test do
   gem "webmock"
   gem "vcr"
 end
+
+gem "bugsnag", "~> 6.25"
