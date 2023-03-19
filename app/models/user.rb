@@ -4,7 +4,7 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable,
          :trackable, 
-         :omniauthable, omniauth_providers: %i[twitter]
+         :omniauthable, omniauth_providers: %i[twitter google_oauth2]
 
   def email_required?
     false
@@ -14,8 +14,8 @@ class User < ApplicationRecord
     where(provider: auth.provider, uid: auth.uid).first_or_create do |user|
       user.email = auth.info.email
       user.password = Devise.friendly_token[0, 20]
-      user.name = auth.info.name # assuming the user model has a name
-      user.username = auth.info.nickname # assuming the user model has a username
+      user.name = auth.info.name
+      user.username = auth.info.nickname || user.name || user.email
     end
   end         
 end
