@@ -56,7 +56,7 @@ gem "google-cloud-storage", require: false
 gem 'sidekiq', '<7'
 gem "sidekiq-cron"
 gem "xsv"
-gem "twitter"
+gem "twitter", "8.0.0.rc.1"
 gem 'tzinfo-data'
 gem 'devise'
 # gem 'omniauth'
@@ -65,6 +65,7 @@ gem 'omniauth-twitter'
 gem 'omniauth-google-oauth2'
 gem "open311"
 gem "rmagick"
+gem 'mastodon-api', require: 'mastodon'
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
