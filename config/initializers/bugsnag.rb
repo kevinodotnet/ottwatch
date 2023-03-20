@@ -1,3 +1,6 @@
 Bugsnag.configure do |config|
-  config.api_key = ENV.fetch("BUGSNAG_KEY") if Rails.env.production?
+  if Rails.env.production?
+    config.api_key = ENV.fetch("BUGSNAG_KEY") 
+    config.app_version = JSON.parse(File.read("version.json"))["object"]["sha"]
+  end
 end
