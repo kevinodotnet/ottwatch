@@ -18,7 +18,7 @@ Rails.application.routes.draw do
   get 'meeting/index'
   get 'meeting/:reference_id', to: 'meeting#show'
 
-  get 'election/donation/:id', to: 'elections#donation'
+  # get 'election/donation/:id', to: 'election#show_legacy_donation'
   get 'election/index', to: 'election#index'
   get 'election/legacy', to: 'election#legacy_index'
   get 'election/:id', to: 'election#show'
