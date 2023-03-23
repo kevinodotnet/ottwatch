@@ -2,6 +2,7 @@ class ElectionController < ApplicationController
   # before_action :authenticate_user!
 
   def show
+    raise ActionController::RoutingError.new("not found") if params[:id] == "listDonations"
     @election = Election.find(params[:id])
   end
 
