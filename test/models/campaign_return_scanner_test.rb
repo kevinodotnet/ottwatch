@@ -7,6 +7,13 @@ class CampaignReturnScannerTest < ActiveSupport::TestCase
     @cached_return_pdf_file = Rails.root.join("fixtures", "four_pages.pdf")
   end
 
+  focus
+  test "can find returns we dont have yet" do
+    VCR.use_cassette("#{class_name}_#{method_name}") do
+      CampaignReturnScanner.scan_for_returns
+    end
+  end
+
   test "scanner creates a return, attaches pdf, cuts page level images" do
     assert_difference -> { CampaignReturn.count } do
       assert_difference -> { CampaignReturnPage.count }, 4 do

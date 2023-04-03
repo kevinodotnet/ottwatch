@@ -3,6 +3,13 @@ require 'rmagick'
 include Magick
 
 class CampaignReturnScanner
+  def self.scan_for_returns
+    url = "https://ottawa.ca/en/city-hall/elections/2022-municipal-elections/financial-statements-2022-municipal-elections"
+    data = Net::HTTP.get(URI(url))
+    doc = Nokogiri::HTML(data)
+    # binding.pry
+  end
+
   def self.scan(candidate:, pdf_file:)
     cr = nil
     CampaignReturn.transaction do
