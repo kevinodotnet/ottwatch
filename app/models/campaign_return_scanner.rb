@@ -7,7 +7,10 @@ class CampaignReturnScanner
     url = "https://ottawa.ca/en/city-hall/elections/2022-municipal-elections/financial-statements-2022-municipal-elections"
     data = Net::HTTP.get(URI(url))
     doc = Nokogiri::HTML(data)
-    # binding.pry
+    returns = doc.xpath('//a').select do |a|
+      a.attributes["href"].value.match(/pdf/)
+    end
+    binding.pry
   end
 
   def self.scan(candidate:, pdf_file:)
