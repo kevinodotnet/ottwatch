@@ -12,6 +12,6 @@ class DevappController < ApplicationController
 
   def show
     @entry = DevApp::Entry.where(app_number: params[:app_number]).includes(:statuses, :addresses, :documents).first
-    raise ActionController::RoutingError.new('Development Application Not Found') unless @entry
+    return render plain: "404 Not Found", status: 404 unless @entry
   end
 end
