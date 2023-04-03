@@ -14,7 +14,6 @@ class Announcement < ApplicationRecord
     end
     return "#{reference.start_time.in_time_zone("America/New_York").strftime("%b %d %H:%M")}" if reference.is_a?(Meeting)
     if reference.is_a?(LobbyingUndertaking)
-      reference.issue.gsub(/\r|\n/, ' ').gsub(/  */, ' ')
       "#{reference.lobbyist_name} (#{reference.lobbyist_position}): #{reference.issue.split(" ").first(10).join(" ")} ..."
     end
   end
