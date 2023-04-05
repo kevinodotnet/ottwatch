@@ -1,4 +1,29 @@
 namespace :election do
+  desc "import campaign return pdf"
+  task :import_campaign_return_pdf, [:candidate_id, :url] => [:environment] do |t, args|
+    Rails.logger = Logger.new(STDOUT)
+    c = Candidate.find(args[:candidate_id])
+    pdf_data = Net::HTTP.get(URI(args[:url]))
+    tmp_file = Tempfile.new('campaign_return_pdf')
+    tmp_file.write(pdf_data.force_encoding("UTF-8"))
+    tmp_file.close
+    CampaignReturnScanner.scan(candidate: c, pdf_file: tmp_file)
+  end
+
+  desc "Scan for 2022 campaign returns"
+  task returns_scan: :environment do
+    result = CampaignReturnScanner.scan_for_returns
+    result.compact.each do |v|
+      puts "#" * 100
+      puts [v[:candidate_name], v[:url]].join("\t")
+      v[:candidate_name].split(" ").each do |p|
+        Candidate.where('name like ?', "%#{p}%").each do |c|
+          puts [v[:candidate_name], v[:url], c[:name], c[:id]].join("\t")
+        end
+      end
+    end
+  end
+
   desc "Generate fake v1 election data"
   task v1gen: :environment do
     FIRST_NAMES = %w(
