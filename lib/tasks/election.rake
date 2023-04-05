@@ -1,4 +1,15 @@
 namespace :election do
+  desc "import campaign return pdf"
+  task :import_campaign_return_pdf, [:candidate_id, :url] => [:environment] do |t, args|
+    Rails.logger = Logger.new(STDOUT)
+    c = Candidate.find(args[:candidate_id])
+    pdf_data = Net::HTTP.get(URI(args[:url]))
+    tmp_file = Tempfile.new('campaign_return_pdf')
+    tmp_file.write(pdf_data.force_encoding("UTF-8"))
+    tmp_file.close
+    CampaignReturnScanner.scan(candidate: c, pdf_file: tmp_file)
+  end
+
   desc "Scan for 2022 campaign returns"
   task returns_scan: :environment do
     result = CampaignReturnScanner.scan_for_returns
