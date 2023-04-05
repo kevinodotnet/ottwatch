@@ -3,6 +3,22 @@ require 'rmagick'
 include Magick
 
 class CampaignReturnScanner
+  def self.scan_for_returns
+    url = "https://ottawa.ca/en/city-hall/elections/2022-municipal-elections/financial-statements-2022-municipal-elections"
+    data = Net::HTTP.get(URI(url))
+    doc = Nokogiri::HTML(data)
+    returns = doc.xpath('//a').map do |a|
+      next unless a.attributes["href"].value.match(/pdf/)
+      row = a.parent.parent # <tr>
+      candidate_name = row.children[0].children[0].to_s
+      return_pdf_url = a.attributes["href"].value
+      {
+        candidate_name: candidate_name,
+        url: return_pdf_url,
+      }
+    end
+  end
+
   def self.scan(candidate:, pdf_file:)
     cr = nil
     CampaignReturn.transaction do

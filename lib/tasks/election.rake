@@ -1,4 +1,18 @@
 namespace :election do
+  desc "Scan for 2022 campaign returns"
+  task returns_scan: :environment do
+    result = CampaignReturnScanner.scan_for_returns
+    result.compact.each do |v|
+      puts "#" * 100
+      puts [v[:candidate_name], v[:url]].join("\t")
+      v[:candidate_name].split(" ").each do |p|
+        Candidate.where('name like ?', "%#{p}%").each do |c|
+          puts [v[:candidate_name], v[:url], c[:name], c[:id]].join("\t")
+        end
+      end
+    end
+  end
+
   desc "Generate fake v1 election data"
   task v1gen: :environment do
     FIRST_NAMES = %w(
