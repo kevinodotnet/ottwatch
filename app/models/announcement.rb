@@ -24,7 +24,7 @@ class Announcement < ApplicationRecord
 
     # TODO: this should move to a helper that can be used in the UI as well
     url = if Rails.env.production?
-      "https://v2.ottwatch.ca"
+      "https://ottwatch.ca"
     else
       "http://localhost:33000"
     end

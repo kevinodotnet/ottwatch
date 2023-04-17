@@ -92,7 +92,7 @@ Rails.application.configure do
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
 
-  config.action_mailer.default_url_options = { host: 'v2.ottwatch.ca', port: 443 }
+  config.action_mailer.default_url_options = { host: 'ottwatch.ca', port: 443 }
 
   Open311.configure do |config|
     config.endpoint     = 'https://city-of-ottawa-prod.apigee.net/open311/v2/'
