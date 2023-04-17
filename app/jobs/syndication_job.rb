@@ -7,7 +7,7 @@ class SyndicationJob < ApplicationJob
     msg = a.message
     msg << " (#{a.reference_context})" if a.reference_context
     msg << " #{a.reference_link}"
-    TwitterClient.update(msg)
+    MastedonClient.update(msg)
   end
 
   def perform

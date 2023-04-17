@@ -19,13 +19,13 @@ class SyndicationJobTest < ActiveJob::TestCase
   end
 
   test "syndication job sends one tweet per announcement" do
-    TwitterClient.expects(:update).times(Announcement.count)
+    MastedonClient.expects(:update).times(Announcement.count)
     SyndicationJob.perform_now
   end
 
   test "in twitter, messages include links back to the reference" do
     expected = "A first message (3020 HAWTHORNE Road) http://localhost:33000/devapp/D07-05-16-0003"
-    TwitterClient.expects(:update).with(expected)
+    MastedonClient.expects(:update).with(expected)
     SyndicationJob.new.syndicate(Announcement.first)
   end
 end

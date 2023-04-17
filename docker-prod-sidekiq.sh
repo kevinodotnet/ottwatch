@@ -14,6 +14,7 @@ sudo docker run \
   -e DB_PASS=$DB_PASS \
   -e DB_USER=$DB_USER \
   -e GCS_KEYFILE=/infra/gcs-prodweb-service-account.json \
+  -e MASTEDON_ACCESS_TOKEN=$MASTEDON_ACCESS_TOKEN \
   -e RAILS_ENV=production \
   -e RAILS_MASTER_KEY=$RAILS_MASTER_KEY \
   -e REDIS_URL=$REDIS_URL \
