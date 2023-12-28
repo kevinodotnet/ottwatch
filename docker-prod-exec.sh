@@ -4,7 +4,7 @@
 
 sudo docker run \
   --rm \
-	--network prodweb \
+	--network $DOCKER_NETWORK \
   -e BUGSNAG_KEY=$BUGSNAG_KEY \
 	-e DB_HOST=$DB_HOST \
 	-e DB_NAME=$DB_NAME \

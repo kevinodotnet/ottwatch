@@ -7,7 +7,7 @@ sudo docker container rm ottwatch-web
 sudo docker run \
   --restart always \
   -d \
-  --network prodweb \
+  --network $DOCKER_NETWORK \
   -e BUGSNAG_KEY=$BUGSNAG_KEY \
   -e DB_HOST=$DB_HOST \
   -e DB_NAME=$DB_NAME \
