@@ -4,7 +4,7 @@ require 'uri'
 class LobbyingScanJob < ApplicationJob
   queue_as :default
 
-  HISTORY_DAYS = 30
+  HISTORY_DAYS = 120
   SEARCH_URL = "https://lobbyist.ottawa.ca/search/searchlobbyist.aspx?lang=en"
 
   def perform(date: nil)
