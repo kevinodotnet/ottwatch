@@ -4,7 +4,7 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable,
          :trackable, 
-         :omniauthable, omniauth_providers: %i[twitter google_oauth2]
+         :omniauthable, omniauth_providers: %i[google_oauth2]
 
   def email_required?
     false

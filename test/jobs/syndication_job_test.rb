@@ -23,7 +23,7 @@ class SyndicationJobTest < ActiveJob::TestCase
     SyndicationJob.perform_now
   end
 
-  test "in twitter, messages include links back to the reference" do
+  test "messages include links back to the reference" do
     expected = "A first message (3020 HAWTHORNE Road) http://localhost:33000/devapp/D07-05-16-0003"
     MastedonClient.expects(:update).with(expected)
     SyndicationJob.new.syndicate(Announcement.first)
