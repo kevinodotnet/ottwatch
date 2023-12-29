@@ -24,13 +24,13 @@ meeting2_scan_job:
 #    cron: "10,30,50 * * * *"
 #    class: "ElectionScanJob"
 
-parcel_scanner:
-   cron: "*/5 * * * *"
-   class: "ParcelScanner"
+# parcel_scanner:
+#    cron: "*/5 * * * *"
+#    class: "ParcelScanner"
 
-zoning_scanner:
-   cron: "*/5 * * * *"
-   class: "ZoningScanner"
+# zoning_scanner:
+#    cron: "*/5 * * * *"
+#    class: "ZoningScanner"
 
 consultation_scanner:
    cron: "10 10-20 * * *"
@@ -40,6 +40,6 @@ service_request_scan_job:
    cron: "*/10 * * * *"
    class: "ServiceRequestScanJob"
 
-syndication_job:
-   cron: "* * * * *"
-   class: "SyndicationJob"
+# syndication_job:
+#    cron: "* * * * *"
+#    class: "SyndicationJob"
