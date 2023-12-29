@@ -2,12 +2,14 @@
 
 . ~/src/infra/ottwatch.sh
 
+sudo docker container stop ottwatch-web
 sudo docker container rm ottwatch-web
 
 sudo docker run \
   --restart always \
   -d \
   --network $DOCKER_NETWORK \
+  --ip 10.50.1.13 \
   -e BUGSNAG_KEY=$BUGSNAG_KEY \
   -e DB_HOST=$DB_HOST \
   -e DB_NAME=$DB_NAME \
