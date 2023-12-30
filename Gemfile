@@ -98,3 +98,5 @@ group :test do
 end
 
 gem "bugsnag", "~> 6.25"
+
+gem "graphql", "~> 2.2"
