@@ -2,6 +2,7 @@
 
 . ~/src/infra/ottwatch.sh
 
+sudo docker container stop ottwatch-sidekiq
 sudo docker container rm ottwatch-sidekiq
 sudo docker run \
   --restart always \
