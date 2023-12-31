@@ -1,26 +1,8 @@
 <div class="row">
-  <div class="col-sm-6">
-    <b>OttWatch</b> is dedicated to making it easier to be part of the political conversation in Ottawa.<br/>
-  </div>
-  <div class="col-sm-6">
-    <p>
-    This is "version2" of OttWatch. Check out <a href="http://ottwatch.ca">version 1</a> which has a lot
-    more content available. Version 2 will continue to grow in scope, as time allows.
-    </p>
-    <p>
-    <%
-    service_code = "2000040-1"
-    # service_code = "2000186-1"
-    sr = ServiceRequest.where(service_code: service_code).order(requested_datetime: :desc).first || ServiceRequest.new(requested_datetime: Time.now)
-    last_bike_update = sr&.requested_datetime || Time.now
-    %>
-    It has been <b><%= (Time.now - last_bike_update).to_i/60 %> minutes</b> 
-    since the last "parked/stopped in bike-lane" 311 request was reported.
-
-    <b>SR<%= sr.service_request_id %></b> was filed at 
-    <%= sr.requested_datetime.in_time_zone("America/New_York").strftime("%Y-%m-%d %H:%M") %>     
-    for <a href="https://www.google.com/maps/@<%= sr.lat %>,<%= sr.lon %>,99m/data=!3m1!1e3"><%= sr.address %></a>.
-    </p>
+  <div class="col-sm-12" style="padding: 20px;">
+    <b>OttWatch</b> is dedicated to making it easier to be part of the political conversation in Ottawa.
+    An <a href="https://ottwatch.ca/?format=rss">old-school RSS feed</a> can be used to get the latest
+    updates, or see below for the most recent anouncements.
   </div>
 </div>
 

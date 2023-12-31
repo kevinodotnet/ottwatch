@@ -96,17 +96,17 @@
       <%= yield %>
 
       <div class="row ow_footer" style="">
-        <div class="col-sm-6">
-          Created by Kevin O'Donnell to make it easier to be part of the political conversation in Ottawa.
+        <div class="col-sm-4">
+          By <a href="https://kevino.ca">Kevin O'Donnell</a><br/>
         </div>
-        <div class="col-sm-3" style="text-align: right;">
+        <div class="col-sm-4" style="text-align: center;">
           <% if user_signed_in? %>
             <%= link_to "Sign Out as @#{current_user&.username}", destroy_user_session_path, method: :delete %>
           <% else %>
             <%= link_to "Sign In", '/users/sign_in'  %>
           <% end %>
         </div>
-        <div class="col-sm-3" style="text-align: right;">
+        <div class="col-sm-4" style="text-align: right;">
           <%= image_tag "logo_50.png" %>
         </div>
       </div>
