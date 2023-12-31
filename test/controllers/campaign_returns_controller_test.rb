@@ -7,7 +7,6 @@ class CampaignReturnsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "return can be created for an existing candidate" do
-    binding.pry
-    
+    # binding.pry
   end
 end
