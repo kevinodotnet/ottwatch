@@ -20,10 +20,6 @@ meeting2_scan_job:
    cron: "0 10-20 * * *"
    class: "Meeting2ScanJob"
 
-# election_scan_job:
-#    cron: "10,30,50 * * * *"
-#    class: "ElectionScanJob"
-
 # parcel_scanner:
 #    cron: "*/5 * * * *"
 #    class: "ParcelScanner"

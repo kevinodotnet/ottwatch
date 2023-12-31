@@ -35,6 +35,5 @@ class Announcement < ApplicationRecord
       return "#{url}/meeting/#{reference.reference_guid}" if reference.reference_guid
     end
     return "#{url}/lobbying/#{reference.id}" if reference.is_a?(LobbyingUndertaking)
-    return "#{url}/election/#{reference.id}" if reference.is_a?(Election)
   end
 end
