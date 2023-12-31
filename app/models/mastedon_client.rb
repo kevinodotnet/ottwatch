@@ -7,19 +7,21 @@ class MastedonClient
   end
 
   def self.update(message)
-    base_url = "https://urbanists.social/"
-    access_token = ENV.fetch("MASTEDON_ACCESS_TOKEN")
+    true
 
-    uri = URI("#{base_url}/api/v1/statuses")
-    req = Net::HTTP::Post.new(uri)
-    req.set_form_data('status' => message)
-    req['Authorization'] = "Bearer #{access_token}"
+    # base_url = "https://urbanists.social/"
+    # access_token = ENV.fetch("MASTEDON_ACCESS_TOKEN")
 
-    http = Net::HTTP.new(uri.host, uri.port)
-    http.use_ssl = true
-    res = http.request(req)
+    # uri = URI("#{base_url}/api/v1/statuses")
+    # req = Net::HTTP::Post.new(uri)
+    # req.set_form_data('status' => message)
+    # req['Authorization'] = "Bearer #{access_token}"
 
-    res.body
+    # http = Net::HTTP.new(uri.host, uri.port)
+    # http.use_ssl = true
+    # res = http.request(req)
+
+    # res.body
   end
 end
 

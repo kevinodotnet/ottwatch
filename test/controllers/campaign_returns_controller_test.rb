@@ -6,7 +6,6 @@ class CampaignReturnsControllerTest < ActionDispatch::IntegrationTest
     @candidate = @election.candidates.last
   end
 
-  focus
   test "return can be created for an existing candidate" do
     binding.pry
     
