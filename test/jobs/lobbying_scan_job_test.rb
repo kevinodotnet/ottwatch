@@ -15,7 +15,7 @@ class LobbyingScanJobTest < ActiveJob::TestCase
   end
 
   test "lobbying records are scraped over many days" do
-    LobbyingScanJob.expects(:perform_later).times(31)
+    LobbyingScanJob.expects(:perform_later).times(LobbyingScanJob::HISTORY_DAYS + 1)
     VCR.use_cassette("#{class_name}_#{method_name}", :match_requests_on => [:body]) do
       LobbyingScanJob.perform_now
     end

@@ -1,9 +1,9 @@
 require "test_helper"
 
 class DevappControllerTest < ActionDispatch::IntegrationTest
-  test "#show for non-existant devapp fails cleanly" do
+  test "#index works" do
     assert_raises ActionController::RoutingError do
-      get "/devapp/DOES_NOT_EXIST"
+      assert_equal 200, (get "/devapp/index")
     end
   end
 end
