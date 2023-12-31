@@ -1,10 +1,5 @@
 <h1>Development Applications</h1>
 
-
-<div class="map-container">
-  <div id="map" style="width:100%; height:500px;"></div>
-</div>
-
 <table class="table table-bordered table-hover table-condensed">
 <tr>
   <th>Number</th>
@@ -45,40 +40,3 @@ end
 <center>
 <%= link_to "More...", devapp_index_path(before_id: @devapps.last&.id) %>
 </center>
-
-<script>
-function initMap() {
-  const map = new google.maps.Map(document.getElementById("map"), {
-    zoom: 10,
-    center: new google.maps.LatLng(45.420833,-75.69), 
-    mapTypeId: google.maps.MapTypeId.ROADMAP 
-  });
-  
-  const addresses = document.querySelectorAll("li.devapp-address-list-item");
-  addresses.forEach(address => {
-    const marker = new google.maps.Marker({
-      position: {
-        lat: parseFloat(address.getAttribute("data-latitude")),
-        lng: parseFloat(address.getAttribute("data-longitude"))
-      },
-      map: map,
-      title: address.getAttribute("data-devapp-number")
-    });
-    // infowindow_content = address.getAttribute("data-devapp-link");
-    const infowindow = new google.maps.InfoWindow({
-      content: "<a target='_new' href='/devapp/" + address.getAttribute("data-devapp-number") + "'>" + address.getAttribute("data-devapp-number") + "</a>"
-    });
-    marker.addListener("click", () => {
-      infowindow.open({
-        anchor: marker,
-        map,
-        shouldFocus: false,
-      });
-    });
-  });
-}
-                    
-window.initMap = initMap;
-</script>
-
-<%= javascript_include_tag "https://maps.googleapis.com/maps/api/js?key=#{ENV["GOOGLE_MAPS_API_KEY"]}&callback=initMap", defer: true %>
