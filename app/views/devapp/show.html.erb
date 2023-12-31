@@ -53,7 +53,7 @@
       <li>
       <%= link_to(d.name.gsub(@entry.app_number, " "), d.url) %>
       <%
-      if d.state != "200"
+      if !%w(200 302).include?(d.state)
         %>
         (<span style="color: #ff0000">Missing/broken document: <%= d.state %></span>)
         <%
