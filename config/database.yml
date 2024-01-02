@@ -30,7 +30,8 @@ test:
   primary:
     <<: *default
     database: ottwatch_test
-    host: localhost
+    host: 127.0.0.1
+    post: 3306
   v1:
     <<: *default
     database: ottwatch_test_v1
