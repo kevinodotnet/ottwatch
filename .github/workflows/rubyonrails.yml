@@ -13,22 +13,25 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    services:
-      mysql:
-        image: mysql:5.7
-        env:
-          MYSQL_ALLOW_EMPTY_PASSWORD: yes
-          MYSQL_DATABASE: ottwatch_test
-        ports:
-          - 3306
-        options: >-
-          --health-cmd="mysqladmin ping"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=3    
+    # services:
+    #   mysql:
+    #     image: mysql:5.7
+    #     env:
+    #       MYSQL_ALLOW_EMPTY_PASSWORD: yes
+    #       MYSQL_DATABASE: ottwatch_test
+    #     ports:
+    #       - 3306
+    #     options: >-
+    #       --health-cmd="mysqladmin ping"
+    #       --health-interval=10s
+    #       --health-timeout=5s
+    #       --health-retries=3    
     env:
       RAILS_ENV: test
       DATABASE_URL: "mysql2://127.0.0.1:3306/ottwatch_test"
+      DB_DATABASE: ottwatch_test
+      DB_USER: root
+      DB_PASSWORD: root
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -38,6 +41,10 @@ jobs:
         with:
           bundler-cache: true
       # Add or replace database setup steps here
+      - name: Start MySQL
+        run: |
+          sudo /etc/init.d/mysql start
+          mysql -e "CREATE DATABASE IF NOT EXISTS $DB_DATABASE;" -u$DB_USER -p$DB_PASSWORD
       - name: Set up database schema
         run: bin/rails db:schema:load
       # Add or replace test runners here
