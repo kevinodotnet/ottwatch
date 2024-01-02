@@ -32,6 +32,8 @@ test:
     database: ottwatch_test
     host: 127.0.0.1
     post: 3306
+    username: <%= ENV["DB_USER"] %>
+    password: <%= ENV["DB_PASS"] %>
   v1:
     <<: *default
     database: ottwatch_test_v1
