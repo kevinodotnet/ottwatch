@@ -28,7 +28,7 @@ jobs:
           --health-retries=3    
     env:
       RAILS_ENV: test
-      DATABASE_URL: "mysql2://root@localhost:3306/ottwatch_test"
+      DATABASE_URL: "mysql2://root@127.0.0.1:3306/ottwatch_test"
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
