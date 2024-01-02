@@ -28,7 +28,7 @@ jobs:
     #       --health-retries=3    
     env:
       RAILS_ENV: test
-      DATABASE_URL: "mysql2://root:root@127.0.0.1:3306/ottwatch_test"
+      DATABASE_URL: "mysql2://localhost/ottwatch_test"
       DB_DATABASE: ottwatch_test
       DB_USER: root
       DB_PASSWORD: root
