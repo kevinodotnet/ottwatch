@@ -36,16 +36,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
       # Add or replace dependency steps here
-      - name: Install Ruby and gems
+      - name: Install Ruby and gems2
         uses: ruby/setup-ruby@55283cc23133118229fd3f97f9336ee23a179fcf # v1.146.0
         with:
           bundler-cache: true
       # Add or replace database setup steps here
-      - name: Start MySQL
+      - name: Start MySQL2
         run: |
           sudo /etc/init.d/mysql start
           mysql -e "CREATE DATABASE IF NOT EXISTS $DB_DATABASE;" -u$DB_USER -p$DB_PASSWORD
-      - name: Set up database schema
+      - name: Set up database schema2
         run: bin/rails db:schema:load
       # Add or replace test runners here
       - name: Run tests
