@@ -45,7 +45,8 @@ jobs:
         run: |
           sudo /etc/init.d/mysql start
           mysql -e "CREATE DATABASE IF NOT EXISTS $DB_DATABASE;" -u$DB_USER -p$DB_PASSWORD
-          mysql -e "show tables" -u$DB_USER -p$DB_PASSWORD $DB_DATABASE
+          mysql -e "ALTER USER '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASSWORD';
+          mysql -e "FLUSH PRIVILEGES;';
       - name: Set up database schema2
         run: bin/rails db:schema:load
       # Add or replace test runners here
