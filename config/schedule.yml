@@ -18,7 +18,7 @@ lobbying_scan_job:
 
 meeting2_scan_job:
    cron: "0 10-20 * * *"
-   class: "Meeting2ScanJob"
+   class: "MeetingScanJob"
 
 # parcel_scanner:
 #    cron: "*/5 * * * *"

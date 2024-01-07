@@ -1,5 +1,5 @@
 require 'net/http'
-class Meeting2ScanJob < ApplicationJob
+class MeetingScanJob < ApplicationJob
   queue_as :default
 
   def perform(attrs: nil)
@@ -39,7 +39,7 @@ class Meeting2ScanJob < ApplicationJob
         meeting_time: meeting_time
       }
       # puts attrs.to_json
-      Meeting2ScanJob.perform_later(attrs: attrs)
+      MeetingScanJob.perform_later(attrs: attrs)
     end
 
     nil

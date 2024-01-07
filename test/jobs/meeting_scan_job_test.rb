@@ -1,6 +1,6 @@
 require "test_helper"
 
-class Meeting2ScanJobTest < ActiveJob::TestCase
+class MeetingScanJobTest < ActiveJob::TestCase
 
   MEETINGS = [
     {"title":"Police Services Board Human Resources Committee","reference_guid":"ce1a3efd-4f33-4838-8aae-76f7123aed8c","meeting_time":"2022-08-30T13:00:00.000-05:00"},
@@ -17,7 +17,7 @@ class Meeting2ScanJobTest < ActiveJob::TestCase
       VCR.use_cassette("#{class_name}_#{method_name}") do
         assert_difference -> { Announcement.count } do
           assert_difference -> { Meeting.count } do
-            Meeting2ScanJob.perform_now(attrs: m)
+            MeetingScanJob.perform_now(attrs: m)
           end
         end
 
@@ -35,7 +35,7 @@ class Meeting2ScanJobTest < ActiveJob::TestCase
 
         assert_no_difference -> { Announcement.count } do
           assert_no_difference -> { Meeting.count } do
-            Meeting2ScanJob.perform_now(attrs: m)
+            MeetingScanJob.perform_now(attrs: m)
           end
         end
       end
@@ -43,9 +43,9 @@ class Meeting2ScanJobTest < ActiveJob::TestCase
   end
 
   test "no argument job inhales the meeting index and enqueues subsequent jobs" do
-    Meeting2ScanJob.expects(:perform_later).at_least(2) # fails if there are fewer than 2 meetings with published HTML agendas at time of test
+    MeetingScanJob.expects(:perform_later).at_least(2) # fails if there are fewer than 2 meetings with published HTML agendas at time of test
     VCR.use_cassette("#{class_name}_#{method_name}") do
-      Meeting2ScanJob.perform_now
+      MeetingScanJob.perform_now
     end
   end
 end
