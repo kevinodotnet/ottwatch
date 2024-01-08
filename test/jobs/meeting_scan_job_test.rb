@@ -42,6 +42,24 @@ class MeetingScanJobTest < ActiveJob::TestCase
     end
   end
 
+  test "meeting items and docs are parsed; saved; not duplicated" do
+    m = {"title":"Planning Committee","reference_guid":"128fff38-faa9-4b07-a8cc-e13e88688f9d","meeting_time":"2022-09-08T09:30:00.000-05:00"}
+
+    VCR.use_cassette("#{class_name}_#{method_name}") do
+      assert_difference -> { MeetingItem.count }, 23 do
+        assert_difference -> { MeetingItemDocument.count }, 34 do
+          MeetingScanJob.perform_now(attrs: m)
+          binding.pry
+        end
+      end
+      assert_no_difference -> { MeetingItem.count } do
+        assert_no_difference -> { MeetingItemDocument.count } do
+          MeetingScanJob.perform_now(attrs: m)
+        end
+      end
+    end
+  end
+
   test "no argument job inhales the meeting index and enqueues subsequent jobs" do
     MeetingScanJob.expects(:perform_later).at_least(2) # fails if there are fewer than 2 meetings with published HTML agendas at time of test
     VCR.use_cassette("#{class_name}_#{method_name}") do
