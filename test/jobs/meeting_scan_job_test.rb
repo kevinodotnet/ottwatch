@@ -1,6 +1,6 @@
 require "test_helper"
 
-class Meeting2ScanJobTest < ActiveJob::TestCase
+class MeetingScanJobTest < ActiveJob::TestCase
 
   MEETINGS = [
     {"title":"Police Services Board Human Resources Committee","reference_guid":"ce1a3efd-4f33-4838-8aae-76f7123aed8c","meeting_time":"2022-08-30T13:00:00.000-05:00"},
@@ -17,7 +17,7 @@ class Meeting2ScanJobTest < ActiveJob::TestCase
       VCR.use_cassette("#{class_name}_#{method_name}") do
         assert_difference -> { Announcement.count } do
           assert_difference -> { Meeting.count } do
-            Meeting2ScanJob.perform_now(attrs: m)
+            MeetingScanJob.perform_now(attrs: m)
           end
         end
 
@@ -35,17 +35,35 @@ class Meeting2ScanJobTest < ActiveJob::TestCase
 
         assert_no_difference -> { Announcement.count } do
           assert_no_difference -> { Meeting.count } do
-            Meeting2ScanJob.perform_now(attrs: m)
+            MeetingScanJob.perform_now(attrs: m)
           end
         end
       end
     end
   end
 
-  test "no argument job inhales the meeting index and enqueues subsequent jobs" do
-    Meeting2ScanJob.expects(:perform_later).at_least(2) # fails if there are fewer than 2 meetings with published HTML agendas at time of test
+  test "meeting items and docs are parsed; saved; not duplicated" do
+    m = {"title":"Planning Committee","reference_guid":"128fff38-faa9-4b07-a8cc-e13e88688f9d","meeting_time":"2022-09-08T09:30:00.000-05:00"}
+
     VCR.use_cassette("#{class_name}_#{method_name}") do
-      Meeting2ScanJob.perform_now
+      assert_difference -> { MeetingItem.count }, 23 do
+        assert_difference -> { MeetingItemDocument.count }, 34 do
+          MeetingScanJob.perform_now(attrs: m)
+          binding.pry
+        end
+      end
+      assert_no_difference -> { MeetingItem.count } do
+        assert_no_difference -> { MeetingItemDocument.count } do
+          MeetingScanJob.perform_now(attrs: m)
+        end
+      end
+    end
+  end
+
+  test "no argument job inhales the meeting index and enqueues subsequent jobs" do
+    MeetingScanJob.expects(:perform_later).at_least(2) # fails if there are fewer than 2 meetings with published HTML agendas at time of test
+    VCR.use_cassette("#{class_name}_#{method_name}") do
+      MeetingScanJob.perform_now
     end
   end
 end
