@@ -1,18 +1,11 @@
-<h3><%= @meeting.committee.name %></h3>
-
 <div class="row">
-  <div class="col-sm-4">
-    <b>Meeting Time:</b> <%= @meeting.start_time.in_time_zone("America/New_York").strftime("%B %d at %H:%M")%>
+  <div class="col-sm-3">
+    <%= @meeting.start_time.in_time_zone("America/New_York").strftime("%B %d - %H:%M")%>
   </div>
-  <div class="col-sm-4">
-    <!--
-    <b>Contact:</b>
-    <%= @meeting.contact_name %><br/>
-    <a href="mailto:<%= @meeting.contact_email %>"><%= @meeting.contact_email %></a><br/>
-    <a href="tel:<%= @meeting.contact_phone %>"><%= @meeting.contact_phone %></a>
-    -->
+  <div class="col-sm-6 text-center">
+    <h3><%= @meeting.committee.name %></h3>
   </div>
-  <div class="col-sm-4">
+  <div class="col-sm-3 text-end">
     <% 
     meeting_url = if @meeting.reference_id
       "https://app05.ottawa.ca/sirepub/mtgviewer.aspx?meetid=#{@meeting.reference_id}&doctype=AGENDA"
@@ -25,8 +18,39 @@
   </div>
 </div>
 
+<%
+@meeting.items.each do |item|
+  %>
+  <h5>
+    <a href="https://pub-ottawa.escribemeetings.com/Meeting.aspx?Id=<%= @meeting.reference_guid %>&Agenda=Agenda&lang=English&Item=<%= item.reference_id %>&Tab=attachments">
+    <%= item.title %>
+    </a>
+  </h5>
+  <%
+  if item.content.present?
+    %>
+    <%= item.content[0..500] %><%= item.content.size > 500 ? "... (cont)" : "" %>
+    <%
+  end
+  %>
+  <ul>
+    <%
+    item.documents.each do |doc|
+      %>
+      <li>
+        <a href="https://pub-ottawa.escribemeetings.com/filestream.ashx?DocumentId=<%= doc.reference_id %>"><%= doc.title %></a>
+      </li>
+      <%
+    end
+    %>
+  </ul>
+  <%
+end
+
+%>
+
 <% if @meeting.reference_id %>
-<h3>Agenda</h3>
+<h4>Agenda</h4>
 <i>(note: this section doesn't work on mobile; blame the city)</i>
 <iframe
   src="https://app05.ottawa.ca/sirepub/mtgviewer.aspx?meetid=<%= @meeting.reference_id%>&doctype=AGENDA"
@@ -35,7 +59,7 @@
 <% end %>
 
 <% if @meeting.reference_guid %>
-<h3>Agenda</h3>
+<h4>Agenda</h4>
 <iframe
   src="https://pub-ottawa.escribemeetings.com/Meeting.aspx?Id=<%= @meeting.reference_guid %>&Agenda=Agenda&lang=English"
   style="width: 100%; height: 2000px;"
