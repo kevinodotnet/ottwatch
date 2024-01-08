@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_04_03_222136) do
+ActiveRecord::Schema[7.0].define(version: 2024_01_08_032419) do
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -196,12 +196,22 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_03_222136) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "meeting_item_documents", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "reference_id"
+    t.string "title"
+    t.bigint "meeting_item_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["meeting_item_id"], name: "index_meeting_item_documents_on_meeting_item_id"
+  end
+
   create_table "meeting_items", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "title"
     t.integer "reference_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "meeting_id", null: false
+    t.text "content"
     t.index ["meeting_id"], name: "index_meeting_items_on_meeting_id"
   end
 
@@ -329,6 +339,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_03_222136) do
   add_foreign_key "dev_app_documents", "dev_app_entries", column: "entry_id"
   add_foreign_key "dev_app_statuses", "dev_app_entries", column: "entry_id"
   add_foreign_key "lobbying_activities", "lobbying_undertakings"
+  add_foreign_key "meeting_item_documents", "meeting_items"
   add_foreign_key "meeting_items", "meetings"
   add_foreign_key "meetings", "committees"
 end

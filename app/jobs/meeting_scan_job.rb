@@ -70,15 +70,27 @@ class MeetingScanJob < ApplicationJob
     #   contact_email = contact_info.children.to_a[2].children.to_s
     # end
 
-    doc.xpath('//div[@class="AgendaItemContainer indent"]').each do |item|
-      item_doc = Nokogiri::HTML(item.to_s)
+    items = elements_with_class(doc, 'AgendaItem').map do |item|
+      item_div = Nokogiri::HTML(item.to_s)
+      item_num = elements_with_class(item_div, 'AgendaItem').first.attributes["class"].value.match(/AgendaItem(\d+)/)[1].to_i
+      item_title = item_div.xpath('//div[@class="AgendaItemTitle"]/a/text()').first.to_s
+      item_content = elements_with_class(item_div, 'AgendaItemContentRow').map(&:text).join("\n").strip
 
-      item_title = item_doc.xpath('//div[@class="ClosedAgendaItemTitle"]').children.to_s # city council meetings are "closed" items
-      item_title = item_doc.xpath("//a").first.children.to_s unless item_title
-      item_doc.xpath('//a[@class="Link"]').each do |attachment|
-        doc_id = attachment.attributes["href"].value.match(/DocumentId=(?<id>\d+)/)["id"].to_i
-        doc_name = attachment.attributes["data-original-title"].value
+      item_docs = item_div.xpath('//a[@class="Link"]').map do |attachment|
+        attachment = Nokogiri::HTML(attachment.to_s)
+        doc_id = attachment.xpath("//a").first.attributes["href"].value.match(/DocumentId=(\d+)/)[1]
+        doc_title = attachment.xpath("//a").first.attributes["data-original-title"].value
+        {
+          id: doc_id,
+          title: doc_title
+        }
       end
+      {
+        num: item_num,
+        title: item_title,
+        content: item_content,
+        docs: item_docs
+      }
     end
 
     Meeting.transaction do
@@ -90,16 +102,50 @@ class MeetingScanJob < ApplicationJob
         # contact_email: contact_email,
         # contact_phone: contact_phone
       )
+
       create_announcement(meeting)
       meeting.save!
+
+      items.each do |item|
+        i = find_or_create_item(meeting, item[:num])
+        i.title = item[:title]
+        i.content = item[:content]
+        i.save!
+
+        item[:docs].each do |d|
+          doc = find_or_create_doc(i, d[:id])
+          doc.title = d[:title]
+          doc.save!
+        end
+      end
     end
   end
   
   private
 
+  def elements_with_class(node, target_class)
+    node.xpath("//*[contains(concat(' ', normalize-space(@class), ' '), ' #{target_class} ')]")
+  end
+
   def create_announcement(meeting)
     return if meeting.persisted? # not a new meeting
     meeting.announcements << Announcement.new(message: "New Meeting: #{meeting.committee.name}")
+  end
+
+  def find_or_create_item(meeting, reference_id)
+    item = meeting.items.find_by_reference_id(reference_id)
+    if item.nil?
+      item = meeting.items.new(reference_id: reference_id)
+    end
+    item
+  end
+
+  def find_or_create_doc(item, reference_id)
+    doc = item.documents.find_by_reference_id(reference_id)
+    if doc.nil?
+      doc = item.documents.new(reference_id: reference_id)
+    end
+    doc
   end
 
   def create_meeting(name:, reference_guid:, contact_name: nil, contact_email: nil, contact_phone: nil, start_time: )
