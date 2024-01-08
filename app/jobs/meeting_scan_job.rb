@@ -109,6 +109,7 @@ class MeetingScanJob < ApplicationJob
       items.each do |item|
         i = find_or_create_item(meeting, item[:num])
         i.title = item[:title]
+        i.content = item[:content]
         i.save!
 
         item[:docs].each do |d|
