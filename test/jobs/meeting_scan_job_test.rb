@@ -49,7 +49,6 @@ class MeetingScanJobTest < ActiveJob::TestCase
       assert_difference -> { MeetingItem.count }, 23 do
         assert_difference -> { MeetingItemDocument.count }, 34 do
           MeetingScanJob.perform_now(attrs: m)
-          binding.pry
         end
       end
       assert_no_difference -> { MeetingItem.count } do
