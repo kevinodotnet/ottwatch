@@ -2,14 +2,7 @@
 
 . ~/src/infra/ottwatch.sh
 
-DOCKER_FILES="
-  Dockerfile.base
-  Dockerfile.prod
-"
-
-for i in $DOCKER_FILES; do
-  name=`echo $i | sed 's/Dockerfile./ottwatch-/'`
-  sudo docker build -t $name -f $i .
-done
-
+sudo docker build -t ottwatch-base -f Dockerfile.base .
+sudo docker build -t ottwatch-prod -f Dockerfile.prod .
+#sudo docker build --no-cache -t ottwatch-prod -f Dockerfile.prod .
 sudo docker image prune -f
