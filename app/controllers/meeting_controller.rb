@@ -5,7 +5,7 @@ class MeetingController < ApplicationController
     else
       Meeting.all
     end
-    @meetings = relation.order(id: :desc).limit(50)
+    @meetings = relation.order(start_time: :desc).limit(50)
   end
 
   def show
