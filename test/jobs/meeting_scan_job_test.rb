@@ -59,8 +59,26 @@ class MeetingScanJobTest < ActiveJob::TestCase
     end
   end
 
+  test "scan_past_meetings works" do
+    expected = [
+      {:title=>"Audit Committee", :reference_guid=>"459a9cef-6fb2-2e60-9ea0-5e54996e6b34", :meeting_time=>"2017-11-30 14:30:00 +0000".to_time},
+      {:title=>"Audit Committee", :reference_guid=>"adcc9d40-3553-832f-1b78-0af9540668b9", :meeting_time=>"2017-05-25 13:30:00 +0000".to_time},
+      {:title=>"Audit Committee", :reference_guid=>"47dfbf67-02e8-4eea-ac47-f113b25fc2e9", :meeting_time=>"2023-02-17 14:30:00 +0000".to_time}
+    ]
+
+    VCR.use_cassette("#{class_name}_#{method_name}") do
+      meetings = MeetingScanJob.scan_past_meetings("Audit Committee")
+      assert_equal ["Audit Committee"], meetings.map{|m| m[:title]}.uniq
+      assert meetings.map{|m| m[:meeting_time]}.all?{|d| d.is_a?(Time)}
+      expected.each do |e|
+        assert_equal e, meetings.detect{|m| m[:reference_guid] == e[:reference_guid]}
+      end
+    end
+  end
+
   test "no argument job inhales the meeting index and enqueues subsequent jobs" do
     MeetingScanJob.expects(:perform_later).at_least(2) # fails if there are fewer than 2 meetings with published HTML agendas at time of test
+    MeetingScanJob.expects(:scan_past_meetings).at_least(10) # ensure fan-out code that checks past meetings for 10+ meeting types happens
     VCR.use_cassette("#{class_name}_#{method_name}") do
       MeetingScanJob.perform_now
     end
