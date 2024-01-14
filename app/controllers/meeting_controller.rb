@@ -1,11 +1,11 @@
 class MeetingController < ApplicationController
   def index
     relation = if params["before_id"]
-      Meeting.where("id < ?", params["before_id"])
+      Meeting.where("start_time < ? and id < ?", m.start_time, params["before_id"])
     else
       Meeting.all
     end
-    @meetings = relation.order(start_time: :desc).limit(50)
+    @meetings = relation.order(start_time: :desc, id: :desc).limit(50)
   end
 
   def show
