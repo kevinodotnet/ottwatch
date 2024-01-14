@@ -10,11 +10,39 @@ class MeetingScanJob < ApplicationJob
     end
   end
 
+  def self.scan_past_meetings(meeting_type)
+    uri = URI('https://pub-ottawa.escribemeetings.com/MeetingsCalendarView.aspx/PastMeetings')
+    req = Net::HTTP::Post.new(uri)
+    req['accept'] = 'application/json, text/javascript, */*; q=0.01'
+    req['content-type'] = 'application/json; charset=UTF-8'
+    req['x-requested-with'] = 'XMLHttpRequest'
+    req.body = "{type: '#{meeting_type}'}"
+
+    http = Net::HTTP.new(uri.host, uri.port)
+    http.use_ssl = true
+    res = http.request(req)
+
+    meetings = JSON.parse(res.body)["d"]
+    meetings.map do |m|
+      {
+        title: m["MeetingType"],
+        reference_guid: m["Id"],
+        meeting_time: Time.at(m["Start"].scan(/\d+/).first.to_i/1000)
+      }
+    end
+  end
+
   private
 
   def scan_main_list
     data = Net::HTTP.get(URI("https://pub-ottawa.escribemeetings.com/"))
     doc = Nokogiri::HTML(data)
+
+    elements_with_class(doc, 'MeetingTypeContainer').map{|c| c.attributes["meetingtype"].value}.each do |c|
+      self.class.scan_past_meetings(c).each do |m|
+        MeetingScanJob.perform_later(attrs: m)
+      end
+    end
 
     doc.xpath('//div[@class="calendar-item"]').each do |m|
       md = Nokogiri::HTML(m.to_s)
@@ -38,7 +66,6 @@ class MeetingScanJob < ApplicationJob
         reference_guid: reference_guid,
         meeting_time: meeting_time
       }
-      # puts attrs.to_json
       MeetingScanJob.perform_later(attrs: attrs)
     end
 
