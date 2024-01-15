@@ -61,7 +61,7 @@ class LobbyingScanJobTest < ActiveJob::TestCase
     end
   end
 
-  test "existing lobbying w/o an announcement dont get announced on re-scan" do
+  test "existing lobbying without an announcement dont get announced on re-scan" do
     VCR.use_cassette("#{class_name}_#{method_name}", :match_requests_on => [:body]) do
       LobbyingScanJob.perform_now(date: "2022-03-23")
       Announcement.delete_all
