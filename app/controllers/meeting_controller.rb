@@ -1,6 +1,7 @@
 class MeetingController < ApplicationController
   def index
     relation = if params["before_id"]
+      m = Meeting.find(params["before_id"])
       Meeting.where("start_time < ? and id < ?", m.start_time, params["before_id"])
     else
       Meeting.all
