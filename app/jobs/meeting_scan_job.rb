@@ -73,29 +73,12 @@ class MeetingScanJob < ApplicationJob
   end
 
   def scan_meeting(attrs)
-
-    # {"title":"Committee of Adjustment - Panel 3","reference_guid":"2dd97c8d-fdc0-4ecb-833e-6d5c8489d552","meeting_time":"2022-09-07T09:00:00.000-05:00"},
-
     guid = attrs[:reference_guid]
     meeting_time = attrs[:meeting_time].to_time
     title = attrs[:title]
 
     data = Net::HTTP.get(URI("https://pub-ottawa.escribemeetings.com/Meeting.aspx?Id=#{guid}&Agenda=Agenda&lang=English"))
     doc = Nokogiri::HTML(data)
-
-    # if doc.xpath('//strong').detect{|e| e.children.to_s == 'cofa@ottawa.ca'}
-    #   # committee of adjustment
-    #   contact_name = "Committee of Adjustment Coordinator"
-    #   contact_phone = doc.to_s.match(/.613. 580-2436/).to_s
-    #   contact_email = "cofa@ottawa.ca"
-    # else
-    #   # police board; others?
-    #   contact_info = doc.xpath('//div[@class="AgendaHeaderSpecialComments"]/p')
-    #   binding.pry unless contact_info.children.to_a[1]
-    #   contact_name = contact_info.children.to_a[0].children.to_s
-    #   contact_phone = contact_info.children.to_a[1].children.to_s
-    #   contact_email = contact_info.children.to_a[2].children.to_s
-    # end
 
     items = elements_with_class(doc, 'AgendaItem').map do |item|
       item_div = Nokogiri::HTML(item.to_s)
@@ -126,9 +109,6 @@ class MeetingScanJob < ApplicationJob
         name: title, 
         reference_guid: guid, 
         start_time: meeting_time,
-        # contact_name: contact_name,
-        # contact_email: contact_email,
-        # contact_phone: contact_phone
       )
 
       create_announcement(meeting)
