@@ -37,7 +37,7 @@ class DevApp::ScannerTest < ActiveSupport::TestCase
       end
       entry.update!(app_type: "foo")
       assert_no_difference -> { DevApp::Entry.all.count} do
-        assert_changes -> { entry.reload.app_type }, from: "foo", to: "Site Plan Control" do
+        assert_changes -> { entry.reload.app_type }, from: "foo", to: "Demolition Control" do
           DevApp::Scanner.scan_application(APP_NUMBER)
         end
       end
@@ -50,7 +50,7 @@ class DevApp::ScannerTest < ActiveSupport::TestCase
         DevApp::Scanner.scan_application(APP_NUMBER)
       end
       announcement = Announcement.last
-      expected = "DevApp D07-12-15-0017 (Site Plan Control for 196 BEECHWOOD) has been born: A new three storey commercial building."
+      expected = "DevApp D07-05-23-0005 (Demolition Control for 115 SPENCER) has been born: City-initiated demo control. Two-storey single detached home with detached garage. Existing structure appears to be typical stick..."
       assert_equal expected, announcement.message
     end
   end
@@ -76,7 +76,7 @@ class DevApp::ScannerTest < ActiveSupport::TestCase
         DevApp::Scanner.scan_application(APP_NUMBER)
       end
       announcement = Announcement.last
-      assert_equal "DevApp D07-12-15-0017 changed its relationship status from 'fake' to 'Active'", announcement.message
+      assert_equal "DevApp #{APP_NUMBER} changed its relationship status from 'fake' to 'Active'", announcement.message
     end    
   end
 
@@ -116,8 +116,8 @@ class DevApp::ScannerTest < ActiveSupport::TestCase
   test "file urls are encoded properly" do
     VCR.use_cassette("#{class_name}_#{method_name}") do
       entry = DevApp::Scanner.scan_application(APP_NUMBER)
-      expected = "http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2017%20revised%20grading.PDF"
-      actual = entry.documents.map{|d| d.url}.select{|u| u.match(/grading/)}.first
+      expected = "http://webcast.ottawa.ca/plan/All_Image%20Referencing_Demolition%20Control_Image%20Reference_2023-08-17%20-%20application%20-%20D07-05-23-0005.PDF"
+      actual = entry.documents.map{|d| d.url}.first
       assert_equal expected, actual
     end
   end
@@ -132,10 +132,10 @@ class DevApp::ScannerTest < ActiveSupport::TestCase
   test "planner contact data is collected" do
     VCR.use_cassette("#{class_name}_#{method_name}") do
       entry = DevApp::Scanner.scan_application(APP_NUMBER)
-      assert_equal "Simon", entry.planner_first_name
-      assert_equal "Deiaco", entry.planner_last_name
-      assert_equal "613-580-2424 x15641", entry.planner_phone
-      assert_equal "simon.deiaco@ottawa.ca", entry.planner_email
+      assert_equal "M Masha Wakula", entry.planner_first_name
+      assert_equal "Vakula", entry.planner_last_name
+      assert_equal "613-580-2424 x27029", entry.planner_phone
+      assert_equal "mmashawakula.vakula@ottawa.ca", entry.planner_email
     end
   end
 
