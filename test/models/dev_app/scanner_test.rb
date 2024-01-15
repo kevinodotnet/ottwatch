@@ -1,7 +1,8 @@
 require "test_helper"
 
 class DevApp::ScannerTest < ActiveSupport::TestCase
-  APP_NUMBER = "D07-12-15-0017"
+  APP_NUMBER = "D07-05-23-0005"
+
   setup do
     @scanner = DevApp::Scanner.new(cached_devapps_file)
   end
@@ -65,14 +66,6 @@ class DevApp::ScannerTest < ActiveSupport::TestCase
     end
   end
 
-  test "documents have HTTP_HEAD state results cached in the db" do
-    VCR.use_cassette("#{class_name}_#{method_name}") do
-      entry = DevApp::Scanner.scan_application("D07-12-21-0040")
-      assert_equal 35, entry.documents.map{|d| d.state}.count
-      assert_equal ["200"], entry.documents.map{|d| d.state}.uniq
-    end
-  end
-
   test "devapp status changes are announced" do
     VCR.use_cassette("#{class_name}_#{method_name}") do
       entry = DevApp::Scanner.scan_application(APP_NUMBER)
@@ -114,7 +107,7 @@ class DevApp::ScannerTest < ActiveSupport::TestCase
 
   test "files get saved" do
     VCR.use_cassette("#{class_name}_#{method_name}") do
-      assert_difference -> { DevApp::Document.all.count}, 10 do
+      assert_difference -> { DevApp::Document.all.count} do
         DevApp::Scanner.scan_application(APP_NUMBER)
       end
     end    

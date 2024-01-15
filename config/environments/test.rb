@@ -53,7 +53,7 @@ Rails.application.configure do
   # Tell Active Support which deprecation messages to disallow.
   config.active_support.disallowed_deprecation_warnings = []
 
-  # aggressive
+  # for re-recording VCR casessettes faster (i/o network bound)
   config.active_support.test_parallelization_threshold = 10
 
   # Raises error for missing translations.
