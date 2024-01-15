@@ -99,7 +99,9 @@ class MeetingScanJob < ApplicationJob
 
     items = elements_with_class(doc, 'AgendaItem').map do |item|
       item_div = Nokogiri::HTML(item.to_s)
-      item_num = elements_with_class(item_div, 'AgendaItem').first.attributes["class"].value.match(/AgendaItem(\d+)/)[1].to_i
+      item_class_num = elements_with_class(item_div, 'AgendaItem').first.attributes["class"].value.match(/AgendaItem(\d+)/)
+      next unless item_class_num
+      item_num = item_class_num[1].to_i
       item_title = item_div.xpath('//div[@class="AgendaItemTitle"]/a/text()').first.to_s
       item_content = elements_with_class(item_div, 'AgendaItemContentRow').map(&:text).join("\n").strip
 
@@ -118,8 +120,7 @@ class MeetingScanJob < ApplicationJob
         content: item_content,
         docs: item_docs
       }
-    end
-
+    end.compact
     Meeting.transaction do
       meeting = create_meeting(
         name: title, 

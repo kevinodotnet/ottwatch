@@ -83,4 +83,17 @@ class MeetingScanJobTest < ActiveJob::TestCase
       MeetingScanJob.perform_now
     end
   end
+
+  test "in-camera items do not have AgendaItemXXX class names as they are hidden" do
+    attr = {
+      title: "Information Technology Sub-Committee",
+      reference_guid: "e8b142bc-0992-4fe7-a9de-6973e6c69c4b",
+      meeting_time: "2021-11-29T14:30:00.000000000+00:00".to_time
+    }
+    VCR.use_cassette("#{class_name}_#{method_name}") do
+      assert_difference -> { MeetingItem.count }, 14 do
+        MeetingScanJob.perform_now(attrs: attr)
+      end
+    end
+  end
 end
