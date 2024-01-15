@@ -90,9 +90,14 @@ class MeetingScanJobTest < ActiveJob::TestCase
       reference_guid: "e8b142bc-0992-4fe7-a9de-6973e6c69c4b",
       meeting_time: "2021-11-29T14:30:00.000000000+00:00".to_time
     }
+    item_title = "2022 Draft Operating and Capital Budgets - Information Technology Sub-Committee"
+    in_camera_item_title = "Verbal Update on Cyber Security and the External Threat Landscape - In Camera – Reporting Out Date: Not To Be Reported Out"
     VCR.use_cassette("#{class_name}_#{method_name}") do
-      assert_difference -> { MeetingItem.count }, 14 do
+      assert_difference -> { MeetingItem.count }, 15 do
         MeetingScanJob.perform_now(attrs: attr)
+        m = Meeting.find_by_reference_guid(attr[:reference_guid])
+        assert m.items.where(title: item_title).first
+        assert m.items.where(title: in_camera_item_title).first
       end
     end
   end
