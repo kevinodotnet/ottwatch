@@ -1,0 +1,57 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://devapps-restapi.ottawa.ca/devapps/search?appStatus=all&appType=all&authKey=4r5T2egSmKm5&bounds=0,0,0,0&searchText=D07-12-15-0017&ward=all
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+      Host:
+      - devapps-restapi.ottawa.ca
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx
+      Date:
+      - Mon, 15 Jan 2024 03:16:33 GMT
+      Content-Type:
+      - application/json; charset=utf-8
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      Strict-Transport-Security:
+      - max-age=15724800; includeSubDomains
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Ott-Cache:
+      - '10'
+      Set-Cookie:
+      - NSC_QH_NzTP_ohjoy=ffffffffc3a0bc3845525d5f4f58455e445a4a42378b;expires=Mon,
+        15-Jan-2024 03:46:33 GMT;path=/;httponly
+      - incap_ses_1227_2348304=TIt6YoKCeGKS15vABi4HEZGjpGUAAAAArHLYJZBv0mRfHPLyMC7Pmw==;
+        path=/; Domain=.ottawa.ca
+      - nlbi_2348304=vzWETDucUycfWIuEl2uJLQAAAABonhzrh5O+FEZRWEDdjP/c; path=/; Domain=.ottawa.ca
+      - visid_incap_2348304=rKJA7Gx6TgGNvlctcO22NoijpGUAAAAAQUIPAAAAAADspYGMK3rG+9HrNf1xBfKf;
+        expires=Mon, 13 Jan 2025 06:58:23 GMT; HttpOnly; path=/; Domain=.ottawa.ca
+      X-Cdn:
+      - Imperva
+      X-Iinfo:
+      - 9-2798889-2798894 NNYN CT(8 9 0) RT(1705288593108 43) q(0 0 0 1) r(1 1) U24
+    body:
+      encoding: ASCII-8BIT
+      string: '{"devApps":[],"totalDevApps":0,"index":0,"limit":0}'
+  recorded_at: Mon, 15 Jan 2024 03:16:33 GMT
+recorded_with: VCR 6.1.0
