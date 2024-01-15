@@ -54,7 +54,7 @@ Rails.application.configure do
   config.active_support.disallowed_deprecation_warnings = []
 
   # for re-recording VCR casessettes faster (i/o network bound)
-  config.active_support.test_parallelization_threshold = 10
+  # config.active_support.test_parallelization_threshold = 10
 
   # Raises error for missing translations.
   # config.i18n.raise_on_missing_translations = true
