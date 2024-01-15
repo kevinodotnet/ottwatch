@@ -3,7 +3,8 @@
 # docker run -v `pwd`:/app -i -t ottwatch-base
 #
 
-FROM ubuntu:latest
+# FROM ubuntu:latest
+FROM debian:12.4-slim
 
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get -y install \
@@ -12,9 +13,9 @@ RUN apt-get update && \
         curl \
         vim \
         sudo \
-        mysql-client \
-        mysql-server \
-        libmysqlclient-dev \
+	libmariadb-dev-compat \
+	libmariadb-dev \
+	mariadb-server \
         git \
         rbenv \
         poppler-utils \
