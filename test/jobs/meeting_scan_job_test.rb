@@ -84,6 +84,21 @@ class MeetingScanJobTest < ActiveJob::TestCase
     end
   end
 
+  test "previous agenda formats are also scanned for items and docs" do
+    attr = {
+      title: "Whatever",
+      reference_guid: "f743d690-36be-4e25-9bf6-dd8f944d1f2f", # city council, 27 Jun 2012
+      meeting_time: Time.now
+    }
+    VCR.use_cassette("#{class_name}_#{method_name}") do
+      MeetingScanJob.perform_now(attrs: attr)
+      m = Meeting.last
+      item = m.items.detect{|i| i.title.match(/Joint Ottawa-Gatineau Transit/)}
+      assert item.title.match(/.*Joint Ottawa-Gatineau Transit Committee*/)
+      assert_equal "05-12 Joint Ottawa-Gatineau Transit Committee - CC 05-12 - Bloess - Response - Ottawa-Gatineau Transit Committee 2.doc.pdf", item.documents.first.title
+    end
+  end
+
   test "in-camera items do not have AgendaItemXXX class names as they are hidden" do
     attr = {
       title: "Information Technology Sub-Committee",

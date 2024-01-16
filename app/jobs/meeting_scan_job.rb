@@ -72,7 +72,18 @@ class MeetingScanJob < ApplicationJob
     nil
   end
 
-  def scan_item(item_div)
+  def scan_v1_item(item_div, docs)
+    item_num = item_div.attributes["itemid"].value.to_i
+    item_title = item_div.text.gsub(/\n/, " ").gsub(/  */, " ")
+    {
+      num: item_num,
+      title: item_title,
+      content: nil, # todo
+      docs: docs.select{|d| d[:item_id] == item_num}.map{|d| d.slice(:id, :title)}
+    }
+  end
+
+  def scan_v2_item(item_div)
     title_xpath = '//div[@class="AgendaItemTitle"]/a/text()'
     in_camera_title_xpath = '//div[@class="ClosedAgendaItemTitle"]/text()'
 
@@ -119,10 +130,29 @@ class MeetingScanJob < ApplicationJob
     data = Net::HTTP.get(URI("https://pub-ottawa.escribemeetings.com/Meeting.aspx?Id=#{guid}&Agenda=Agenda&lang=English"))
     doc = Nokogiri::HTML(data)
 
-    items = elements_with_class(doc, 'AgendaItem').map do |item|
-      item_div = Nokogiri::HTML(item.to_s)
-      scan_item(item_div)
+    items = if elements_with_class(doc, 'SelectableItem').any?
+      # v1 agenda format
+      lines = data.gsub(/\r/, "").gsub(/</, "\n<").split("\n")
+      doc_div_starts = lines.each_index.select{|i| lines[i].match(/DIV class='AgendaItemAttachment AgendaItemAttachment\d+'/)}
+      docs = doc_div_starts.map do |line_num|
+        link = lines[line_num..].first(20).detect{|l| l.match(/<a/)}
+        {
+          item_id: lines[line_num].scan(/\d+/).first.to_i,
+          id: link.match(/documentid=(\d+)/)[1].to_i,
+          title: link.match(/data-original-title='(.*)' target/)[1].gsub(/  */, " ")
+        }
+      end
+      elements_with_class(doc, 'SelectableItem').map do |item|
+        scan_v1_item(item, docs)
+      end
+    else
+      # v2 agenda format
+      elements_with_class(doc, 'AgendaItem').map do |item|
+        item_div = Nokogiri::HTML(item.to_s)
+        scan_v2_item(item_div)
+      end
     end.compact
+
     Meeting.transaction do
       meeting = create_meeting(
         name: title, 
