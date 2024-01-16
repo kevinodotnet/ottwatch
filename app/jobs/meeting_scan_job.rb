@@ -132,6 +132,14 @@ class MeetingScanJob < ApplicationJob
 
     items = if elements_with_class(doc, 'SelectableItem').any?
       # v1 agenda format
+
+      data = data.force_encoding("UTF-8")
+        .gsub(/–/, "-")
+        .gsub(/’/, "'")
+        .gsub(/&nbsp;/, " ")
+
+      doc = Nokogiri::HTML(data)
+
       lines = data.gsub(/\r/, "").gsub(/</, "\n<").split("\n")
       doc_div_starts = lines.each_index.select{|i| lines[i].match(/DIV class='AgendaItemAttachment AgendaItemAttachment\d+'/)}
       docs = doc_div_starts.map do |line_num|

@@ -94,7 +94,7 @@ class MeetingScanJobTest < ActiveJob::TestCase
       MeetingScanJob.perform_now(attrs: attr)
       m = Meeting.last
       item = m.items.detect{|i| i.title.match(/Joint Ottawa-Gatineau Transit/)}
-      assert item.title.match(/.*Joint Ottawa-Gatineau Transit Committee*/)
+      assert_equal "05-12 - Joint Ottawa-Gatineau Transit Committee", item.title
       assert_equal "05-12 Joint Ottawa-Gatineau Transit Committee - CC 05-12 - Bloess - Response - Ottawa-Gatineau Transit Committee 2.doc.pdf", item.documents.first.title
     end
   end
