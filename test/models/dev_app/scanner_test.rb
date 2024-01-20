@@ -76,7 +76,7 @@ class DevApp::ScannerTest < ActiveSupport::TestCase
         DevApp::Scanner.scan_application(APP_NUMBER)
       end
       announcement = Announcement.last
-      assert_equal "DevApp #{APP_NUMBER} changed its relationship status from 'fake' to 'Active'", announcement.message
+      assert_equal "DevApp #{APP_NUMBER} changed status from 'fake' to 'Active'", announcement.message
     end    
   end
 

@@ -154,7 +154,7 @@ class DevApp::Scanner
           m << "..." if desc_parts.any?
           m
         else
-          "DevApp #{entry.app_number} changed its relationship status from '#{msg[:from]}' to '#{msg[:to]}'"
+          "DevApp #{entry.app_number} changed status from '#{msg[:from]}' to '#{msg[:to]}'"
         end
         entry.announcements << Announcement.new(message: message)
       end
