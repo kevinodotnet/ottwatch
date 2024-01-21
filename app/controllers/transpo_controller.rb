@@ -11,7 +11,13 @@ class TranspoController < ApplicationController
 
   def self.stop_trips(stop_no)
     data = get_next_trips_for_stop_all_routes(stop_no)
-    data = JSON.parse(data)["GetRouteSummaryForStopResult"]
+
+    begin
+      data = JSON.parse(data)["GetRouteSummaryForStopResult"]
+    rescue => e
+      return :api_error
+    end
+
 
     routes = data["Routes"]["Route"]
     routes = [routes] if routes.is_a?(Hash)
@@ -53,6 +59,7 @@ class TranspoController < ApplicationController
 
   def show_stop
     @stop_data = self.class.stop_trips(params[:stop_no]) if params[:stop_no]
+    return if @stop_data == :api_error
     if params[:stop_routes] && params[:stop_routes].size > 0
       keep_routes = params[:stop_routes].split(" ")
       @stop_data[:routes] = @stop_data[:routes].select{|r| keep_routes.include?(r[:no])}

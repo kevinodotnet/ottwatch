@@ -1,5 +1,11 @@
+<% if @stop_data == :api_error %>
+  <div>
+  Oh no! The OC Transpo system returned an error when your search was performed!
+  You can try again. Maybe the stop number doesn't exist?
+  </div>
+<% end %>
 
-<% if @stop_data %>
+<% if @stop_data.is_a?(Hash) %>
   <% content_for :html_title, "#{@stop_data[:no]}: #{@stop_data[:desc]}" %>
 
   <h3><%= @stop_data[:no] %> <%= @stop_data[:desc] %>
@@ -44,7 +50,7 @@
       <%= form.label(:stop_no, "Stop Number:") %> 
     </div>
     <div class="col-6">
-      <%= form.text_field(:stop_no, value: params[:stop_no], placeholder: "4940") %>
+      <%= form.text_field(:stop_no, value: params[:stop_no], required: true) %>
     </div>
   </div>
   <div class="row">
@@ -52,7 +58,7 @@
       <%= form.label(:stop_routes, "Routes:") %> 
     </div>
     <div class="col-6">
-      <%= form.text_field(:stop_routes, value: params[:stop_routes], placeholder: "11 85 212") %>
+      <%= form.text_field(:stop_routes, value: params[:stop_routes]) %>
     </div>
   </div>
   <div class="row">
