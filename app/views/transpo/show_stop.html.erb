@@ -1,31 +1,72 @@
-<% content_for :html_title, "#{@stop_data[:no]}: #{@stop_data[:desc]}" %>
 
-<h3><%= @stop_data[:no] %> <%= @stop_data[:desc] %></h3>
-<%
-@stop_data[:routes].each do |r|
-  %>
-  <h4>
-    <%= r[:no] %>
-    <%= r[:heading] %>
-  </h4>
-  <ul>
-    <%
-    r[:trips].each do |t|
-      %>
-      <li>
-      <%= t[:in] %>m, per <%= t[:per] %>
-      <%
-        if t[:per] == :gps
-          %>
-          (<%= t[:age] %>)
-          <%
-        end
-      %>
-      </li>
-      <%
-    end
-    %>
-  </ul>
+<% if @stop_data %>
+  <% content_for :html_title, "#{@stop_data[:no]}: #{@stop_data[:desc]}" %>
+
+  <h3><%= @stop_data[:no] %> <%= @stop_data[:desc] %>
+  <small>(<%= link_to "all routes", transpo_show_stop_path(stop_no: params[:stop_no]) %>)</small>
+  </h3>
   <%
-end
-%>
+  @stop_data[:routes].each do |r|
+    %>
+    <h5>
+      <%= link_to r[:no], transpo_show_stop_path(stop_no: params[:stop_no], stop_routes: r[:no]) %>
+      <%= r[:heading] %>
+    </h5>
+    <ul>
+      <%
+      r[:trips].each do |t|
+        %>
+        <li>
+        <%= t[:in] %>m, per <%= t[:per] %>
+        <%
+          if t[:per] == :gps
+            %>
+            (<%= t[:age] %>)
+            <%
+          end
+        %>
+        </li>
+        <%
+      end
+      %>
+    </ul>
+    <%
+  end
+  %>
+<% end %>
+
+<h3>Search</h3>
+
+
+<%= form_with(url: transpo_show_stop_path, method: :get) do |form| %>
+  <div class="row">
+    <div class="col-6 col-sm-3">
+      <%= form.label(:stop_no, "Stop Number:") %> 
+    </div>
+    <div class="col-6">
+      <%= form.text_field(:stop_no, value: params[:stop_no], placeholder: "4940") %>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-6 col-sm-3">
+      <%= form.label(:stop_routes, "Routes:") %> 
+    </div>
+    <div class="col-6">
+      <%= form.text_field(:stop_routes, value: params[:stop_routes], placeholder: "11 85 212") %>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-6 col-sm-3">
+    </div>
+    <div class="col-6">
+      <%= form.submit("Search") %>
+    </div>
+  </div>
+
+<p>
+Enter a stop number ("4940") and optionally one or more route numbers ("11 59") separated
+by spaces to get the next available trips in all directions. If you leave the route number(s)
+empty, all routes servicing that stop will be shown.
+</p>
+
+<% end %>
