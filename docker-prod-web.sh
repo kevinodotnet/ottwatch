@@ -25,6 +25,8 @@ sudo docker run \
   -e RAILS_SERVE_STATIC_FILES=1 \
   -e REDIS_URL=$REDIS_URL \
   -e SENDGRID_API_KEY=$SENDGRID_PRODWEB_FULL \
+  -e OCTRANSPO_APP_ID=$OCTRANSPO_APP_ID \
+  -e OCTRANSPO_APP_KEY=$OCTRANSPO_APP_KEY \
   -v $INFRA_FOLDER:/infra \
   -p 3000:3000 \
   --name ottwatch-web \
