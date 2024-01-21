@@ -72,6 +72,56 @@ class MeetingScanJob < ApplicationJob
     nil
   end
 
+  def scan_v1_item(item_div, docs)
+    item_num = item_div.attributes["itemid"].value.to_i
+    item_title = item_div.text.gsub(/\n/, " ").gsub(/  */, " ")
+    {
+      num: item_num,
+      title: item_title,
+      content: nil, # todo
+      docs: docs.select{|d| d[:item_id] == item_num}.map{|d| d.slice(:id, :title)}
+    }
+  end
+
+  def scan_v2_item(item_div)
+    title_xpath = '//div[@class="AgendaItemTitle"]/a/text()'
+    in_camera_title_xpath = '//div[@class="ClosedAgendaItemTitle"]/text()'
+
+    in_camera = item_div.xpath(in_camera_title_xpath).first.to_s.size > 0
+    item_num = nil
+    item_content = nil
+    item_title = [
+      title_xpath,
+      in_camera_title_xpath
+    ].map do |xpath|
+      title = item_div.xpath(xpath).first.to_s
+      title == "" ? nil : title
+    end.compact.first
+
+    unless in_camera
+      item_class_num = elements_with_class(item_div, 'AgendaItem').first.attributes["class"].value.match(/AgendaItem(\d+)/)
+      item_num = item_class_num[1].to_i
+      item_content = elements_with_class(item_div, 'AgendaItemContentRow').map(&:text).join("\n").strip
+    end
+
+    item_docs = item_div.xpath('//a[@class="Link"]').map do |attachment|
+      attachment = Nokogiri::HTML(attachment.to_s)
+      doc_id = attachment.xpath("//a").first.attributes["href"].value.match(/DocumentId=(\d+)/)[1]
+      doc_title = attachment.xpath("//a").first.attributes["data-original-title"].value
+      {
+        id: doc_id,
+        title: doc_title
+      }
+    end
+
+    {
+      num: item_num,
+      title: item_title,
+      content: item_content,
+      docs: item_docs
+    }
+  end
+
   def scan_meeting(attrs)
     guid = attrs[:reference_guid]
     meeting_time = attrs[:meeting_time].to_time
@@ -80,30 +130,37 @@ class MeetingScanJob < ApplicationJob
     data = Net::HTTP.get(URI("https://pub-ottawa.escribemeetings.com/Meeting.aspx?Id=#{guid}&Agenda=Agenda&lang=English"))
     doc = Nokogiri::HTML(data)
 
-    items = elements_with_class(doc, 'AgendaItem').map do |item|
-      item_div = Nokogiri::HTML(item.to_s)
-      item_class_num = elements_with_class(item_div, 'AgendaItem').first.attributes["class"].value.match(/AgendaItem(\d+)/)
-      next unless item_class_num
-      item_num = item_class_num[1].to_i
-      item_title = item_div.xpath('//div[@class="AgendaItemTitle"]/a/text()').first.to_s
-      item_content = elements_with_class(item_div, 'AgendaItemContentRow').map(&:text).join("\n").strip
+    items = if elements_with_class(doc, 'SelectableItem').any?
+      # v1 agenda format
 
-      item_docs = item_div.xpath('//a[@class="Link"]').map do |attachment|
-        attachment = Nokogiri::HTML(attachment.to_s)
-        doc_id = attachment.xpath("//a").first.attributes["href"].value.match(/DocumentId=(\d+)/)[1]
-        doc_title = attachment.xpath("//a").first.attributes["data-original-title"].value
+      data = data.force_encoding("UTF-8")
+        .gsub(/–/, "-")
+        .gsub(/’/, "'")
+        .gsub(/&nbsp;/, " ")
+
+      doc = Nokogiri::HTML(data)
+
+      lines = data.gsub(/\r/, "").gsub(/</, "\n<").split("\n")
+      doc_div_starts = lines.each_index.select{|i| lines[i].match(/DIV class='AgendaItemAttachment AgendaItemAttachment\d+'/)}
+      docs = doc_div_starts.map do |line_num|
+        link = lines[line_num..].first(20).detect{|l| l.match(/<a/)}
         {
-          id: doc_id,
-          title: doc_title
+          item_id: lines[line_num].scan(/\d+/).first.to_i,
+          id: link.match(/documentid=(\d+)/)[1].to_i,
+          title: link.match(/data-original-title='(.*)' target/)[1].gsub(/  */, " ")
         }
       end
-      {
-        num: item_num,
-        title: item_title,
-        content: item_content,
-        docs: item_docs
-      }
+      elements_with_class(doc, 'SelectableItem').map do |item|
+        scan_v1_item(item, docs)
+      end
+    else
+      # v2 agenda format
+      elements_with_class(doc, 'AgendaItem').map do |item|
+        item_div = Nokogiri::HTML(item.to_s)
+        scan_v2_item(item_div)
+      end
     end.compact
+
     Meeting.transaction do
       meeting = create_meeting(
         name: title, 

@@ -84,15 +84,35 @@ class MeetingScanJobTest < ActiveJob::TestCase
     end
   end
 
+  test "previous agenda formats are also scanned for items and docs" do
+    attr = {
+      title: "Whatever",
+      reference_guid: "f743d690-36be-4e25-9bf6-dd8f944d1f2f", # city council, 27 Jun 2012
+      meeting_time: Time.now
+    }
+    VCR.use_cassette("#{class_name}_#{method_name}") do
+      MeetingScanJob.perform_now(attrs: attr)
+      m = Meeting.last
+      item = m.items.detect{|i| i.title.match(/Joint Ottawa-Gatineau Transit/)}
+      assert_equal "05-12 - Joint Ottawa-Gatineau Transit Committee", item.title
+      assert_equal "05-12 Joint Ottawa-Gatineau Transit Committee - CC 05-12 - Bloess - Response - Ottawa-Gatineau Transit Committee 2.doc.pdf", item.documents.first.title
+    end
+  end
+
   test "in-camera items do not have AgendaItemXXX class names as they are hidden" do
     attr = {
       title: "Information Technology Sub-Committee",
       reference_guid: "e8b142bc-0992-4fe7-a9de-6973e6c69c4b",
       meeting_time: "2021-11-29T14:30:00.000000000+00:00".to_time
     }
+    item_title = "2022 Draft Operating and Capital Budgets - Information Technology Sub-Committee"
+    in_camera_item_title = "Verbal Update on Cyber Security and the External Threat Landscape - In Camera – Reporting Out Date: Not To Be Reported Out"
     VCR.use_cassette("#{class_name}_#{method_name}") do
-      assert_difference -> { MeetingItem.count }, 14 do
+      assert_difference -> { MeetingItem.count }, 15 do
         MeetingScanJob.perform_now(attrs: attr)
+        m = Meeting.find_by_reference_guid(attr[:reference_guid])
+        assert m.items.where(title: item_title).first
+        assert m.items.where(title: in_camera_item_title).first
       end
     end
   end
