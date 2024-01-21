@@ -1,3 +1,5 @@
+<% content_for :html_title, "#{@stop_data[:no]}: #{@stop_data[:desc]}" %>
+
 <h1><%= @stop_data[:no] %> <%= @stop_data[:desc] %></h1>
 <%
 @stop_data[:routes].each do |r|
