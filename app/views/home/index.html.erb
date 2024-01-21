@@ -22,21 +22,7 @@
     </div>
   <% end %>
 </div>
-<div style="margin-top: 10px; margin-bottom: 10px;">
-  <h2>Recent announcements</h2>
-</div>
-<div class="owrows">
-  <% @announcements.each do |a| %>
-    <div class="row">
-      <div class="col-sm-3">
-        <%= link_to(a.reference_context || a.reference.class, a.reference_link) %>
-      </div>
-      <div class="col-md-7">
-        <%= a.message %>
-      </div>
-      <div class="col-md-2" style="text-align: right;">
-        <%= a.created_at.in_time_zone("America/New_York").strftime("%Y-%m-%d") %>
-      </div>
-    </div>
-  <% end %>
-</div>
+
+<hr/>
+
+<div>

@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get 'announcement/index'
   get 'transpo/show_stop'
   get 'service_requests/index'
   devise_for :users, controllers: { omniauth_callbacks: 'users/omniauth_callbacks' }
