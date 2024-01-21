@@ -93,18 +93,16 @@
       <%= yield %>
 
       <div class="row ow_footer" style="">
-        <div class="col-sm-4">
-          By <a href="https://kevino.ca">Kevin O'Donnell</a><br/>
+        <div class="col-sm-6">
+          <%= image_tag "logo_50.png" %>
         </div>
-        <div class="col-sm-4" style="text-align: center;">
+        <div class="col-sm-6" style="text-align: right;">
+          By <a href="https://kevino.ca">Kevin O'Donnell</a><br/>
           <% if user_signed_in? %>
-            <%= link_to "Sign Out as @#{current_user&.username}", destroy_user_session_path, method: :delete %>
+            <%= link_to "Sign Out", destroy_user_session_path, method: :delete %>
           <% else %>
             <%= link_to "Sign In", '/users/sign_in'  %>
           <% end %>
-        </div>
-        <div class="col-sm-4" style="text-align: right;">
-          <%= image_tag "logo_50.png" %>
         </div>
       </div>
     </div>
