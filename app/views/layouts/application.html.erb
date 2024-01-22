@@ -69,20 +69,22 @@
               <a class="nav-link" href="/meeting/index">Meetings</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="/service_requests/index">311 Requests</a>
-            </li>
-            <li class="nav-item">
               <a class="nav-link" href="/lobbying/index">Lobbying</a>
             </li>
             <li class="nav-item">
               <%= link_to "Transpo", transpo_show_stop_path, class: "nav-link" %>
             </li>
             <li class="nav-item">
+              <a class="nav-link" href="/service_requests/index">311</a>
+            </li>
+            <li class="nav-item">
               <a class="nav-link" href="https://shop.ottwatch.ca/">Shop</a>
             </li>
+            <!--
             <li class="nav-item">
               <a class="nav-link" href="/team/index">Team</a>
             </li>
+            -->
           </ul>
         </div>
       </div>
@@ -100,15 +102,17 @@
 
       <div class="row ow_footer" style="">
         <div class="col-6">
-          <%= image_tag "logo_50.png" %>
+          <%= image_tag "logo_50.png" %> 
         </div>
         <div class="col-6" style="text-align: right;">
           By <a href="https://kevino.ca">Kevin O'Donnell</a><br/>
+          <!--
           <% if user_signed_in? %>
             <%= link_to "Sign Out", destroy_user_session_path, method: :delete %>
           <% else %>
             <%= link_to "Sign In", '/users/sign_in'  %>
           <% end %>
+          -->
         </div>
       </div>
     </div>

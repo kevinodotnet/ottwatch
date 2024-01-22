@@ -1,17 +1,11 @@
 <h1>Development Applications</h1>
 
-<table class="table table-bordered table-hover table-condensed">
-<tr>
-  <th>Number</th>
-  <th>Desc</th>
-  <th>Updated</th>
-</tr>
 <% 
 @devapps.each do |d| 
   %>
-  <td><nobr><%= link_to(d.app_number, "/devapp/#{d.app_number}") %></nobr></td>
-  <td>
-    <%= d.app_type %>: <%= d.desc %>
+  <p>
+  <%= link_to(d.app_number, "/devapp/#{d.app_number}") %>
+  <%= d.app_type %>: <%= d.desc %>.
     <ul>
     <% d.addresses.each do |a| %>
       <% next if a.ref_id == "" %>
@@ -26,15 +20,11 @@
       </li>
     <% end %>
     </ul>
-  </td>
-  <td><nobr><%= d.updated_at.in_time_zone("America/New_York").strftime("%Y-%m-%d %H:%M") %></nobr></td>
-  </tr>
+  </p>
+  <hr/>
   <% 
 end
 %>
-</table>
-
-<hr/>
 
 <center>
 <%= link_to "More...", devapp_index_path(before_id: @devapps.last&.id) %>

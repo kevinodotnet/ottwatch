@@ -9,7 +9,7 @@
   <% content_for :html_title, "#{@stop_data[:no]}: #{@stop_data[:desc]}" %>
 
   <h3><%= @stop_data[:no] %> <%= @stop_data[:desc] %>
-  <small>(<%= link_to "all routes", transpo_show_stop_path(stop_no: params[:stop_no]) %>)</small>
+  <small>(<%= link_to "all", transpo_show_stop_path(stop_no: params[:stop_no]) %>)</small>
   </h3>
   <%
   @stop_data[:routes].each do |r|
@@ -69,7 +69,7 @@
     </div>
   </div>
 
-<p>
+<p style="padding-top: 10px;">
 Enter a stop number ("4940") and optionally one or more route numbers ("11 59") separated
 by spaces to get the next available trips in all directions. If you leave the route number(s)
 empty, all routes servicing that stop will be shown.
