@@ -110,6 +110,17 @@ class MeetingScanJobTest < ActiveJob::TestCase
     end
   end
 
+  test "issue 96: regression" do
+    attr = {
+      title: "Committee of Adjustment - Panel 1",
+      reference_guid: "9dc974f2-fb95-401e-bf2f-5fe225f5cdb5",
+      meeting_time: "2016-02-03T18:00:00.000000000+00:00".to_time
+    }
+    VCR.use_cassette("#{class_name}_#{method_name}") do
+      MeetingScanJob.perform_now(attrs: attr)
+    end
+  end
+
   test "in-camera items do not have AgendaItemXXX class names as they are hidden" do
     attr = {
       title: "Information Technology Sub-Committee",

@@ -146,7 +146,7 @@ class MeetingScanJob < ApplicationJob
         link = lines[line_num..].first(20).detect{|l| l.match(/<a/)}
         {
           item_id: lines[line_num].scan(/\d+/).first.to_i,
-          id: link.match(/documentid=(\d+)/)[1].to_i,
+          id: link.match(/documentid=(\d+)/i)[1].to_i,
           title: link.match(/data-original-title='(.*)' target/)[1].gsub(/  */, " ")
         }
       end
