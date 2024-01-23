@@ -99,6 +99,17 @@ class MeetingScanJobTest < ActiveJob::TestCase
     end
   end
 
+  test "regression issue 93: title was too long for schema" do
+    attr = {
+      title: "City Council",
+      reference_guid: "8bb58320-84bf-63d9-a43e-c955acdd42a9",
+      meeting_time: "2019-10-23T14:00:00.000000000+00:00".to_time
+    }
+    VCR.use_cassette("#{class_name}_#{method_name}") do
+      MeetingScanJob.perform_now(attrs: attr)
+    end
+  end
+
   test "in-camera items do not have AgendaItemXXX class names as they are hidden" do
     attr = {
       title: "Information Technology Sub-Committee",
