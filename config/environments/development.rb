@@ -80,6 +80,12 @@ Rails.application.configure do
     config.jurisdiction = ''
   end
 
+  config.action_mailer.delivery_method = :sendgrid_actionmailer
+  config.action_mailer.sendgrid_actionmailer_settings = {
+    api_key: ENV['SENDGRID_API_KEY'],
+    raise_delivery_errors: true
+  }  
+
   # config.after_initialize do
   #   HttpLog.configure do |c|
   #     c.log_headers   = true
