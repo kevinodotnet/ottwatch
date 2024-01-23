@@ -139,6 +139,12 @@ class DevApp::ScannerTest < ActiveSupport::TestCase
     end
   end
 
+  test "issue 102 regression fix" do
+    VCR.use_cassette("#{class_name}_#{method_name}") do
+      refute DevApp::Scanner.scan_application("D07-12-15-0165")
+    end
+  end
+
   private
 
   def cached_devapps_file

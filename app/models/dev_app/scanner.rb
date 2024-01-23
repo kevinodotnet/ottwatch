@@ -37,7 +37,10 @@ class DevApp::Scanner
     url = "https://devapps-restapi.ottawa.ca/devapps/search?authKey=#{authkey}&appStatus=all&searchText=#{app_number}&appType=all&ward=all&bounds=0,0,0,0"
 
     d = JSON.parse(Net::HTTP.get(URI(url)))
-    # return nil if d["totalDevApps"] == 0
+    if d["totalDevApps"] == 0
+      Rails.logger.info(msg: "dev app does not exist", app_number: app_number)
+      return nil
+    end
 
     announcements = []
 
