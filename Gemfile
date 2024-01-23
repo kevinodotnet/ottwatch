@@ -98,3 +98,4 @@ group :test do
 end
 
 gem "bugsnag", "~> 6.25"
+gem "sendgrid-actionmailer"
