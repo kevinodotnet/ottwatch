@@ -18,15 +18,5 @@ Rails.application.routes.draw do
   get 'meeting/index'
   get 'meeting/:reference_id', to: 'meeting#show'
 
-  resources :campaign_donations
-  resources :campaign_returns
-  resources :campaign_return_pages, only: [:show] do
-    member do
-      get :rotate
-      post :create_donation
-    end
-  end
-
-
   get 'team/index'
 end
