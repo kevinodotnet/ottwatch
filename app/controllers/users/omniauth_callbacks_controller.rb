@@ -3,6 +3,10 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
     generic_handler
   end
 
+  def github
+    generic_handler
+  end
+
   def generic_handler
     @user = User.from_omniauth(request.env["omniauth.auth"])
 
