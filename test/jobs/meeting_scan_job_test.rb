@@ -121,6 +121,24 @@ class MeetingScanJobTest < ActiveJob::TestCase
     end
   end
 
+  test "issue 112: item documents are 404ing after items are edited at source" do
+    attr = {
+      reference_guid: "a2265439-2abd-42a0-8ada-4010b9d4921c",
+      title: "n/a",
+      meeting_time: Time.now
+    }
+    VCR.use_cassette("#{class_name}_#{method_name}") do
+      # setup the data
+      MeetingScanJob.perform_now(attrs: attr)
+      # munge the created item docs, replicating what it looks like when ottawa.ca is updated between scans
+      MeetingItemDocument.last.update_attribute(:reference_id, 999_999_999)
+      # re-scan; old docs are purged since they were deleted at-source
+      assert_no_difference -> { MeetingItemDocument.count } do
+        MeetingScanJob.perform_now(attrs: attr)
+      end
+    end
+  end
+
   test "in-camera items do not have AgendaItemXXX class names as they are hidden" do
     attr = {
       title: "Information Technology Sub-Committee",

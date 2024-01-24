@@ -182,6 +182,10 @@ class MeetingScanJob < ApplicationJob
           doc.title = d[:title]
           doc.save!
         end
+
+        current_docs = item[:docs].map{|d| d[:id].to_s}
+        saved_docs = i.documents.map(&:reference_id)
+        MeetingItemDocument.where(reference_id: (saved_docs - current_docs)).delete_all
       end
     end
   end
