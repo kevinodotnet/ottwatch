@@ -34,18 +34,25 @@ session["annoucements_index_#{last_key}"] = @announcements.first.id
   </div>
 </div>
 
-<div class="owrows">
-<% @announcements.each do |a|
+<% 
+prev_date = nil
+@announcements.each do |a| 
+  is_new_date = a.created_at.to_date != prev_date
+  if is_new_date
+    %>
+    <h5 style="padding-top: 10px;"><%= a.created_at.in_time_zone("America/New_York").strftime("%Y-%m-%d") %></h5>
+    <%
+  end
+  prev_date = a.created_at.to_date
   message = a.message
   message = [a.message, a.reference_context].join(" ") if a.reference_type == "LobbyingUndertaking"
   %>
-  <div class="row">
+  <div class="row" style="margin-top: 2px;">
     <div class="col-9">
       <%= link_to(message, a.reference_link) %>
     </div>
     <div class="col-3 text-nowrap" style="text-align: right">
       <%= raw("<span class=\"new_announcement_badge\">(new)</span>") if a.id > last_id %>
-      <%= a.created_at.in_time_zone("America/New_York").strftime("%Y-%m-%d") %>
     </div>
   </div>
 <% end %>
