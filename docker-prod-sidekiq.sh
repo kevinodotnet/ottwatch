@@ -20,6 +20,7 @@ sudo docker run \
   -e RAILS_MASTER_KEY=$RAILS_MASTER_KEY \
   -e REDIS_URL=$REDIS_URL \
   -e SENDGRID_API_KEY=$SENDGRID_PRODWEB_FULL \
+  -e RAILS_MAX_THREADS=10 \
   -v $INFRA_FOLDER:/infra \
   --name ottwatch-sidekiq \
   ottwatch-prod \
