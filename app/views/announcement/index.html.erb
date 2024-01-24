@@ -1,3 +1,10 @@
+<%
+
+last_key = params["reference_type"] || "all"
+last_id = session["annoucements_index_#{last_key}"] || 0
+session["annoucements_index_#{last_key}"] = @announcements.first.id
+
+%>
 <div class="row">
   <div class="col-8">
     <h4>
@@ -14,7 +21,7 @@
 
   <div class="col-4 text-end">
     Next:
-    <% [10, 25, 50, 100, 250].each do |limit| %>
+    <% [25, 50, 100].each do |limit| %>
       <%= link_to(
         "#{limit}", 
         announcement_index_path(
@@ -28,21 +35,18 @@
 </div>
 
 <div class="owrows">
-<% @announcements.each do |a| %>
+<% @announcements.each do |a|
+  message = a.message
+  message = [a.message, a.reference_context].join(" ") if a.reference_type == "LobbyingUndertaking"
+  %>
   <div class="row">
     <div class="col-9">
-      <%
-      message = a.message
-      message = [a.message, a.reference_context].join(" ") if a.reference_type == "LobbyingUndertaking"
-      %>
       <%= link_to(message, a.reference_link) %>
     </div>
     <div class="col-3 text-nowrap" style="text-align: right">
+      <%= raw("<span class=\"new_announcement_badge\">(new)</span>") if a.id > last_id %>
       <%= a.created_at.in_time_zone("America/New_York").strftime("%Y-%m-%d") %>
     </div>
   </div>
 <% end %>
 </div>
-
-
-

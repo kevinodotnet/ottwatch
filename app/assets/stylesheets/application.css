@@ -40,3 +40,7 @@ a {
 a:hover {
   text-decoration: underline !important;
 }
+
+.new_announcement_badge {
+  color: #7aa126;
+}

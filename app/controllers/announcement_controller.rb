@@ -5,6 +5,5 @@ class AnnouncementController < ApplicationController
     relation = relation.where('id < ?', params[:before_id]) if params[:before_id]
     relation = relation.limit(params[:limit] || 50).includes(:reference)
     @announcements = relation.order(id: :desc)
-
   end
 end
