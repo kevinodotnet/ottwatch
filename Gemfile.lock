@@ -77,6 +77,9 @@ GEM
     bugsnag (6.25.2)
       concurrent-ruby (~> 1.0)
     builder (3.2.4)
+    bullet (7.1.6)
+      activesupport (>= 3.0.0)
+      uniform_notifier (~> 1.11)
     capybara (3.38.0)
       addressable
       matrix
@@ -403,6 +406,7 @@ GEM
       unf_ext
     unf_ext (0.0.8.2)
     unicode-display_width (2.4.2)
+    uniform_notifier (1.16.0)
     vcr (6.1.0)
     version_gem (1.1.1)
     warden (1.2.9)
@@ -437,6 +441,7 @@ PLATFORMS
 DEPENDENCIES
   bootsnap
   bugsnag (~> 6.25)
+  bullet
   capybara
   debug
   devise
