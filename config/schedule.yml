@@ -20,13 +20,13 @@ meeting_scan_job:
    cron: "0 6,10,14,16,20 * * *"
    class: "MeetingScanJob"
 
-# parcel_scanner:
-#    cron: "*/5 * * * *"
-#    class: "ParcelScanner"
+parcel_scanner:
+   cron: "0 4 * * *"
+   class: "ParcelScanner"
 
-# zoning_scanner:
-#    cron: "*/5 * * * *"
-#    class: "ZoningScanner"
+zoning_scanner:
+   cron: "0 4 * * *"
+   class: "ZoningScanner"
 
 consultation_scanner:
    cron: "10 10-20 * * *"
