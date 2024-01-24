@@ -16,27 +16,6 @@
     <%= auto_discovery_link_tag :rss, "https://ottwatch.ca/home/index.rss" %>
 
     <style>
-.owrows {
-  border-top: solid 1px #c0c0c0;
-  border-bottom: solid 1px #c0c0c0;
-}
-.owrows .row:nth-child(odd) {
-  background: #f0f0f0;
-  padding-top: 5px;
-  padding-bottom: 5px;
-}
-.owrows .row:nth-child(even) {
-  padding-top: 5px;
-  padding-bottom: 5px;
-}
-.ow_footer {
-  margin-top: 25px; 
-  padding: 10px; 
-  background: #f0f0f0;
-  border: solid 1px #c0c0c0;
-  font-size: 90%;
-  font-style: italic;
-}
     </style>
 
     <% if Rails.env.production? %>
