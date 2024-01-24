@@ -28,6 +28,8 @@ sudo docker run \
   -e OCTRANSPO_APP_ID=$OCTRANSPO_APP_ID \
   -e OCTRANSPO_APP_KEY=$OCTRANSPO_APP_KEY \
   -e RAILS_MAX_THREADS=10 \
+  -e GITHUB_APP_ID=$GITHUB_APP_ID \
+  -e GITHUB_APP_SECRET=$GITHUB_APP_SECRET \
   -v $INFRA_FOLDER:/infra \
   -p 3000:3000 \
   --name ottwatch-web \
