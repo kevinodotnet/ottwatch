@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# BUILD_NO_CACHE=--no-cache ./docker-prod-deploy.sh
+
 cd `dirname $0`
 
 . ~/src/infra/ottwatch.sh
