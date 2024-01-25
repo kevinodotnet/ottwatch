@@ -275,7 +275,7 @@ Devise.setup do |config|
     :github,
     ENV["GITHUB_APP_ID"],
     ENV["GITHUB_APP_SECRET"],
-    scope: 'user,public_repo'
+    scope: 'user:email'
   )
   config.omniauth(
     :google_oauth2,
