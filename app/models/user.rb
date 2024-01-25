@@ -7,7 +7,7 @@ class User < ApplicationRecord
          :omniauthable, omniauth_providers: %i[google_oauth2 github]
 
   def email_required?
-    false
+    true
   end
 
   def self.from_omniauth(auth)
@@ -19,3 +19,4 @@ class User < ApplicationRecord
     end
   end         
 end
+
