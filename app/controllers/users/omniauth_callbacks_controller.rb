@@ -16,7 +16,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
       user_email: @user.email,
       provider: @user.provider,
       uuid: @user.uid,
-      persisted: @user.persisted?
+      persisted: @user.persisted?,
       errors: @user.errors.full_messages
     )
 
