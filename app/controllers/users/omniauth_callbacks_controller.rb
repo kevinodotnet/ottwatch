@@ -8,6 +8,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
   end
 
   def generic_handler
+    Rails.logger.info("omniauth.auth: #{request.env["omniauth.auth"]}")
     @user = User.from_omniauth(request.env["omniauth.auth"])
 
     if @user.persisted?
