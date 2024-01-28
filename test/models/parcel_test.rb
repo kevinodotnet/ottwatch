@@ -12,6 +12,20 @@ class ParcelTest < ActiveSupport::TestCase
     end
   end
 
+  test "#perform uses first day of month as snapshot_date and pulls a full clone each month" do
+    VCR.use_cassette("#{class_name}_#{method_name}") do
+      travel_to(Time.zone.local(2023, 12, 15, 01, 02, 03)) do
+        ParcelScanner.new.perform
+      end
+      travel_to(Time.zone.local(2024, 01, 15, 01, 02, 03)) do
+        ParcelScanner.new.perform
+      end
+      assert_equal 2, Parcel.where(objectid: 1).count
+      assert_equal ["2023-12-01".to_date, "2024-01-01".to_date], Parcel.where(objectid: 1).map(&:snapshot_date).sort
+    end
+  end
+
+
   test "#objects_after returns objects after the given one" do
     VCR.use_cassette("#{class_name}_#{method_name}") do
       features = ParcelScanner.new.objects_after(0)
