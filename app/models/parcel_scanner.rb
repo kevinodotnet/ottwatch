@@ -2,7 +2,7 @@ class ParcelScanner < ApplicationJob
   queue_as :default
 
   def perform
-    objectid = Parcel.maximum(:objectid) || 0
+    objectid = Parcel.where(snapshot_date: current_month).maximum(:objectid) || 0
     objects_after(objectid).each do |feature|
       parcel_from_api(feature)
     end
@@ -16,10 +16,14 @@ class ParcelScanner < ApplicationJob
 
   private
 
+  def current_month
+    Date.today.strftime("%Y-%m-01").to_date
+  end
+
   def parcel_from_api(feature)
     attributes = feature.dig("attributes").map{|k, v| [k.downcase, v.to_s.gsub(/ *$/, '')]}.to_h
     attributes = attributes.except("textheight", "textwidth", "textrotation")
-    parcel = Parcel.find_or_create_by(objectid: attributes["objectid"])
+    parcel = Parcel.find_or_create_by(snapshot_date: current_month, objectid: attributes["objectid"])
     parcel.assign_attributes(attributes)
     parcel.geometry_json = feature["geometry"].to_json
     parcel.save!
