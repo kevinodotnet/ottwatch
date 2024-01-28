@@ -46,6 +46,16 @@ class DevApp::Scanner
 
     data = d["devApps"].select{ |data| data["applicationNumber"] == app_number}.first
 
+    if data.nil?
+      Rails.logger.info(msg: "dev app got renamed?", app_number: d["devApps"].first["applicationNumber"])
+      return nil
+    end
+
+    if d["totalDevApps"] == 0
+      Rails.logger.info(msg: "dev app does not exist", app_number: app_number)
+      return nil
+    end
+
     attributes = {}
     attributes[:app_id] = data["devAppId"]
     attributes[:app_number] = data["applicationNumber"]

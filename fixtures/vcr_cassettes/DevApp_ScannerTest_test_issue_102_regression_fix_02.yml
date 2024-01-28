@@ -1,0 +1,59 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://devapps-restapi.ottawa.ca/devapps/search?appStatus=all&appType=all&authKey=4r5T2egSmKm5&bounds=0,0,0,0&searchText=D01-01-18-0001&ward=all
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+      Host:
+      - devapps-restapi.ottawa.ca
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx
+      Date:
+      - Sun, 28 Jan 2024 02:24:07 GMT
+      Content-Type:
+      - application/json; charset=utf-8
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      Strict-Transport-Security:
+      - max-age=15724800; includeSubDomains
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Ott-Cache:
+      - '11'
+      Set-Cookie:
+      - NSC_QH_NzTP_ohjoy=ffffffffc3a07a1d45525d5f4f58455e445a4a42378b;expires=Sun,
+        28-Jan-2024 02:54:07 GMT;path=/;httponly
+      - incap_ses_530_2348304=OJfuZxV/LhpHHEHZX/FaB8e6tWUAAAAA4Qgafo0r+XieAuHSyBcZ6A==;
+        path=/; Domain=.ottawa.ca
+      - nlbi_2348304=F3q9HZ6c8QaZ27O9l2uJLQAAAAA8YdczGxPuyXEb71dkpvf9; path=/; Domain=.ottawa.ca
+      - visid_incap_2348304=MxsC8oopTUSSKIthzClS7se6tWUAAAAAQUIPAAAAAAB2yFUn2f5QPFcDYYBK7KyL;
+        expires=Sun, 26 Jan 2025 07:35:16 GMT; HttpOnly; path=/; Domain=.ottawa.ca
+      X-Cdn:
+      - Imperva
+      X-Iinfo:
+      - 8-53376506-53376514 NNYN CT(6 29 0) RT(1706408647015 43) q(0 0 0 0) r(1 1)
+        U24
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        eyJkZXZBcHBzIjpbeyJkZXZBcHBJZCI6Il9fQ0w3Rk1EIiwiYXBwbGljYXRpb25OdW1iZXIiOiJEMDctMTYtMjItMDAxMyIsImFwcGxpY2F0aW9uRGF0ZSI6NjM3OTI3MDAwMTkwMDAwMDAwLCJhcHBsaWNhdGlvbkRhdGVZTUQiOiIyMDIyLTA3LTA2IiwiYXBwbGljYXRpb25UeXBlSWQiOiJfX19fX181SCIsImFwcGxpY2F0aW9uVHlwZSI6eyJlbiI6IlBsYW4gb2YgU3ViZGl2aXNpb24iLCJmciI6IlBsYW4gZGUgbG90aXNzZW1lbnQifSwiYXBwbGljYXRpb25CcmllZkRlc2MiOnt9LCJhcHBsaWNhdGlvblN0YXR1cyI6eyJlbiI6IkZpbGUgUGVuZGluZyIsImZyIjoiRG9zc2llciBlbiBjb3VycyJ9LCJkZXZBcHBBZGRyZXNzZXMiOlt7ImFkZHJlc3NSZWZlcmVuY2VJZCI6Il9fQ0w3RlA0IiwiYWRkcmVzc051bWJlciI6Mjc0MCwiYWRkcmVzc1F1YWxpZmllciI6IiIsImxlZ2FsVW5pdCI6IiIsInJvYWROYW1lIjoiQ0VEQVJWSUVXIiwiY2FyZGluYWxEaXJlY3Rpb24iOiIiLCJyb2FkVHlwZSI6IlJvYWQiLCJtdW5pY2lwYWxpdHkiOiJOZXBlYW4iLCJhZGRyZXNzVHlwZSI6IlNVQk9SRCIsImFkZHJlc3NMYXRpdHVkZSI6NDUuMjc3MzA2LCJhZGRyZXNzTG9uZ2l0dWRlIjotNzUuNzgxNzQ5LCJhZGRyZXNzTnVtYmVyUm9hZE5hbWUiOiIyNzQwIENFREFSVklFVyIsInBhcmNlbFBpbk51bWJlciI6NDQ2NzIwMTZ9LHsiYWRkcmVzc1JlZmVyZW5jZUlkIjoiX19DTDdGUTIiLCJhZGRyZXNzTnVtYmVyIjo0MTkwLCJhZGRyZXNzUXVhbGlmaWVyIjoiIiwibGVnYWxVbml0IjoiIiwicm9hZE5hbWUiOiJGQUxMT1dGSUVMRCIsImNhcmRpbmFsRGlyZWN0aW9uIjoiIiwicm9hZFR5cGUiOiJSb2FkIiwibXVuaWNpcGFsaXR5IjoiTmVwZWFuIiwiYWRkcmVzc1R5cGUiOiJNQUlOIiwiYWRkcmVzc0xhdGl0dWRlIjo0NS4yNzgzNDIsImFkZHJlc3NMb25naXR1ZGUiOi03NS43ODAxODUsImFkZHJlc3NOdW1iZXJSb2FkTmFtZSI6IjQxOTAgRkFMTE9XRklFTEQiLCJwYXJjZWxQaW5OdW1iZXIiOjQ0NjcyMDA5fSx7ImFkZHJlc3NSZWZlcmVuY2VJZCI6Il9fQ0w3RlEwIiwiYWRkcmVzc051bWJlciI6NDIwMCwiYWRkcmVzc1F1YWxpZmllciI6IiIsImxlZ2FsVW5pdCI6IiIsInJvYWROYW1lIjoiRkFMTE9XRklFTEQiLCJjYXJkaW5hbERpcmVjdGlvbiI6IiIsInJvYWRUeXBlIjoiUm9hZCIsIm11bmljaXBhbGl0eSI6Ik5lcGVhbiIsImFkZHJlc3NUeXBlIjoiTUFJTiIsImFkZHJlc3NMYXRpdHVkZSI6NDUuMjc4MDU5LCJhZGRyZXNzTG9uZ2l0dWRlIjotNzUuNzgwODc3LCJhZGRyZXNzTnVtYmVyUm9hZE5hbWUiOiI0MjAwIEZBTExPV0ZJRUxEIiwicGFyY2VsUGluTnVtYmVyIjo0NDY3MjAwN30seyJhZGRyZXNzUmVmZXJlbmNlSWQiOiJfX0NMN0ZRRyIsImFkZHJlc3NOdW1iZXIiOjQyMTAsImFkZHJlc3NRdWFsaWZpZXIiOiIiLCJsZWdhbFVuaXQiOiIiLCJyb2FkTmFtZSI6IkZBTExPV0ZJRUxEIiwiY2FyZGluYWxEaXJlY3Rpb24iOiIiLCJyb2FkVHlwZSI6IlJvYWQiLCJtdW5pY2lwYWxpdHkiOiJOZXBlYW4iLCJhZGRyZXNzVHlwZSI6Ik1BSU4iLCJhZGRyZXNzTGF0aXR1ZGUiOjQ1LjI3NzcyNywiYWRkcmVzc0xvbmdpdHVkZSI6LTc1Ljc4MTY4OCwiYWRkcmVzc051bWJlclJvYWROYW1lIjoiNDIxMCBGQUxMT1dGSUVMRCIsInBhcmNlbFBpbk51bWJlciI6NDQ2NzIwMTF9LHsiYWRkcmVzc1JlZmVyZW5jZUlkIjoiX19DTDdGUkwiLCJhZGRyZXNzTnVtYmVyIjo0MjM2LCJhZGRyZXNzUXVhbGlmaWVyIjoiIiwibGVnYWxVbml0IjoiIiwicm9hZE5hbWUiOiJGQUxMT1dGSUVMRCIsImNhcmRpbmFsRGlyZWN0aW9uIjoiIiwicm9hZFR5cGUiOiJSb2FkIiwibXVuaWNpcGFsaXR5IjoiTmVwZWFuIiwiYWRkcmVzc1R5cGUiOiJTVUJPUkQiLCJhZGRyZXNzTGF0aXR1ZGUiOjQ1LjI3NzMwNiwiYWRkcmVzc0xvbmdpdHVkZSI6LTc1Ljc4MTc0OSwiYWRkcmVzc051bWJlclJvYWROYW1lIjoiNDIzNiBGQUxMT1dGSUVMRCIsInBhcmNlbFBpbk51bWJlciI6NDQ2NzIwMTZ9XSwiZGV2QXBwRG9jdW1lbnRzIjpbXSwib2JqZWN0U3RhdHVzIjp7Im9iamVjdFN0YXR1c1R5cGVJZCI6Il9fMzAzR0VRIiwib2JqZWN0Q3VycmVudFN0YXR1cyI6eyJlbiI6IkRyYWZ0IEFwcHJvdmVkIiwiZnIiOiJBcHByb2JhdGlvbiBQcsOpbGltaW5haXJlIn0sIm9iamVjdEN1cnJlbnRTdGF0dXNEYXRlIjo2MzgxMTk2NzA5NDAwMDAwMDAsIm9iamVjdEN1cnJlbnRTdGF0dXNEYXRlWU1EIjoiMjAyMy0wMi0xNCJ9LCJkZXZBcHBXYXJkIjp7ImNvbW11bml0eUlkIjpudWxsLCJ3YXJkTnVtYmVyIjp7fSwid2FyZE5hbWUiOnt9LCJjb3VuY2lsbG9yTGFzdE5hbWUiOm51bGwsImNvdW5jaWxsb3JGaXJzdE5hbWUiOm51bGwsIndhcmRDb3VuY2lsbG9yRW1haWwiOm51bGx9LCJlbmRPZkNpcmN1bGF0aW9uRGF0ZSI6NjM3OTcwMTQ2MDgwMDAwMDAwLCJlbmRPZkNpcmN1bGF0aW9uRGF0ZVlNRCI6IjIwMjItMDgtMjUiLCJjYW5Db21tZW50IjoiWSIsInNob3dGZWVkYmFja0xpbmsiOiJOIiwicGxhbm5lckZpcnN0TmFtZSI6bnVsbCwicGxhbm5lckxhc3ROYW1lIjpudWxsLCJwbGFubmVyUGhvbmUiOm51bGwsInBsYW5uZXJFbWFpbCI6bnVsbCwic2VhcmNoYWJsZVRleHQiOm51bGwsInN0cmVldEFkcmVzcyI6IkNFREFSVklFVyIsInN0cmVldE51bWJlciI6Mjc0MH1dLCJ0b3RhbERldkFwcHMiOjEsImluZGV4IjowLCJsaW1pdCI6NTB9
+  recorded_at: Sun, 28 Jan 2024 02:24:07 GMT
+recorded_with: VCR 6.1.0
