@@ -7,7 +7,7 @@ Rails.application.routes.draw do
   get 'home/index'
   root "home#index"
 
-  get 'parcels/:objectid', to: 'parcels#show'
+  get 'parcels/:id', to: 'parcels#show'
 
   get 'devapp/index'
   get 'devapp/:app_number', to: 'devapp#show'
