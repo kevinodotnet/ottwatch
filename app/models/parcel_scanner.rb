@@ -3,9 +3,12 @@ class ParcelScanner < ApplicationJob
 
   def perform
     objectid = Parcel.where(snapshot_date: current_month).maximum(:objectid) || 0
+    again = false
     objects_after(objectid).each do |feature|
       parcel_from_api(feature)
+      again = true
     end
+    ParcelScanner.perform_later if again
   end
 
   def objects_after(objectid)
