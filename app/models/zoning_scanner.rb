@@ -10,10 +10,13 @@ class ZoningScanner < ApplicationJob
   }
 
   def perform
-    objectid = Zoning.maximum(:objectid) || 0
+    objectid = Zoning.where(snapshot_date: current_month).maximum(:objectid) || 0
+    again = false
     objects_after(objectid).each do |feature|
       zoning_from_api(feature)
+      again = true
     end
+    ZoningScanner.perform_later if again
   end
 
   def objects_after(objectid)
@@ -24,6 +27,10 @@ class ZoningScanner < ApplicationJob
 
   private
 
+  def current_month
+    Date.today.strftime("%Y-%m-01").to_date
+  end
+
   def zoning_from_api(feature)
     orig_attr = feature.dig("attributes").map{|k, v| [k.downcase, v.to_s.gsub(/ *$/, '')]}.to_h
 
@@ -33,7 +40,7 @@ class ZoningScanner < ApplicationJob
       attributes[v] = orig_attr[k]
     end
 
-    zoning = Zoning.find_or_create_by(objectid: attributes["objectid"]) do |zoning|
+    zoning = Zoning.find_or_create_by(snapshot_date: current_month, objectid: attributes["objectid"]) do |zoning|
       zoning.assign_attributes(attributes)
       zoning.geometry_json = feature["geometry"].to_json
     end
