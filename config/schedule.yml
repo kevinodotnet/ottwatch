@@ -25,7 +25,7 @@ parcel_scanner:
    class: "ParcelScanner"
 
 zoning_scanner:
-   cron: "0 4 * * *"
+   cron: "0 2 * * *"
    class: "ZoningScanner"
 
 consultation_scanner:
