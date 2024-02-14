@@ -44,30 +44,33 @@
 
 <%= form_with(url: transpo_show_stop_path, method: :get) do |form| %>
   <div class="row">
-    <div class="col-6 col-sm-3">
-      <%= form.label(:stop_no, "Stop Number:") %> 
+    <div class="col-3">
+      <%= form.label(:stop_no, "Stop:") %>
     </div>
-    <div class="col-6">
-      <%= form.text_field(:stop_no, value: params[:stop_no], required: true) %>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-6 col-sm-3">
-      <%= form.label(:stop_routes, "Routes:") %> 
-    </div>
-    <div class="col-6">
-      <%= form.text_field(:stop_routes, value: params[:stop_routes]) %>
+    <div class="col-9">
+      <%= form.text_field(:stop_no, value: params[:stop_no], required: true, class: "form-control") %>
     </div>
   </div>
   <div class="row">
-    <div class="col-6 col-sm-3">
+    <div class="col-3">
+      <%= form.label(:stop_routes, "Route(s):") %>
     </div>
-    <div class="col-6">
-      <%= form.submit("Search") %>
+    <div class="col-9">
+      <%= form.text_field(:stop_routes, value: params[:stop_routes], class: "form-control") %>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-3">
+    </div>
+    <div class="col-9">
+      <%= form.submit("Search", class: "btn btn-primary") %>
     </div>
   </div>
 
-<p style="padding-top: 10px;">
+
+
+<h5 style="padding-top: 20px;">Instructions</h5>
+<p>
 Enter a stop number ("4940") and optionally one or more route numbers ("11 59") separated
 by spaces to get the next available trips in all directions. If you leave the route number(s)
 empty, all routes servicing that stop will be shown.
