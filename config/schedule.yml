@@ -21,11 +21,11 @@ meeting_scan_job:
    class: "MeetingScanJob"
 
 parcel_scanner:
-   cron: "0 2 * * *"
+   cron: "0 2 1,2,3 * *"
    class: "ParcelScanner"
 
 zoning_scanner:
-   cron: "0 2 * * *"
+   cron: "0 2 1,2,3 * *"
    class: "ZoningScanner"
 
 consultation_scanner:
