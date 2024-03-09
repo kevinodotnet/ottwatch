@@ -34,7 +34,7 @@ class ParcelCompareJob < ApplicationJob
       if p1.count == 0 && p2.count == 1
         return :added
       end
-      binding.pry
+      return :other_count
     end
 
     result = p1.each_with_index.map do |p, i|
@@ -42,7 +42,7 @@ class ParcelCompareJob < ApplicationJob
     end
     return result.uniq.first if result.uniq.count == 1
     # return :equal if result.uniq == [:equal]
-    binding.pry
+    return :other_not_single_uniq
   end
 
   def compare_parcels(p1, p2)
@@ -53,15 +53,5 @@ class ParcelCompareJob < ApplicationJob
 
     diff_keys = p1a.keys.select{|k| p1a[k] != p2a[k]}
     return diff_keys.join(":").to_sym
-
-    # return :attr_change_non_geo if diff_keys == ["postal_code"]
-    # return :attr_change_geo_only if diff_keys == ["shape_length", "shape_area", "geometry_json"]
-    # return :attr_change_geo_only if diff_keys == ["northing", "shape_length", "shape_area", "geometry_json"]
-    # return :attr_change_geo_only if diff_keys == ["geometry_json"]
-    # return :attr_change_geo_only if diff_keys == ["easting", "northing", "shape_length", "shape_area", "geometry_json"]
-
-    # return :attr_change_non_geo if diff_keys == ["pi_municipal_address_id", "record_owner_id", "rt_road_name_id", "address_number", "road_name", "suffix", "dir", "municipality_name", "postal_code", "address_status", "address_type_id", "pin_number", "feat_num", "pi_parcel_id"]
-
-    # binding.pry
   end
 end
