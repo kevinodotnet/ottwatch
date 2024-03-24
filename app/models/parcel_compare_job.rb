@@ -14,6 +14,7 @@ class ParcelCompareJob < ApplicationJob
     # iterate by pins
     pin_id = -1
     pin_id = "039250122"
+    pin_id = "161020000"
 
     while !pin_id.nil?
       p1 = Parcel.select(:pin).where(snapshot_date: s1).where("pin > ?", pin_id).order(:pin).limit(1).first
