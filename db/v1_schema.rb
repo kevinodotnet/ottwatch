@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_02_01_195110) do
+ActiveRecord::Schema[7.0].define(version: 2024_03_07_034008) do
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -258,6 +258,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_01_195110) do
     t.text "geometry_json", size: :medium
     t.integer "snapshot_id"
     t.date "snapshot_date"
+    t.index ["pin", "snapshot_date"], name: "index_parcels_on_pin_and_snapshot_date"
     t.index ["snapshot_date", "objectid"], name: "index_parcels_on_snapshot_date_and_objectid", unique: true
   end
 
