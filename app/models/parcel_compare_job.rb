@@ -13,14 +13,19 @@ class ParcelCompareJob < ApplicationJob
 
     # iterate by pins
     pin_id = -1
-    pin_id = "039250122"
-    pin_id = "161020000"
+    # pin_id = "039250122"
+    # pin_id = "161020000"
+
+    seen = []
 
     while !pin_id.nil?
       p1 = Parcel.select(:pin).where(snapshot_date: s1).where("pin > ?", pin_id).order(:pin).limit(1).first
       p2 = Parcel.select(:pin).where(snapshot_date: s2).where("pin > ?", pin_id).order(:pin).limit(1).first
       pin_id = [p1.pin, p2.pin].min
-      compare_pin(pin_id, s1, s2)
+      result = compare_pin(pin_id, s1, s2)
+      next if result == :equal
+      
+      binding.pry
     end
   end
 
