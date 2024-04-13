@@ -68,6 +68,8 @@ Rails.application.configure do
   # Annotate rendered view with file names.
   # config.action_view.annotate_rendered_view_with_filenames = true
 
+  config.active_job.queue_adapter = :test
+
   Open311.configure do |config|
     config.endpoint     = 'https://city-of-ottawa-dev.apigee.net/open311/v2/'
     config.api_key      = 'TODO find test key'
