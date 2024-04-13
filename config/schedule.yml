@@ -32,10 +32,6 @@ consultation_scanner:
    cron: "10 10-20 * * *"
    class: "ConsultationScanner"
 
-# service_request_scan_job:
-#    cron: "*/10 * * * *"
-#    class: "ServiceRequestScanJob"
-
 # syndication_job:
 #    cron: "* * * * *"
 #    class: "SyndicationJob"

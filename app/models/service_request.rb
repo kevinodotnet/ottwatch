@@ -1,2 +1,0 @@
-class ServiceRequest < ApplicationRecord
-end
