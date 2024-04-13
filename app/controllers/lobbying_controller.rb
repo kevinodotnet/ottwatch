@@ -1,6 +1,6 @@
 class LobbyingController < ApplicationController
   def index
-    relation = LobbyingUndertaking.all.includes(:activities)
+    relation = LobbyingUndertaking.all
     if params["before_id"]
       relation = relation.where("id < ?", params["before_id"])
     end

@@ -25,7 +25,6 @@ class ParcelTest < ActiveSupport::TestCase
     end
   end
 
-
   test "#objects_after returns objects after the given one" do
     VCR.use_cassette("#{class_name}_#{method_name}") do
       features = ParcelScanner.new.objects_after(0)
