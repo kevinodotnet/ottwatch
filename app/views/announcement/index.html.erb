@@ -1,7 +1,7 @@
 <%
 last_key = params["reference_type"] || "all"
 last_id = session["annoucements_index_#{last_key}"] || 0
-session["annoucements_index_#{last_key}"] = @announcements.first.id
+session["annoucements_index_#{last_key}"] = @announcements.first&.id
 %>
 <div class="row">
   <div class="col-8">
