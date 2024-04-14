@@ -1,5 +1,4 @@
 require "active_support/core_ext/integer/time"
-require "open311"
 
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
@@ -93,10 +92,4 @@ Rails.application.configure do
   config.active_record.dump_schema_after_migration = false
 
   config.action_mailer.default_url_options = { host: 'ottwatch.ca', port: 443 }
-
-  Open311.configure do |config|
-    config.endpoint     = 'https://city-of-ottawa-prod.apigee.net/open311/v2/'
-    config.api_key      = 'TODO find test key' # TODO source API_KEY from ENV
-    config.jurisdiction = ''
-  end
 end

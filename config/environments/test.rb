@@ -1,5 +1,4 @@
 require "active_support/core_ext/integer/time"
-require "open311"
 
 # The test environment is used exclusively to run your application's
 # test suite. You never need to work with it otherwise. Remember that
@@ -69,10 +68,4 @@ Rails.application.configure do
   # config.action_view.annotate_rendered_view_with_filenames = true
 
   config.active_job.queue_adapter = :test
-
-  Open311.configure do |config|
-    config.endpoint     = 'https://city-of-ottawa-dev.apigee.net/open311/v2/'
-    config.api_key      = 'TODO find test key'
-    config.jurisdiction = ''
-  end
 end
