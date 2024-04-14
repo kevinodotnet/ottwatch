@@ -117,7 +117,7 @@ class DevApp::Scanner
           Rails.logger.info(msg: "scanning devapp NO_CHANGE_NO_DB", app_number: app_number, api_status: status, db_status_id: current_status.id, db_status: current_status.status)
         else
           Rails.logger.info(msg: "scanning devapp CHANGED_UPDATING", app_number: app_number, api_status: status, db_status_id: current_status.id, db_status: current_status.status)
-          announcements << { type: :status_change, from: current_status.status, to: status}
+          # announcements << { type: :status_change, from: current_status.status, to: status}
           entry.statuses << DevApp::Status.new(status: status)
         end
       else
@@ -166,8 +166,6 @@ class DevApp::Scanner
           end
           m << "..." if desc_parts.any?
           m
-        else
-          "DevApp #{entry.app_number} changed status from '#{msg[:from]}' to '#{msg[:to]}'"
         end
         entry.announcements << Announcement.new(message: message)
       end
