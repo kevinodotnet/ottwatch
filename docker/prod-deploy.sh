@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# BUILD_NO_CACHE=--no-cache ./docker-prod-deploy.sh
+# BUILD_NO_CACHE=--no-cache ./prod-deploy.sh
 
 cd `dirname $0`
 
@@ -10,35 +10,35 @@ echo "############################"
 date
 echo "Building..."
 echo ""
-./docker-prod-build.sh
+./prod-build.sh
 
 echo ""
 echo "############################"
 date
 echo "Stopping..."
 echo ""
-./docker-prod-stop.sh
+./prod-stop.sh
 
 echo ""
 echo "############################"
 date
 echo "Migrating..."
 echo ""
-./docker-prod-exec.sh bin/rails db:migrate:primary
+./prod-exec.sh bin/rails db:migrate:primary
 
 echo ""
 echo "############################"
 date
 echo "Sidekiq..."
 echo ""
-./docker-prod-sidekiq.sh
+./prod-sidekiq.sh
 
 echo ""
 echo "############################"
 date
 echo "Web..."
 echo ""
-./docker-prod-web.sh
+./prod-web.sh
 
 echo ""
 echo "############################"
