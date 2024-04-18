@@ -14,6 +14,6 @@ echo "#"
 echo "cd ottwatch; bin/rails db:setup"
 echo ""
 
-docker run --name ottwatch-dev -p 33000:3000 -v `pwd`:/ottwatch -i -t ottwatch-dev || \
+docker run --name ottwatch-dev -p 33000:3000 -v `pwd`/..:/ottwatch -i -t ottwatch-dev || \
   docker start -i ottwatch-dev
 
