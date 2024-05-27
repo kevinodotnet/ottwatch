@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_03_07_034008) do
+ActiveRecord::Schema[7.1].define(version: 2024_05_27_005909) do
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -226,6 +226,17 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_07_034008) do
     t.datetime "updated_at", null: false
     t.string "reference_guid"
     t.index ["committee_id"], name: "index_meetings_on_committee_id"
+  end
+
+  create_table "model_comparisons", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "model1_type", null: false
+    t.bigint "model1_id", null: false
+    t.string "model2_type", null: false
+    t.bigint "model2_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["model1_type", "model1_id"], name: "index_model_comparisons_on_model1"
+    t.index ["model2_type", "model2_id"], name: "index_model_comparisons_on_model2"
   end
 
   create_table "parcels", charset: "utf8mb4", collation: "utf8mb4_unicode_520_ci", force: :cascade do |t|
