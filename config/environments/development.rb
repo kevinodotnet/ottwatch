@@ -19,6 +19,7 @@ Rails.application.configure do
 
   config.hosts << "dev.local"
   config.hosts << "dev.ottwatch.ca"
+  config.hosts << "pi"
 
   # Do not eager load code on boot.
   config.eager_load = false
