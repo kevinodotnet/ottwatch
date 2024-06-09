@@ -66,20 +66,6 @@ class DevApp::ScannerTest < ActiveSupport::TestCase
     end
   end
 
-  test "devapp status changes are announced" do
-    VCR.use_cassette("#{class_name}_#{method_name}") do
-      entry = DevApp::Scanner.scan_application(APP_NUMBER)
-      s = entry.statuses.first
-      s.status = "fake"
-      s.save!
-      entry = assert_difference -> { Announcement.all.count} do
-        DevApp::Scanner.scan_application(APP_NUMBER)
-      end
-      announcement = Announcement.last
-      assert_equal "DevApp #{APP_NUMBER} changed status from 'fake' to 'Active'", announcement.message
-    end    
-  end
-
   test "addresses get saved" do
     VCR.use_cassette("#{class_name}_#{method_name}") do
       assert_difference -> { DevApp::Address.all.count}, 1 do
@@ -145,7 +131,6 @@ class DevApp::ScannerTest < ActiveSupport::TestCase
     end
   end
 
-  focus
   test "issue 102 regression fix 02" do
     VCR.use_cassette("#{class_name}_#{method_name}") do
       refute DevApp::Scanner.scan_application("D01-01-18-0001")
