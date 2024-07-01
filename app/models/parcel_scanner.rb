@@ -1,14 +1,14 @@
 class ParcelScanner < ApplicationJob
   queue_as :default
 
-  def perform
+  def perform(allow_again: true)
     objectid = Parcel.where(snapshot_date: current_month).maximum(:objectid) || 0
     again = false
     objects_after(objectid).each do |feature|
       parcel_from_api(feature)
       again = true
     end
-    ParcelScanner.perform_later if again
+    ParcelScanner.perform_later if allow_again && again
   end
 
   def objects_after(objectid)

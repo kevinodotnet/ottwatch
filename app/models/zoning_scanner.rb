@@ -9,14 +9,14 @@ class ZoningScanner < ApplicationJob
     "url_fr" => nil,
   }
 
-  def perform
+  def perform(allow_again: true)
     objectid = Zoning.where(snapshot_date: current_month).maximum(:objectid) || 0
     again = false
     objects_after(objectid).each do |feature|
       zoning_from_api(feature)
       again = true
     end
-    ZoningScanner.perform_later if again
+    ZoningScanner.perform_later if allow_again && again
   end
 
   def objects_after(objectid)

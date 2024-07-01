@@ -3,7 +3,41 @@ require 'csv'
 namespace :ottwatch do
   desc "Seed data"
   task seed: :environment do
-    ParcelScanner.perform_now
+    puts "DevApp: (getting latest)"
+    dev_apps = Set.new
+    latest = DevApp::Scanner.latest
+    latest.sort_by{|d| d[:status_date].to_date}.reverse.first(10).map{|d| d[:app_number]}.each do |a|
+      if dev_apps.include?(a)
+        puts "DevApp: #{a} (dup)"
+        next
+      end
+      puts "DevApp: #{a}"
+      dev_apps << a
+      DevApp::Scanner.scan_application(a)
+    end
+
+    puts "ConsultationScanner"
+    ConsultationScanner.perform_now
+
+    puts "ZoningScanner"
+    ZoningScanner.perform_now(allow_again: false)
+
+    puts "ParcelScanner"
+    ParcelScanner.perform_now(allow_again: false)
+
+    meeting_type = "City Council"
+    puts "MeetingScanJob: #{meeting_type}"
+    meetings = MeetingScanJob.scan_past_meetings(meeting_type)
+    meetings.sort{|d| d[:meeting_time]}.last(10).each do |m|
+      puts "MeetingScanJob: #{m}"
+      MeetingScanJob.new.send(:scan_meeting, meetings.sample)
+    end
+
+    (-10..0).each do |i|
+      date = Date.today + i.days
+      puts "LobbyingScanJob: #{date}"
+      LobbyingScanJob.perform_now(date: date)
+    end
   end
 
   desc "Speed data"

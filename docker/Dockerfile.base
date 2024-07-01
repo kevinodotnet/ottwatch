@@ -21,8 +21,8 @@ RUN apt-get update && \
         imagemagick \
         libmagick++-dev
 
-RUN groupadd -g 1000 -r app && \
-    useradd -u 1000 --no-log-init -r -g app app && \
+RUN groupadd -g 2200 -r app && \
+    useradd -u 2200 --no-log-init -r -g app app && \
     mkdir /home/app && \
     chown app:app /home/app && \
     adduser app sudo

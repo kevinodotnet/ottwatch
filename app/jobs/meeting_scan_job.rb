@@ -163,8 +163,8 @@ class MeetingScanJob < ApplicationJob
 
     Meeting.transaction do
       meeting = create_meeting(
-        name: title, 
-        reference_guid: guid, 
+        name: title,
+        reference_guid: guid,
         start_time: meeting_time,
       )
 
@@ -189,7 +189,7 @@ class MeetingScanJob < ApplicationJob
       end
     end
   end
-  
+
   private
 
   def elements_with_class(node, target_class)
@@ -221,7 +221,7 @@ class MeetingScanJob < ApplicationJob
 
   def create_meeting(name:, reference_guid:, contact_name: nil, contact_email: nil, contact_phone: nil, start_time: )
     attributes = {
-      contact_name: contact_name, 
+      contact_name: contact_name,
       contact_email: contact_email,
       contact_phone: contact_phone,
       reference_guid: reference_guid,
