@@ -1,12 +1,14 @@
 class MeetingController < ApplicationController
   def index
+    @upcoming = Meeting.includes(:committee).where('start_time > ?', Time.now).order(:start_time)
+
     relation = if params["before_id"]
       m = Meeting.find(params["before_id"])
       Meeting.where("start_time < ? and id < ?", m.start_time, params["before_id"])
     else
-      Meeting.all
+      Meeting.where('start_time < ?', Time.now)
     end
-    @meetings = relation.includes(:committee).order(start_time: :desc, id: :desc).limit(50)
+    @previous = relation.includes(:committee).order(start_time: :desc, id: :desc).limit(50)
   end
 
   def show
