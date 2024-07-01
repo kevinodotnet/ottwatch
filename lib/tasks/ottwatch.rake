@@ -3,6 +3,32 @@ require 'csv'
 namespace :ottwatch do
   desc "Seed data"
   task seed: :environment do
+
+    Nokogiri::HTML(Net::HTTP.get(URI("https://pub-ottawa.escribemeetings.com/"))).xpath('//div[@class="calendar-item"]').each do |m|
+      md = Nokogiri::HTML(m.to_s)
+
+      title = md.xpath('//div[@class="meeting-title"]/h3/span').children.to_s
+      meeting_time = md.xpath('//div[@class="meeting-date"]').first.children.to_s
+      meeting_time = "#{meeting_time} EST".to_time
+      reference_guid = md.xpath('//a').map do |a|
+        a.attributes.map do |k,v|
+          next unless k == 'href'
+          next unless v.value.match(/Meeting.aspx.*/)
+          next unless a.children.to_s.match(/HTML/)
+          v.value.match(/Meeting.aspx\?Id=(?<id>[^&]*)/)["id"]
+        end
+      end.flatten.compact.first
+
+      next unless reference_guid
+
+      attrs = {
+        title: title,
+        reference_guid: reference_guid,
+        meeting_time: meeting_time
+      }
+      MeetingScanJob.perform_now(attrs: attrs)
+    end
+
     puts "DevApp: (getting latest)"
     dev_apps = Set.new
     latest = DevApp::Scanner.latest
