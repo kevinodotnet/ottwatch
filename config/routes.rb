@@ -9,8 +9,10 @@ Rails.application.routes.draw do
 
   get 'parcels/:id', to: 'parcels#show'
 
+  get 'devapp/map', to: 'devapp#map'
+  get 'devapp/map_data', to: 'devapp#map_data'
   get 'devapp/index'
-  get 'devapp/:app_number', to: 'devapp#show'
+  get 'devapp/:app_number', to: 'devapp#show', as: 'devapp'
 
   get 'lobbying/index'
   get 'lobbying/:id', to: 'lobbying#show'
