@@ -13,9 +13,6 @@ export default class extends Controller {
 
   connect() {
     this.initMap()
-    if (!this.singlePointValue) {
-      this.applyFilters()
-    }
   }
 
   initMap() {
@@ -82,6 +79,11 @@ export default class extends Controller {
         this.map.on('click', 'data-layer', this.handleMarkerClick.bind(this));
         this.map.on('mouseenter', 'data-layer', () => this.map.getCanvas().style.cursor = 'pointer');
         this.map.on('mouseleave', 'data-layer', () => this.map.getCanvas().style.cursor = '');
+
+        // Apply filters after data is loaded
+        if (!this.singlePointValue) {
+          this.applyFilters()
+        }
       });
   }
 
@@ -117,6 +119,11 @@ export default class extends Controller {
   }
 
   applyFilters() {
+    if (!this.map.getLayer('data-layer')) {
+      console.warn('Data layer not yet loaded. Skipping filter application.');
+      return;
+    }
+
     const filters = Object.entries(this.filterGroupsValue).map(([groupName, options]) => {
       const checkedOptions = this.filterCheckboxTargets
         .filter(checkbox => checkbox.dataset.mapFilterGroup === groupName && checkbox.checked)
@@ -125,9 +132,7 @@ export default class extends Controller {
     });
 
     const combinedFilter = ['all', ...filters];
-    if (this.map) {
-      this.map.setFilter('data-layer', combinedFilter);
-    }
+    this.map.setFilter('data-layer', combinedFilter);
   }
 
   resetFilters() {
