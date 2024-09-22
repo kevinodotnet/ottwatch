@@ -7,33 +7,26 @@
     </div>
   </div>
 
-  <%
-  @devapps.each do |d|
-    %>
-    <p>
-    <%= link_to(d.app_number, "/devapp/#{d.app_number}") %>
-    <%= d.app_type %>: <%= d.desc %>.
-      <ul>
-      <% d.addresses.each do |a| %>
-        <% next if a.ref_id == "" %>
-        <li
-          class="devapp-address-list-item"
-          data-devapp-id="<%= d.id %>"
-          data-devapp-number="<%= d.app_number %>"
-          data-latitude="<%= a.lat %>"
-          data-longitude="<%= a.lon %>"
-        >
-        <%= [a.road_number, a.road_name, a.direction, a.road_type].compact.join(" ") %>
-        </li>
-      <% end %>
-      </ul>
-    </p>
-    <hr/>
-    <%
-  end
-  %>
+  <div class="list-group list-group-flush">
+    <% @devapps.each do |d| %>
+      <div class="list-group-item">
+        <div class="d-flex w-100 justify-content-between">
+          <%= link_to "/devapp/#{d.app_number}" do %>
+            <h5 class="mb-1"><%= d.app_number %></h5>
+          <% end %>
+          <small><%= d.updated_at.strftime("%B %d, %Y") %></small>
+        </div>
+        <p class="mb-1"><strong><%= d.app_type %></strong></p>
+        <p class="mb-1"><%= d.desc %></p>
+        <small>
+          Addresses:
+          <%= d.addresses.reject { |a| a.ref_id.blank? }.map { |a| [a.road_number, a.road_name, a.direction, a.road_type].compact.join(" ") }.join(", ") %>
+        </small>
+      </div>
+    <% end %>
+  </div>
 
-  <center>
-  <%= link_to "More...", devapp_index_path(before_id: @devapps.last&.id) %>
-  </center>
+  <div class="d-flex justify-content-center mt-4 mb-5">
+    <%= link_to "Load More", devapp_index_path(before_id: @devapps.last&.id), class: "btn btn-outline-primary" %>
+  </div>
 </div>

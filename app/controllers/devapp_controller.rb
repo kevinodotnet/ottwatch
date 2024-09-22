@@ -13,6 +13,8 @@ class DevappController < ApplicationController
   def show
     @entry = DevApp::Entry.where(app_number: params[:app_number]).includes(:statuses, :addresses, :documents).first
     return render plain: "404 Not Found", status: 404 unless @entry
+
+    @coordinates = @entry.addresses.first&.coordinates
   end
 
   def map
@@ -27,6 +29,9 @@ class DevappController < ApplicationController
   def map_data
     geojson = {
       type: "FeatureCollection",
+      # TODO: group the data by unique address and update the popup to show the different apps at the address.
+      # Unsure at the moment whether the map is move valuable showing distinct applications (pin to first address) or
+      # distinct list of addresses and possible displaying the same app multiple times.
       features: DevApp::Entry.includes(:addresses, :statuses).filter_map do |app|
         next unless (coordinates = app.addresses.first&.coordinates)
 

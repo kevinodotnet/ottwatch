@@ -1,69 +1,96 @@
 <% content_for(:html_title, "#{@entry.app_number} - Development Application") %>
-<h1><%= @entry.app_number %></h1>
-<table border="1">
-<tr><th>Number</th><td><%= @entry.app_number %></td></tr>
-<tr><th>Type</th><td><%= @entry.app_type %></td></tr>
-<tr><th>Indexed</th><td><%= @entry.created_at %></td></tr>
-<tr><th>Description</th><td><%= @entry.desc %></td></tr>
-<tr><th>External</th><td><%= link_to("View application on ottawa.ca", "https://devapps.ottawa.ca/en/applications/#{@entry.app_number}/details") %></td></tr>
 
-<tr>
-  <th>Status</th>
-  <td>
-    <ul>
-    <%
-    @entry.statuses.each do |a|
-      %>
-      <li><%= a.slice(:created_at, :status).values.join(" ") %></li>
-      <%
-    end
-    %>
-    </ul>
-  </td>
-</tr>
-<tr>
-  <th>Addresses</th>
-  <td>
-    <ul>
-    <%
-    @entry.addresses.each do |a|
-      %>
-      <li><%= a.slice(:road_number, :road_name, :road_type, :direction, :municipality).values.join(" ") %></li>
-      <%
-    end
-    %>
-    </ul>
-  </td>
-</tr>
-<tr>
-  <th>City Staff Contact</th>
-  <td>
-    <%= @entry.planner_first_name %> <%= @entry.planner_last_name %><br/>
-    <a href="mailto:<%= @entry.planner_email %>"><%= @entry.planner_email %></a><br/>
-    <a href="tel:<%= @entry.planner_phone %>"><%= @entry.planner_phone %></a><br/>
-  </td>
-</tr>
-<tr>
-  <th>Documents</th>
-  <td>
-    <ul>
-    <%
-    @entry.documents.each do |d|
-      %>
-      <li>
-      <%= link_to(d.name.gsub(@entry.app_number, " "), d.url) %>
-      <%
-      if !%w(200 302).include?(d.state)
-        %>
-        (<span style="color: #ff0000">Missing/broken document: <%= d.state %></span>)
-        <%
-      end
-      %>
-      </li>
-      <%
-    end
-    %>
-    </ul>
-  </td>
-</tr>
-</table>
+<div class="container mt-4" data-controller="devapp-show">
+  <h1 class="mb-4"><%= @entry.app_number %></h1>
+
+  <div class="row">
+    <div class="col-md-8">
+      <div class="card mb-4">
+        <div class="card-body">
+          <h5 class="card-title">Application Details</h5>
+          <dl class="row">
+            <dt class="col-sm-3">Number</dt>
+            <dd class="col-sm-9"><%= @entry.app_number %></dd>
+
+            <dt class="col-sm-3">Type</dt>
+            <dd class="col-sm-9"><%= @entry.app_type %></dd>
+
+            <dt class="col-sm-3">Indexed</dt>
+            <dd class="col-sm-9"><%= @entry.created_at.strftime("%B %d, %Y") %></dd>
+
+            <dt class="col-sm-3">Description</dt>
+            <dd class="col-sm-9"><%= @entry.desc %></dd>
+
+            <dt class="col-sm-3">External Link</dt>
+            <dd class="col-sm-9">
+              <%= link_to("View application on ottawa.ca", "https://devapps.ottawa.ca/en/applications/#{@entry.app_number}/details", target: "_blank", class: "btn btn-sm btn-outline-primary") %>
+            </dd>
+          </dl>
+        </div>
+      </div>
+
+      <div class="card mb-4">
+        <div class="card-body">
+          <h5 class="card-title">Status History</h5>
+          <ul class="list-group list-group-flush">
+            <% @entry.statuses.each do |status| %>
+              <li class="list-group-item">
+                <strong><%= status.created_at.strftime("%B %d, %Y") %>:</strong> <%= status.status %>
+              </li>
+            <% end %>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card mb-4">
+        <div class="card-body">
+          <h5 class="card-title">Addresses</h5>
+          <ul class="list-group list-group-flush">
+            <% @entry.addresses.each do |address| %>
+              <li class="list-group-item">
+                <%= [address.road_number, address.road_name, address.road_type, address.direction, address.municipality].compact.join(" ") %>
+              </li>
+            <% end %>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card mb-4">
+        <div class="card-body">
+          <h5 class="card-title">City Staff Contact</h5>
+          <p class="card-text">
+            <%= @entry.planner_first_name %> <%= @entry.planner_last_name %><br>
+            <a href="mailto:<%= @entry.planner_email %>"><%= @entry.planner_email %></a><br>
+            <a href="tel:<%= @entry.planner_phone %>"><%= @entry.planner_phone %></a>
+          </p>
+        </div>
+      </div>
+
+      <div class="card mb-4">
+        <div class="card-body">
+          <h5 class="card-title">Documents</h5>
+          <ul class="list-group list-group-flush">
+            <% @entry.documents.each do |document| %>
+              <li class="list-group-item">
+                <%= link_to(document.name.gsub(@entry.app_number, "").strip, document.url, target: "_blank") %>
+                <% unless %w(200 302).include?(document.state) %>
+                  <span class="badge bg-danger">Missing/broken document: <%= document.state %></span>
+                <% end %>
+              </li>
+            <% end %>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div data-controller="map"
+          data-map-target="mapContainer"
+          data-map-initial-lat-value="<%= @entry.addresses.first&.coordinates&.lat %>"
+          data-map-initial-lon-value="<%= @entry.addresses.first&.coordinates&.lon %>"
+          data-map-single-point-value="true"
+          class="rounded"
+          style="width: 100%; height: 300px;"></div>
+    </div>
+  </div>
+</div>

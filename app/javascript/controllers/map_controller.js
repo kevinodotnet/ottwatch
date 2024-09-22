@@ -7,12 +7,15 @@ export default class extends Controller {
     initialLat: Number,
     initialLon: Number,
     dataUrl: String,
-    filterGroups: Object
+    filterGroups: Object,
+    singlePoint: Boolean
   }
 
   connect() {
     this.initMap()
-    this.applyFilters()
+    if (!this.singlePointValue) {
+      this.applyFilters()
+    }
   }
 
   initMap() {
@@ -37,10 +40,22 @@ export default class extends Controller {
         }]
       },
       center: [this.initialLonValue, this.initialLatValue],
-      zoom: 13
+      zoom: this.singlePointValue ? 15 : 13
     });
 
-    this.map.on('load', () => this.loadData());
+    this.map.on('load', () => {
+      if (this.singlePointValue) {
+        this.addSingleMarker()
+      } else {
+        this.loadData()
+      }
+    });
+  }
+
+  addSingleMarker() {
+    new maplibregl.Marker()
+      .setLngLat([this.initialLonValue, this.initialLatValue])
+      .addTo(this.map);
   }
 
   loadData() {
