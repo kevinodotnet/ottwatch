@@ -46,7 +46,7 @@ class DevappController < ApplicationController
             app_number: app.app_number,
             app_type: app.app_type,
             status: app.current_status.status,
-            description: app.desc.truncate(140, separator: /\s/),
+            description: app.desc&.truncate(140, separator: /\s/),
             url: url_for(controller: 'devapp', action: 'show', app_number: app.app_number)
           }
         }
