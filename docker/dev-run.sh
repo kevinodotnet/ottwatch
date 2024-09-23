@@ -1,5 +1,7 @@
 #!/bin/bash
 
+cd `dirname $0`
+
 # create/run the container, or if it already exists, restart the existing one
 # use 'docker container rm ottwatch-dev' to reset from the beginning
 
