@@ -17,7 +17,9 @@ sudo docker run \
   -e GCS_KEYFILE=/infra/gcs-prodweb-service-account.json \
   -e REDIS_URL=$REDIS_URL \
   -e SENDGRID_API_KEY=$SENDGRID_PRODWEB_FULL \
+  -e LOCAL_STORAGE_FOLDER=$LOCAL_STORAGE_FOLDER_CLIENT \
   -v $INFRA_FOLDER:/infra \
+  -v $LOCAL_STORAGE_FOLDER_HOST:$LOCAL_STORAGE_FOLDER_CLIENT \
   -i -t \
 	ottwatch-prod $*
 

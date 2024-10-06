@@ -21,7 +21,9 @@ sudo docker run \
   -e REDIS_URL=$REDIS_URL \
   -e SENDGRID_API_KEY=$SENDGRID_PRODWEB_FULL \
   -e RAILS_MAX_THREADS=10 \
+  -e LOCAL_STORAGE_FOLDER=$LOCAL_STORAGE_FOLDER_CLIENT \
   -v $INFRA_FOLDER:/infra \
+  -v $LOCAL_STORAGE_FOLDER_HOST:$LOCAL_STORAGE_FOLDER_CLIENT \
   --name ottwatch-sidekiq \
   ottwatch-prod \
   bundle exec sidekiq -q ottwatch_production_default

@@ -30,7 +30,9 @@ sudo docker run \
   -e RAILS_MAX_THREADS=10 \
   -e GITHUB_APP_ID=$GITHUB_APP_ID \
   -e GITHUB_APP_SECRET=$GITHUB_APP_SECRET \
+  -e LOCAL_STORAGE_FOLDER=$LOCAL_STORAGE_FOLDER_CLIENT \
   -v $INFRA_FOLDER:/infra \
+  -v $LOCAL_STORAGE_FOLDER_HOST:$LOCAL_STORAGE_FOLDER_CLIENT \
   -p 3000:3000 \
   --name ottwatch-web \
   ottwatch-prod bin/rails server
