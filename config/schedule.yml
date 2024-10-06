@@ -32,12 +32,8 @@ consultation_scanner:
    cron: "10 10-20 * * *"
    class: "ConsultationScanner"
 
-traffic_camera_scrape_job_daytime:
-   cron: "*/10 6-22 * * *"
-   class: "TrafficCameraScrapeJob"
-
-traffic_camera_scrape_job_nighttime:
-   cron: "0,30 23,0-5 * * *"
+traffic_camera_scrape_job:
+   cron: "*/10 * * * *"
    class: "TrafficCameraScrapeJob"
 
 # syndication_job:
