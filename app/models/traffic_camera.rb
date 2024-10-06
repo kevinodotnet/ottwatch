@@ -20,7 +20,7 @@ class TrafficCamera < ApplicationRecord
     end
 
     def self.capture_folder
-        ENV["LOCAL_STORAGE_FOLDER"] || Rails.root.join("tmp").to_s
+        dir = ENV["LOCAL_STORAGE_FOLDER"] || Rails.root.join("tmp").to_s
         "#{dir}/camera"
     end
 
