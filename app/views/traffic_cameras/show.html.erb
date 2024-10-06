@@ -1,0 +1,8 @@
+<h1><%= @traffic_camera.name %></h1>
+
+<% @traffic_camera.captures.sort_by{|c| c[:time_ms]}.reverse.first(2).each do |capture| %>
+    <%= Time.at(capture[:time]).to_datetime.in_time_zone("America/New_York").strftime('%Y-%m-%d %H:%M:%S') %> || 
+    <%= time_ago_in_words(Time.at(capture[:time])) %> ago<br/>
+    <%= image_tag traffic_camera_capture_path(@traffic_camera, time_ms: capture[:time_ms]), alt: "Traffic camera image at #{capture[:time]}" %>
+    <br/>
+<% end %>

@@ -1,0 +1,5 @@
+<ul>
+<% @traffic_cameras.each do |camera| %>
+<li><%= link_to camera.name, traffic_camera_path(camera) %></li>
+<% end %>
+</ul>
