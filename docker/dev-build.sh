@@ -1,5 +1,7 @@
 #!/bin/bash
 
+cd `dirname $0`
+
 # --progress=plain
 #
 # BUILD_NO_CACHE=--no-cache ./dev-build.sh
