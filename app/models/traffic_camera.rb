@@ -20,8 +20,8 @@ class TrafficCamera < ApplicationRecord
     end
 
     def self.capture_folder
-        ENV["LOCAL_STORAGE_FOLDER"] if Rails.env.production?
-        Rails.root.join("tmp/camera")
+        dir = ENV["LOCAL_STORAGE_FOLDER"] || Rails.root.join("tmp")
+        dir.join("camera")
     end
 
     def capture_image
