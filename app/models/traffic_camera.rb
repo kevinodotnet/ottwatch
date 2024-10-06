@@ -35,6 +35,12 @@ class TrafficCamera < ApplicationRecord
         response
     end
 
+    def capture_jpg(time_ms)
+        c = captures.detect { |capture| capture[:time_ms] == time_ms }
+        return unless c
+        File.read(c[:file])
+    end
+
     def captures 
         Dir.glob(File.join(self.class.capture_folder, reference_id, '**', '*')).select { |f| File.file?(f) }.sort.map do |file|
             time_ms = file.scan(/.*#{reference_id}\/#{reference_id}_(\d+)\.jpg/).first.first.to_i

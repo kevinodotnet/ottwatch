@@ -7,6 +7,10 @@ Rails.application.routes.draw do
   get 'home/index'
   root "home#index"
 
+  get 'traffic_cameras', to: 'traffic_cameras#index'
+  get 'traffic_cameras/:id', to: 'traffic_cameras#show', as: 'traffic_camera'
+  get 'traffic_cameras/:id/capture', to: 'traffic_cameras#capture', as: 'traffic_camera_capture'
+
   get 'parcels/:id', to: 'parcels#show'
 
   get 'devapp/map', to: 'devapp#map'
