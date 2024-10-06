@@ -42,7 +42,7 @@ class TrafficCamera < ApplicationRecord
     end
 
     def captures 
-        Dir.glob(File.join(self.class.capture_folder, id, '**', '*')).select { |f| File.file?(f) }.sort.map do |file|
+        Dir.glob(File.join(self.class.capture_folder, id.to_s, '**', '*')).select { |f| File.file?(f) }.sort.map do |file|
             time_ms = file.scan(/.*#{id}\/#{id}_(\d+)\.jpg/).first.first.to_i
             time = time_ms / 1000
             {
