@@ -67,3 +67,19 @@ a:hover {
   font-size: 90%;
   font-style: italic;
 }
+
+.camera-grid {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.camera-item {
+  width: 100px;
+  height: 100px;
+}
+
+.camera-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}

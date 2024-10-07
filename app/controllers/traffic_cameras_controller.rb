@@ -1,6 +1,6 @@
 class TrafficCamerasController < ApplicationController
   def index
-    @traffic_cameras = TrafficCamera.all.order(:name)
+    @traffic_cameras = TrafficCamera.all.order(:id)
   end
 
   def show

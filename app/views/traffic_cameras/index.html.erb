@@ -1,3 +1,12 @@
+<div class="camera-grid">
+  <% @traffic_cameras.each do |camera| %>
+    <%= link_to traffic_camera_path(camera), class: "camera-item" do %>
+      <%= image_tag camera.current_image_url, class: "img-fluid" %>
+    <% end %>
+  <% end %>
+</div>
+
+<hr/>
 <ul>
 <% @traffic_cameras.each do |camera| %>
 <li><%= link_to camera.name, traffic_camera_path(camera) %></li>
