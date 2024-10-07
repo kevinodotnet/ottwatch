@@ -1,18 +1,21 @@
+<center>
 <h1><%= @traffic_camera.name %></h1>
 
 <% captures = @traffic_camera.captures.sort_by { |c| c[:time_ms] }.last(20) %>
 <div id="traffic-camera-animation">
   <% captures.each_with_index do |capture, index| %>
-    <%= image_tag traffic_camera_capture_path(@traffic_camera, time_ms: capture[:time_ms]),
-                  alt: "Traffic camera image at #{Time.at(capture[:time]).strftime('%Y-%m-%d %H:%M:%S')}",
-                  class: "camera-image",
-                  style: index == 0 ? "display: block;" : "display: none;" %>
+    <div class="camera-frame" style="<%= index == 0 ? 'display: block;' : 'display: none;' %>">
+      <code><%= Time.at(capture[:time]).strftime('%Y-%m-%d %H:%M:%S') %></code><br/>
+      <%= image_tag traffic_camera_capture_path(@traffic_camera, time_ms: capture[:time_ms]),
+                    alt: "Traffic camera image at #{Time.at(capture[:time]).strftime('%Y-%m-%d %H:%M:%S')}",
+                    class: "camera-image" %>
+    </div>
   <% end %>
 </div>
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    const images = document.querySelectorAll('#traffic-camera-animation .camera-image');
+    const images = document.querySelectorAll('#traffic-camera-animation .camera-frame');
     let currentIndex = 0;
 
     function showNextImage() {
@@ -24,12 +27,4 @@
     setInterval(showNextImage, 500); // Change image every 1 second
   });
 </script>
-
-<!--
-<% @traffic_camera.captures.sort_by{|c| c[:time_ms]}.reverse.first(2).each do |capture| %>
-    <%= Time.at(capture[:time]).to_datetime.in_time_zone("America/New_York").strftime('%Y-%m-%d %H:%M:%S') %> || 
-    <%= time_ago_in_words(Time.at(capture[:time])) %> ago<br/>
-    <%= image_tag traffic_camera_capture_path(@traffic_camera, time_ms: capture[:time_ms]), alt: "Traffic camera image at #{capture[:time]}" %>
-    <br/>
-<% end %>
--->
+</center>
