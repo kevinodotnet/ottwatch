@@ -1,3 +1,4 @@
+<% content_for(:html_title, "Camera") %>
 <div class="camera-grid">
   <% @traffic_cameras.each do |camera| %>
     <%= link_to traffic_camera_path(camera), class: "camera-item" do %>
