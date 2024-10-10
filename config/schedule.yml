@@ -33,7 +33,7 @@ consultation_scanner:
    class: "ConsultationScanner"
 
 traffic_camera_scrape_job:
-   cron: "*/10 * * * *"
+   cron: "*/5 * * * *"
    class: "TrafficCameraScrapeJob"
 
 # syndication_job:
