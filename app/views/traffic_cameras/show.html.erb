@@ -9,7 +9,7 @@
       <%= image_tag traffic_camera_capture_path(@traffic_camera, time_ms: capture[:time_ms]),
                     alt: "Traffic camera image at #{Time.at(capture[:time]).strftime('%Y-%m-%d %H:%M:%S')}",
                     class: "camera-image img-fluid" %>
-      <br/><code><%= Time.at(capture[:time]).strftime('%Y-%m-%d %H:%M:%S') %> (<%= sprintf('%03d', index) %>)</code><br/>
+      <br/><code><%= Time.at(capture[:time]).in_time_zone("America/New_York").strftime('%Y-%m-%d %H:%M:%S') %> (<%= sprintf('%03d', index) %>)</code><br/>
     </div>
   <% end %>
 </div>
