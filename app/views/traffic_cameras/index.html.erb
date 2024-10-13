@@ -14,15 +14,14 @@
             const newTimems = Date.now();
             const timeDifference = Math.abs(newTimems - currentTimems);
 
-            if (timeDifference < 5000) { // 5 seconds in milliseconds
-              console.log(`timeDifference: ${timeDifference} too small, skipping`);
-              return;
+            
+            if (timeDifference >= 5000) { // 5 seconds in milliseconds
+              const newUrl = `${baseUrl}?id=${cameraId}&timems=${newTimems}`;
+              console.log(`updating ${cameraImage.src} -> ${newUrl}`);
+              cameraImage.src = newUrl;
             }
 
-            const newUrl = `${baseUrl}?id=${cameraId}&timems=${newTimems}`;
-            console.log(`updating cameraImage: ${cameraImage.src} -> ${newUrl}`);
-            cameraImage.src = newUrl;
-            const period = 60000; // 60 seconds in milliseconds
+            const period = 5000;
             const time = newTimems % period;
             let color;
             if (time < period * 0.8) {
@@ -46,7 +45,7 @@
         const cameraImage = document.getElementById(`camera-${cameraId}`);
         if (cameraImage) {
           cameraImage.addEventListener('mouseenter', () => updateCameraImage(cameraId));
-          cameraImage.addEventListener('mouseleave', () => updateCameraImage(cameraId));
+          cameraImage.addEventListener('mouseleave', () => cameraImage.style.border = '2px solid black');
         }
       });
 
@@ -54,13 +53,10 @@
         const hoveredImage = document.querySelector('.camera-item:hover img');
         if (hoveredImage) {
           const cameraId = hoveredImage.id.split('-')[1];
-          console.log(`hoveredCameraId: hoveredImage: ${hoveredImage} cameraId: ${cameraId}`);
           updateCameraImage(cameraId);
         }
-      }, 500);
+      }, 100);
         
-      console.log("loaded!")
-
       </script>
 </div>
 
