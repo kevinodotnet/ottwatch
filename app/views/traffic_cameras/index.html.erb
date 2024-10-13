@@ -2,7 +2,7 @@
 <div class="camera-grid">
   <% @traffic_cameras.each do |camera| %>
     <%= link_to traffic_camera_path(camera), class: "camera-item" do %>
-      <%= image_tag camera.current_image_url, class: "img-fluid", id: "camera-#{camera.id}" %>
+      <%= image_tag camera.current_image_url, class: "img-fluid", id: "camera-#{camera.id}", style: "border: 2px solid black;" %>
       <script>
         function updateCameraImage(cameraId) {
           const cameraImage = document.getElementById(`camera-${cameraId}`);
@@ -10,12 +10,31 @@
             const baseUrl = cameraImage.src.split('?')[0];
             const newUrl = `${baseUrl}?id=${cameraId}&timems=${Date.now()}`;
             cameraImage.src = newUrl;
+            const period = 60000; // 60 seconds in milliseconds
+            const time = Date.now() % period;
+            let color;
+            if (time < period * 0.8) {
+              const hue = (time / (period * 0.8)) * 360; // hue value in degrees
+              color = `hsl(${hue}, 100%, 50%)`;
+            } else if (time < period * 0.9) {
+              const transition = (time - period * 0.8) / (period * 0.1);
+              const grayValue = Math.floor(transition * 255);
+              color = `rgb(${grayValue}, ${grayValue}, ${grayValue})`;
+            } else {
+              const transition = (time - period * 0.9) / (period * 0.1);
+              const grayValue = 255 - Math.floor(transition * 255);
+              color = `rgb(${grayValue}, ${grayValue}, ${grayValue})`;
+            }
+            cameraImage.style.border = `2px solid ${color}`;
           }
         }
 
         setInterval(() => {
-          updateCameraImage(<%= camera.id %>);
-        }, Math.floor(Math.random() * (20000 - 5000 + 1)) + 5000);
+          const cameraImage = document.getElementById(`camera-<%= camera.id %>`);
+          if (cameraImage && cameraImage.getBoundingClientRect().top >= 0 && cameraImage.getBoundingClientRect().bottom <= window.innerHeight) {
+            updateCameraImage(<%= camera.id %>);
+          }
+        }, Math.floor(Math.random() * (40000 - 20000 + 1)) + 5000);
       </script>
     <% end %>
   <% end %>
