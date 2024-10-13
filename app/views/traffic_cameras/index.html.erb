@@ -42,6 +42,13 @@
         }
 
       const cameraIds = <%= @traffic_cameras.map(&:id).to_json %>;
+      cameraIds.forEach(cameraId => {
+        const cameraImage = document.getElementById(`camera-${cameraId}`);
+        if (cameraImage) {
+          cameraImage.addEventListener('mouseenter', () => updateCameraImage(cameraId));
+          cameraImage.addEventListener('mouseleave', () => updateCameraImage(cameraId));
+        }
+      });
 
       setInterval(() => {
         const hoveredImage = document.querySelector('.camera-item:hover img');
@@ -50,7 +57,7 @@
           console.log(`hoveredCameraId: hoveredImage: ${hoveredImage} cameraId: ${cameraId}`);
           updateCameraImage(cameraId);
         }
-      }, 100);
+      }, 500);
         
       console.log("loaded!")
 
