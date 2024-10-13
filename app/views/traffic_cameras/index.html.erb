@@ -6,6 +6,11 @@
     <% end %>
   <% end %>
       <script>
+      function setAllBordersToBlack() {
+        const cameraImages = document.querySelectorAll('.camera-item img');
+        cameraImages.forEach(image => image.style.border = '2px solid black');
+      }
+
         function updateCameraImage(cameraId) {
           const cameraImage = document.getElementById(`camera-${cameraId}`);
           if (cameraImage) {
@@ -41,19 +46,20 @@
         }
 
       const cameraIds = <%= @traffic_cameras.map(&:id).to_json %>;
+      let currentCameraId = -1;
       cameraIds.forEach(cameraId => {
         const cameraImage = document.getElementById(`camera-${cameraId}`);
         if (cameraImage) {
-          cameraImage.addEventListener('mouseenter', () => updateCameraImage(cameraId));
-          cameraImage.addEventListener('mouseleave', () => cameraImage.style.border = '2px solid black');
+          cameraImage.addEventListener('mouseenter', () => currentCameraId = cameraId);
+          cameraImage.addEventListener('mouseleave', () => setAllBordersToBlack());
+          cameraImage.addEventListener('touchstart', () => currentCameraId = cameraId);
+          cameraImage.addEventListener('touchend', () => setAllBordersToBlack());
         }
       });
 
       setInterval(() => {
-        const hoveredImage = document.querySelector('.camera-item:hover img');
-        if (hoveredImage) {
-          const cameraId = hoveredImage.id.split('-')[1];
-          updateCameraImage(cameraId);
+        if (currentCameraId != -1) {
+          updateCameraImage(currentCameraId);
         }
       }, 100);
         
