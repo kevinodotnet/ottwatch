@@ -3,6 +3,7 @@
 <h1><%= @traffic_camera.name %></h1>
 
 <%= image_tag @traffic_camera.current_image_url, id: "live-image", data: { camera_id: @traffic_camera.camera_number }, class: "img-fluid", style: "border: 2px solid black;" %>
+<br/><code id="live-image-time"><%= Time.now.in_time_zone("America/New_York").strftime('%Y-%m-%d %H:%M:%S') %></code><br/>
 
 <div style="margin-top: 10px;">
 </div>
@@ -21,19 +22,20 @@
 </div>
 
 <script>
-
-
-function updateLiveImage() {
-  const liveImage = document.getElementById('live-image');
-  if (liveImage) {
-    liveImage.src = `https://traffic.ottawa.ca/camera?id=${liveImage.dataset.cameraId}&timems=${Date.now()}`;
-    const randomHue = Math.floor(Math.random() * 360);
-    liveImage.style.border = `2px solid hsl(${randomHue}, 100%, 50%)`;
-  }
-}
-
-
   document.addEventListener('turbo:load', function() {
+    function updateLiveImage() {
+      const liveImage = document.getElementById('live-image');
+      if (liveImage) {
+        liveImage.src = `https://traffic.ottawa.ca/camera?id=${liveImage.dataset.cameraId}&timems=${Date.now()}`;
+        const randomHue = Math.floor(Math.random() * 360);
+        liveImage.style.border = `2px solid hsl(${randomHue}, 100%, 50%)`;
+        const userTime = new Date().toLocaleString('en-CA', { timeZone: 'America/New_York', hour12: false });
+        const formattedTime = userTime.replace(',', '').replace(/\//g, '-').replace(' ', 'T').split('T')[0] + ' ' + userTime.split(' ')[1];
+        document.getElementById('live-image-time').textContent = formattedTime;
+      }
+    }
+    setInterval(updateLiveImage, 1000);
+
     const images = document.querySelectorAll('#traffic-camera-animation .camera-frame');
     let currentIndex = 0;
 
@@ -44,7 +46,6 @@ function updateLiveImage() {
     }
 
     setInterval(showNextImage, 500); // Change image every 1 second
-    setInterval(updateLiveImage, 5000);
   });
 </script>
 </center>
