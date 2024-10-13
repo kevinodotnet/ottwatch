@@ -2,7 +2,7 @@
 <div class="camera-grid">
   <% @traffic_cameras.each do |camera| %>
     <%= link_to traffic_camera_path(camera), class: "camera-item" do %>
-      <%= image_tag camera.current_image_url, class: "img-fluid", id: "camera-#{camera.id}", style: "border: 2px solid black;" %>
+      <%= image_tag camera.current_image_url, class: "img-fluid", id: "camera-#{camera.camera_number}", style: "border: 2px solid black;", loading: "lazy" %>
     <% end %>
   <% end %>
       <script>
@@ -11,6 +11,7 @@
           if (cameraImage) {
             const baseUrl = cameraImage.src.split('?')[0];
             const newUrl = `${baseUrl}?id=${cameraId}&timems=${Date.now()}`;
+            console.log(`updating cameraImage: ${cameraImage.src} -> ${newUrl}`);
             cameraImage.src = newUrl;
             const period = 60000; // 60 seconds in milliseconds
             const time = Date.now() % period;
@@ -31,25 +32,17 @@
           }
         }
 
-      let currentCameraIndex = 0;
       const cameraIds = <%= @traffic_cameras.map(&:id).to_json %>;
-        
-      function updateAllCameras() {
-        console.log(`updateAllCameras: ${currentCameraIndex}`);
-        while (true) {
-          const cameraImage = document.getElementById(`camera-${cameraIds[currentCameraIndex]}`);
-          console.log(`checking: ${currentCameraIndex}`);
-          if (cameraImage && cameraImage.getBoundingClientRect().top < window.innerHeight && cameraImage.getBoundingClientRect().bottom >= 0) {
-            break;
-          }
-          currentCameraIndex = (currentCameraIndex + 1) % cameraIds.length;
-        }
-        updateCameraImage(cameraIds[currentCameraIndex]);
-        currentCameraIndex = (currentCameraIndex + 1) % cameraIds.length;
-        
-      }
 
-      setInterval(updateAllCameras, 200);
+      setInterval(() => {
+        const hoveredImage = document.querySelector('.camera-item:hover img');
+        if (hoveredImage) {
+          const cameraId = hoveredImage.id.split('-')[1];
+          console.log(`hoveredCameraId: hoveredImage: ${hoveredImage} cameraId: ${cameraId}`);
+          updateCameraImage(cameraId);
+        }
+      }, 1000);
+        
       console.log("loaded!")
 
       </script>
