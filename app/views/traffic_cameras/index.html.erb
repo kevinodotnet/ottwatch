@@ -2,7 +2,21 @@
 <div class="camera-grid">
   <% @traffic_cameras.each do |camera| %>
     <%= link_to traffic_camera_path(camera), class: "camera-item" do %>
-      <%= image_tag camera.current_image_url, class: "img-fluid" %>
+      <%= image_tag camera.current_image_url, class: "img-fluid", id: "camera-#{camera.id}" %>
+      <script>
+        function updateCameraImage(cameraId) {
+          const cameraImage = document.getElementById(`camera-${cameraId}`);
+          if (cameraImage) {
+            const baseUrl = cameraImage.src.split('?')[0];
+            const newUrl = `${baseUrl}?id=${cameraId}&timems=${Date.now()}`;
+            cameraImage.src = newUrl;
+          }
+        }
+
+        setInterval(() => {
+          updateCameraImage(<%= camera.id %>);
+        }, Math.floor(Math.random() * (20000 - 5000 + 1)) + 5000);
+      </script>
     <% end %>
   <% end %>
 </div>
