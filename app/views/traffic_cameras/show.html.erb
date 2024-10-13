@@ -2,19 +2,37 @@
 <center>
 <h1><%= @traffic_camera.name %></h1>
 
+<%= image_tag @traffic_camera.current_image_url, id: "live-image", data: { camera_id: @traffic_camera.camera_number }, class: "img-fluid", style: "border: 2px solid black;" %>
+
+<div style="margin-top: 10px;">
+</div>
 <% captures = @traffic_camera.captures.sort_by { |c| c[:time_ms] }.last(20) %>
 <div id="traffic-camera-animation">
   <% captures.each_with_index do |capture, index| %>
     <div class="camera-frame" style="<%= index == 0 ? 'display: block;' : 'display: none;' %>">
       <%= image_tag traffic_camera_capture_path(@traffic_camera, time_ms: capture[:time_ms]),
                     alt: "Traffic camera image at #{Time.at(capture[:time]).strftime('%Y-%m-%d %H:%M:%S')}",
-                    class: "camera-image img-fluid" %>
+                    class: "camera-image img-fluid",
+                    style: "border: 2px solid black;"
+                       %>
       <br/><code><%= Time.at(capture[:time]).in_time_zone("America/New_York").strftime('%Y-%m-%d %H:%M:%S') %> (<%= sprintf('%03d', index) %>)</code><br/>
     </div>
   <% end %>
 </div>
 
 <script>
+
+
+function updateLiveImage() {
+  const liveImage = document.getElementById('live-image');
+  if (liveImage) {
+    liveImage.src = `https://traffic.ottawa.ca/camera?id=${liveImage.dataset.cameraId}&timems=${Date.now()}`;
+    const randomHue = Math.floor(Math.random() * 360);
+    liveImage.style.border = `2px solid hsl(${randomHue}, 100%, 50%)`;
+  }
+}
+
+
   document.addEventListener('turbo:load', function() {
     const images = document.querySelectorAll('#traffic-camera-animation .camera-frame');
     let currentIndex = 0;
@@ -26,6 +44,7 @@
     }
 
     setInterval(showNextImage, 500); // Change image every 1 second
+    setInterval(updateLiveImage, 5000);
   });
 </script>
 </center>
