@@ -24,14 +24,19 @@
 <script>
   document.addEventListener('turbo:load', function() {
     function updateLiveImage() {
+      const userTime = new Date().toLocaleString('en-CA', { timeZone: 'America/New_York', hour12: false });
+      const formattedTime = userTime.replace(',', '').replace(/\//g, '-').replace(' ', 'T').split('T')[0] + ' ' + userTime.split(' ')[1];
+      document.getElementById('live-image-time').textContent = formattedTime;
       const liveImage = document.getElementById('live-image');
       if (liveImage) {
-        liveImage.src = `https://traffic.ottawa.ca/camera?id=${liveImage.dataset.cameraId}&timems=${Date.now()}`;
-        const randomHue = Math.floor(Math.random() * 360);
-        liveImage.style.border = `2px solid hsl(${randomHue}, 100%, 50%)`;
-        const userTime = new Date().toLocaleString('en-CA', { timeZone: 'America/New_York', hour12: false });
-        const formattedTime = userTime.replace(',', '').replace(/\//g, '-').replace(' ', 'T').split('T')[0] + ' ' + userTime.split(' ')[1];
-        document.getElementById('live-image-time').textContent = formattedTime;
+        const currentTimems = parseInt(new URL(liveImage.src).searchParams.get('timems'), 10);
+        const newTimems = Date.now();
+        if (newTimems - currentTimems > 5000) { // 5 seconds in milliseconds
+          console.log("Updating live image");
+          liveImage.src = `https://traffic.ottawa.ca/camera?id=${liveImage.dataset.cameraId}&timems=${newTimems}`;
+          const randomHue = Math.floor(Math.random() * 360);
+          liveImage.style.border = `2px solid hsl(${randomHue}, 100%, 50%)`;
+        }
       }
     }
     setInterval(updateLiveImage, 1000);
