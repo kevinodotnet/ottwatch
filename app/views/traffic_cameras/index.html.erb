@@ -6,6 +6,8 @@
     <% end %>
   <% end %>
       <script>
+      document.addEventListener('turbo:load', () => {
+
       function setAllBordersToBlack() {
         const cameraImages = document.querySelectorAll('.camera-item img');
         cameraImages.forEach(image => image.style.border = '2px solid black');
@@ -44,24 +46,25 @@
             cameraImage.style.border = `2px solid ${color}`;
           }
         }
-
-      const cameraIds = <%= @traffic_cameras.map(&:id).to_json %>;
-      let currentCameraId = -1;
-      cameraIds.forEach(cameraId => {
-        const cameraImage = document.getElementById(`camera-${cameraId}`);
-        if (cameraImage) {
-          cameraImage.addEventListener('mouseenter', () => currentCameraId = cameraId);
-          cameraImage.addEventListener('mouseleave', () => setAllBordersToBlack());
-          cameraImage.addEventListener('touchstart', () => currentCameraId = cameraId);
-          cameraImage.addEventListener('touchend', () => setAllBordersToBlack());
-        }
-      });
+        const cameraIds = <%= @traffic_cameras.map(&:id).to_json %>;
+        let currentCameraId = -1;
+  
+          cameraIds.forEach(cameraId => {
+          const cameraImage = document.getElementById(`camera-${cameraId}`);
+          if (cameraImage) {
+            cameraImage.addEventListener('mouseenter', () => currentCameraId = cameraId);
+            cameraImage.addEventListener('mouseleave', () => setAllBordersToBlack());
+            cameraImage.addEventListener('touchstart', () => currentCameraId = cameraId);
+            cameraImage.addEventListener('touchend', () => setAllBordersToBlack());
+          }
+        });
 
       setInterval(() => {
         if (currentCameraId != -1) {
           updateCameraImage(currentCameraId);
         }
       }, 100);
+      });
         
       </script>
 </div>

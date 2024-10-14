@@ -26,7 +26,10 @@
     function updateLiveImage() {
       const userTime = new Date().toLocaleString('en-CA', { timeZone: 'America/New_York', hour12: false });
       const formattedTime = userTime.replace(',', '').replace(/\//g, '-').replace(' ', 'T').split('T')[0] + ' ' + userTime.split(' ')[1];
-      document.getElementById('live-image-time').textContent = formattedTime;
+      liveImageTime = document.getElementById('live-image-time')
+      if (liveImageTime) {
+        liveImageTime.textContent = formattedTime;
+      }
       const liveImage = document.getElementById('live-image');
       if (liveImage) {
         const currentTimems = parseInt(new URL(liveImage.src).searchParams.get('timems'), 10);
@@ -45,9 +48,11 @@
     let currentIndex = 0;
 
     function showNextImage() {
-      images[currentIndex].style.display = 'none';
-      currentIndex = (currentIndex + 1) % images.length;
-      images[currentIndex].style.display = 'block';
+      if (images[currentIndex]) {
+        images[currentIndex].style.display = 'none';
+        currentIndex = (currentIndex + 1) % images.length;
+        images[currentIndex].style.display = 'block';
+      }
     }
 
     setInterval(showNextImage, 500); // Change image every 1 second
