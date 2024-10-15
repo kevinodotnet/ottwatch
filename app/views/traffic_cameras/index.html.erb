@@ -2,9 +2,71 @@
 <div class="camera-grid">
   <% @traffic_cameras.each do |camera| %>
     <%= link_to traffic_camera_path(camera), class: "camera-item" do %>
-      <%= image_tag camera.current_image_url, class: "img-fluid" %>
+      <%= image_tag camera.current_image_url, class: "img-fluid", id: "camera-#{camera.camera_number}", style: "border: 2px solid black;", loading: "lazy" %>
     <% end %>
   <% end %>
+      <script>
+      document.addEventListener('turbo:load', () => {
+
+      function setAllBordersToBlack() {
+        const cameraImages = document.querySelectorAll('.camera-item img');
+        cameraImages.forEach(image => image.style.border = '2px solid black');
+      }
+
+        function updateCameraImage(cameraId) {
+          const cameraImage = document.getElementById(`camera-${cameraId}`);
+          if (cameraImage) {
+            const baseUrl = cameraImage.src.split('?')[0];
+            const currentTimems = parseInt(new URL(cameraImage.src).searchParams.get('timems'), 10);
+            const newTimems = Date.now();
+            const timeDifference = Math.abs(newTimems - currentTimems);
+
+            
+            if (timeDifference >= 5000) { // 5 seconds in milliseconds
+              const newUrl = `${baseUrl}?id=${cameraId}&timems=${newTimems}`;
+              console.log(`updating ${cameraImage.src} -> ${newUrl}`);
+              cameraImage.src = newUrl;
+            }
+
+            const period = 5000;
+            const time = newTimems % period;
+            let color;
+            if (time < period * 0.8) {
+              const hue = (time / (period * 0.8)) * 360; // hue value in degrees
+              color = `hsl(${hue}, 100%, 50%)`;
+            } else if (time < period * 0.9) {
+              const transition = (time - period * 0.8) / (period * 0.1);
+              const grayValue = Math.floor(transition * 255);
+              color = `rgb(${grayValue}, ${grayValue}, ${grayValue})`;
+            } else {
+              const transition = (time - period * 0.9) / (period * 0.1);
+              const grayValue = 255 - Math.floor(transition * 255);
+              color = `rgb(${grayValue}, ${grayValue}, ${grayValue})`;
+            }
+            cameraImage.style.border = `2px solid ${color}`;
+          }
+        }
+        const cameraIds = <%= @traffic_cameras.map(&:id).to_json %>;
+        let currentCameraId = -1;
+  
+          cameraIds.forEach(cameraId => {
+          const cameraImage = document.getElementById(`camera-${cameraId}`);
+          if (cameraImage) {
+            cameraImage.addEventListener('mouseenter', () => currentCameraId = cameraId);
+            cameraImage.addEventListener('mouseleave', () => setAllBordersToBlack());
+            cameraImage.addEventListener('touchstart', () => currentCameraId = cameraId);
+            cameraImage.addEventListener('touchend', () => setAllBordersToBlack());
+          }
+        });
+
+      setInterval(() => {
+        if (currentCameraId != -1) {
+          updateCameraImage(currentCameraId);
+        }
+      }, 100);
+      });
+        
+      </script>
 </div>
 
 <hr/>

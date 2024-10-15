@@ -11,7 +11,7 @@ class DevApp::Entry < ApplicationRecord
       # it so UI elements that power themselves from DB enums on that column continue to work.
       statuses.create(status: "404_missing_data")
     else
-      statuses.order(:id).last
+      statuses.last
     end
   end
 end
