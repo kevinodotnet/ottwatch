@@ -22,7 +22,7 @@ class DevappController < ApplicationController
     @initial_lat = ottawa_city_hall.lat
     @initial_lon = ottawa_city_hall.lon
 
-    @statuses = DevApp::Status.distinct.pluck(:status).sort
+    @statuses = DevApp::Status.distinct.pluck(:status) - ["404_missing_data"]
     @app_types = DevApp::Entry.distinct.pluck(:app_type).sort
   end
 

@@ -76,7 +76,7 @@ class DevApp::ScannerTest < ActiveSupport::TestCase
 
   test "status gets saved" do
     VCR.use_cassette("#{class_name}_#{method_name}") do
-      entry = assert_difference -> { DevApp::Status.all.count}, 1 do
+      entry = assert_difference -> { DevApp::Status.all.count}, 2 do
         DevApp::Scanner.scan_application(APP_NUMBER)
       end
       # double-read of same status does not insert duplicate
