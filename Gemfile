@@ -52,7 +52,7 @@ gem "bootsnap", require: false
 
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 gem "image_processing"
-gem "mini_magick", "~> 4.12"
+gem "mini_magick", "~> 4.13"
 
 gem "google-cloud-storage", require: false
 #gem "sidekiq"
