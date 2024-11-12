@@ -56,7 +56,7 @@ gem "mini_magick", "~> 4.12"
 
 gem "google-cloud-storage", require: false
 #gem "sidekiq"
-gem 'sidekiq', '<8'
+gem 'sidekiq', '<7'
 gem "sidekiq-cron"
 gem "xsv"
 gem "twitter"
