@@ -106,7 +106,9 @@ class MeetingScanJobTest < ActiveJob::TestCase
       meeting_time: "2019-10-23T14:00:00.000000000+00:00".to_time
     }
     VCR.use_cassette("#{class_name}_#{method_name}") do
-      MeetingScanJob.perform_now(attrs: attr)
+      assert_nothing_raised do
+        MeetingScanJob.perform_now(attrs: attr)
+      end
     end
   end
 
@@ -117,7 +119,9 @@ class MeetingScanJobTest < ActiveJob::TestCase
       meeting_time: "2016-02-03T18:00:00.000000000+00:00".to_time
     }
     VCR.use_cassette("#{class_name}_#{method_name}") do
-      MeetingScanJob.perform_now(attrs: attr)
+      assert_nothing_raised do
+        MeetingScanJob.perform_now(attrs: attr)
+      end
     end
   end
 
