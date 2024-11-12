@@ -20,6 +20,7 @@ Rails.application.configure do
   config.hosts << "dev.local"
   config.hosts << "dev.ottwatch.ca"
   config.hosts << "pi"
+  config.hosts << "snack"
 
   # Do not eager load code on boot.
   config.eager_load = false
@@ -90,11 +91,11 @@ Rails.application.configure do
     Bullet.alert = true
     Bullet.bullet_logger = true
     Bullet.console = true
-    # Bullet.xmpp = { 
+    # Bullet.xmpp = {
     #   :account  => 'bullets_account@jabber.org',
     #   :password => 'bullets_password_for_jabber',
     #   :receiver => 'your_account@jabber.org',
-    #   :show_online_status => true 
+    #   :show_online_status => true
     # }
     Bullet.rails_logger = true
     # # Bullet.honeybadger = true
@@ -107,7 +108,7 @@ Rails.application.configure do
     # Bullet.stacktrace_includes = [ 'your_gem', 'your_middleware' ]
     # Bullet.stacktrace_excludes = [ 'their_gem', 'their_middleware', ['my_file.rb', 'my_method'], ['my_file.rb', 16..20] ]
     # Bullet.slack = { webhook_url: 'http://some.slack.url', channel: '#default', username: 'notifier' }
-  end  
+  end
 
   # config.after_initialize do
   #   HttpLog.configure do |c|
@@ -115,4 +116,3 @@ Rails.application.configure do
   #   end
   # end
 end
-
