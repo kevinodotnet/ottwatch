@@ -25,5 +25,6 @@ class LobbyingControllerTest < ActionDispatch::IntegrationTest
 
   test "#show for non-existant devapp fails cleanly" do
     get "/lobbying/index"
+    assert_response :success
   end
 end
