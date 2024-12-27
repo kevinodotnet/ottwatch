@@ -300,7 +300,7 @@ GEM
     pry (0.15.2)
       coderay (~> 1.1)
       method_source (~> 1.0)
-    psych (4.0.6)
+    psych (5.2.0)
       stringio
     public_suffix (6.0.1)
     puma (5.6.9)
@@ -508,7 +508,7 @@ DEPENDENCIES
   omniauth-github
   omniauth-google-oauth2
   pry
-  psych (~> 4)
+  psych (~> 5)
   puma (~> 5.6)
   rails (~> 8.0.0)
   rmagick
