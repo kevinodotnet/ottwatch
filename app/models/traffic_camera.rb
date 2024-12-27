@@ -29,11 +29,16 @@ class TrafficCamera < ApplicationRecord
         "https://traffic.ottawa.ca/camera?id=#{camera_number}&timems=#{time_now}"
     end
 
+    def capture_image_path(time_ms = (Time.now.to_f * 1000).to_i)
+        yyyymmdd = Time.at(time_ms / 1000).strftime("%Y-%m-%d")
+        camera_path = "#{self.class.capture_folder}/#{yyyymmdd}/#{id}"
+        capture_filename = "#{camera_path}/#{id}_#{time_ms}.jpg"
+        [camera_path, capture_filename]
+    end
+
     def capture_image
-        time_now = (Time.now.to_f * 1000).to_i
         response = Net::HTTP.get(URI(current_image_url))
-        camera_path = "#{self.class.capture_folder}/#{id}"
-        capture_filename = "#{camera_path}/#{id}_#{time_now}.jpg"
+        camera_path, capture_filename = capture_image_path
         FileUtils.mkdir_p(camera_path)
         File.binwrite(capture_filename, response)
         response

@@ -1,10 +1,20 @@
 require 'test_helper'
 
 class TrafficCameraTest < ActiveSupport::TestCase
+  # include ActiveSupport::Testing::TimeHelpers
+
     setup do
     @camera = TrafficCamera.create!(reference_id: 37, camera_number: 8, name: "Belfast & St. Laurent", camera_owner: "CITY", lat: 45.411858, lon: -75.630376)
     end
 
+    focus
+    test "camera path has yyyymmdd format" do
+      ActiveSupport::Testing::TimeHelpers.travel_to(Time.zone.local(2021, 1, 1, 12, 0, 0)) do
+        path = TrafficCamera.new(id: 12).capture_image_path
+        binding.pry
+        end
+      
+    end
 
   test "cameras are scraped correctly" do
     VCR.use_cassette("#{class_name}_#{method_name}", :match_requests_on => [:body]) do
