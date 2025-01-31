@@ -18,7 +18,7 @@ gem "mysql2"
 gem "puma", "~> 5.6"
 
 # https://www.reddit.com/r/rails/comments/19de7ju/rails_official_guide_installation_not_working/
-gem "psych", "~> 4"
+gem "psych", "~> 5"
 
 # Use JavaScript with ESM import maps [https://github.com/rails/importmap-rails]
 gem "importmap-rails"
