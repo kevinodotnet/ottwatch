@@ -10,66 +10,34 @@ class MeetingScanJob < ApplicationJob
     end
   end
 
-  def self.scan_past_meetings(meeting_type)
-    uri = URI('https://pub-ottawa.escribemeetings.com/MeetingsCalendarView.aspx/PastMeetings')
-    req = Net::HTTP::Post.new(uri)
-    req['accept'] = 'application/json, text/javascript, */*; q=0.01'
-    req['content-type'] = 'application/json; charset=UTF-8'
-    req['x-requested-with'] = 'XMLHttpRequest'
-    req.body = "{type: '#{meeting_type}'}"
-
-    http = Net::HTTP.new(uri.host, uri.port)
-    http.use_ssl = true
-    res = http.request(req)
-
-    meetings = JSON.parse(res.body)["d"]
-    meetings.map do |m|
-      {
-        title: m["MeetingType"],
-        reference_guid: m["Id"],
-        meeting_time: Time.at(m["Start"].scan(/\d+/).first.to_i/1000)
-      }
-    end
-  end
-
   private
 
   def scan_main_list
-    data = Net::HTTP.get(URI("https://pub-ottawa.escribemeetings.com/"))
-    doc = Nokogiri::HTML(data)
 
-    elements_with_class(doc, 'MeetingTypeContainer').map{|c| c.attributes["meetingtype"].value}.each do |c|
-      self.class.scan_past_meetings(c).each do |m|
-        MeetingScanJob.perform_later(attrs: m)
-      end
-    end
+    url = URI("https://pub-ottawa.escribemeetings.com/MeetingsCalendarView.aspx/GetAllMeetings")
+    req = Net::HTTP::Post.new(url)
+    req['Content-Type'] = 'application/json'
+    # FIXME: lame date hard coding
+    req.body = "{calendarStartDate: '2024-01-01T00:00:00-05:00', calendarEndDate: '2025-12-01T00:00:00-05:00'}"
 
-    doc.xpath('//div[@class="calendar-item"]').each do |m|
-      md = Nokogiri::HTML(m.to_s)
+    http = Net::HTTP.new(url.host, url.port)
+    http.use_ssl = true
+    res = http.request(req)
 
-      title = md.xpath('//div[@class="meeting-title"]/h3/span').children.to_s
-      meeting_time = md.xpath('//div[@class="meeting-date"]').first.children.to_s
-      meeting_time = "#{meeting_time} EST".to_time
-      reference_guid = md.xpath('//a').map do |a|
-        a.attributes.map do |k,v|
-          next unless k == 'href'
-          next unless v.value.match(/Meeting.aspx.*/)
-          next unless a.children.to_s.match(/HTML/)
-          v.value.match(/Meeting.aspx\?Id=(?<id>[^&]*)/)["id"]
-        end
-      end.flatten.compact.first
-
-      next unless reference_guid
-
+    data = res.body
+    meetings = JSON.parse(data)["d"]
+    meetings
+      .select{|m| m["Url"].presence}
+      .sort_by{|m| m["StartDate"]}.each do |m|
+      next unless m["Url"].presence
+      # url = "https://pub-ottawa.escribemeetings.com/Meeting.aspx?Id=#{m["ID"]}&Agenda=Agenda&lang=English"
       attrs = {
-        title: title,
-        reference_guid: reference_guid,
-        meeting_time: meeting_time
+        title: m["MeetingName"],
+        reference_guid: m["ID"],
+        meeting_time: m["StartDate"].in_time_zone('Eastern Time (US & Canada)')
       }
       MeetingScanJob.perform_later(attrs: attrs)
     end
-
-    nil
   end
 
   def scan_v1_item(item_div, docs)
@@ -189,8 +157,6 @@ class MeetingScanJob < ApplicationJob
       end
     end
   end
-
-  private
 
   def elements_with_class(node, target_class)
     node.xpath("//*[contains(concat(' ', normalize-space(@class), ' '), ' #{target_class} ')]")
