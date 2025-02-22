@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://devapps-restapi.ottawa.ca/devapps/search?appStatus=all&appType=all&authKey=4r5T2egSmKm5&bounds=0,0,0,0&searchText=D07-05-23-0005&ward=all
+    uri: https://devapps-restapi.ottawa.ca/devapps/search?appStatus=all&appType=all&authKey=4r5T2egSmKm5&bounds=0,0,0,0&searchText=D07-12-24-0020&ward=all
     body:
       encoding: US-ASCII
       string: ''
@@ -23,13 +23,11 @@ http_interactions:
       Server:
       - nginx
       Date:
-      - Mon, 15 Jan 2024 03:37:46 GMT
+      - Sat, 22 Feb 2025 17:42:10 GMT
       Content-Type:
       - application/json; charset=utf-8
       Transfer-Encoding:
       - chunked
-      Connection:
-      - keep-alive
       Strict-Transport-Security:
       - max-age=15724800; includeSubDomains
       X-Xss-Protection:
@@ -37,28 +35,27 @@ http_interactions:
       X-Frame-Options:
       - SAMEORIGIN
       X-Ott-Cache:
-      - '11'
+      - '28'
       Set-Cookie:
-      - NSC_QH_NzTP_ohjoy=ffffffffc3a07a1d45525d5f4f58455e445a4a42378b;expires=Mon,
-        15-Jan-2024 04:07:46 GMT;path=/;httponly
-      - incap_ses_1227_2348304=zUxeKJbRoyLb75/ABi4HEYqopGUAAAAA7g/aG4wEpXYqHjCrR9ELcw==;
+      - incap_ses_1710_2348304=9iWlAHMHJhgnSKMzLSS7F3EMumcAAAAAquFrDWv5KFPWkcVnPlZNfg==;
         path=/; Domain=.ottawa.ca
-      - nlbi_2348304=vjM3Ac0WijANgAnTl2uJLQAAAADBPSmGIZlynmRhnnTx6vnk; path=/; Domain=.ottawa.ca
-      - visid_incap_2348304=oB93WwUvSM67NeX8OXYO3oqopGUAAAAAQUIPAAAAAADeUTXSxnajXzXwt5ruWv0m;
-        expires=Mon, 13 Jan 2025 06:58:23 GMT; HttpOnly; path=/; Domain=.ottawa.ca
+      - nlbi_2348304=DJezMohEehXy62fRuLiUiQAAAACbdbXDOCTm4VNkTTYfQCOg; HttpOnly; path=/;
+        Domain=.ottawa.ca
+      - visid_incap_2348304=+wLneSOVRVmlskxj8KBPNHEMumcAAAAAQUIPAAAAAACqYJAarTr+RPSvNB23xVLw;
+        expires=Sun, 22 Feb 2026 06:56:40 GMT; HttpOnly; path=/; Domain=.ottawa.ca
       X-Cdn:
       - Imperva
       X-Iinfo:
-      - 2-2046088-2046089 NNYY CT(9 10 0) RT(1705289866211 22) q(0 0 0 -1) r(0 0)
+      - 53-5494826-5494827 NNYY CT(18 15 0) RT(1740246129464 9) q(0 0 0 -1) r(0 1)
         U24
     body:
       encoding: ASCII-8BIT
       string: !binary |-
-        eyJkZXZBcHBzIjpbeyJkZXZBcHBJZCI6Il9fQ1I1VFpCIiwiYXBwbGljYXRpb25OdW1iZXIiOiJEMDctMDUtMjMtMDAwNSIsImFwcGxpY2F0aW9uRGF0ZSI6NjM4Mjc4NTE2NDUwMDAwMDAwLCJhcHBsaWNhdGlvbkRhdGVZTUQiOiIyMDIzLTA4LTE3IiwiYXBwbGljYXRpb25UeXBlSWQiOiJfX18xVFpXWCIsImFwcGxpY2F0aW9uVHlwZSI6eyJlbiI6IkRlbW9saXRpb24gQ29udHJvbCIsImZyIjoiUsOpZ2xlbWVudGF0aW9uIGRlcyBkw6ltb2xpdGlvbnMifSwiYXBwbGljYXRpb25CcmllZkRlc2MiOnt9LCJhcHBsaWNhdGlvblN0YXR1cyI6eyJlbiI6IkFjdGl2ZSIsImZyIjoiQWN0aWYifSwiZGV2QXBwQWRkcmVzc2VzIjpbeyJhZGRyZXNzUmVmZXJlbmNlSWQiOiJfX0NSNVRaRCIsImFkZHJlc3NOdW1iZXIiOjExNSwiYWRkcmVzc1F1YWxpZmllciI6IiIsImxlZ2FsVW5pdCI6IiIsInJvYWROYW1lIjoiU1BFTkNFUiIsImNhcmRpbmFsRGlyZWN0aW9uIjoiIiwicm9hZFR5cGUiOiJTdHJlZXQiLCJtdW5pY2lwYWxpdHkiOiJPbGQgT3R0YXdhIiwiYWRkcmVzc1R5cGUiOiJNQUlOIiwiYWRkcmVzc0xhdGl0dWRlIjo0NS40MDE0MzcsImFkZHJlc3NMb25naXR1ZGUiOi03NS43MzQ1NDIsImFkZHJlc3NOdW1iZXJSb2FkTmFtZSI6IjExNSBTUEVOQ0VSIiwicGFyY2VsUGluTnVtYmVyIjo0MDM0MDEyMn1dLCJkZXZBcHBEb2N1bWVudHMiOltdLCJvYmplY3RTdGF0dXMiOnsib2JqZWN0U3RhdHVzVHlwZUlkIjoiX180TzM4Q0wiLCJvYmplY3RDdXJyZW50U3RhdHVzIjp7ImVuIjoiIiwiZnIiOiIifSwib2JqZWN0Q3VycmVudFN0YXR1c0RhdGUiOjYzODMwMDM2NjkyMDAwMDAwMCwib2JqZWN0Q3VycmVudFN0YXR1c0RhdGVZTUQiOiIyMDIzLTA5LTExIn0sImRldkFwcFdhcmQiOnsiY29tbXVuaXR5SWQiOm51bGwsIndhcmROdW1iZXIiOnt9LCJ3YXJkTmFtZSI6e30sImNvdW5jaWxsb3JMYXN0TmFtZSI6bnVsbCwiY291bmNpbGxvckZpcnN0TmFtZSI6bnVsbCwid2FyZENvdW5jaWxsb3JFbWFpbCI6bnVsbH0sImVuZE9mQ2lyY3VsYXRpb25EYXRlIjo2MzgzMjQ0MjI0MzAwMDAwMDAsImVuZE9mQ2lyY3VsYXRpb25EYXRlWU1EIjoiMjAyMy0xMC0wOSIsImNhbkNvbW1lbnQiOiJZIiwic2hvd0ZlZWRiYWNrTGluayI6Ik4iLCJwbGFubmVyRmlyc3ROYW1lIjpudWxsLCJwbGFubmVyTGFzdE5hbWUiOm51bGwsInBsYW5uZXJQaG9uZSI6bnVsbCwicGxhbm5lckVtYWlsIjpudWxsLCJzZWFyY2hhYmxlVGV4dCI6bnVsbCwic3RyZWV0QWRyZXNzIjoiU1BFTkNFUiIsInN0cmVldE51bWJlciI6MTE1fV0sInRvdGFsRGV2QXBwcyI6MSwiaW5kZXgiOjAsImxpbWl0Ijo1MH0=
-  recorded_at: Mon, 15 Jan 2024 03:37:46 GMT
+        eyJkZXZBcHBzIjpbeyJkZXZBcHBJZCI6Il9fQ1UwWkZaIiwiYXBwbGljYXRpb25OdW1iZXIiOiJEMDctMTItMjQtMDAyMCIsImFwcGxpY2F0aW9uRGF0ZSI6NjM4NDgzNDA5NzcwMDAwMDAwLCJhcHBsaWNhdGlvbkRhdGVZTUQiOiIyMDI0LTA0LTEwIiwiYXBwbGljYXRpb25UeXBlSWQiOiJfX19fNUNDViIsImFwcGxpY2F0aW9uVHlwZSI6eyJlbiI6IlNpdGUgUGxhbiBDb250cm9sIiwiZnIiOiJSw6lnbGVtZW50YXRpb24gZHUgcGxhbiBkJ2ltcGxhbnRhdGlvbiJ9LCJhcHBsaWNhdGlvbkJyaWVmRGVzYyI6e30sImFwcGxpY2F0aW9uU3RhdHVzIjp7ImVuIjoiSW5hY3RpdmUiLCJmciI6IkluYWN0aWYifSwiZGV2QXBwQWRkcmVzc2VzIjpbeyJhZGRyZXNzUmVmZXJlbmNlSWQiOiJfX0NVMFpGNyIsImFkZHJlc3NOdW1iZXIiOjIwNSwiYWRkcmVzc1F1YWxpZmllciI6IiIsImxlZ2FsVW5pdCI6IiIsInJvYWROYW1lIjoiR1JFRU5CQU5LIiwiY2FyZGluYWxEaXJlY3Rpb24iOiIiLCJyb2FkVHlwZSI6IlJvYWQiLCJtdW5pY2lwYWxpdHkiOiJOZXBlYW4iLCJhZGRyZXNzVHlwZSI6Ik1BSU4iLCJhZGRyZXNzTGF0aXR1ZGUiOjQ1LjMyNjQ5OCwiYWRkcmVzc0xvbmdpdHVkZSI6LTc1Ljc3ODQ4MSwiYWRkcmVzc051bWJlclJvYWROYW1lIjoiMjA1IEdSRUVOQkFOSyIsInBhcmNlbFBpbk51bWJlciI6NDY1MTAwMDd9XSwiZGV2QXBwRG9jdW1lbnRzIjpbXSwib2JqZWN0U3RhdHVzIjp7Im9iamVjdFN0YXR1c1R5cGVJZCI6Il9fNEJYUk9YIiwib2JqZWN0Q3VycmVudFN0YXR1cyI6eyJlbiI6IkFncmVlbWVudCBSZWdpc3RlcmVkIC0gRmluYWwgTGVnYWwgQ2xlYXJhbmNlIEdpdmVuIiwiZnIiOiJFbnRlbnRlIEVucmVnaXN0csOpZSAtIEFwcHJvYmF0aW9uIEZpbmFsZSBkdSBDb250ZW50aWV1eCJ9LCJvYmplY3RDdXJyZW50U3RhdHVzRGF0ZSI6NjM4NjU3MjIzMjIwMDAwMDAwLCJvYmplY3RDdXJyZW50U3RhdHVzRGF0ZVlNRCI6IjIwMjQtMTAtMjgifSwiZGV2QXBwV2FyZCI6eyJjb21tdW5pdHlJZCI6bnVsbCwid2FyZE51bWJlciI6e30sIndhcmROYW1lIjp7fSwiY291bmNpbGxvckxhc3ROYW1lIjpudWxsLCJjb3VuY2lsbG9yRmlyc3ROYW1lIjpudWxsLCJ3YXJkQ291bmNpbGxvckVtYWlsIjpudWxsfSwiZW5kT2ZDaXJjdWxhdGlvbkRhdGUiOjAsImVuZE9mQ2lyY3VsYXRpb25EYXRlWU1EIjoiMDAwMS0wMS0wMSIsImNhbkNvbW1lbnQiOiJOIiwic2hvd0ZlZWRiYWNrTGluayI6Ik4iLCJwbGFubmVyRmlyc3ROYW1lIjpudWxsLCJwbGFubmVyTGFzdE5hbWUiOm51bGwsInBsYW5uZXJQaG9uZSI6bnVsbCwicGxhbm5lckVtYWlsIjpudWxsLCJzZWFyY2hhYmxlVGV4dCI6bnVsbCwic3RyZWV0QWRyZXNzIjoiR1JFRU5CQU5LIiwic3RyZWV0TnVtYmVyIjoyMDV9XSwidG90YWxEZXZBcHBzIjoxLCJpbmRleCI6MCwibGltaXQiOjUwfQ==
+  recorded_at: Sat, 22 Feb 2025 17:42:10 GMT
 - request:
     method: get
-    uri: https://devapps-restapi.ottawa.ca/devapps/D07-05-23-0005?authKey=4r5T2egSmKm5
+    uri: https://devapps-restapi.ottawa.ca/devapps/D07-12-24-0020?authKey=4r5T2egSmKm5
     body:
       encoding: US-ASCII
       string: ''
@@ -79,13 +76,11 @@ http_interactions:
       Server:
       - nginx
       Date:
-      - Mon, 15 Jan 2024 03:37:46 GMT
+      - Sat, 22 Feb 2025 17:42:10 GMT
       Content-Type:
       - application/json; charset=utf-8
       Transfer-Encoding:
       - chunked
-      Connection:
-      - keep-alive
       Strict-Transport-Security:
       - max-age=15724800; includeSubDomains
       X-Xss-Protection:
@@ -93,56 +88,1286 @@ http_interactions:
       X-Frame-Options:
       - SAMEORIGIN
       X-Ott-Cache:
-      - '11'
+      - '27'
       Set-Cookie:
-      - NSC_QH_NzTP_ohjoy=ffffffffc3a07a1d45525d5f4f58455e445a4a42378b;expires=Mon,
-        15-Jan-2024 04:07:46 GMT;path=/;httponly
-      - incap_ses_1227_2348304=1knZFCUDMUb675/ABi4HEYqopGUAAAAA7CePDhZ5LhIHZ11PtXTF6g==;
+      - incap_ses_1710_2348304=2oRYCqeMu0YtSKMzLSS7F3EMumcAAAAAUHog80pKlG+94MzmHYBwyA==;
         path=/; Domain=.ottawa.ca
-      - nlbi_2348304=4xWyGyDODFC01ohel2uJLQAAAAALatC5LAGw9+QY2e7lRiZ4; path=/; Domain=.ottawa.ca
-      - visid_incap_2348304=Dnb00qGhRtmw4sENJbNoRoqopGUAAAAAQUIPAAAAAACoIVPcy7xuPpy3GFHXtDHr;
-        expires=Mon, 13 Jan 2025 06:58:07 GMT; HttpOnly; path=/; Domain=.ottawa.ca
+      - nlbi_2348304=EJUhAQWihT71IHoZuLiUiQAAAAAcUecTANh9KEr7yBOpUSzJ; HttpOnly; path=/;
+        Domain=.ottawa.ca
+      - visid_incap_2348304=wZbkf86rRb2pR6mfNy06BnEMumcAAAAAQUIPAAAAAABYxFJNZJcfo2Wa/PpTOEDD;
+        expires=Sun, 22 Feb 2026 06:56:35 GMT; HttpOnly; path=/; Domain=.ottawa.ca
       X-Cdn:
       - Imperva
       X-Iinfo:
-      - 3-3556089-3556090 NNYY CT(9 10 0) RT(1705289866327 25) q(0 0 0 -1) r(0 0)
-        U24
+      - 62-43686493-43684979 PNYy RT(1740246129529 9) q(0 0 0 -1) r(0 0) U24
     body:
       encoding: ASCII-8BIT
       string: !binary |-
-        eyJkZXZBcHBJZCI6Il9fQ1I1VFpCIiwiYXBwbGljYXRpb25OdW1iZXIiOiJEMDctMDUtMjMtMDAwNSIsImFwcGxpY2F0aW9uRGF0ZSI6NjM4Mjc4NTE2NDUwMDAwMDAwLCJhcHBsaWNhdGlvbkRhdGVZTUQiOiIyMDIzLTA4LTE3IiwiYXBwbGljYXRpb25UeXBlSWQiOiJfX18xVFpXWCIsImFwcGxpY2F0aW9uVHlwZSI6eyJlbiI6IkRlbW9saXRpb24gQ29udHJvbCIsImZyIjoiUsOpZ2xlbWVudGF0aW9uIGRlcyBkw6ltb2xpdGlvbnMifSwiYXBwbGljYXRpb25CcmllZkRlc2MiOnsiZW4iOiJDaXR5LWluaXRpYXRlZCBkZW1vIGNvbnRyb2wuIFR3by1zdG9yZXkgc2luZ2xlIGRldGFjaGVkIGhvbWUgd2l0aCBkZXRhY2hlZCBnYXJhZ2UuIEV4aXN0aW5nIHN0cnVjdHVyZSBhcHBlYXJzIHRvIGJlIHR5cGljYWwgc3RpY2sgZnJhbWUgY29uc3RydWN0aW9uIG9uIGNvbmNyZXRlIGZvdW5kYXRpb25zLiIsImZyIjoiIn0sImFwcGxpY2F0aW9uU3RhdHVzIjp7ImVuIjoiQWN0aXZlIiwiZnIiOiJBY3RpZiJ9LCJkZXZBcHBBZGRyZXNzZXMiOlt7ImFkZHJlc3NSZWZlcmVuY2VJZCI6Il9fQ1I1VFpEIiwiYWRkcmVzc051bWJlciI6MTE1LCJhZGRyZXNzUXVhbGlmaWVyIjoiIiwibGVnYWxVbml0IjoiIiwicm9hZE5hbWUiOiJTUEVOQ0VSIiwiY2FyZGluYWxEaXJlY3Rpb24iOiIiLCJyb2FkVHlwZSI6IlN0cmVldCIsIm11bmljaXBhbGl0eSI6Ik9sZCBPdHRhd2EiLCJhZGRyZXNzVHlwZSI6Ik1BSU4iLCJhZGRyZXNzTGF0aXR1ZGUiOjQ1LjQwMTQzNywiYWRkcmVzc0xvbmdpdHVkZSI6LTc1LjczNDU0MiwiYWRkcmVzc051bWJlclJvYWROYW1lIjoiMTE1IFNQRU5DRVIiLCJwYXJjZWxQaW5OdW1iZXIiOjQwMzQwMTIyfV0sImRldkFwcERvY3VtZW50cyI6W3siZG9jUmVmZXJlbmNlSWQiOiJfX0NSNVQxMSIsImRvY3VtZW50TmFtZSI6IjIwMjMtMDgtMTcgLSBhcHBsaWNhdGlvbiAtIEQwNy0wNS0yMy0wMDA1IiwiZmlsZVNpemUiOiIwLjY5IE1CIiwiZmlsZVBhdGgiOiJEZW1vbGl0aW9uIENvbnRyb2xfSW1hZ2UgUmVmZXJlbmNlXzIwMjMtMDgtMTcgLSBhcHBsaWNhdGlvbiAtIEQwNy0wNS0yMy0wMDA1LlBERiJ9XSwib2JqZWN0U3RhdHVzIjp7Im9iamVjdFN0YXR1c1R5cGVJZCI6Il9fNE8zOENMIiwib2JqZWN0Q3VycmVudFN0YXR1cyI6eyJlbiI6IiIsImZyIjoiIn0sIm9iamVjdEN1cnJlbnRTdGF0dXNEYXRlIjo2MzgzMDAzNjY5MjAwMDAwMDAsIm9iamVjdEN1cnJlbnRTdGF0dXNEYXRlWU1EIjoiMjAyMy0wOS0xMSJ9LCJkZXZBcHBXYXJkIjp7ImNvbW11bml0eUlkIjoiX18zMDVUNkoiLCJ3YXJkTnVtYmVyIjp7ImVuIjoiV2FyZCAxNSIsImZyIjoiUXVhcnRpZXIgMTUifSwid2FyZE5hbWUiOnsiZW4iOiJLSVRDSElTU0lQUEkiLCJmciI6IktJVENISVNTSVBQSSJ9LCJjb3VuY2lsbG9yTGFzdE5hbWUiOiJMZWlwZXIiLCJjb3VuY2lsbG9yRmlyc3ROYW1lIjoiSmVmZiIsIndhcmRDb3VuY2lsbG9yRW1haWwiOiJKZWZmLkxlaXBlckBvdHRhd2EuY2EifSwiZW5kT2ZDaXJjdWxhdGlvbkRhdGUiOjYzODMyNDQyMjQzMDAwMDAwMCwiZW5kT2ZDaXJjdWxhdGlvbkRhdGVZTUQiOiIyMDIzLTEwLTA5IiwiY2FuQ29tbWVudCI6IlkiLCJzaG93RmVlZGJhY2tMaW5rIjoiTiIsInBsYW5uZXJGaXJzdE5hbWUiOiJNIE1hc2hhIFdha3VsYSIsInBsYW5uZXJMYXN0TmFtZSI6IlZha3VsYSIsInBsYW5uZXJQaG9uZSI6IjYxMy01ODAtMjQyNCB4MjcwMjkiLCJwbGFubmVyRW1haWwiOiJtbWFzaGF3YWt1bGEudmFrdWxhQG90dGF3YS5jYSIsInNlYXJjaGFibGVUZXh0IjoiMTE1IFNQRU5DRVIgU3RyZWV0IERlbW9saXRpb24gQ29udHJvbCBSw6lnbGVtZW50YXRpb24gZGVzIGTDqW1vbGl0aW9ucyBDaXR5LWluaXRpYXRlZCBkZW1vIGNvbnRyb2wuIFR3by1zdG9yZXkgc2luZ2xlIGRldGFjaGVkIGhvbWUgd2l0aCBkZXRhY2hlZCBnYXJhZ2UuIEV4aXN0aW5nIHN0cnVjdHVyZSBhcHBlYXJzIHRvIGJlIHR5cGljYWwgc3RpY2sgZnJhbWUgY29uc3RydWN0aW9uIG9uIGNvbmNyZXRlIGZvdW5kYXRpb25zLiAgQWN0aXZlIEFjdGlmICAgIFdhcmQgMTUgUXVhcnRpZXIgMTUgS0lUQ0hJU1NJUFBJIEtJVENISVNTSVBQSSBKZWZmIExlaXBlciBEMDctMDUtMjMtMDAwNSIsInN0cmVldEFkcmVzcyI6IlNQRU5DRVIiLCJzdHJlZXROdW1iZXIiOjExNX0=
-  recorded_at: Mon, 15 Jan 2024 03:37:46 GMT
+        eyJkZXZBcHBJZCI6Il9fQ1UwWkZaIiwiYXBwbGljYXRpb25OdW1iZXIiOiJEMDctMTItMjQtMDAyMCIsImFwcGxpY2F0aW9uRGF0ZSI6NjM4NDgzNDA5NzcwMDAwMDAwLCJhcHBsaWNhdGlvbkRhdGVZTUQiOiIyMDI0LTA0LTEwIiwiYXBwbGljYXRpb25UeXBlSWQiOiJfX19fNUNDViIsImFwcGxpY2F0aW9uVHlwZSI6eyJlbiI6IlNpdGUgUGxhbiBDb250cm9sIiwiZnIiOiJSw6lnbGVtZW50YXRpb24gZHUgcGxhbiBkJ2ltcGxhbnRhdGlvbiJ9LCJhcHBsaWNhdGlvbkJyaWVmRGVzYyI6eyJlbiI6IlRoZSBDaXR5IG9mIE90dGF3YSBoYXMgcmVjZWl2ZWQgYSBTaXRlIFBsYW4gQ29udHJvbCBhcHBsaWNhdGlvbiB0byBjb25zdHJ1Y3QgYSB0d28tc3RvcmV5IGFkZGl0aW9uIGNvbm5lY3RlZCBvbiB0aGUgc291dGh3ZXN0IHNpZGUgb2YgdGhlIGV4aXN0aW5nIHR3byBzdG9yZXkgV29vZHZhbGUgUGVudGVjb3N0YWwgQ2h1cmNoLiIsImZyIjoiTGEgVmlsbGUgZFx1MDA5Mk90dGF3YSBhIHJlw6d1IHVuZSBkZW1hbmRlIGRlIHLDqWdsZW1lbnRhdGlvbiBkdSBwbGFuIGRcdTAwOTJpbXBsYW50YXRpb24gYXlhbnQgcG91ciBvYmpldCBkZSBwZXJtZXR0cmUgbGEgY29uc3RydWN0aW9uIGRcdTAwOTJ1biByYWpvdXQgZGUgZGV1eCDDqXRhZ2VzIHJlbGnDqSBkdSBjw7R0w6kgc3VkLW91ZXN0IMOgIGxcdTAwOTLDqWdsaXNlIHBlbnRlY8O0dGlzdGUgV29vZHZhbGUsIHVuIGLDonRpbWVudCBkZSBkZXV4IMOpdGFnZXMgw6lnYWxlbWVudC4ifSwiYXBwbGljYXRpb25TdGF0dXMiOnsiZW4iOiJJbmFjdGl2ZSIsImZyIjoiSW5hY3RpZiJ9LCJkZXZBcHBBZGRyZXNzZXMiOlt7ImFkZHJlc3NSZWZlcmVuY2VJZCI6Il9fQ1UwWkY3IiwiYWRkcmVzc051bWJlciI6MjA1LCJhZGRyZXNzUXVhbGlmaWVyIjoiIiwibGVnYWxVbml0IjoiIiwicm9hZE5hbWUiOiJHUkVFTkJBTksiLCJjYXJkaW5hbERpcmVjdGlvbiI6IiIsInJvYWRUeXBlIjoiUm9hZCIsIm11bmljaXBhbGl0eSI6Ik5lcGVhbiIsImFkZHJlc3NUeXBlIjoiTUFJTiIsImFkZHJlc3NMYXRpdHVkZSI6NDUuMzI2NDk4LCJhZGRyZXNzTG9uZ2l0dWRlIjotNzUuNzc4NDgxLCJhZGRyZXNzTnVtYmVyUm9hZE5hbWUiOiIyMDUgR1JFRU5CQU5LIiwicGFyY2VsUGluTnVtYmVyIjo0NjUxMDAwN31dLCJkZXZBcHBEb2N1bWVudHMiOlt7ImRvY1JlZmVyZW5jZUlkIjoiX19DVjVaR1UiLCJkb2N1bWVudE5hbWUiOiIyMDI0LTA2LTEzIC0gU2lnbmVkIERlbGVnYXRlZCBBdXRob3JpdHkgUmVwb3J0IC0gRDA3LTEyLTI0LTAwMjAiLCJmaWxlU2l6ZSI6IjAuNDkgTUIiLCJmaWxlUGF0aCI6IlNpdGUgUGxhbiBBcHBsaWNhdGlvbl9JbWFnZSBSZWZlcmVuY2VfMjAyNC0wNi0xMyAtIFNpZ25lZCBEZWxlZ2F0ZWQgQXV0aG9yaXR5IFJlcG9ydCAtIEQwNy0xMi0yNC0wMDIwLlBERiJ9LHsiZG9jUmVmZXJlbmNlSWQiOiJfX0NWNVpFUyIsImRvY3VtZW50TmFtZSI6IjIwMjQtMDYtMTMgLSBBcHByb3ZlZCBTaXRlIFNlcnZpY2luZyBQbGFuIC0gRDA3LTEyLTI0LTAwMjAiLCJmaWxlU2l6ZSI6IjAuNTUgTUIiLCJmaWxlUGF0aCI6IlNpdGUgUGxhbiBBcHBsaWNhdGlvbl9JbWFnZSBSZWZlcmVuY2VfMjAyNC0wNi0xMyAtIEFwcHJvdmVkIFNpdGUgU2VydmljaW5nIFBsYW4gLSBEMDctMTItMjQtMDAyMC5QREYifSx7ImRvY1JlZmVyZW5jZUlkIjoiX19DVjVaRVQiLCJkb2N1bWVudE5hbWUiOiIyMDI0LTA2LTEzIC0gQXBwcm92ZWQgU2l0ZSBQbGFuIC0gRDA3LTEyLTI0LTAwMjAiLCJmaWxlU2l6ZSI6IjIuNTggTUIiLCJmaWxlUGF0aCI6IlNpdGUgUGxhbiBBcHBsaWNhdGlvbl9JbWFnZSBSZWZlcmVuY2VfMjAyNC0wNi0xMyAtIEFwcHJvdmVkIFNpdGUgUGxhbiAtIEQwNy0xMi0yNC0wMDIwLlBERiJ9LHsiZG9jUmVmZXJlbmNlSWQiOiJfX0NWNVpFVSIsImRvY3VtZW50TmFtZSI6IjIwMjQtMDYtMTMgLSBBcHByb3ZlZCBSb29mIERyYWluYWdlIFBsYW4gLSBEMDctMTItMjQtMDAyMCIsImZpbGVTaXplIjoiMC4yMSBNQiIsImZpbGVQYXRoIjoiU2l0ZSBQbGFuIEFwcGxpY2F0aW9uX0ltYWdlIFJlZmVyZW5jZV8yMDI0LTA2LTEzIC0gQXBwcm92ZWQgUm9vZiBEcmFpbmFnZSBQbGFuIC0gRDA3LTEyLTI0LTAwMjAuUERGIn0seyJkb2NSZWZlcmVuY2VJZCI6Il9fQ1Y1WkVWIiwiZG9jdW1lbnROYW1lIjoiMjAyNC0wNi0xMyAtIEFwcHJvdmVkIE5vdGVzICYgRGV0YWlscyAtIEQwNy0xMi0yNC0wMDIwIiwiZmlsZVNpemUiOiIwLjk4IE1CIiwiZmlsZVBhdGgiOiJTaXRlIFBsYW4gQXBwbGljYXRpb25fSW1hZ2UgUmVmZXJlbmNlXzIwMjQtMDYtMTMgLSBBcHByb3ZlZCBOb3RlcyAmIERldGFpbHMgLSBEMDctMTItMjQtMDAyMC5QREYifSx7ImRvY1JlZmVyZW5jZUlkIjoiX19DVjVaRVciLCJkb2N1bWVudE5hbWUiOiIyMDI0LTA2LTEzIC0gQXBwcm92ZWQgTGFuZHNjYXBlIFBsYW4gLSBEMDctMTItMjQtMDAyMCIsImZpbGVTaXplIjoiMS4wMSBNQiIsImZpbGVQYXRoIjoiU2l0ZSBQbGFuIEFwcGxpY2F0aW9uX0ltYWdlIFJlZmVyZW5jZV8yMDI0LTA2LTEzIC0gQXBwcm92ZWQgTGFuZHNjYXBlIFBsYW4gLSBEMDctMTItMjQtMDAyMC5QREYifSx7ImRvY1JlZmVyZW5jZUlkIjoiX19DVjVaRTAiLCJkb2N1bWVudE5hbWUiOiIyMDI0LTA2LTEzIC0gQXBwcm92ZWQgTGFuZHNjYXBlIERldGFpbHMgUGxhbiAtIEQwNy0xMi0yNC0wMDIwIiwiZmlsZVNpemUiOiIwLjc1IE1CIiwiZmlsZVBhdGgiOiJTaXRlIFBsYW4gQXBwbGljYXRpb25fSW1hZ2UgUmVmZXJlbmNlXzIwMjQtMDYtMTMgLSBBcHByb3ZlZCBMYW5kc2NhcGUgRGV0YWlscyBQbGFuIC0gRDA3LTEyLTI0LTAwMjAuUERGIn0seyJkb2NSZWZlcmVuY2VJZCI6Il9fQ1Y1WkZNIiwiZG9jdW1lbnROYW1lIjoiMjAyNC0wNi0xMyAtIEFwcHJvdmVkIEdyYWRpbmcgUGxhbiAmIEVyb3Npb24gJiBTZWRpbWVudCBDb250cm9sIFBsYW4gLSBEMDctMTItMjQtMDAyMCIsImZpbGVTaXplIjoiMC45MyBNQiIsImZpbGVQYXRoIjoiU2l0ZSBQbGFuIEFwcGxpY2F0aW9uX0ltYWdlIFJlZmVyZW5jZV8yMDI0LTA2LTEzIC0gQXBwcm92ZWQgR3JhZGluZyBQbGFuICYgRXJvc2lvbiAmIFNlZGltZW50IENvbnRyb2wgUGxhbiAtIEQwNy0xMi0yNC0wMDIwLlBERiJ9LHsiZG9jUmVmZXJlbmNlSWQiOiJfX0NWNVpGTiIsImRvY3VtZW50TmFtZSI6IjIwMjQtMDYtMTMgLSBBcHByb3ZlZCBFbGV2YXRpb25zIC0gRDA3LTEyLTI0LTAwMjAiLCJmaWxlU2l6ZSI6IjAuNDkgTUIiLCJmaWxlUGF0aCI6IlNpdGUgUGxhbiBBcHBsaWNhdGlvbl9JbWFnZSBSZWZlcmVuY2VfMjAyNC0wNi0xMyAtIEFwcHJvdmVkIEVsZXZhdGlvbnMgLSBEMDctMTItMjQtMDAyMC5QREYifSx7ImRvY1JlZmVyZW5jZUlkIjoiX19DVjVaRkMiLCJkb2N1bWVudE5hbWUiOiIyMDI0LTA2LTEzIC0gQXBwcm92ZWQgRHJhaW5hZ2UgUGxhbiAtIEQwNy0xMi0yNC0wMDIwIiwiZmlsZVNpemUiOiIwLjQzIE1CIiwiZmlsZVBhdGgiOiJTaXRlIFBsYW4gQXBwbGljYXRpb25fSW1hZ2UgUmVmZXJlbmNlXzIwMjQtMDYtMTMgLSBBcHByb3ZlZCBEcmFpbmFnZSBQbGFuIC0gRDA3LTEyLTI0LTAwMjAuUERGIn0seyJkb2NSZWZlcmVuY2VJZCI6Il9fQ1Y1WkZFIiwiZG9jdW1lbnROYW1lIjoiMjAyNC0wNi0xMyAtIEFwcHJvdmVkIERldGFpbHMgJiBTY2hlZHVsZXMgLSBEMDctMTItMjQtMDAyMCIsImZpbGVTaXplIjoiMC40NCBNQiIsImZpbGVQYXRoIjoiU2l0ZSBQbGFuIEFwcGxpY2F0aW9uX0ltYWdlIFJlZmVyZW5jZV8yMDI0LTA2LTEzIC0gQXBwcm92ZWQgRGV0YWlscyAmIFNjaGVkdWxlcyAtIEQwNy0xMi0yNC0wMDIwLlBERiJ9LHsiZG9jUmVmZXJlbmNlSWQiOiJfX0NWVkZIRCIsImRvY3VtZW50TmFtZSI6IjIwMjQtMDUtMjEgLSBMYW5kc2NhcGUgUGxhbiAtIEQwNy0xMi0yNC0wMDIwIiwiZmlsZVNpemUiOiIxLjAwIE1CIiwiZmlsZVBhdGgiOiJTaXRlIFBsYW4gQXBwbGljYXRpb25fSW1hZ2UgUmVmZXJlbmNlXzIwMjQtMDUtMjEgLSBMYW5kc2NhcGUgUGxhbiAtIEQwNy0xMi0yNC0wMDIwLlBERiJ9LHsiZG9jUmVmZXJlbmNlSWQiOiJfX0NWVkZIWCIsImRvY3VtZW50TmFtZSI6IjIwMjQtMDUtMjEgLSBMYW5kc2NhcGUgRGV0YWlscyBQbGFuIC0gRDA3LTEyLTI0LTAwMjAiLCJmaWxlU2l6ZSI6IjAuNzQgTUIiLCJmaWxlUGF0aCI6IlNpdGUgUGxhbiBBcHBsaWNhdGlvbl9JbWFnZSBSZWZlcmVuY2VfMjAyNC0wNS0yMSAtIExhbmRzY2FwZSBEZXRhaWxzIFBsYW4gLSBEMDctMTItMjQtMDAyMC5QREYifSx7ImRvY1JlZmVyZW5jZUlkIjoiX19DVkpTWTEiLCJkb2N1bWVudE5hbWUiOiIyMDI0LTA0LTI5IC0gQXBwbGljYXRpb24gU3VtbWFyeSAtIEQwNy0xMi0yNC0wMDIwIiwiZmlsZVNpemUiOiIwLjUyIE1CIiwiZmlsZVBhdGgiOiJTaXRlIFBsYW4gQXBwbGljYXRpb25fSW1hZ2UgUmVmZXJlbmNlXzIwMjQtMDQtMjkgLSBBcHBsaWNhdGlvbiBTdW1tYXJ5IC0gRDA3LTEyLTI0LTAwMjAuUERGIn0seyJkb2NSZWZlcmVuY2VJZCI6Il9fQ1UwNDVRIiwiZG9jdW1lbnROYW1lIjoiMjAyNC0wNC0xMCAtIFRyYW5zcG9ydGF0aW9uIEltcGFjdCBBc3Nlc3NtZW50IFNjcmVlbmluZyAtIEQwNy0xMi0yNC0wMDIwIiwiZmlsZVNpemUiOiIwLjYyIE1CIiwiZmlsZVBhdGgiOiJTaXRlIFBsYW4gQXBwbGljYXRpb25fSW1hZ2UgUmVmZXJlbmNlXzIwMjQtMDQtMTAgLSBUcmFuc3BvcnRhdGlvbiBJbXBhY3QgQXNzZXNzbWVudCBTY3JlZW5pbmcgLSBEMDctMTItMjQtMDAyMC5QREYifSx7ImRvY1JlZmVyZW5jZUlkIjoiX19DVTA0NFoiLCJkb2N1bWVudE5hbWUiOiIyMDI0LTA0LTEwIC0gVHJhZmZpYyBOb2lzZSBJbXBhY3QgQXNzZXNzbWVudCAgLSBEMDctMTItMjQtMDAyMCIsImZpbGVTaXplIjoiMi4zNCBNQiIsImZpbGVQYXRoIjoiU2l0ZSBQbGFuIEFwcGxpY2F0aW9uX0ltYWdlIFJlZmVyZW5jZV8yMDI0LTA0LTEwIC0gVHJhZmZpYyBOb2lzZSBJbXBhY3QgQXNzZXNzbWVudCAgLSBEMDctMTItMjQtMDAyMC5QREYifSx7ImRvY1JlZmVyZW5jZUlkIjoiX19DVTA0NFAiLCJkb2N1bWVudE5hbWUiOiIyMDI0LTA0LTEwIC0gVG9wb2dyYXBoaWNhbCBQbGFuIG9mIFN1cnZleSAtIEQwNy0xMi0yNC0wMDIwIiwiZmlsZVNpemUiOiIwLjY4IE1CIiwiZmlsZVBhdGgiOiJTaXRlIFBsYW4gQXBwbGljYXRpb25fSW1hZ2UgUmVmZXJlbmNlXzIwMjQtMDQtMTAgLSBUb3BvZ3JhcGhpY2FsIFBsYW4gb2YgU3VydmV5IC0gRDA3LTEyLTI0LTAwMjAuUERGIn0seyJkb2NSZWZlcmVuY2VJZCI6Il9fQ1UwNDM4IiwiZG9jdW1lbnROYW1lIjoiMjAyNC0wNC0xMCAtIFN1biBTaGFkb3cgQW5hbHlzaXMgLSBEMDctMTItMjQtMDAyMCIsImZpbGVTaXplIjoiMS42NCBNQiIsImZpbGVQYXRoIjoiU2l0ZSBQbGFuIEFwcGxpY2F0aW9uX0ltYWdlIFJlZmVyZW5jZV8yMDI0LTA0LTEwIC0gU3VuIFNoYWRvdyBBbmFseXNpcyAtIEQwNy0xMi0yNC0wMDIwLlBERiJ9LHsiZG9jUmVmZXJlbmNlSWQiOiJfX0NVMDQxQyIsImRvY3VtZW50TmFtZSI6IjIwMjQtMDQtMTAgLSBTaXRlIFNlcnZpY2luZyBTdHVkeSBhbmQgU3Rvcm13YXRlciBNYW5hZ2VtZW50IFJlcG9ydCAtIEQwNy0xMi0yNC0wMDIwIiwiZmlsZVNpemUiOiIzLjU3IE1CIiwiZmlsZVBhdGgiOiJTaXRlIFBsYW4gQXBwbGljYXRpb25fSW1hZ2UgUmVmZXJlbmNlXzIwMjQtMDQtMTAgLSBTaXRlIFNlcnZpY2luZyBTdHVkeSBhbmQgU3Rvcm13YXRlciBNYW5hZ2VtZW50IFJlcG9ydCAtIEQwNy0xMi0yNC0wMDIwLlBERiJ9LHsiZG9jUmVmZXJlbmNlSWQiOiJfX0NVMDQxUSIsImRvY3VtZW50TmFtZSI6IjIwMjQtMDQtMTAgLSBTaXRlIFNlcnZpY2luZyBQbGFuIC0gRDA3LTEyLTI0LTAwMjAiLCJmaWxlU2l6ZSI6IjAuNTUgTUIiLCJmaWxlUGF0aCI6IlNpdGUgUGxhbiBBcHBsaWNhdGlvbl9JbWFnZSBSZWZlcmVuY2VfMjAyNC0wNC0xMCAtIFNpdGUgU2VydmljaW5nIFBsYW4gLSBEMDctMTItMjQtMDAyMC5QREYifSx7ImRvY1JlZmVyZW5jZUlkIjoiX19DVTA0WkciLCJkb2N1bWVudE5hbWUiOiIyMDI0LTA0LTEwIC0gU2l0ZSBQbGFuIC0gRDA3LTEyLTI0LTAwMjAiLCJmaWxlU2l6ZSI6IjIuNjAgTUIiLCJmaWxlUGF0aCI6IlNpdGUgUGxhbiBBcHBsaWNhdGlvbl9JbWFnZSBSZWZlcmVuY2VfMjAyNC0wNC0xMCAtIFNpdGUgUGxhbiAtIEQwNy0xMi0yNC0wMDIwLlBERiJ9LHsiZG9jUmVmZXJlbmNlSWQiOiJfX0NVMDRZRyIsImRvY3VtZW50TmFtZSI6IjIwMjQtMDQtMTAgLSBSb29mIERyYWluYWdlIFBsYW4gLSBEMDctMTItMjQtMDAyMCIsImZpbGVTaXplIjoiMC4yMCBNQiIsImZpbGVQYXRoIjoiU2l0ZSBQbGFuIEFwcGxpY2F0aW9uX0ltYWdlIFJlZmVyZW5jZV8yMDI0LTA0LTEwIC0gUm9vZiBEcmFpbmFnZSBQbGFuIC0gRDA3LTEyLTI0LTAwMjAuUERGIn0seyJkb2NSZWZlcmVuY2VJZCI6Il9fQ1UwNFlSIiwiZG9jdW1lbnROYW1lIjoiMjAyNC0wNC0xMCAtIFBsYW4gU3VydmV5IC0gRDA3LTEyLTI0LTAwMjAiLCJmaWxlU2l6ZSI6IjAuNjAgTUIiLCJmaWxlUGF0aCI6IlNpdGUgUGxhbiBBcHBsaWNhdGlvbl9JbWFnZSBSZWZlcmVuY2VfMjAyNC0wNC0xMCAtIFBsYW4gU3VydmV5IC0gRDA3LTEyLTI0LTAwMjAuUERGIn0seyJkb2NSZWZlcmVuY2VJZCI6Il9fQ1UwNFhLIiwiZG9jdW1lbnROYW1lIjoiMjAyNC0wNC0xMCAtIFBlcnNwZWN0aXZlIFJlbmRlcmluZ3MgLSBEMDctMTItMjQtMDAyMCIsImZpbGVTaXplIjoiMjUuMTYgTUIiLCJmaWxlUGF0aCI6IlNpdGUgUGxhbiBBcHBsaWNhdGlvbl9JbWFnZSBSZWZlcmVuY2VfMjAyNC0wNC0xMCAtIFBlcnNwZWN0aXZlIFJlbmRlcmluZ3MgLSBEMDctMTItMjQtMDAyMC5QREYifSx7ImRvY1JlZmVyZW5jZUlkIjoiX19DVTA0UUwiLCJkb2N1bWVudE5hbWUiOiIyMDI0LTA0LTEwIC0gTm90ZXMgYW5kIERldGFpbHMgLSBEMDctMTItMjQtMDAyMCIsImZpbGVTaXplIjoiMS4wMCBNQiIsImZpbGVQYXRoIjoiU2l0ZSBQbGFuIEFwcGxpY2F0aW9uX0ltYWdlIFJlZmVyZW5jZV8yMDI0LTA0LTEwIC0gTm90ZXMgYW5kIERldGFpbHMgLSBEMDctMTItMjQtMDAyMC5QREYifSx7ImRvY1JlZmVyZW5jZUlkIjoiX19DVTA0UE0iLCJkb2N1bWVudE5hbWUiOiIyMDI0LTA0LTEwIC0gTGV2ZWwgMiBGbG9vciBQbGFuIC0gRDA3LTEyLTI0LTAwMjAiLCJmaWxlU2l6ZSI6IjAuNTEgTUIiLCJmaWxlUGF0aCI6IlNpdGUgUGxhbiBBcHBsaWNhdGlvbl9JbWFnZSBSZWZlcmVuY2VfMjAyNC0wNC0xMCAtIExldmVsIDIgRmxvb3IgUGxhbiAtIEQwNy0xMi0yNC0wMDIwLlBERiJ9LHsiZG9jUmVmZXJlbmNlSWQiOiJfX0NVMDNHOSIsImRvY3VtZW50TmFtZSI6IjIwMjQtMDQtMTAgLSBHcm91bmQgRmxvb3IgUGxhbiAtIEQwNy0xMi0yNC0wMDIwIiwiZmlsZVNpemUiOiIxLjA4IE1CIiwiZmlsZVBhdGgiOiJTaXRlIFBsYW4gQXBwbGljYXRpb25fSW1hZ2UgUmVmZXJlbmNlXzIwMjQtMDQtMTAgLSBHcm91bmQgRmxvb3IgUGxhbiAtIEQwNy0xMi0yNC0wMDIwLlBERiJ9LHsiZG9jUmVmZXJlbmNlSWQiOiJfX0NVMDNBMSIsImRvY3VtZW50TmFtZSI6IjIwMjQtMDQtMTAgLSBHZW90ZWNobmljYWwgSW52ZXN0aWdhdGlvbiAtIEQwNy0xMi0yNC0wMDIwIiwiZmlsZVNpemUiOiIyLjg0IE1CIiwiZmlsZVBhdGgiOiJTaXRlIFBsYW4gQXBwbGljYXRpb25fSW1hZ2UgUmVmZXJlbmNlXzIwMjQtMDQtMTAgLSBHZW90ZWNobmljYWwgSW52ZXN0aWdhdGlvbiAtIEQwNy0xMi0yNC0wMDIwLlBERiJ9LHsiZG9jUmVmZXJlbmNlSWQiOiJfX0NVMDM1TiIsImRvY3VtZW50TmFtZSI6IjIwMjQtMDQtMTAgLSBFeGlzdGluZyBDb25kaXRpb25zIFJlbW92YWxzICAtIEQwNy0xMi0yNC0wMDIwIiwiZmlsZVNpemUiOiIwLjQ4IE1CIiwiZmlsZVBhdGgiOiJTaXRlIFBsYW4gQXBwbGljYXRpb25fSW1hZ2UgUmVmZXJlbmNlXzIwMjQtMDQtMTAgLSBFeGlzdGluZyBDb25kaXRpb25zIFJlbW92YWxzICAtIEQwNy0xMi0yNC0wMDIwLlBERiJ9LHsiZG9jUmVmZXJlbmNlSWQiOiJfX0NVMDNYUiIsImRvY3VtZW50TmFtZSI6IjIwMjQtMDQtMTAgLSBFbGV2YXRpb25zIC0gRDA3LTEyLTI0LTAwMjAiLCJmaWxlU2l6ZSI6IjAuNDUgTUIiLCJmaWxlUGF0aCI6IlNpdGUgUGxhbiBBcHBsaWNhdGlvbl9JbWFnZSBSZWZlcmVuY2VfMjAyNC0wNC0xMCAtIEVsZXZhdGlvbnMgLSBEMDctMTItMjQtMDAyMC5QREYifSx7ImRvY1JlZmVyZW5jZUlkIjoiX19DVTAzV0giLCJkb2N1bWVudE5hbWUiOiIyMDI0LTA0LTEwIC0gRWxldHJpY2FsIFNpdGUgTGlnaHRpbmcgV29yayBQbGFuIC0gRDA3LTEyLTI0LTAwMjAiLCJmaWxlU2l6ZSI6IjAuMjkgTUIiLCJmaWxlUGF0aCI6IlNpdGUgUGxhbiBBcHBsaWNhdGlvbl9JbWFnZSBSZWZlcmVuY2VfMjAyNC0wNC0xMCAtIEVsZXRyaWNhbCBTaXRlIExpZ2h0aW5nIFdvcmsgUGxhbiAtIEQwNy0xMi0yNC0wMDIwLlBERiJ9LHsiZG9jUmVmZXJlbmNlSWQiOiJfX0NVMDNWNCIsImRvY3VtZW50TmFtZSI6IjIwMjQtMDQtMTAgLSBEcmFpbmFnZSBQbGFuIGFuZCBFcm9zaW9uIGFuZCBTZWRpbWVudCBDb250cm9sIFBsYW4gLSBEMDctMTItMjQtMDAyMCIsImZpbGVTaXplIjoiMC45NSBNQiIsImZpbGVQYXRoIjoiU2l0ZSBQbGFuIEFwcGxpY2F0aW9uX0ltYWdlIFJlZmVyZW5jZV8yMDI0LTA0LTEwIC0gRHJhaW5hZ2UgUGxhbiBhbmQgRXJvc2lvbiBhbmQgU2VkaW1lbnQgQ29udHJvbCBQbGFuIC0gRDA3LTEyLTI0LTAwMjAuUERGIn0seyJkb2NSZWZlcmVuY2VJZCI6Il9fQ1UwM1ZXIiwiZG9jdW1lbnROYW1lIjoiMjAyNC0wNC0xMCAtIERyYWluYWdlIFBsYW4gLSBEMDctMTItMjQtMDAyMCIsImZpbGVTaXplIjoiMC40MyBNQiIsImZpbGVQYXRoIjoiU2l0ZSBQbGFuIEFwcGxpY2F0aW9uX0ltYWdlIFJlZmVyZW5jZV8yMDI0LTA0LTEwIC0gRHJhaW5hZ2UgUGxhbiAtIEQwNy0xMi0yNC0wMDIwLlBERiJ9LHsiZG9jUmVmZXJlbmNlSWQiOiJfX0NVMDNRTCIsImRvY3VtZW50TmFtZSI6IjIwMjQtMDQtMTAgLSBEZXRhaWxzIGFuZCBTY2hlZHVsZXMgLSBEMDctMTItMjQtMDAyMCIsImZpbGVTaXplIjoiMC40NCBNQiIsImZpbGVQYXRoIjoiU2l0ZSBQbGFuIEFwcGxpY2F0aW9uX0ltYWdlIFJlZmVyZW5jZV8yMDI0LTA0LTEwIC0gRGV0YWlscyBhbmQgU2NoZWR1bGVzIC0gRDA3LTEyLTI0LTAwMjAuUERGIn0seyJkb2NSZWZlcmVuY2VJZCI6Il9fQ1UwM1AxIiwiZG9jdW1lbnROYW1lIjoiMjAyNC0wNC0xMCAtIERlc2lnbiBCcmllZiAtIEQwNy0xMi0yNC0wMDIwIiwiZmlsZVNpemUiOiIwLjM4IE1CIiwiZmlsZVBhdGgiOiJTaXRlIFBsYW4gQXBwbGljYXRpb25fSW1hZ2UgUmVmZXJlbmNlXzIwMjQtMDQtMTAgLSBEZXNpZ24gQnJpZWYgLSBEMDctMTItMjQtMDAyMC5QREYifV0sIm9iamVjdFN0YXR1cyI6eyJvYmplY3RTdGF0dXNUeXBlSWQiOiJfXzRCWFJPWCIsIm9iamVjdEN1cnJlbnRTdGF0dXMiOnsiZW4iOiJBZ3JlZW1lbnQgUmVnaXN0ZXJlZCAtIEZpbmFsIExlZ2FsIENsZWFyYW5jZSBHaXZlbiIsImZyIjoiRW50ZW50ZSBFbnJlZ2lzdHLDqWUgLSBBcHByb2JhdGlvbiBGaW5hbGUgZHUgQ29udGVudGlldXgifSwib2JqZWN0Q3VycmVudFN0YXR1c0RhdGUiOjYzODY1NzIyMzIyMDAwMDAwMCwib2JqZWN0Q3VycmVudFN0YXR1c0RhdGVZTUQiOiIyMDI0LTEwLTI4In0sImRldkFwcFdhcmQiOnsiY29tbXVuaXR5SWQiOiJfXzMwNVQ1QSIsIndhcmROdW1iZXIiOnsiZW4iOiJXYXJkIDkiLCJmciI6IlF1YXJ0aWVyIDA5In0sIndhcmROYW1lIjp7ImVuIjoiS05PWERBTEUtTUVSSVZBTEUiLCJmciI6IktOT1hEQUxFLU1FUklWQUxFIn0sImNvdW5jaWxsb3JMYXN0TmFtZSI6IkRldmluZSIsImNvdW5jaWxsb3JGaXJzdE5hbWUiOiJTZWFuIiwid2FyZENvdW5jaWxsb3JFbWFpbCI6InNlYW4uZGV2aW5lQG90dGF3YS5jYSJ9LCJlbmRPZkNpcmN1bGF0aW9uRGF0ZSI6MCwiZW5kT2ZDaXJjdWxhdGlvbkRhdGVZTUQiOiIwMDAxLTAxLTAxIiwiY2FuQ29tbWVudCI6Ik4iLCJzaG93RmVlZGJhY2tMaW5rIjoiTiIsInBsYW5uZXJGaXJzdE5hbWUiOiJTaGFoaXJhIiwicGxhbm5lckxhc3ROYW1lIjoiSmFsYWwiLCJwbGFubmVyUGhvbmUiOiI2MTMtNTgwLTI0MjQgeDI0OTE0IiwicGxhbm5lckVtYWlsIjoic2hhaGlyYS5qYWxhbEBvdHRhd2EuY2EiLCJzZWFyY2hhYmxlVGV4dCI6IjIwNSBHUkVFTkJBTksgUm9hZCBTaXRlIFBsYW4gQ29udHJvbCBSw6lnbGVtZW50YXRpb24gZHUgcGxhbiBkJ2ltcGxhbnRhdGlvbiBUaGUgQ2l0eSBvZiBPdHRhd2EgaGFzIHJlY2VpdmVkIGEgU2l0ZSBQbGFuIENvbnRyb2wgYXBwbGljYXRpb24gdG8gY29uc3RydWN0IGEgdHdvLXN0b3JleSBhZGRpdGlvbiBjb25uZWN0ZWQgb24gdGhlIHNvdXRod2VzdCBzaWRlIG9mIHRoZSBleGlzdGluZyB0d28gc3RvcmV5IFdvb2R2YWxlIFBlbnRlY29zdGFsIENodXJjaC4gTGEgVmlsbGUgZFx1MDA5Mk90dGF3YSBhIHJlw6d1IHVuZSBkZW1hbmRlIGRlIHLDqWdsZW1lbnRhdGlvbiBkdSBwbGFuIGRcdTAwOTJpbXBsYW50YXRpb24gYXlhbnQgcG91ciBvYmpldCBkZSBwZXJtZXR0cmUgbGEgY29uc3RydWN0aW9uIGRcdTAwOTJ1biByYWpvdXQgZGUgZGV1eCDDqXRhZ2VzIHJlbGnDqSBkdSBjw7R0w6kgc3VkLW91ZXN0IMOgIGxcdTAwOTLDqWdsaXNlIHBlbnRlY8O0dGlzdGUgV29vZHZhbGUsIHVuIGLDonRpbWVudCBkZSBkZXV4IMOpdGFnZXMgw6lnYWxlbWVudC4gSW5hY3RpdmUgSW5hY3RpZiBBZ3JlZW1lbnQgUmVnaXN0ZXJlZCAtIEZpbmFsIExlZ2FsIENsZWFyYW5jZSBHaXZlbiBFbnRlbnRlIEVucmVnaXN0csOpZSAtIEFwcHJvYmF0aW9uIEZpbmFsZSBkdSBDb250ZW50aWV1eCAgV2FyZCA5IFF1YXJ0aWVyIDA5IEtOT1hEQUxFLU1FUklWQUxFIEtOT1hEQUxFLU1FUklWQUxFIFNlYW4gRGV2aW5lIEQwNy0xMi0yNC0wMDIwIiwic3RyZWV0QWRyZXNzIjoiR1JFRU5CQU5LIiwic3RyZWV0TnVtYmVyIjoyMDV9
+  recorded_at: Sat, 22 Feb 2025 17:42:10 GMT
 - request:
     method: head
-    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Demolition%20Control_Image%20Reference_2023-08-17%20-%20application%20-%20D07-05-23-0005.PDF
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-06-13%20-%20Signed%20Delegated%20Authority%20Report%20-%20D07-12-24-0020.PDF
     body:
       encoding: US-ASCII
       string: ''
     headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
       Accept:
       - "*/*"
       User-Agent:
       - Ruby
   response:
     status:
-      code: 302
-      message: Found
+      code: 307
+      message: Temporary Redirect
     headers:
+      Date:
+      - Sat, 22 Feb 2025 17:42:10 GMT
+      Content-Type:
+      - text/html
       Content-Length:
       - '0'
+      Connection:
+      - keep-alive
       Location:
-      - https://webcast.ottawa.ca/plan/All_Image%20Referencing_Demolition%20Control_Image%20Reference_2023-08-17%20-%20application%20-%20D07-05-23-0005.PDF
+      - https://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-06-13%20-%20Signed%20Delegated%20Authority%20Report%20-%20D07-12-24-0020.PDF
       X-Azure-Ref:
-      - 0iqikZQAAAADaygb06JgPR4FI4vHC8omdWVRPMjIxMDkwODIwMDMzADE0YWEzNmE5LTc5MDQtNGIxZC1iNDU4LTU4NjVhYmNmYzgxNw==
-      Date:
-      - Mon, 15 Jan 2024 03:37:46 GMT
+      - 20250222T174210Z-1546cc46689l8ssghC1YTO2t0c00000000sg00000000b450
+      X-Cache:
+      - CONFIG_NOCACHE
     body:
       encoding: UTF-8
       string: ''
-  recorded_at: Mon, 15 Jan 2024 03:37:46 GMT
+  recorded_at: Sat, 22 Feb 2025 17:42:10 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-06-13%20-%20Approved%20Site%20Servicing%20Plan%20-%20D07-12-24-0020.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 307
+      message: Temporary Redirect
+    headers:
+      Date:
+      - Sat, 22 Feb 2025 17:42:10 GMT
+      Content-Type:
+      - text/html
+      Content-Length:
+      - '0'
+      Connection:
+      - keep-alive
+      Location:
+      - https://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-06-13%20-%20Approved%20Site%20Servicing%20Plan%20-%20D07-12-24-0020.PDF
+      X-Azure-Ref:
+      - 20250222T174210Z-1546cc466898kdxbhC1YTOk32000000002qg000000002z79
+      X-Cache:
+      - CONFIG_NOCACHE
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Sat, 22 Feb 2025 17:42:10 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-06-13%20-%20Approved%20Site%20Plan%20-%20D07-12-24-0020.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 307
+      message: Temporary Redirect
+    headers:
+      Date:
+      - Sat, 22 Feb 2025 17:42:10 GMT
+      Content-Type:
+      - text/html
+      Content-Length:
+      - '0'
+      Connection:
+      - keep-alive
+      Location:
+      - https://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-06-13%20-%20Approved%20Site%20Plan%20-%20D07-12-24-0020.PDF
+      X-Azure-Ref:
+      - 20250222T174210Z-1546cc46689bwx5zhC1YTO63ac00000008d000000000ayhe
+      X-Cache:
+      - CONFIG_NOCACHE
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Sat, 22 Feb 2025 17:42:10 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-06-13%20-%20Approved%20Roof%20Drainage%20Plan%20-%20D07-12-24-0020.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 307
+      message: Temporary Redirect
+    headers:
+      Date:
+      - Sat, 22 Feb 2025 17:42:10 GMT
+      Content-Type:
+      - text/html
+      Content-Length:
+      - '0'
+      Connection:
+      - keep-alive
+      Location:
+      - https://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-06-13%20-%20Approved%20Roof%20Drainage%20Plan%20-%20D07-12-24-0020.PDF
+      X-Azure-Ref:
+      - 20250222T174210Z-1546cc46689fjc7whC1YTO8u500000000p4g000000002565
+      X-Cache:
+      - CONFIG_NOCACHE
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Sat, 22 Feb 2025 17:42:10 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-06-13%20-%20Approved%20Notes%20&%20Details%20-%20D07-12-24-0020.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 307
+      message: Temporary Redirect
+    headers:
+      Date:
+      - Sat, 22 Feb 2025 17:42:10 GMT
+      Content-Type:
+      - text/html
+      Content-Length:
+      - '0'
+      Connection:
+      - keep-alive
+      Location:
+      - https://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-06-13%20-%20Approved%20Notes%20&%20Details%20-%20D07-12-24-0020.PDF
+      X-Azure-Ref:
+      - 20250222T174210Z-1546cc46689zfs8vhC1YTO34t00000000wwg00000000btah
+      X-Cache:
+      - CONFIG_NOCACHE
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Sat, 22 Feb 2025 17:42:10 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-06-13%20-%20Approved%20Landscape%20Plan%20-%20D07-12-24-0020.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 307
+      message: Temporary Redirect
+    headers:
+      Date:
+      - Sat, 22 Feb 2025 17:42:10 GMT
+      Content-Type:
+      - text/html
+      Content-Length:
+      - '0'
+      Connection:
+      - keep-alive
+      Location:
+      - https://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-06-13%20-%20Approved%20Landscape%20Plan%20-%20D07-12-24-0020.PDF
+      X-Azure-Ref:
+      - 20250222T174210Z-1546cc46689zfs8vhC1YTO34t00000000x10000000003fhs
+      X-Cache:
+      - CONFIG_NOCACHE
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Sat, 22 Feb 2025 17:42:10 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-06-13%20-%20Approved%20Landscape%20Details%20Plan%20-%20D07-12-24-0020.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 307
+      message: Temporary Redirect
+    headers:
+      Date:
+      - Sat, 22 Feb 2025 17:42:10 GMT
+      Content-Type:
+      - text/html
+      Content-Length:
+      - '0'
+      Connection:
+      - keep-alive
+      Location:
+      - https://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-06-13%20-%20Approved%20Landscape%20Details%20Plan%20-%20D07-12-24-0020.PDF
+      X-Azure-Ref:
+      - 20250222T174210Z-1546cc4668952j5whC1YTOfw0c0000000xa000000000aba3
+      X-Cache:
+      - CONFIG_NOCACHE
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Sat, 22 Feb 2025 17:42:10 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-06-13%20-%20Approved%20Grading%20Plan%20&%20Erosion%20&%20Sediment%20Control%20Plan%20-%20D07-12-24-0020.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 307
+      message: Temporary Redirect
+    headers:
+      Date:
+      - Sat, 22 Feb 2025 17:42:10 GMT
+      Content-Type:
+      - text/html
+      Content-Length:
+      - '0'
+      Connection:
+      - keep-alive
+      Location:
+      - https://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-06-13%20-%20Approved%20Grading%20Plan%20&%20Erosion%20&%20Sediment%20Control%20Plan%20-%20D07-12-24-0020.PDF
+      X-Azure-Ref:
+      - 20250222T174210Z-1546cc46689l8ssghC1YTO2t0c00000000sg00000000b45u
+      X-Cache:
+      - CONFIG_NOCACHE
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Sat, 22 Feb 2025 17:42:10 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-06-13%20-%20Approved%20Elevations%20-%20D07-12-24-0020.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 307
+      message: Temporary Redirect
+    headers:
+      Date:
+      - Sat, 22 Feb 2025 17:42:10 GMT
+      Content-Type:
+      - text/html
+      Content-Length:
+      - '0'
+      Connection:
+      - keep-alive
+      Location:
+      - https://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-06-13%20-%20Approved%20Elevations%20-%20D07-12-24-0020.PDF
+      X-Azure-Ref:
+      - 20250222T174210Z-1546cc466892qms6hC1YTO76ks0000000490000000001myh
+      X-Cache:
+      - CONFIG_NOCACHE
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Sat, 22 Feb 2025 17:42:10 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-06-13%20-%20Approved%20Drainage%20Plan%20-%20D07-12-24-0020.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 307
+      message: Temporary Redirect
+    headers:
+      Date:
+      - Sat, 22 Feb 2025 17:42:10 GMT
+      Content-Type:
+      - text/html
+      Content-Length:
+      - '0'
+      Connection:
+      - keep-alive
+      Location:
+      - https://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-06-13%20-%20Approved%20Drainage%20Plan%20-%20D07-12-24-0020.PDF
+      X-Azure-Ref:
+      - 20250222T174210Z-1546cc46689tqvfrhC1YTO58ew000000029g00000000c8kx
+      X-Cache:
+      - CONFIG_NOCACHE
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Sat, 22 Feb 2025 17:42:10 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-06-13%20-%20Approved%20Details%20&%20Schedules%20-%20D07-12-24-0020.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 307
+      message: Temporary Redirect
+    headers:
+      Date:
+      - Sat, 22 Feb 2025 17:42:10 GMT
+      Content-Type:
+      - text/html
+      Content-Length:
+      - '0'
+      Connection:
+      - keep-alive
+      Location:
+      - https://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-06-13%20-%20Approved%20Details%20&%20Schedules%20-%20D07-12-24-0020.PDF
+      X-Azure-Ref:
+      - 20250222T174210Z-1546cc46689nxpcthC1YTO23xs00000004xg0000000082cs
+      X-Cache:
+      - CONFIG_NOCACHE
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Sat, 22 Feb 2025 17:42:10 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-05-21%20-%20Landscape%20Plan%20-%20D07-12-24-0020.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 307
+      message: Temporary Redirect
+    headers:
+      Date:
+      - Sat, 22 Feb 2025 17:42:10 GMT
+      Content-Type:
+      - text/html
+      Content-Length:
+      - '0'
+      Connection:
+      - keep-alive
+      Location:
+      - https://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-05-21%20-%20Landscape%20Plan%20-%20D07-12-24-0020.PDF
+      X-Azure-Ref:
+      - 20250222T174210Z-1546cc466899nx5nhC1YTO1xwg00000000tg000000009avr
+      X-Cache:
+      - CONFIG_NOCACHE
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Sat, 22 Feb 2025 17:42:10 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-05-21%20-%20Landscape%20Details%20Plan%20-%20D07-12-24-0020.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 307
+      message: Temporary Redirect
+    headers:
+      Date:
+      - Sat, 22 Feb 2025 17:42:10 GMT
+      Content-Type:
+      - text/html
+      Content-Length:
+      - '0'
+      Connection:
+      - keep-alive
+      Location:
+      - https://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-05-21%20-%20Landscape%20Details%20Plan%20-%20D07-12-24-0020.PDF
+      X-Azure-Ref:
+      - 20250222T174210Z-1546cc46689wbw8chC1YTO6vh000000003cg000000004pke
+      X-Cache:
+      - CONFIG_NOCACHE
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Sat, 22 Feb 2025 17:42:10 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-04-29%20-%20Application%20Summary%20-%20D07-12-24-0020.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 307
+      message: Temporary Redirect
+    headers:
+      Date:
+      - Sat, 22 Feb 2025 17:42:10 GMT
+      Content-Type:
+      - text/html
+      Content-Length:
+      - '0'
+      Connection:
+      - keep-alive
+      Location:
+      - https://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-04-29%20-%20Application%20Summary%20-%20D07-12-24-0020.PDF
+      X-Azure-Ref:
+      - 20250222T174210Z-1546cc46689rfxcghC1YTOcvm40000000x00000000001fkp
+      X-Cache:
+      - CONFIG_NOCACHE
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Sat, 22 Feb 2025 17:42:10 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-04-10%20-%20Transportation%20Impact%20Assessment%20Screening%20-%20D07-12-24-0020.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 307
+      message: Temporary Redirect
+    headers:
+      Date:
+      - Sat, 22 Feb 2025 17:42:10 GMT
+      Content-Type:
+      - text/html
+      Content-Length:
+      - '0'
+      Connection:
+      - keep-alive
+      Location:
+      - https://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-04-10%20-%20Transportation%20Impact%20Assessment%20Screening%20-%20D07-12-24-0020.PDF
+      X-Azure-Ref:
+      - 20250222T174210Z-1546cc46689hnz8lhC1YTOc03c0000000wx000000000bmkw
+      X-Cache:
+      - CONFIG_NOCACHE
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Sat, 22 Feb 2025 17:42:10 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-04-10%20-%20Traffic%20Noise%20Impact%20Assessment%20%20-%20D07-12-24-0020.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 307
+      message: Temporary Redirect
+    headers:
+      Date:
+      - Sat, 22 Feb 2025 17:42:10 GMT
+      Content-Type:
+      - text/html
+      Content-Length:
+      - '0'
+      Connection:
+      - keep-alive
+      Location:
+      - https://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-04-10%20-%20Traffic%20Noise%20Impact%20Assessment%20%20-%20D07-12-24-0020.PDF
+      X-Azure-Ref:
+      - 20250222T174210Z-1546cc46689wbw8chC1YTO6vh0000000038000000000d7qd
+      X-Cache:
+      - CONFIG_NOCACHE
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Sat, 22 Feb 2025 17:42:10 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-04-10%20-%20Topographical%20Plan%20of%20Survey%20-%20D07-12-24-0020.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 307
+      message: Temporary Redirect
+    headers:
+      Date:
+      - Sat, 22 Feb 2025 17:42:10 GMT
+      Content-Type:
+      - text/html
+      Content-Length:
+      - '0'
+      Connection:
+      - keep-alive
+      Location:
+      - https://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-04-10%20-%20Topographical%20Plan%20of%20Survey%20-%20D07-12-24-0020.PDF
+      X-Azure-Ref:
+      - 20250222T174210Z-1546cc46689rfxcghC1YTOcvm40000000wx00000000078kc
+      X-Cache:
+      - CONFIG_NOCACHE
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Sat, 22 Feb 2025 17:42:10 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-04-10%20-%20Sun%20Shadow%20Analysis%20-%20D07-12-24-0020.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 307
+      message: Temporary Redirect
+    headers:
+      Date:
+      - Sat, 22 Feb 2025 17:42:10 GMT
+      Content-Type:
+      - text/html
+      Content-Length:
+      - '0'
+      Connection:
+      - keep-alive
+      Location:
+      - https://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-04-10%20-%20Sun%20Shadow%20Analysis%20-%20D07-12-24-0020.PDF
+      X-Azure-Ref:
+      - 20250222T174210Z-1546cc466899nx5nhC1YTO1xwg00000000u0000000006pw9
+      X-Cache:
+      - CONFIG_NOCACHE
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Sat, 22 Feb 2025 17:42:11 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-04-10%20-%20Site%20Servicing%20Study%20and%20Stormwater%20Management%20Report%20-%20D07-12-24-0020.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 307
+      message: Temporary Redirect
+    headers:
+      Date:
+      - Sat, 22 Feb 2025 17:42:11 GMT
+      Content-Type:
+      - text/html
+      Content-Length:
+      - '0'
+      Connection:
+      - keep-alive
+      Location:
+      - https://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-04-10%20-%20Site%20Servicing%20Study%20and%20Stormwater%20Management%20Report%20-%20D07-12-24-0020.PDF
+      X-Azure-Ref:
+      - 20250222T174211Z-1546cc46689v4mh8hC1YTOtaa800000004g0000000002166
+      X-Cache:
+      - CONFIG_NOCACHE
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Sat, 22 Feb 2025 17:42:11 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-04-10%20-%20Site%20Servicing%20Plan%20-%20D07-12-24-0020.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 307
+      message: Temporary Redirect
+    headers:
+      Date:
+      - Sat, 22 Feb 2025 17:42:11 GMT
+      Content-Type:
+      - text/html
+      Content-Length:
+      - '0'
+      Connection:
+      - keep-alive
+      Location:
+      - https://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-04-10%20-%20Site%20Servicing%20Plan%20-%20D07-12-24-0020.PDF
+      X-Azure-Ref:
+      - 20250222T174211Z-1546cc46689rkzr5hC1YTOv53000000000f0000000002b5d
+      X-Cache:
+      - CONFIG_NOCACHE
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Sat, 22 Feb 2025 17:42:11 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-04-10%20-%20Site%20Plan%20-%20D07-12-24-0020.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 307
+      message: Temporary Redirect
+    headers:
+      Date:
+      - Sat, 22 Feb 2025 17:42:11 GMT
+      Content-Type:
+      - text/html
+      Content-Length:
+      - '0'
+      Connection:
+      - keep-alive
+      Location:
+      - https://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-04-10%20-%20Site%20Plan%20-%20D07-12-24-0020.PDF
+      X-Azure-Ref:
+      - 20250222T174211Z-1546cc466897lpb5hC1YTO726400000004h000000000456d
+      X-Cache:
+      - CONFIG_NOCACHE
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Sat, 22 Feb 2025 17:42:11 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-04-10%20-%20Roof%20Drainage%20Plan%20-%20D07-12-24-0020.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 307
+      message: Temporary Redirect
+    headers:
+      Date:
+      - Sat, 22 Feb 2025 17:42:11 GMT
+      Content-Type:
+      - text/html
+      Content-Length:
+      - '0'
+      Connection:
+      - keep-alive
+      Location:
+      - https://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-04-10%20-%20Roof%20Drainage%20Plan%20-%20D07-12-24-0020.PDF
+      X-Azure-Ref:
+      - 20250222T174211Z-1546cc466895r7phhC1YTOrgbc00000003ng000000000vc3
+      X-Cache:
+      - CONFIG_NOCACHE
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Sat, 22 Feb 2025 17:42:11 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-04-10%20-%20Plan%20Survey%20-%20D07-12-24-0020.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 307
+      message: Temporary Redirect
+    headers:
+      Date:
+      - Sat, 22 Feb 2025 17:42:11 GMT
+      Content-Type:
+      - text/html
+      Content-Length:
+      - '0'
+      Connection:
+      - keep-alive
+      Location:
+      - https://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-04-10%20-%20Plan%20Survey%20-%20D07-12-24-0020.PDF
+      X-Azure-Ref:
+      - 20250222T174211Z-1546cc466896llnmhC1YTOa21400000003q0000000001cdr
+      X-Cache:
+      - CONFIG_NOCACHE
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Sat, 22 Feb 2025 17:42:11 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-04-10%20-%20Perspective%20Renderings%20-%20D07-12-24-0020.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 307
+      message: Temporary Redirect
+    headers:
+      Date:
+      - Sat, 22 Feb 2025 17:42:11 GMT
+      Content-Type:
+      - text/html
+      Content-Length:
+      - '0'
+      Connection:
+      - keep-alive
+      Location:
+      - https://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-04-10%20-%20Perspective%20Renderings%20-%20D07-12-24-0020.PDF
+      X-Azure-Ref:
+      - 20250222T174211Z-1546cc466892qms6hC1YTO76ks000000043g00000000b22q
+      X-Cache:
+      - CONFIG_NOCACHE
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Sat, 22 Feb 2025 17:42:11 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-04-10%20-%20Notes%20and%20Details%20-%20D07-12-24-0020.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 307
+      message: Temporary Redirect
+    headers:
+      Date:
+      - Sat, 22 Feb 2025 17:42:11 GMT
+      Content-Type:
+      - text/html
+      Content-Length:
+      - '0'
+      Connection:
+      - keep-alive
+      Location:
+      - https://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-04-10%20-%20Notes%20and%20Details%20-%20D07-12-24-0020.PDF
+      X-Azure-Ref:
+      - 20250222T174211Z-1546cc46689zmbnrhC1YTOf62s00000001r000000000de0m
+      X-Cache:
+      - CONFIG_NOCACHE
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Sat, 22 Feb 2025 17:42:11 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-04-10%20-%20Level%202%20Floor%20Plan%20-%20D07-12-24-0020.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 307
+      message: Temporary Redirect
+    headers:
+      Date:
+      - Sat, 22 Feb 2025 17:42:11 GMT
+      Content-Type:
+      - text/html
+      Content-Length:
+      - '0'
+      Connection:
+      - keep-alive
+      Location:
+      - https://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-04-10%20-%20Level%202%20Floor%20Plan%20-%20D07-12-24-0020.PDF
+      X-Azure-Ref:
+      - 20250222T174211Z-1546cc466899nx5nhC1YTO1xwg00000000v0000000005s7r
+      X-Cache:
+      - CONFIG_NOCACHE
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Sat, 22 Feb 2025 17:42:11 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-04-10%20-%20Ground%20Floor%20Plan%20-%20D07-12-24-0020.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 307
+      message: Temporary Redirect
+    headers:
+      Date:
+      - Sat, 22 Feb 2025 17:42:11 GMT
+      Content-Type:
+      - text/html
+      Content-Length:
+      - '0'
+      Connection:
+      - keep-alive
+      Location:
+      - https://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-04-10%20-%20Ground%20Floor%20Plan%20-%20D07-12-24-0020.PDF
+      X-Azure-Ref:
+      - 20250222T174211Z-1546cc46689c5jgshC1YTOt8n40000000400000000006udk
+      X-Cache:
+      - CONFIG_NOCACHE
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Sat, 22 Feb 2025 17:42:11 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-04-10%20-%20Geotechnical%20Investigation%20-%20D07-12-24-0020.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 307
+      message: Temporary Redirect
+    headers:
+      Date:
+      - Sat, 22 Feb 2025 17:42:11 GMT
+      Content-Type:
+      - text/html
+      Content-Length:
+      - '0'
+      Connection:
+      - keep-alive
+      Location:
+      - https://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-04-10%20-%20Geotechnical%20Investigation%20-%20D07-12-24-0020.PDF
+      X-Azure-Ref:
+      - 20250222T174211Z-1546cc46689qhpnvhC1YTOkmns000000035g000000003x6k
+      X-Cache:
+      - CONFIG_NOCACHE
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Sat, 22 Feb 2025 17:42:11 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-04-10%20-%20Existing%20Conditions%20Removals%20%20-%20D07-12-24-0020.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 307
+      message: Temporary Redirect
+    headers:
+      Date:
+      - Sat, 22 Feb 2025 17:42:11 GMT
+      Content-Type:
+      - text/html
+      Content-Length:
+      - '0'
+      Connection:
+      - keep-alive
+      Location:
+      - https://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-04-10%20-%20Existing%20Conditions%20Removals%20%20-%20D07-12-24-0020.PDF
+      X-Azure-Ref:
+      - 20250222T174211Z-1546cc46689fjc7whC1YTO8u500000000p2g0000000062fm
+      X-Cache:
+      - CONFIG_NOCACHE
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Sat, 22 Feb 2025 17:42:11 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-04-10%20-%20Elevations%20-%20D07-12-24-0020.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 307
+      message: Temporary Redirect
+    headers:
+      Date:
+      - Sat, 22 Feb 2025 17:42:11 GMT
+      Content-Type:
+      - text/html
+      Content-Length:
+      - '0'
+      Connection:
+      - keep-alive
+      Location:
+      - https://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-04-10%20-%20Elevations%20-%20D07-12-24-0020.PDF
+      X-Azure-Ref:
+      - 20250222T174211Z-1546cc46689c5jgshC1YTOt8n40000000420000000004251
+      X-Cache:
+      - CONFIG_NOCACHE
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Sat, 22 Feb 2025 17:42:11 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-04-10%20-%20Eletrical%20Site%20Lighting%20Work%20Plan%20-%20D07-12-24-0020.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 307
+      message: Temporary Redirect
+    headers:
+      Date:
+      - Sat, 22 Feb 2025 17:42:11 GMT
+      Content-Type:
+      - text/html
+      Content-Length:
+      - '0'
+      Connection:
+      - keep-alive
+      Location:
+      - https://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-04-10%20-%20Eletrical%20Site%20Lighting%20Work%20Plan%20-%20D07-12-24-0020.PDF
+      X-Azure-Ref:
+      - 20250222T174211Z-1546cc46689nxpcthC1YTO23xs00000004v000000000dr00
+      X-Cache:
+      - CONFIG_NOCACHE
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Sat, 22 Feb 2025 17:42:11 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-04-10%20-%20Drainage%20Plan%20and%20Erosion%20and%20Sediment%20Control%20Plan%20-%20D07-12-24-0020.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 307
+      message: Temporary Redirect
+    headers:
+      Date:
+      - Sat, 22 Feb 2025 17:42:11 GMT
+      Content-Type:
+      - text/html
+      Content-Length:
+      - '0'
+      Connection:
+      - keep-alive
+      Location:
+      - https://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-04-10%20-%20Drainage%20Plan%20and%20Erosion%20and%20Sediment%20Control%20Plan%20-%20D07-12-24-0020.PDF
+      X-Azure-Ref:
+      - 20250222T174211Z-1546cc466898kdxbhC1YTOk32000000002gg00000000ehm8
+      X-Cache:
+      - CONFIG_NOCACHE
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Sat, 22 Feb 2025 17:42:11 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-04-10%20-%20Drainage%20Plan%20-%20D07-12-24-0020.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 307
+      message: Temporary Redirect
+    headers:
+      Date:
+      - Sat, 22 Feb 2025 17:42:11 GMT
+      Content-Type:
+      - text/html
+      Content-Length:
+      - '0'
+      Connection:
+      - keep-alive
+      Location:
+      - https://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-04-10%20-%20Drainage%20Plan%20-%20D07-12-24-0020.PDF
+      X-Azure-Ref:
+      - 20250222T174211Z-1546cc466896q4zjhC1YTO2v2g0000000240000000008z7c
+      X-Cache:
+      - CONFIG_NOCACHE
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Sat, 22 Feb 2025 17:42:11 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-04-10%20-%20Details%20and%20Schedules%20-%20D07-12-24-0020.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 307
+      message: Temporary Redirect
+    headers:
+      Date:
+      - Sat, 22 Feb 2025 17:42:11 GMT
+      Content-Type:
+      - text/html
+      Content-Length:
+      - '0'
+      Connection:
+      - keep-alive
+      Location:
+      - https://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-04-10%20-%20Details%20and%20Schedules%20-%20D07-12-24-0020.PDF
+      X-Azure-Ref:
+      - 20250222T174211Z-1546cc46689c5jgshC1YTOt8n400000003x000000000cv04
+      X-Cache:
+      - CONFIG_NOCACHE
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Sat, 22 Feb 2025 17:42:11 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-04-10%20-%20Design%20Brief%20-%20D07-12-24-0020.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 307
+      message: Temporary Redirect
+    headers:
+      Date:
+      - Sat, 22 Feb 2025 17:42:11 GMT
+      Content-Type:
+      - text/html
+      Content-Length:
+      - '0'
+      Connection:
+      - keep-alive
+      Location:
+      - https://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-04-10%20-%20Design%20Brief%20-%20D07-12-24-0020.PDF
+      X-Azure-Ref:
+      - 20250222T174211Z-1546cc46689v4mh8hC1YTOtaa800000004d0000000007zgu
+      X-Cache:
+      - CONFIG_NOCACHE
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Sat, 22 Feb 2025 17:42:11 GMT
 - request:
     method: get
-    uri: https://devapps-restapi.ottawa.ca/devapps/search?appStatus=all&appType=all&authKey=4r5T2egSmKm5&bounds=0,0,0,0&searchText=D07-05-23-0005&ward=all
+    uri: https://devapps-restapi.ottawa.ca/devapps/search?appStatus=all&appType=all&authKey=4r5T2egSmKm5&bounds=0,0,0,0&searchText=D07-12-24-0020&ward=all
     body:
       encoding: US-ASCII
       string: ''
@@ -163,13 +1388,11 @@ http_interactions:
       Server:
       - nginx
       Date:
-      - Mon, 15 Jan 2024 03:37:46 GMT
+      - Sat, 22 Feb 2025 17:42:11 GMT
       Content-Type:
       - application/json; charset=utf-8
       Transfer-Encoding:
       - chunked
-      Connection:
-      - keep-alive
       Strict-Transport-Security:
       - max-age=15724800; includeSubDomains
       X-Xss-Protection:
@@ -177,106 +1400,1334 @@ http_interactions:
       X-Frame-Options:
       - SAMEORIGIN
       X-Ott-Cache:
-      - '10'
+      - '27'
       Set-Cookie:
-      - NSC_QH_NzTP_ohjoy=ffffffffc3a0bc3845525d5f4f58455e445a4a42378b;expires=Mon,
-        15-Jan-2024 04:07:46 GMT;path=/;httponly
-      - incap_ses_1227_2348304=LataJaw1FGw18J/ABi4HEYqopGUAAAAATOSXKxaS1R7alpinHKPh5A==;
+      - incap_ses_1710_2348304=uE/ENcN1pkHvSKMzLSS7F3IMumcAAAAAIfhG/AUocoo+IYRdgVDSww==;
         path=/; Domain=.ottawa.ca
-      - nlbi_2348304=h+4fYAcyM0PIghrcl2uJLQAAAADNjVG546Cg7quwUBRDSOhD; path=/; Domain=.ottawa.ca
-      - visid_incap_2348304=ErgXS4S3QsibQq8CvzZ05YqopGUAAAAAQUIPAAAAAACoyJ0+YTnzms8Nk6ZVxoZl;
-        expires=Mon, 13 Jan 2025 06:58:23 GMT; HttpOnly; path=/; Domain=.ottawa.ca
+      - nlbi_2348304=CT56THYKRy4yVoXbuLiUiQAAAABmyGYk5M7XtxMY+k7/R/ZH; HttpOnly; path=/;
+        Domain=.ottawa.ca
+      - visid_incap_2348304=zear3zkVSFCQHDjrxF0W8XIMumcAAAAAQUIPAAAAAABCvT7ukbZCaVTmAqU/mddz;
+        expires=Sun, 22 Feb 2026 06:56:53 GMT; HttpOnly; path=/; Domain=.ottawa.ca
       X-Cdn:
       - Imperva
       X-Iinfo:
-      - 8-1829979-1829980 NNYY CT(8 8 0) RT(1705289866552 21) q(0 0 0 -1) r(0 0) U24
-    body:
-      encoding: ASCII-8BIT
-      string: !binary |-
-        eyJkZXZBcHBzIjpbeyJkZXZBcHBJZCI6Il9fQ1I1VFpCIiwiYXBwbGljYXRpb25OdW1iZXIiOiJEMDctMDUtMjMtMDAwNSIsImFwcGxpY2F0aW9uRGF0ZSI6NjM4Mjc4NTE2NDUwMDAwMDAwLCJhcHBsaWNhdGlvbkRhdGVZTUQiOiIyMDIzLTA4LTE3IiwiYXBwbGljYXRpb25UeXBlSWQiOiJfX18xVFpXWCIsImFwcGxpY2F0aW9uVHlwZSI6eyJlbiI6IkRlbW9saXRpb24gQ29udHJvbCIsImZyIjoiUsOpZ2xlbWVudGF0aW9uIGRlcyBkw6ltb2xpdGlvbnMifSwiYXBwbGljYXRpb25CcmllZkRlc2MiOnt9LCJhcHBsaWNhdGlvblN0YXR1cyI6eyJlbiI6IkFjdGl2ZSIsImZyIjoiQWN0aWYifSwiZGV2QXBwQWRkcmVzc2VzIjpbeyJhZGRyZXNzUmVmZXJlbmNlSWQiOiJfX0NSNVRaRCIsImFkZHJlc3NOdW1iZXIiOjExNSwiYWRkcmVzc1F1YWxpZmllciI6IiIsImxlZ2FsVW5pdCI6IiIsInJvYWROYW1lIjoiU1BFTkNFUiIsImNhcmRpbmFsRGlyZWN0aW9uIjoiIiwicm9hZFR5cGUiOiJTdHJlZXQiLCJtdW5pY2lwYWxpdHkiOiJPbGQgT3R0YXdhIiwiYWRkcmVzc1R5cGUiOiJNQUlOIiwiYWRkcmVzc0xhdGl0dWRlIjo0NS40MDE0MzcsImFkZHJlc3NMb25naXR1ZGUiOi03NS43MzQ1NDIsImFkZHJlc3NOdW1iZXJSb2FkTmFtZSI6IjExNSBTUEVOQ0VSIiwicGFyY2VsUGluTnVtYmVyIjo0MDM0MDEyMn1dLCJkZXZBcHBEb2N1bWVudHMiOltdLCJvYmplY3RTdGF0dXMiOnsib2JqZWN0U3RhdHVzVHlwZUlkIjoiX180TzM4Q0wiLCJvYmplY3RDdXJyZW50U3RhdHVzIjp7ImVuIjoiIiwiZnIiOiIifSwib2JqZWN0Q3VycmVudFN0YXR1c0RhdGUiOjYzODMwMDM2NjkyMDAwMDAwMCwib2JqZWN0Q3VycmVudFN0YXR1c0RhdGVZTUQiOiIyMDIzLTA5LTExIn0sImRldkFwcFdhcmQiOnsiY29tbXVuaXR5SWQiOm51bGwsIndhcmROdW1iZXIiOnt9LCJ3YXJkTmFtZSI6e30sImNvdW5jaWxsb3JMYXN0TmFtZSI6bnVsbCwiY291bmNpbGxvckZpcnN0TmFtZSI6bnVsbCwid2FyZENvdW5jaWxsb3JFbWFpbCI6bnVsbH0sImVuZE9mQ2lyY3VsYXRpb25EYXRlIjo2MzgzMjQ0MjI0MzAwMDAwMDAsImVuZE9mQ2lyY3VsYXRpb25EYXRlWU1EIjoiMjAyMy0xMC0wOSIsImNhbkNvbW1lbnQiOiJZIiwic2hvd0ZlZWRiYWNrTGluayI6Ik4iLCJwbGFubmVyRmlyc3ROYW1lIjpudWxsLCJwbGFubmVyTGFzdE5hbWUiOm51bGwsInBsYW5uZXJQaG9uZSI6bnVsbCwicGxhbm5lckVtYWlsIjpudWxsLCJzZWFyY2hhYmxlVGV4dCI6bnVsbCwic3RyZWV0QWRyZXNzIjoiU1BFTkNFUiIsInN0cmVldE51bWJlciI6MTE1fV0sInRvdGFsRGV2QXBwcyI6MSwiaW5kZXgiOjAsImxpbWl0Ijo1MH0=
-  recorded_at: Mon, 15 Jan 2024 03:37:46 GMT
-- request:
-    method: get
-    uri: https://devapps-restapi.ottawa.ca/devapps/D07-05-23-0005?authKey=4r5T2egSmKm5
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept-Encoding:
-      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
-      Accept:
-      - "*/*"
-      User-Agent:
-      - Ruby
-      Host:
-      - devapps-restapi.ottawa.ca
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx
-      Date:
-      - Mon, 15 Jan 2024 03:37:46 GMT
-      Content-Type:
-      - application/json; charset=utf-8
-      Transfer-Encoding:
-      - chunked
-      Connection:
-      - keep-alive
-      Strict-Transport-Security:
-      - max-age=15724800; includeSubDomains
-      X-Xss-Protection:
-      - 1; mode=block
-      X-Frame-Options:
-      - SAMEORIGIN
-      X-Ott-Cache:
-      - '11'
-      Set-Cookie:
-      - NSC_QH_NzTP_ohjoy=ffffffffc3a07a1d45525d5f4f58455e445a4a42378b;expires=Mon,
-        15-Jan-2024 04:07:46 GMT;path=/;httponly
-      - incap_ses_1227_2348304=o0haZb8PUU9I8J/ABi4HEYqopGUAAAAAkgki1ucCtWw9/noCtpvpYA==;
-        path=/; Domain=.ottawa.ca
-      - nlbi_2348304=BTfSQgt4LgG7dw0Nl2uJLQAAAACm0HxchGA+7BDHREwvWsH2; path=/; Domain=.ottawa.ca
-      - visid_incap_2348304=FKpL387PQVmT4PXdv6umloqopGUAAAAAQUIPAAAAAABsQRX02/jU2Z4MD7W7ETRL;
-        expires=Mon, 13 Jan 2025 06:58:23 GMT; HttpOnly; path=/; Domain=.ottawa.ca
-      X-Cdn:
-      - Imperva
-      X-Iinfo:
-      - 4-4260111-4260114 NNYY CT(9 10 0) RT(1705289866638 21) q(0 0 0 -1) r(0 0)
+      - 54-5561838-5561839 NNYN CT(22 21 0) RT(1740246130709 8) q(0 0 0 -1) r(0 1)
         U24
     body:
       encoding: ASCII-8BIT
       string: !binary |-
-        eyJkZXZBcHBJZCI6Il9fQ1I1VFpCIiwiYXBwbGljYXRpb25OdW1iZXIiOiJEMDctMDUtMjMtMDAwNSIsImFwcGxpY2F0aW9uRGF0ZSI6NjM4Mjc4NTE2NDUwMDAwMDAwLCJhcHBsaWNhdGlvbkRhdGVZTUQiOiIyMDIzLTA4LTE3IiwiYXBwbGljYXRpb25UeXBlSWQiOiJfX18xVFpXWCIsImFwcGxpY2F0aW9uVHlwZSI6eyJlbiI6IkRlbW9saXRpb24gQ29udHJvbCIsImZyIjoiUsOpZ2xlbWVudGF0aW9uIGRlcyBkw6ltb2xpdGlvbnMifSwiYXBwbGljYXRpb25CcmllZkRlc2MiOnsiZW4iOiJDaXR5LWluaXRpYXRlZCBkZW1vIGNvbnRyb2wuIFR3by1zdG9yZXkgc2luZ2xlIGRldGFjaGVkIGhvbWUgd2l0aCBkZXRhY2hlZCBnYXJhZ2UuIEV4aXN0aW5nIHN0cnVjdHVyZSBhcHBlYXJzIHRvIGJlIHR5cGljYWwgc3RpY2sgZnJhbWUgY29uc3RydWN0aW9uIG9uIGNvbmNyZXRlIGZvdW5kYXRpb25zLiIsImZyIjoiIn0sImFwcGxpY2F0aW9uU3RhdHVzIjp7ImVuIjoiQWN0aXZlIiwiZnIiOiJBY3RpZiJ9LCJkZXZBcHBBZGRyZXNzZXMiOlt7ImFkZHJlc3NSZWZlcmVuY2VJZCI6Il9fQ1I1VFpEIiwiYWRkcmVzc051bWJlciI6MTE1LCJhZGRyZXNzUXVhbGlmaWVyIjoiIiwibGVnYWxVbml0IjoiIiwicm9hZE5hbWUiOiJTUEVOQ0VSIiwiY2FyZGluYWxEaXJlY3Rpb24iOiIiLCJyb2FkVHlwZSI6IlN0cmVldCIsIm11bmljaXBhbGl0eSI6Ik9sZCBPdHRhd2EiLCJhZGRyZXNzVHlwZSI6Ik1BSU4iLCJhZGRyZXNzTGF0aXR1ZGUiOjQ1LjQwMTQzNywiYWRkcmVzc0xvbmdpdHVkZSI6LTc1LjczNDU0MiwiYWRkcmVzc051bWJlclJvYWROYW1lIjoiMTE1IFNQRU5DRVIiLCJwYXJjZWxQaW5OdW1iZXIiOjQwMzQwMTIyfV0sImRldkFwcERvY3VtZW50cyI6W3siZG9jUmVmZXJlbmNlSWQiOiJfX0NSNVQxMSIsImRvY3VtZW50TmFtZSI6IjIwMjMtMDgtMTcgLSBhcHBsaWNhdGlvbiAtIEQwNy0wNS0yMy0wMDA1IiwiZmlsZVNpemUiOiIwLjY5IE1CIiwiZmlsZVBhdGgiOiJEZW1vbGl0aW9uIENvbnRyb2xfSW1hZ2UgUmVmZXJlbmNlXzIwMjMtMDgtMTcgLSBhcHBsaWNhdGlvbiAtIEQwNy0wNS0yMy0wMDA1LlBERiJ9XSwib2JqZWN0U3RhdHVzIjp7Im9iamVjdFN0YXR1c1R5cGVJZCI6Il9fNE8zOENMIiwib2JqZWN0Q3VycmVudFN0YXR1cyI6eyJlbiI6IiIsImZyIjoiIn0sIm9iamVjdEN1cnJlbnRTdGF0dXNEYXRlIjo2MzgzMDAzNjY5MjAwMDAwMDAsIm9iamVjdEN1cnJlbnRTdGF0dXNEYXRlWU1EIjoiMjAyMy0wOS0xMSJ9LCJkZXZBcHBXYXJkIjp7ImNvbW11bml0eUlkIjoiX18zMDVUNkoiLCJ3YXJkTnVtYmVyIjp7ImVuIjoiV2FyZCAxNSIsImZyIjoiUXVhcnRpZXIgMTUifSwid2FyZE5hbWUiOnsiZW4iOiJLSVRDSElTU0lQUEkiLCJmciI6IktJVENISVNTSVBQSSJ9LCJjb3VuY2lsbG9yTGFzdE5hbWUiOiJMZWlwZXIiLCJjb3VuY2lsbG9yRmlyc3ROYW1lIjoiSmVmZiIsIndhcmRDb3VuY2lsbG9yRW1haWwiOiJKZWZmLkxlaXBlckBvdHRhd2EuY2EifSwiZW5kT2ZDaXJjdWxhdGlvbkRhdGUiOjYzODMyNDQyMjQzMDAwMDAwMCwiZW5kT2ZDaXJjdWxhdGlvbkRhdGVZTUQiOiIyMDIzLTEwLTA5IiwiY2FuQ29tbWVudCI6IlkiLCJzaG93RmVlZGJhY2tMaW5rIjoiTiIsInBsYW5uZXJGaXJzdE5hbWUiOiJNIE1hc2hhIFdha3VsYSIsInBsYW5uZXJMYXN0TmFtZSI6IlZha3VsYSIsInBsYW5uZXJQaG9uZSI6IjYxMy01ODAtMjQyNCB4MjcwMjkiLCJwbGFubmVyRW1haWwiOiJtbWFzaGF3YWt1bGEudmFrdWxhQG90dGF3YS5jYSIsInNlYXJjaGFibGVUZXh0IjoiMTE1IFNQRU5DRVIgU3RyZWV0IERlbW9saXRpb24gQ29udHJvbCBSw6lnbGVtZW50YXRpb24gZGVzIGTDqW1vbGl0aW9ucyBDaXR5LWluaXRpYXRlZCBkZW1vIGNvbnRyb2wuIFR3by1zdG9yZXkgc2luZ2xlIGRldGFjaGVkIGhvbWUgd2l0aCBkZXRhY2hlZCBnYXJhZ2UuIEV4aXN0aW5nIHN0cnVjdHVyZSBhcHBlYXJzIHRvIGJlIHR5cGljYWwgc3RpY2sgZnJhbWUgY29uc3RydWN0aW9uIG9uIGNvbmNyZXRlIGZvdW5kYXRpb25zLiAgQWN0aXZlIEFjdGlmICAgIFdhcmQgMTUgUXVhcnRpZXIgMTUgS0lUQ0hJU1NJUFBJIEtJVENISVNTSVBQSSBKZWZmIExlaXBlciBEMDctMDUtMjMtMDAwNSIsInN0cmVldEFkcmVzcyI6IlNQRU5DRVIiLCJzdHJlZXROdW1iZXIiOjExNX0=
-  recorded_at: Mon, 15 Jan 2024 03:37:46 GMT
+        eyJkZXZBcHBzIjpbeyJkZXZBcHBJZCI6Il9fQ1UwWkZaIiwiYXBwbGljYXRpb25OdW1iZXIiOiJEMDctMTItMjQtMDAyMCIsImFwcGxpY2F0aW9uRGF0ZSI6NjM4NDgzNDA5NzcwMDAwMDAwLCJhcHBsaWNhdGlvbkRhdGVZTUQiOiIyMDI0LTA0LTEwIiwiYXBwbGljYXRpb25UeXBlSWQiOiJfX19fNUNDViIsImFwcGxpY2F0aW9uVHlwZSI6eyJlbiI6IlNpdGUgUGxhbiBDb250cm9sIiwiZnIiOiJSw6lnbGVtZW50YXRpb24gZHUgcGxhbiBkJ2ltcGxhbnRhdGlvbiJ9LCJhcHBsaWNhdGlvbkJyaWVmRGVzYyI6e30sImFwcGxpY2F0aW9uU3RhdHVzIjp7ImVuIjoiSW5hY3RpdmUiLCJmciI6IkluYWN0aWYifSwiZGV2QXBwQWRkcmVzc2VzIjpbeyJhZGRyZXNzUmVmZXJlbmNlSWQiOiJfX0NVMFpGNyIsImFkZHJlc3NOdW1iZXIiOjIwNSwiYWRkcmVzc1F1YWxpZmllciI6IiIsImxlZ2FsVW5pdCI6IiIsInJvYWROYW1lIjoiR1JFRU5CQU5LIiwiY2FyZGluYWxEaXJlY3Rpb24iOiIiLCJyb2FkVHlwZSI6IlJvYWQiLCJtdW5pY2lwYWxpdHkiOiJOZXBlYW4iLCJhZGRyZXNzVHlwZSI6Ik1BSU4iLCJhZGRyZXNzTGF0aXR1ZGUiOjQ1LjMyNjQ5OCwiYWRkcmVzc0xvbmdpdHVkZSI6LTc1Ljc3ODQ4MSwiYWRkcmVzc051bWJlclJvYWROYW1lIjoiMjA1IEdSRUVOQkFOSyIsInBhcmNlbFBpbk51bWJlciI6NDY1MTAwMDd9XSwiZGV2QXBwRG9jdW1lbnRzIjpbXSwib2JqZWN0U3RhdHVzIjp7Im9iamVjdFN0YXR1c1R5cGVJZCI6Il9fNEJYUk9YIiwib2JqZWN0Q3VycmVudFN0YXR1cyI6eyJlbiI6IkFncmVlbWVudCBSZWdpc3RlcmVkIC0gRmluYWwgTGVnYWwgQ2xlYXJhbmNlIEdpdmVuIiwiZnIiOiJFbnRlbnRlIEVucmVnaXN0csOpZSAtIEFwcHJvYmF0aW9uIEZpbmFsZSBkdSBDb250ZW50aWV1eCJ9LCJvYmplY3RDdXJyZW50U3RhdHVzRGF0ZSI6NjM4NjU3MjIzMjIwMDAwMDAwLCJvYmplY3RDdXJyZW50U3RhdHVzRGF0ZVlNRCI6IjIwMjQtMTAtMjgifSwiZGV2QXBwV2FyZCI6eyJjb21tdW5pdHlJZCI6bnVsbCwid2FyZE51bWJlciI6e30sIndhcmROYW1lIjp7fSwiY291bmNpbGxvckxhc3ROYW1lIjpudWxsLCJjb3VuY2lsbG9yRmlyc3ROYW1lIjpudWxsLCJ3YXJkQ291bmNpbGxvckVtYWlsIjpudWxsfSwiZW5kT2ZDaXJjdWxhdGlvbkRhdGUiOjAsImVuZE9mQ2lyY3VsYXRpb25EYXRlWU1EIjoiMDAwMS0wMS0wMSIsImNhbkNvbW1lbnQiOiJOIiwic2hvd0ZlZWRiYWNrTGluayI6Ik4iLCJwbGFubmVyRmlyc3ROYW1lIjpudWxsLCJwbGFubmVyTGFzdE5hbWUiOm51bGwsInBsYW5uZXJQaG9uZSI6bnVsbCwicGxhbm5lckVtYWlsIjpudWxsLCJzZWFyY2hhYmxlVGV4dCI6bnVsbCwic3RyZWV0QWRyZXNzIjoiR1JFRU5CQU5LIiwic3RyZWV0TnVtYmVyIjoyMDV9XSwidG90YWxEZXZBcHBzIjoxLCJpbmRleCI6MCwibGltaXQiOjUwfQ==
+  recorded_at: Sat, 22 Feb 2025 17:42:11 GMT
 - request:
-    method: head
-    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Demolition%20Control_Image%20Reference_2023-08-17%20-%20application%20-%20D07-05-23-0005.PDF
+    method: get
+    uri: https://devapps-restapi.ottawa.ca/devapps/D07-12-24-0020?authKey=4r5T2egSmKm5
     body:
       encoding: US-ASCII
       string: ''
     headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+      Host:
+      - devapps-restapi.ottawa.ca
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx
+      Date:
+      - Sat, 22 Feb 2025 17:42:11 GMT
+      Content-Type:
+      - application/json; charset=utf-8
+      Transfer-Encoding:
+      - chunked
+      Strict-Transport-Security:
+      - max-age=15724800; includeSubDomains
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Ott-Cache:
+      - '27'
+      Set-Cookie:
+      - incap_ses_1710_2348304=51rXf9cJmgn7SKMzLSS7F3IMumcAAAAATwM1kRREMsevXGZo7fWpZw==;
+        path=/; Domain=.ottawa.ca
+      - nlbi_2348304=0VjdIhkdvVVgWZyWuLiUiQAAAACLK0M2iU1BuaSQraTNSH95; HttpOnly; path=/;
+        Domain=.ottawa.ca
+      - visid_incap_2348304=9EuiHiwvSdegtvxeR938rXIMumcAAAAAQUIPAAAAAADXlQSFgEw+yxN9h39oD94z;
+        expires=Sun, 22 Feb 2026 06:56:35 GMT; HttpOnly; path=/; Domain=.ottawa.ca
+      X-Cdn:
+      - Imperva
+      X-Iinfo:
+      - 62-43686718-43684979 PNYy RT(1740246130824 9) q(0 0 0 -1) r(0 0) U24
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        eyJkZXZBcHBJZCI6Il9fQ1UwWkZaIiwiYXBwbGljYXRpb25OdW1iZXIiOiJEMDctMTItMjQtMDAyMCIsImFwcGxpY2F0aW9uRGF0ZSI6NjM4NDgzNDA5NzcwMDAwMDAwLCJhcHBsaWNhdGlvbkRhdGVZTUQiOiIyMDI0LTA0LTEwIiwiYXBwbGljYXRpb25UeXBlSWQiOiJfX19fNUNDViIsImFwcGxpY2F0aW9uVHlwZSI6eyJlbiI6IlNpdGUgUGxhbiBDb250cm9sIiwiZnIiOiJSw6lnbGVtZW50YXRpb24gZHUgcGxhbiBkJ2ltcGxhbnRhdGlvbiJ9LCJhcHBsaWNhdGlvbkJyaWVmRGVzYyI6eyJlbiI6IlRoZSBDaXR5IG9mIE90dGF3YSBoYXMgcmVjZWl2ZWQgYSBTaXRlIFBsYW4gQ29udHJvbCBhcHBsaWNhdGlvbiB0byBjb25zdHJ1Y3QgYSB0d28tc3RvcmV5IGFkZGl0aW9uIGNvbm5lY3RlZCBvbiB0aGUgc291dGh3ZXN0IHNpZGUgb2YgdGhlIGV4aXN0aW5nIHR3byBzdG9yZXkgV29vZHZhbGUgUGVudGVjb3N0YWwgQ2h1cmNoLiIsImZyIjoiTGEgVmlsbGUgZFx1MDA5Mk90dGF3YSBhIHJlw6d1IHVuZSBkZW1hbmRlIGRlIHLDqWdsZW1lbnRhdGlvbiBkdSBwbGFuIGRcdTAwOTJpbXBsYW50YXRpb24gYXlhbnQgcG91ciBvYmpldCBkZSBwZXJtZXR0cmUgbGEgY29uc3RydWN0aW9uIGRcdTAwOTJ1biByYWpvdXQgZGUgZGV1eCDDqXRhZ2VzIHJlbGnDqSBkdSBjw7R0w6kgc3VkLW91ZXN0IMOgIGxcdTAwOTLDqWdsaXNlIHBlbnRlY8O0dGlzdGUgV29vZHZhbGUsIHVuIGLDonRpbWVudCBkZSBkZXV4IMOpdGFnZXMgw6lnYWxlbWVudC4ifSwiYXBwbGljYXRpb25TdGF0dXMiOnsiZW4iOiJJbmFjdGl2ZSIsImZyIjoiSW5hY3RpZiJ9LCJkZXZBcHBBZGRyZXNzZXMiOlt7ImFkZHJlc3NSZWZlcmVuY2VJZCI6Il9fQ1UwWkY3IiwiYWRkcmVzc051bWJlciI6MjA1LCJhZGRyZXNzUXVhbGlmaWVyIjoiIiwibGVnYWxVbml0IjoiIiwicm9hZE5hbWUiOiJHUkVFTkJBTksiLCJjYXJkaW5hbERpcmVjdGlvbiI6IiIsInJvYWRUeXBlIjoiUm9hZCIsIm11bmljaXBhbGl0eSI6Ik5lcGVhbiIsImFkZHJlc3NUeXBlIjoiTUFJTiIsImFkZHJlc3NMYXRpdHVkZSI6NDUuMzI2NDk4LCJhZGRyZXNzTG9uZ2l0dWRlIjotNzUuNzc4NDgxLCJhZGRyZXNzTnVtYmVyUm9hZE5hbWUiOiIyMDUgR1JFRU5CQU5LIiwicGFyY2VsUGluTnVtYmVyIjo0NjUxMDAwN31dLCJkZXZBcHBEb2N1bWVudHMiOlt7ImRvY1JlZmVyZW5jZUlkIjoiX19DVjVaR1UiLCJkb2N1bWVudE5hbWUiOiIyMDI0LTA2LTEzIC0gU2lnbmVkIERlbGVnYXRlZCBBdXRob3JpdHkgUmVwb3J0IC0gRDA3LTEyLTI0LTAwMjAiLCJmaWxlU2l6ZSI6IjAuNDkgTUIiLCJmaWxlUGF0aCI6IlNpdGUgUGxhbiBBcHBsaWNhdGlvbl9JbWFnZSBSZWZlcmVuY2VfMjAyNC0wNi0xMyAtIFNpZ25lZCBEZWxlZ2F0ZWQgQXV0aG9yaXR5IFJlcG9ydCAtIEQwNy0xMi0yNC0wMDIwLlBERiJ9LHsiZG9jUmVmZXJlbmNlSWQiOiJfX0NWNVpFUyIsImRvY3VtZW50TmFtZSI6IjIwMjQtMDYtMTMgLSBBcHByb3ZlZCBTaXRlIFNlcnZpY2luZyBQbGFuIC0gRDA3LTEyLTI0LTAwMjAiLCJmaWxlU2l6ZSI6IjAuNTUgTUIiLCJmaWxlUGF0aCI6IlNpdGUgUGxhbiBBcHBsaWNhdGlvbl9JbWFnZSBSZWZlcmVuY2VfMjAyNC0wNi0xMyAtIEFwcHJvdmVkIFNpdGUgU2VydmljaW5nIFBsYW4gLSBEMDctMTItMjQtMDAyMC5QREYifSx7ImRvY1JlZmVyZW5jZUlkIjoiX19DVjVaRVQiLCJkb2N1bWVudE5hbWUiOiIyMDI0LTA2LTEzIC0gQXBwcm92ZWQgU2l0ZSBQbGFuIC0gRDA3LTEyLTI0LTAwMjAiLCJmaWxlU2l6ZSI6IjIuNTggTUIiLCJmaWxlUGF0aCI6IlNpdGUgUGxhbiBBcHBsaWNhdGlvbl9JbWFnZSBSZWZlcmVuY2VfMjAyNC0wNi0xMyAtIEFwcHJvdmVkIFNpdGUgUGxhbiAtIEQwNy0xMi0yNC0wMDIwLlBERiJ9LHsiZG9jUmVmZXJlbmNlSWQiOiJfX0NWNVpFVSIsImRvY3VtZW50TmFtZSI6IjIwMjQtMDYtMTMgLSBBcHByb3ZlZCBSb29mIERyYWluYWdlIFBsYW4gLSBEMDctMTItMjQtMDAyMCIsImZpbGVTaXplIjoiMC4yMSBNQiIsImZpbGVQYXRoIjoiU2l0ZSBQbGFuIEFwcGxpY2F0aW9uX0ltYWdlIFJlZmVyZW5jZV8yMDI0LTA2LTEzIC0gQXBwcm92ZWQgUm9vZiBEcmFpbmFnZSBQbGFuIC0gRDA3LTEyLTI0LTAwMjAuUERGIn0seyJkb2NSZWZlcmVuY2VJZCI6Il9fQ1Y1WkVWIiwiZG9jdW1lbnROYW1lIjoiMjAyNC0wNi0xMyAtIEFwcHJvdmVkIE5vdGVzICYgRGV0YWlscyAtIEQwNy0xMi0yNC0wMDIwIiwiZmlsZVNpemUiOiIwLjk4IE1CIiwiZmlsZVBhdGgiOiJTaXRlIFBsYW4gQXBwbGljYXRpb25fSW1hZ2UgUmVmZXJlbmNlXzIwMjQtMDYtMTMgLSBBcHByb3ZlZCBOb3RlcyAmIERldGFpbHMgLSBEMDctMTItMjQtMDAyMC5QREYifSx7ImRvY1JlZmVyZW5jZUlkIjoiX19DVjVaRVciLCJkb2N1bWVudE5hbWUiOiIyMDI0LTA2LTEzIC0gQXBwcm92ZWQgTGFuZHNjYXBlIFBsYW4gLSBEMDctMTItMjQtMDAyMCIsImZpbGVTaXplIjoiMS4wMSBNQiIsImZpbGVQYXRoIjoiU2l0ZSBQbGFuIEFwcGxpY2F0aW9uX0ltYWdlIFJlZmVyZW5jZV8yMDI0LTA2LTEzIC0gQXBwcm92ZWQgTGFuZHNjYXBlIFBsYW4gLSBEMDctMTItMjQtMDAyMC5QREYifSx7ImRvY1JlZmVyZW5jZUlkIjoiX19DVjVaRTAiLCJkb2N1bWVudE5hbWUiOiIyMDI0LTA2LTEzIC0gQXBwcm92ZWQgTGFuZHNjYXBlIERldGFpbHMgUGxhbiAtIEQwNy0xMi0yNC0wMDIwIiwiZmlsZVNpemUiOiIwLjc1IE1CIiwiZmlsZVBhdGgiOiJTaXRlIFBsYW4gQXBwbGljYXRpb25fSW1hZ2UgUmVmZXJlbmNlXzIwMjQtMDYtMTMgLSBBcHByb3ZlZCBMYW5kc2NhcGUgRGV0YWlscyBQbGFuIC0gRDA3LTEyLTI0LTAwMjAuUERGIn0seyJkb2NSZWZlcmVuY2VJZCI6Il9fQ1Y1WkZNIiwiZG9jdW1lbnROYW1lIjoiMjAyNC0wNi0xMyAtIEFwcHJvdmVkIEdyYWRpbmcgUGxhbiAmIEVyb3Npb24gJiBTZWRpbWVudCBDb250cm9sIFBsYW4gLSBEMDctMTItMjQtMDAyMCIsImZpbGVTaXplIjoiMC45MyBNQiIsImZpbGVQYXRoIjoiU2l0ZSBQbGFuIEFwcGxpY2F0aW9uX0ltYWdlIFJlZmVyZW5jZV8yMDI0LTA2LTEzIC0gQXBwcm92ZWQgR3JhZGluZyBQbGFuICYgRXJvc2lvbiAmIFNlZGltZW50IENvbnRyb2wgUGxhbiAtIEQwNy0xMi0yNC0wMDIwLlBERiJ9LHsiZG9jUmVmZXJlbmNlSWQiOiJfX0NWNVpGTiIsImRvY3VtZW50TmFtZSI6IjIwMjQtMDYtMTMgLSBBcHByb3ZlZCBFbGV2YXRpb25zIC0gRDA3LTEyLTI0LTAwMjAiLCJmaWxlU2l6ZSI6IjAuNDkgTUIiLCJmaWxlUGF0aCI6IlNpdGUgUGxhbiBBcHBsaWNhdGlvbl9JbWFnZSBSZWZlcmVuY2VfMjAyNC0wNi0xMyAtIEFwcHJvdmVkIEVsZXZhdGlvbnMgLSBEMDctMTItMjQtMDAyMC5QREYifSx7ImRvY1JlZmVyZW5jZUlkIjoiX19DVjVaRkMiLCJkb2N1bWVudE5hbWUiOiIyMDI0LTA2LTEzIC0gQXBwcm92ZWQgRHJhaW5hZ2UgUGxhbiAtIEQwNy0xMi0yNC0wMDIwIiwiZmlsZVNpemUiOiIwLjQzIE1CIiwiZmlsZVBhdGgiOiJTaXRlIFBsYW4gQXBwbGljYXRpb25fSW1hZ2UgUmVmZXJlbmNlXzIwMjQtMDYtMTMgLSBBcHByb3ZlZCBEcmFpbmFnZSBQbGFuIC0gRDA3LTEyLTI0LTAwMjAuUERGIn0seyJkb2NSZWZlcmVuY2VJZCI6Il9fQ1Y1WkZFIiwiZG9jdW1lbnROYW1lIjoiMjAyNC0wNi0xMyAtIEFwcHJvdmVkIERldGFpbHMgJiBTY2hlZHVsZXMgLSBEMDctMTItMjQtMDAyMCIsImZpbGVTaXplIjoiMC40NCBNQiIsImZpbGVQYXRoIjoiU2l0ZSBQbGFuIEFwcGxpY2F0aW9uX0ltYWdlIFJlZmVyZW5jZV8yMDI0LTA2LTEzIC0gQXBwcm92ZWQgRGV0YWlscyAmIFNjaGVkdWxlcyAtIEQwNy0xMi0yNC0wMDIwLlBERiJ9LHsiZG9jUmVmZXJlbmNlSWQiOiJfX0NWVkZIRCIsImRvY3VtZW50TmFtZSI6IjIwMjQtMDUtMjEgLSBMYW5kc2NhcGUgUGxhbiAtIEQwNy0xMi0yNC0wMDIwIiwiZmlsZVNpemUiOiIxLjAwIE1CIiwiZmlsZVBhdGgiOiJTaXRlIFBsYW4gQXBwbGljYXRpb25fSW1hZ2UgUmVmZXJlbmNlXzIwMjQtMDUtMjEgLSBMYW5kc2NhcGUgUGxhbiAtIEQwNy0xMi0yNC0wMDIwLlBERiJ9LHsiZG9jUmVmZXJlbmNlSWQiOiJfX0NWVkZIWCIsImRvY3VtZW50TmFtZSI6IjIwMjQtMDUtMjEgLSBMYW5kc2NhcGUgRGV0YWlscyBQbGFuIC0gRDA3LTEyLTI0LTAwMjAiLCJmaWxlU2l6ZSI6IjAuNzQgTUIiLCJmaWxlUGF0aCI6IlNpdGUgUGxhbiBBcHBsaWNhdGlvbl9JbWFnZSBSZWZlcmVuY2VfMjAyNC0wNS0yMSAtIExhbmRzY2FwZSBEZXRhaWxzIFBsYW4gLSBEMDctMTItMjQtMDAyMC5QREYifSx7ImRvY1JlZmVyZW5jZUlkIjoiX19DVkpTWTEiLCJkb2N1bWVudE5hbWUiOiIyMDI0LTA0LTI5IC0gQXBwbGljYXRpb24gU3VtbWFyeSAtIEQwNy0xMi0yNC0wMDIwIiwiZmlsZVNpemUiOiIwLjUyIE1CIiwiZmlsZVBhdGgiOiJTaXRlIFBsYW4gQXBwbGljYXRpb25fSW1hZ2UgUmVmZXJlbmNlXzIwMjQtMDQtMjkgLSBBcHBsaWNhdGlvbiBTdW1tYXJ5IC0gRDA3LTEyLTI0LTAwMjAuUERGIn0seyJkb2NSZWZlcmVuY2VJZCI6Il9fQ1UwNDVRIiwiZG9jdW1lbnROYW1lIjoiMjAyNC0wNC0xMCAtIFRyYW5zcG9ydGF0aW9uIEltcGFjdCBBc3Nlc3NtZW50IFNjcmVlbmluZyAtIEQwNy0xMi0yNC0wMDIwIiwiZmlsZVNpemUiOiIwLjYyIE1CIiwiZmlsZVBhdGgiOiJTaXRlIFBsYW4gQXBwbGljYXRpb25fSW1hZ2UgUmVmZXJlbmNlXzIwMjQtMDQtMTAgLSBUcmFuc3BvcnRhdGlvbiBJbXBhY3QgQXNzZXNzbWVudCBTY3JlZW5pbmcgLSBEMDctMTItMjQtMDAyMC5QREYifSx7ImRvY1JlZmVyZW5jZUlkIjoiX19DVTA0NFoiLCJkb2N1bWVudE5hbWUiOiIyMDI0LTA0LTEwIC0gVHJhZmZpYyBOb2lzZSBJbXBhY3QgQXNzZXNzbWVudCAgLSBEMDctMTItMjQtMDAyMCIsImZpbGVTaXplIjoiMi4zNCBNQiIsImZpbGVQYXRoIjoiU2l0ZSBQbGFuIEFwcGxpY2F0aW9uX0ltYWdlIFJlZmVyZW5jZV8yMDI0LTA0LTEwIC0gVHJhZmZpYyBOb2lzZSBJbXBhY3QgQXNzZXNzbWVudCAgLSBEMDctMTItMjQtMDAyMC5QREYifSx7ImRvY1JlZmVyZW5jZUlkIjoiX19DVTA0NFAiLCJkb2N1bWVudE5hbWUiOiIyMDI0LTA0LTEwIC0gVG9wb2dyYXBoaWNhbCBQbGFuIG9mIFN1cnZleSAtIEQwNy0xMi0yNC0wMDIwIiwiZmlsZVNpemUiOiIwLjY4IE1CIiwiZmlsZVBhdGgiOiJTaXRlIFBsYW4gQXBwbGljYXRpb25fSW1hZ2UgUmVmZXJlbmNlXzIwMjQtMDQtMTAgLSBUb3BvZ3JhcGhpY2FsIFBsYW4gb2YgU3VydmV5IC0gRDA3LTEyLTI0LTAwMjAuUERGIn0seyJkb2NSZWZlcmVuY2VJZCI6Il9fQ1UwNDM4IiwiZG9jdW1lbnROYW1lIjoiMjAyNC0wNC0xMCAtIFN1biBTaGFkb3cgQW5hbHlzaXMgLSBEMDctMTItMjQtMDAyMCIsImZpbGVTaXplIjoiMS42NCBNQiIsImZpbGVQYXRoIjoiU2l0ZSBQbGFuIEFwcGxpY2F0aW9uX0ltYWdlIFJlZmVyZW5jZV8yMDI0LTA0LTEwIC0gU3VuIFNoYWRvdyBBbmFseXNpcyAtIEQwNy0xMi0yNC0wMDIwLlBERiJ9LHsiZG9jUmVmZXJlbmNlSWQiOiJfX0NVMDQxQyIsImRvY3VtZW50TmFtZSI6IjIwMjQtMDQtMTAgLSBTaXRlIFNlcnZpY2luZyBTdHVkeSBhbmQgU3Rvcm13YXRlciBNYW5hZ2VtZW50IFJlcG9ydCAtIEQwNy0xMi0yNC0wMDIwIiwiZmlsZVNpemUiOiIzLjU3IE1CIiwiZmlsZVBhdGgiOiJTaXRlIFBsYW4gQXBwbGljYXRpb25fSW1hZ2UgUmVmZXJlbmNlXzIwMjQtMDQtMTAgLSBTaXRlIFNlcnZpY2luZyBTdHVkeSBhbmQgU3Rvcm13YXRlciBNYW5hZ2VtZW50IFJlcG9ydCAtIEQwNy0xMi0yNC0wMDIwLlBERiJ9LHsiZG9jUmVmZXJlbmNlSWQiOiJfX0NVMDQxUSIsImRvY3VtZW50TmFtZSI6IjIwMjQtMDQtMTAgLSBTaXRlIFNlcnZpY2luZyBQbGFuIC0gRDA3LTEyLTI0LTAwMjAiLCJmaWxlU2l6ZSI6IjAuNTUgTUIiLCJmaWxlUGF0aCI6IlNpdGUgUGxhbiBBcHBsaWNhdGlvbl9JbWFnZSBSZWZlcmVuY2VfMjAyNC0wNC0xMCAtIFNpdGUgU2VydmljaW5nIFBsYW4gLSBEMDctMTItMjQtMDAyMC5QREYifSx7ImRvY1JlZmVyZW5jZUlkIjoiX19DVTA0WkciLCJkb2N1bWVudE5hbWUiOiIyMDI0LTA0LTEwIC0gU2l0ZSBQbGFuIC0gRDA3LTEyLTI0LTAwMjAiLCJmaWxlU2l6ZSI6IjIuNjAgTUIiLCJmaWxlUGF0aCI6IlNpdGUgUGxhbiBBcHBsaWNhdGlvbl9JbWFnZSBSZWZlcmVuY2VfMjAyNC0wNC0xMCAtIFNpdGUgUGxhbiAtIEQwNy0xMi0yNC0wMDIwLlBERiJ9LHsiZG9jUmVmZXJlbmNlSWQiOiJfX0NVMDRZRyIsImRvY3VtZW50TmFtZSI6IjIwMjQtMDQtMTAgLSBSb29mIERyYWluYWdlIFBsYW4gLSBEMDctMTItMjQtMDAyMCIsImZpbGVTaXplIjoiMC4yMCBNQiIsImZpbGVQYXRoIjoiU2l0ZSBQbGFuIEFwcGxpY2F0aW9uX0ltYWdlIFJlZmVyZW5jZV8yMDI0LTA0LTEwIC0gUm9vZiBEcmFpbmFnZSBQbGFuIC0gRDA3LTEyLTI0LTAwMjAuUERGIn0seyJkb2NSZWZlcmVuY2VJZCI6Il9fQ1UwNFlSIiwiZG9jdW1lbnROYW1lIjoiMjAyNC0wNC0xMCAtIFBsYW4gU3VydmV5IC0gRDA3LTEyLTI0LTAwMjAiLCJmaWxlU2l6ZSI6IjAuNjAgTUIiLCJmaWxlUGF0aCI6IlNpdGUgUGxhbiBBcHBsaWNhdGlvbl9JbWFnZSBSZWZlcmVuY2VfMjAyNC0wNC0xMCAtIFBsYW4gU3VydmV5IC0gRDA3LTEyLTI0LTAwMjAuUERGIn0seyJkb2NSZWZlcmVuY2VJZCI6Il9fQ1UwNFhLIiwiZG9jdW1lbnROYW1lIjoiMjAyNC0wNC0xMCAtIFBlcnNwZWN0aXZlIFJlbmRlcmluZ3MgLSBEMDctMTItMjQtMDAyMCIsImZpbGVTaXplIjoiMjUuMTYgTUIiLCJmaWxlUGF0aCI6IlNpdGUgUGxhbiBBcHBsaWNhdGlvbl9JbWFnZSBSZWZlcmVuY2VfMjAyNC0wNC0xMCAtIFBlcnNwZWN0aXZlIFJlbmRlcmluZ3MgLSBEMDctMTItMjQtMDAyMC5QREYifSx7ImRvY1JlZmVyZW5jZUlkIjoiX19DVTA0UUwiLCJkb2N1bWVudE5hbWUiOiIyMDI0LTA0LTEwIC0gTm90ZXMgYW5kIERldGFpbHMgLSBEMDctMTItMjQtMDAyMCIsImZpbGVTaXplIjoiMS4wMCBNQiIsImZpbGVQYXRoIjoiU2l0ZSBQbGFuIEFwcGxpY2F0aW9uX0ltYWdlIFJlZmVyZW5jZV8yMDI0LTA0LTEwIC0gTm90ZXMgYW5kIERldGFpbHMgLSBEMDctMTItMjQtMDAyMC5QREYifSx7ImRvY1JlZmVyZW5jZUlkIjoiX19DVTA0UE0iLCJkb2N1bWVudE5hbWUiOiIyMDI0LTA0LTEwIC0gTGV2ZWwgMiBGbG9vciBQbGFuIC0gRDA3LTEyLTI0LTAwMjAiLCJmaWxlU2l6ZSI6IjAuNTEgTUIiLCJmaWxlUGF0aCI6IlNpdGUgUGxhbiBBcHBsaWNhdGlvbl9JbWFnZSBSZWZlcmVuY2VfMjAyNC0wNC0xMCAtIExldmVsIDIgRmxvb3IgUGxhbiAtIEQwNy0xMi0yNC0wMDIwLlBERiJ9LHsiZG9jUmVmZXJlbmNlSWQiOiJfX0NVMDNHOSIsImRvY3VtZW50TmFtZSI6IjIwMjQtMDQtMTAgLSBHcm91bmQgRmxvb3IgUGxhbiAtIEQwNy0xMi0yNC0wMDIwIiwiZmlsZVNpemUiOiIxLjA4IE1CIiwiZmlsZVBhdGgiOiJTaXRlIFBsYW4gQXBwbGljYXRpb25fSW1hZ2UgUmVmZXJlbmNlXzIwMjQtMDQtMTAgLSBHcm91bmQgRmxvb3IgUGxhbiAtIEQwNy0xMi0yNC0wMDIwLlBERiJ9LHsiZG9jUmVmZXJlbmNlSWQiOiJfX0NVMDNBMSIsImRvY3VtZW50TmFtZSI6IjIwMjQtMDQtMTAgLSBHZW90ZWNobmljYWwgSW52ZXN0aWdhdGlvbiAtIEQwNy0xMi0yNC0wMDIwIiwiZmlsZVNpemUiOiIyLjg0IE1CIiwiZmlsZVBhdGgiOiJTaXRlIFBsYW4gQXBwbGljYXRpb25fSW1hZ2UgUmVmZXJlbmNlXzIwMjQtMDQtMTAgLSBHZW90ZWNobmljYWwgSW52ZXN0aWdhdGlvbiAtIEQwNy0xMi0yNC0wMDIwLlBERiJ9LHsiZG9jUmVmZXJlbmNlSWQiOiJfX0NVMDM1TiIsImRvY3VtZW50TmFtZSI6IjIwMjQtMDQtMTAgLSBFeGlzdGluZyBDb25kaXRpb25zIFJlbW92YWxzICAtIEQwNy0xMi0yNC0wMDIwIiwiZmlsZVNpemUiOiIwLjQ4IE1CIiwiZmlsZVBhdGgiOiJTaXRlIFBsYW4gQXBwbGljYXRpb25fSW1hZ2UgUmVmZXJlbmNlXzIwMjQtMDQtMTAgLSBFeGlzdGluZyBDb25kaXRpb25zIFJlbW92YWxzICAtIEQwNy0xMi0yNC0wMDIwLlBERiJ9LHsiZG9jUmVmZXJlbmNlSWQiOiJfX0NVMDNYUiIsImRvY3VtZW50TmFtZSI6IjIwMjQtMDQtMTAgLSBFbGV2YXRpb25zIC0gRDA3LTEyLTI0LTAwMjAiLCJmaWxlU2l6ZSI6IjAuNDUgTUIiLCJmaWxlUGF0aCI6IlNpdGUgUGxhbiBBcHBsaWNhdGlvbl9JbWFnZSBSZWZlcmVuY2VfMjAyNC0wNC0xMCAtIEVsZXZhdGlvbnMgLSBEMDctMTItMjQtMDAyMC5QREYifSx7ImRvY1JlZmVyZW5jZUlkIjoiX19DVTAzV0giLCJkb2N1bWVudE5hbWUiOiIyMDI0LTA0LTEwIC0gRWxldHJpY2FsIFNpdGUgTGlnaHRpbmcgV29yayBQbGFuIC0gRDA3LTEyLTI0LTAwMjAiLCJmaWxlU2l6ZSI6IjAuMjkgTUIiLCJmaWxlUGF0aCI6IlNpdGUgUGxhbiBBcHBsaWNhdGlvbl9JbWFnZSBSZWZlcmVuY2VfMjAyNC0wNC0xMCAtIEVsZXRyaWNhbCBTaXRlIExpZ2h0aW5nIFdvcmsgUGxhbiAtIEQwNy0xMi0yNC0wMDIwLlBERiJ9LHsiZG9jUmVmZXJlbmNlSWQiOiJfX0NVMDNWNCIsImRvY3VtZW50TmFtZSI6IjIwMjQtMDQtMTAgLSBEcmFpbmFnZSBQbGFuIGFuZCBFcm9zaW9uIGFuZCBTZWRpbWVudCBDb250cm9sIFBsYW4gLSBEMDctMTItMjQtMDAyMCIsImZpbGVTaXplIjoiMC45NSBNQiIsImZpbGVQYXRoIjoiU2l0ZSBQbGFuIEFwcGxpY2F0aW9uX0ltYWdlIFJlZmVyZW5jZV8yMDI0LTA0LTEwIC0gRHJhaW5hZ2UgUGxhbiBhbmQgRXJvc2lvbiBhbmQgU2VkaW1lbnQgQ29udHJvbCBQbGFuIC0gRDA3LTEyLTI0LTAwMjAuUERGIn0seyJkb2NSZWZlcmVuY2VJZCI6Il9fQ1UwM1ZXIiwiZG9jdW1lbnROYW1lIjoiMjAyNC0wNC0xMCAtIERyYWluYWdlIFBsYW4gLSBEMDctMTItMjQtMDAyMCIsImZpbGVTaXplIjoiMC40MyBNQiIsImZpbGVQYXRoIjoiU2l0ZSBQbGFuIEFwcGxpY2F0aW9uX0ltYWdlIFJlZmVyZW5jZV8yMDI0LTA0LTEwIC0gRHJhaW5hZ2UgUGxhbiAtIEQwNy0xMi0yNC0wMDIwLlBERiJ9LHsiZG9jUmVmZXJlbmNlSWQiOiJfX0NVMDNRTCIsImRvY3VtZW50TmFtZSI6IjIwMjQtMDQtMTAgLSBEZXRhaWxzIGFuZCBTY2hlZHVsZXMgLSBEMDctMTItMjQtMDAyMCIsImZpbGVTaXplIjoiMC40NCBNQiIsImZpbGVQYXRoIjoiU2l0ZSBQbGFuIEFwcGxpY2F0aW9uX0ltYWdlIFJlZmVyZW5jZV8yMDI0LTA0LTEwIC0gRGV0YWlscyBhbmQgU2NoZWR1bGVzIC0gRDA3LTEyLTI0LTAwMjAuUERGIn0seyJkb2NSZWZlcmVuY2VJZCI6Il9fQ1UwM1AxIiwiZG9jdW1lbnROYW1lIjoiMjAyNC0wNC0xMCAtIERlc2lnbiBCcmllZiAtIEQwNy0xMi0yNC0wMDIwIiwiZmlsZVNpemUiOiIwLjM4IE1CIiwiZmlsZVBhdGgiOiJTaXRlIFBsYW4gQXBwbGljYXRpb25fSW1hZ2UgUmVmZXJlbmNlXzIwMjQtMDQtMTAgLSBEZXNpZ24gQnJpZWYgLSBEMDctMTItMjQtMDAyMC5QREYifV0sIm9iamVjdFN0YXR1cyI6eyJvYmplY3RTdGF0dXNUeXBlSWQiOiJfXzRCWFJPWCIsIm9iamVjdEN1cnJlbnRTdGF0dXMiOnsiZW4iOiJBZ3JlZW1lbnQgUmVnaXN0ZXJlZCAtIEZpbmFsIExlZ2FsIENsZWFyYW5jZSBHaXZlbiIsImZyIjoiRW50ZW50ZSBFbnJlZ2lzdHLDqWUgLSBBcHByb2JhdGlvbiBGaW5hbGUgZHUgQ29udGVudGlldXgifSwib2JqZWN0Q3VycmVudFN0YXR1c0RhdGUiOjYzODY1NzIyMzIyMDAwMDAwMCwib2JqZWN0Q3VycmVudFN0YXR1c0RhdGVZTUQiOiIyMDI0LTEwLTI4In0sImRldkFwcFdhcmQiOnsiY29tbXVuaXR5SWQiOiJfXzMwNVQ1QSIsIndhcmROdW1iZXIiOnsiZW4iOiJXYXJkIDkiLCJmciI6IlF1YXJ0aWVyIDA5In0sIndhcmROYW1lIjp7ImVuIjoiS05PWERBTEUtTUVSSVZBTEUiLCJmciI6IktOT1hEQUxFLU1FUklWQUxFIn0sImNvdW5jaWxsb3JMYXN0TmFtZSI6IkRldmluZSIsImNvdW5jaWxsb3JGaXJzdE5hbWUiOiJTZWFuIiwid2FyZENvdW5jaWxsb3JFbWFpbCI6InNlYW4uZGV2aW5lQG90dGF3YS5jYSJ9LCJlbmRPZkNpcmN1bGF0aW9uRGF0ZSI6MCwiZW5kT2ZDaXJjdWxhdGlvbkRhdGVZTUQiOiIwMDAxLTAxLTAxIiwiY2FuQ29tbWVudCI6Ik4iLCJzaG93RmVlZGJhY2tMaW5rIjoiTiIsInBsYW5uZXJGaXJzdE5hbWUiOiJTaGFoaXJhIiwicGxhbm5lckxhc3ROYW1lIjoiSmFsYWwiLCJwbGFubmVyUGhvbmUiOiI2MTMtNTgwLTI0MjQgeDI0OTE0IiwicGxhbm5lckVtYWlsIjoic2hhaGlyYS5qYWxhbEBvdHRhd2EuY2EiLCJzZWFyY2hhYmxlVGV4dCI6IjIwNSBHUkVFTkJBTksgUm9hZCBTaXRlIFBsYW4gQ29udHJvbCBSw6lnbGVtZW50YXRpb24gZHUgcGxhbiBkJ2ltcGxhbnRhdGlvbiBUaGUgQ2l0eSBvZiBPdHRhd2EgaGFzIHJlY2VpdmVkIGEgU2l0ZSBQbGFuIENvbnRyb2wgYXBwbGljYXRpb24gdG8gY29uc3RydWN0IGEgdHdvLXN0b3JleSBhZGRpdGlvbiBjb25uZWN0ZWQgb24gdGhlIHNvdXRod2VzdCBzaWRlIG9mIHRoZSBleGlzdGluZyB0d28gc3RvcmV5IFdvb2R2YWxlIFBlbnRlY29zdGFsIENodXJjaC4gTGEgVmlsbGUgZFx1MDA5Mk90dGF3YSBhIHJlw6d1IHVuZSBkZW1hbmRlIGRlIHLDqWdsZW1lbnRhdGlvbiBkdSBwbGFuIGRcdTAwOTJpbXBsYW50YXRpb24gYXlhbnQgcG91ciBvYmpldCBkZSBwZXJtZXR0cmUgbGEgY29uc3RydWN0aW9uIGRcdTAwOTJ1biByYWpvdXQgZGUgZGV1eCDDqXRhZ2VzIHJlbGnDqSBkdSBjw7R0w6kgc3VkLW91ZXN0IMOgIGxcdTAwOTLDqWdsaXNlIHBlbnRlY8O0dGlzdGUgV29vZHZhbGUsIHVuIGLDonRpbWVudCBkZSBkZXV4IMOpdGFnZXMgw6lnYWxlbWVudC4gSW5hY3RpdmUgSW5hY3RpZiBBZ3JlZW1lbnQgUmVnaXN0ZXJlZCAtIEZpbmFsIExlZ2FsIENsZWFyYW5jZSBHaXZlbiBFbnRlbnRlIEVucmVnaXN0csOpZSAtIEFwcHJvYmF0aW9uIEZpbmFsZSBkdSBDb250ZW50aWV1eCAgV2FyZCA5IFF1YXJ0aWVyIDA5IEtOT1hEQUxFLU1FUklWQUxFIEtOT1hEQUxFLU1FUklWQUxFIFNlYW4gRGV2aW5lIEQwNy0xMi0yNC0wMDIwIiwic3RyZWV0QWRyZXNzIjoiR1JFRU5CQU5LIiwic3RyZWV0TnVtYmVyIjoyMDV9
+  recorded_at: Sat, 22 Feb 2025 17:42:11 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-06-13%20-%20Signed%20Delegated%20Authority%20Report%20-%20D07-12-24-0020.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
       Accept:
       - "*/*"
       User-Agent:
       - Ruby
   response:
     status:
-      code: 302
-      message: Found
+      code: 307
+      message: Temporary Redirect
     headers:
+      Date:
+      - Sat, 22 Feb 2025 17:42:11 GMT
+      Content-Type:
+      - text/html
       Content-Length:
       - '0'
+      Connection:
+      - keep-alive
       Location:
-      - https://webcast.ottawa.ca/plan/All_Image%20Referencing_Demolition%20Control_Image%20Reference_2023-08-17%20-%20application%20-%20D07-05-23-0005.PDF
+      - https://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-06-13%20-%20Signed%20Delegated%20Authority%20Report%20-%20D07-12-24-0020.PDF
       X-Azure-Ref:
-      - 0i6ikZQAAAAAi5bsjy7FDT6+1f/HwOmBBWVRPMjIxMDkwODIwMDMzADE0YWEzNmE5LTc5MDQtNGIxZC1iNDU4LTU4NjVhYmNmYzgxNw==
-      Date:
-      - Mon, 15 Jan 2024 03:37:46 GMT
+      - 20250222T174211Z-1546cc46689fjc7whC1YTO8u500000000p4000000000339y
+      X-Cache:
+      - CONFIG_NOCACHE
     body:
       encoding: UTF-8
       string: ''
-  recorded_at: Mon, 15 Jan 2024 03:37:47 GMT
-recorded_with: VCR 6.1.0
+  recorded_at: Sat, 22 Feb 2025 17:42:11 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-06-13%20-%20Approved%20Site%20Servicing%20Plan%20-%20D07-12-24-0020.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 307
+      message: Temporary Redirect
+    headers:
+      Date:
+      - Sat, 22 Feb 2025 17:42:11 GMT
+      Content-Type:
+      - text/html
+      Content-Length:
+      - '0'
+      Connection:
+      - keep-alive
+      Location:
+      - https://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-06-13%20-%20Approved%20Site%20Servicing%20Plan%20-%20D07-12-24-0020.PDF
+      X-Azure-Ref:
+      - 20250222T174211Z-1546cc46689wss9lhC1YTOn3z800000000m00000000083aa
+      X-Cache:
+      - CONFIG_NOCACHE
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Sat, 22 Feb 2025 17:42:11 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-06-13%20-%20Approved%20Site%20Plan%20-%20D07-12-24-0020.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 307
+      message: Temporary Redirect
+    headers:
+      Date:
+      - Sat, 22 Feb 2025 17:42:11 GMT
+      Content-Type:
+      - text/html
+      Content-Length:
+      - '0'
+      Connection:
+      - keep-alive
+      Location:
+      - https://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-06-13%20-%20Approved%20Site%20Plan%20-%20D07-12-24-0020.PDF
+      X-Azure-Ref:
+      - 20250222T174211Z-1546cc46689wbw8chC1YTO6vh0000000038000000000d7tq
+      X-Cache:
+      - CONFIG_NOCACHE
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Sat, 22 Feb 2025 17:42:11 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-06-13%20-%20Approved%20Roof%20Drainage%20Plan%20-%20D07-12-24-0020.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 307
+      message: Temporary Redirect
+    headers:
+      Date:
+      - Sat, 22 Feb 2025 17:42:11 GMT
+      Content-Type:
+      - text/html
+      Content-Length:
+      - '0'
+      Connection:
+      - keep-alive
+      Location:
+      - https://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-06-13%20-%20Approved%20Roof%20Drainage%20Plan%20-%20D07-12-24-0020.PDF
+      X-Azure-Ref:
+      - 20250222T174211Z-1546cc46689q2lrnhC1YTOasd400000002wg00000000aca0
+      X-Cache:
+      - CONFIG_NOCACHE
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Sat, 22 Feb 2025 17:42:11 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-06-13%20-%20Approved%20Notes%20&%20Details%20-%20D07-12-24-0020.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 307
+      message: Temporary Redirect
+    headers:
+      Date:
+      - Sat, 22 Feb 2025 17:42:11 GMT
+      Content-Type:
+      - text/html
+      Content-Length:
+      - '0'
+      Connection:
+      - keep-alive
+      Location:
+      - https://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-06-13%20-%20Approved%20Notes%20&%20Details%20-%20D07-12-24-0020.PDF
+      X-Azure-Ref:
+      - 20250222T174211Z-1546cc46689bwx5zhC1YTO63ac00000008e0000000007kek
+      X-Cache:
+      - CONFIG_NOCACHE
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Sat, 22 Feb 2025 17:42:11 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-06-13%20-%20Approved%20Landscape%20Plan%20-%20D07-12-24-0020.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 307
+      message: Temporary Redirect
+    headers:
+      Date:
+      - Sat, 22 Feb 2025 17:42:11 GMT
+      Content-Type:
+      - text/html
+      Content-Length:
+      - '0'
+      Connection:
+      - keep-alive
+      Location:
+      - https://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-06-13%20-%20Approved%20Landscape%20Plan%20-%20D07-12-24-0020.PDF
+      X-Azure-Ref:
+      - 20250222T174211Z-1546cc46689wbh5vhC1YTO8k18000000021g000000003hf2
+      X-Cache:
+      - CONFIG_NOCACHE
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Sat, 22 Feb 2025 17:42:11 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-06-13%20-%20Approved%20Landscape%20Details%20Plan%20-%20D07-12-24-0020.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 307
+      message: Temporary Redirect
+    headers:
+      Date:
+      - Sat, 22 Feb 2025 17:42:11 GMT
+      Content-Type:
+      - text/html
+      Content-Length:
+      - '0'
+      Connection:
+      - keep-alive
+      Location:
+      - https://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-06-13%20-%20Approved%20Landscape%20Details%20Plan%20-%20D07-12-24-0020.PDF
+      X-Azure-Ref:
+      - 20250222T174211Z-1546cc466899nx5nhC1YTO1xwg00000000s000000000ayku
+      X-Cache:
+      - CONFIG_NOCACHE
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Sat, 22 Feb 2025 17:42:11 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-06-13%20-%20Approved%20Grading%20Plan%20&%20Erosion%20&%20Sediment%20Control%20Plan%20-%20D07-12-24-0020.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 307
+      message: Temporary Redirect
+    headers:
+      Date:
+      - Sat, 22 Feb 2025 17:42:11 GMT
+      Content-Type:
+      - text/html
+      Content-Length:
+      - '0'
+      Connection:
+      - keep-alive
+      Location:
+      - https://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-06-13%20-%20Approved%20Grading%20Plan%20&%20Erosion%20&%20Sediment%20Control%20Plan%20-%20D07-12-24-0020.PDF
+      X-Azure-Ref:
+      - 20250222T174211Z-1546cc46689hs8cvhC1YTOkavs00000001m00000000052ew
+      X-Cache:
+      - CONFIG_NOCACHE
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Sat, 22 Feb 2025 17:42:11 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-06-13%20-%20Approved%20Elevations%20-%20D07-12-24-0020.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 307
+      message: Temporary Redirect
+    headers:
+      Date:
+      - Sat, 22 Feb 2025 17:42:11 GMT
+      Content-Type:
+      - text/html
+      Content-Length:
+      - '0'
+      Connection:
+      - keep-alive
+      Location:
+      - https://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-06-13%20-%20Approved%20Elevations%20-%20D07-12-24-0020.PDF
+      X-Azure-Ref:
+      - 20250222T174211Z-1546cc46689hnz8lhC1YTOc03c0000000wz0000000007e3e
+      X-Cache:
+      - CONFIG_NOCACHE
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Sat, 22 Feb 2025 17:42:12 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-06-13%20-%20Approved%20Drainage%20Plan%20-%20D07-12-24-0020.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 307
+      message: Temporary Redirect
+    headers:
+      Date:
+      - Sat, 22 Feb 2025 17:42:11 GMT
+      Content-Type:
+      - text/html
+      Content-Length:
+      - '0'
+      Connection:
+      - keep-alive
+      Location:
+      - https://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-06-13%20-%20Approved%20Drainage%20Plan%20-%20D07-12-24-0020.PDF
+      X-Azure-Ref:
+      - 20250222T174211Z-1546cc46689bwhf6hC1YTOp1fg0000000xgg000000007u1a
+      X-Cache:
+      - CONFIG_NOCACHE
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Sat, 22 Feb 2025 17:42:12 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-06-13%20-%20Approved%20Details%20&%20Schedules%20-%20D07-12-24-0020.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 307
+      message: Temporary Redirect
+    headers:
+      Date:
+      - Sat, 22 Feb 2025 17:42:12 GMT
+      Content-Type:
+      - text/html
+      Content-Length:
+      - '0'
+      Connection:
+      - keep-alive
+      Location:
+      - https://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-06-13%20-%20Approved%20Details%20&%20Schedules%20-%20D07-12-24-0020.PDF
+      X-Azure-Ref:
+      - 20250222T174212Z-1546cc466897tgjphC1YTOpqss0000000n0g000000002890
+      X-Cache:
+      - CONFIG_NOCACHE
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Sat, 22 Feb 2025 17:42:12 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-05-21%20-%20Landscape%20Plan%20-%20D07-12-24-0020.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 307
+      message: Temporary Redirect
+    headers:
+      Date:
+      - Sat, 22 Feb 2025 17:42:12 GMT
+      Content-Type:
+      - text/html
+      Content-Length:
+      - '0'
+      Connection:
+      - keep-alive
+      Location:
+      - https://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-05-21%20-%20Landscape%20Plan%20-%20D07-12-24-0020.PDF
+      X-Azure-Ref:
+      - 20250222T174212Z-1546cc466896llnmhC1YTOa21400000003qg0000000004c2
+      X-Cache:
+      - CONFIG_NOCACHE
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Sat, 22 Feb 2025 17:42:12 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-05-21%20-%20Landscape%20Details%20Plan%20-%20D07-12-24-0020.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 307
+      message: Temporary Redirect
+    headers:
+      Date:
+      - Sat, 22 Feb 2025 17:42:12 GMT
+      Content-Type:
+      - text/html
+      Content-Length:
+      - '0'
+      Connection:
+      - keep-alive
+      Location:
+      - https://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-05-21%20-%20Landscape%20Details%20Plan%20-%20D07-12-24-0020.PDF
+      X-Azure-Ref:
+      - 20250222T174212Z-1546cc466896llnmhC1YTOa21400000003f000000000d790
+      X-Cache:
+      - CONFIG_NOCACHE
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Sat, 22 Feb 2025 17:42:12 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-04-29%20-%20Application%20Summary%20-%20D07-12-24-0020.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 307
+      message: Temporary Redirect
+    headers:
+      Date:
+      - Sat, 22 Feb 2025 17:42:12 GMT
+      Content-Type:
+      - text/html
+      Content-Length:
+      - '0'
+      Connection:
+      - keep-alive
+      Location:
+      - https://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-04-29%20-%20Application%20Summary%20-%20D07-12-24-0020.PDF
+      X-Azure-Ref:
+      - 20250222T174212Z-1546cc46689ttktjhC1YTOezyg0000000x300000000082cy
+      X-Cache:
+      - CONFIG_NOCACHE
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Sat, 22 Feb 2025 17:42:12 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-04-10%20-%20Transportation%20Impact%20Assessment%20Screening%20-%20D07-12-24-0020.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 307
+      message: Temporary Redirect
+    headers:
+      Date:
+      - Sat, 22 Feb 2025 17:42:12 GMT
+      Content-Type:
+      - text/html
+      Content-Length:
+      - '0'
+      Connection:
+      - keep-alive
+      Location:
+      - https://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-04-10%20-%20Transportation%20Impact%20Assessment%20Screening%20-%20D07-12-24-0020.PDF
+      X-Azure-Ref:
+      - 20250222T174212Z-1546cc46689g27qfhC1YTO4wqc00000002sg0000000088hr
+      X-Cache:
+      - CONFIG_NOCACHE
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Sat, 22 Feb 2025 17:42:12 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-04-10%20-%20Traffic%20Noise%20Impact%20Assessment%20%20-%20D07-12-24-0020.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 307
+      message: Temporary Redirect
+    headers:
+      Date:
+      - Sat, 22 Feb 2025 17:42:12 GMT
+      Content-Type:
+      - text/html
+      Content-Length:
+      - '0'
+      Connection:
+      - keep-alive
+      Location:
+      - https://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-04-10%20-%20Traffic%20Noise%20Impact%20Assessment%20%20-%20D07-12-24-0020.PDF
+      X-Azure-Ref:
+      - 20250222T174212Z-1546cc466898kdxbhC1YTOk32000000002ng000000006m7c
+      X-Cache:
+      - CONFIG_NOCACHE
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Sat, 22 Feb 2025 17:42:12 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-04-10%20-%20Topographical%20Plan%20of%20Survey%20-%20D07-12-24-0020.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 307
+      message: Temporary Redirect
+    headers:
+      Date:
+      - Sat, 22 Feb 2025 17:42:12 GMT
+      Content-Type:
+      - text/html
+      Content-Length:
+      - '0'
+      Connection:
+      - keep-alive
+      Location:
+      - https://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-04-10%20-%20Topographical%20Plan%20of%20Survey%20-%20D07-12-24-0020.PDF
+      X-Azure-Ref:
+      - 20250222T174212Z-1546cc46689bwx5zhC1YTO63ac00000008e0000000007kgc
+      X-Cache:
+      - CONFIG_NOCACHE
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Sat, 22 Feb 2025 17:42:12 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-04-10%20-%20Sun%20Shadow%20Analysis%20-%20D07-12-24-0020.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 307
+      message: Temporary Redirect
+    headers:
+      Date:
+      - Sat, 22 Feb 2025 17:42:12 GMT
+      Content-Type:
+      - text/html
+      Content-Length:
+      - '0'
+      Connection:
+      - keep-alive
+      Location:
+      - https://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-04-10%20-%20Sun%20Shadow%20Analysis%20-%20D07-12-24-0020.PDF
+      X-Azure-Ref:
+      - 20250222T174212Z-1546cc466895r7phhC1YTOrgbc00000003ng000000000vdh
+      X-Cache:
+      - CONFIG_NOCACHE
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Sat, 22 Feb 2025 17:42:12 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-04-10%20-%20Site%20Servicing%20Study%20and%20Stormwater%20Management%20Report%20-%20D07-12-24-0020.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 307
+      message: Temporary Redirect
+    headers:
+      Date:
+      - Sat, 22 Feb 2025 17:42:12 GMT
+      Content-Type:
+      - text/html
+      Content-Length:
+      - '0'
+      Connection:
+      - keep-alive
+      Location:
+      - https://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-04-10%20-%20Site%20Servicing%20Study%20and%20Stormwater%20Management%20Report%20-%20D07-12-24-0020.PDF
+      X-Azure-Ref:
+      - 20250222T174212Z-1546cc46689hnz8lhC1YTOc03c0000000x100000000038qg
+      X-Cache:
+      - CONFIG_NOCACHE
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Sat, 22 Feb 2025 17:42:12 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-04-10%20-%20Site%20Servicing%20Plan%20-%20D07-12-24-0020.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 307
+      message: Temporary Redirect
+    headers:
+      Date:
+      - Sat, 22 Feb 2025 17:42:12 GMT
+      Content-Type:
+      - text/html
+      Content-Length:
+      - '0'
+      Connection:
+      - keep-alive
+      Location:
+      - https://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-04-10%20-%20Site%20Servicing%20Plan%20-%20D07-12-24-0020.PDF
+      X-Azure-Ref:
+      - 20250222T174212Z-1546cc4668952j5whC1YTOfw0c0000000xd0000000004fwy
+      X-Cache:
+      - CONFIG_NOCACHE
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Sat, 22 Feb 2025 17:42:12 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-04-10%20-%20Site%20Plan%20-%20D07-12-24-0020.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 307
+      message: Temporary Redirect
+    headers:
+      Date:
+      - Sat, 22 Feb 2025 17:42:12 GMT
+      Content-Type:
+      - text/html
+      Content-Length:
+      - '0'
+      Connection:
+      - keep-alive
+      Location:
+      - https://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-04-10%20-%20Site%20Plan%20-%20D07-12-24-0020.PDF
+      X-Azure-Ref:
+      - 20250222T174212Z-1546cc46689zctn2hC1YTOqe680000000x2g000000000vme
+      X-Cache:
+      - CONFIG_NOCACHE
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Sat, 22 Feb 2025 17:42:12 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-04-10%20-%20Roof%20Drainage%20Plan%20-%20D07-12-24-0020.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 307
+      message: Temporary Redirect
+    headers:
+      Date:
+      - Sat, 22 Feb 2025 17:42:12 GMT
+      Content-Type:
+      - text/html
+      Content-Length:
+      - '0'
+      Connection:
+      - keep-alive
+      Location:
+      - https://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-04-10%20-%20Roof%20Drainage%20Plan%20-%20D07-12-24-0020.PDF
+      X-Azure-Ref:
+      - 20250222T174212Z-1546cc466897lpb5hC1YTO726400000004kg000000001zn2
+      X-Cache:
+      - CONFIG_NOCACHE
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Sat, 22 Feb 2025 17:42:12 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-04-10%20-%20Plan%20Survey%20-%20D07-12-24-0020.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 307
+      message: Temporary Redirect
+    headers:
+      Date:
+      - Sat, 22 Feb 2025 17:42:12 GMT
+      Content-Type:
+      - text/html
+      Content-Length:
+      - '0'
+      Connection:
+      - keep-alive
+      Location:
+      - https://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-04-10%20-%20Plan%20Survey%20-%20D07-12-24-0020.PDF
+      X-Azure-Ref:
+      - 20250222T174212Z-1546cc46689nxpcthC1YTO23xs00000004yg000000006m5q
+      X-Cache:
+      - CONFIG_NOCACHE
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Sat, 22 Feb 2025 17:42:12 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-04-10%20-%20Perspective%20Renderings%20-%20D07-12-24-0020.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 307
+      message: Temporary Redirect
+    headers:
+      Date:
+      - Sat, 22 Feb 2025 17:42:12 GMT
+      Content-Type:
+      - text/html
+      Content-Length:
+      - '0'
+      Connection:
+      - keep-alive
+      Location:
+      - https://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-04-10%20-%20Perspective%20Renderings%20-%20D07-12-24-0020.PDF
+      X-Azure-Ref:
+      - 20250222T174212Z-1546cc46689nxpcthC1YTO23xs00000004xg0000000082uh
+      X-Cache:
+      - CONFIG_NOCACHE
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Sat, 22 Feb 2025 17:42:12 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-04-10%20-%20Notes%20and%20Details%20-%20D07-12-24-0020.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 307
+      message: Temporary Redirect
+    headers:
+      Date:
+      - Sat, 22 Feb 2025 17:42:12 GMT
+      Content-Type:
+      - text/html
+      Content-Length:
+      - '0'
+      Connection:
+      - keep-alive
+      Location:
+      - https://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-04-10%20-%20Notes%20and%20Details%20-%20D07-12-24-0020.PDF
+      X-Azure-Ref:
+      - 20250222T174212Z-1546cc46689rkzr5hC1YTOv53000000000k00000000029dr
+      X-Cache:
+      - CONFIG_NOCACHE
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Sat, 22 Feb 2025 17:42:12 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-04-10%20-%20Level%202%20Floor%20Plan%20-%20D07-12-24-0020.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 307
+      message: Temporary Redirect
+    headers:
+      Date:
+      - Sat, 22 Feb 2025 17:42:12 GMT
+      Content-Type:
+      - text/html
+      Content-Length:
+      - '0'
+      Connection:
+      - keep-alive
+      Location:
+      - https://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-04-10%20-%20Level%202%20Floor%20Plan%20-%20D07-12-24-0020.PDF
+      X-Azure-Ref:
+      - 20250222T174212Z-1546cc46689bwx5zhC1YTO63ac00000008fg0000000062c4
+      X-Cache:
+      - CONFIG_NOCACHE
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Sat, 22 Feb 2025 17:42:12 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-04-10%20-%20Ground%20Floor%20Plan%20-%20D07-12-24-0020.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 307
+      message: Temporary Redirect
+    headers:
+      Date:
+      - Sat, 22 Feb 2025 17:42:12 GMT
+      Content-Type:
+      - text/html
+      Content-Length:
+      - '0'
+      Connection:
+      - keep-alive
+      Location:
+      - https://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-04-10%20-%20Ground%20Floor%20Plan%20-%20D07-12-24-0020.PDF
+      X-Azure-Ref:
+      - 20250222T174212Z-1546cc46689fjc7whC1YTO8u500000000p5g0000000009vv
+      X-Cache:
+      - CONFIG_NOCACHE
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Sat, 22 Feb 2025 17:42:12 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-04-10%20-%20Geotechnical%20Investigation%20-%20D07-12-24-0020.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 307
+      message: Temporary Redirect
+    headers:
+      Date:
+      - Sat, 22 Feb 2025 17:42:12 GMT
+      Content-Type:
+      - text/html
+      Content-Length:
+      - '0'
+      Connection:
+      - keep-alive
+      Location:
+      - https://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-04-10%20-%20Geotechnical%20Investigation%20-%20D07-12-24-0020.PDF
+      X-Azure-Ref:
+      - 20250222T174212Z-1546cc46689rfxcghC1YTOcvm40000000wx00000000078nw
+      X-Cache:
+      - CONFIG_NOCACHE
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Sat, 22 Feb 2025 17:42:12 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-04-10%20-%20Existing%20Conditions%20Removals%20%20-%20D07-12-24-0020.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 307
+      message: Temporary Redirect
+    headers:
+      Date:
+      - Sat, 22 Feb 2025 17:42:12 GMT
+      Content-Type:
+      - text/html
+      Content-Length:
+      - '0'
+      Connection:
+      - keep-alive
+      Location:
+      - https://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-04-10%20-%20Existing%20Conditions%20Removals%20%20-%20D07-12-24-0020.PDF
+      X-Azure-Ref:
+      - 20250222T174212Z-1546cc46689mzskshC1YTOgp9c0000000x1000000000az1p
+      X-Cache:
+      - CONFIG_NOCACHE
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Sat, 22 Feb 2025 17:42:12 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-04-10%20-%20Elevations%20-%20D07-12-24-0020.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 307
+      message: Temporary Redirect
+    headers:
+      Date:
+      - Sat, 22 Feb 2025 17:42:12 GMT
+      Content-Type:
+      - text/html
+      Content-Length:
+      - '0'
+      Connection:
+      - keep-alive
+      Location:
+      - https://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-04-10%20-%20Elevations%20-%20D07-12-24-0020.PDF
+      X-Azure-Ref:
+      - 20250222T174212Z-1546cc46689v4mh8hC1YTOtaa800000004e0000000005ndt
+      X-Cache:
+      - CONFIG_NOCACHE
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Sat, 22 Feb 2025 17:42:12 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-04-10%20-%20Eletrical%20Site%20Lighting%20Work%20Plan%20-%20D07-12-24-0020.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 307
+      message: Temporary Redirect
+    headers:
+      Date:
+      - Sat, 22 Feb 2025 17:42:12 GMT
+      Content-Type:
+      - text/html
+      Content-Length:
+      - '0'
+      Connection:
+      - keep-alive
+      Location:
+      - https://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-04-10%20-%20Eletrical%20Site%20Lighting%20Work%20Plan%20-%20D07-12-24-0020.PDF
+      X-Azure-Ref:
+      - 20250222T174212Z-1546cc466897lpb5hC1YTO726400000004c000000000ffe0
+      X-Cache:
+      - CONFIG_NOCACHE
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Sat, 22 Feb 2025 17:42:12 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-04-10%20-%20Drainage%20Plan%20and%20Erosion%20and%20Sediment%20Control%20Plan%20-%20D07-12-24-0020.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 307
+      message: Temporary Redirect
+    headers:
+      Date:
+      - Sat, 22 Feb 2025 17:42:12 GMT
+      Content-Type:
+      - text/html
+      Content-Length:
+      - '0'
+      Connection:
+      - keep-alive
+      Location:
+      - https://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-04-10%20-%20Drainage%20Plan%20and%20Erosion%20and%20Sediment%20Control%20Plan%20-%20D07-12-24-0020.PDF
+      X-Azure-Ref:
+      - 20250222T174212Z-1546cc466896q4zjhC1YTO2v2g000000022g00000000c3mm
+      X-Cache:
+      - CONFIG_NOCACHE
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Sat, 22 Feb 2025 17:42:12 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-04-10%20-%20Drainage%20Plan%20-%20D07-12-24-0020.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 307
+      message: Temporary Redirect
+    headers:
+      Date:
+      - Sat, 22 Feb 2025 17:42:12 GMT
+      Content-Type:
+      - text/html
+      Content-Length:
+      - '0'
+      Connection:
+      - keep-alive
+      Location:
+      - https://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-04-10%20-%20Drainage%20Plan%20-%20D07-12-24-0020.PDF
+      X-Azure-Ref:
+      - 20250222T174212Z-1546cc46689svjp9hC1YTO1g600000000x0g000000003xad
+      X-Cache:
+      - CONFIG_NOCACHE
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Sat, 22 Feb 2025 17:42:12 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-04-10%20-%20Details%20and%20Schedules%20-%20D07-12-24-0020.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 307
+      message: Temporary Redirect
+    headers:
+      Date:
+      - Sat, 22 Feb 2025 17:42:12 GMT
+      Content-Type:
+      - text/html
+      Content-Length:
+      - '0'
+      Connection:
+      - keep-alive
+      Location:
+      - https://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-04-10%20-%20Details%20and%20Schedules%20-%20D07-12-24-0020.PDF
+      X-Azure-Ref:
+      - 20250222T174212Z-1546cc46689zmbnrhC1YTOf62s00000001u0000000007ynx
+      X-Cache:
+      - CONFIG_NOCACHE
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Sat, 22 Feb 2025 17:42:12 GMT
+- request:
+    method: head
+    uri: http://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-04-10%20-%20Design%20Brief%20-%20D07-12-24-0020.PDF
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 307
+      message: Temporary Redirect
+    headers:
+      Date:
+      - Sat, 22 Feb 2025 17:42:12 GMT
+      Content-Type:
+      - text/html
+      Content-Length:
+      - '0'
+      Connection:
+      - keep-alive
+      Location:
+      - https://webcast.ottawa.ca/plan/All_Image%20Referencing_Site%20Plan%20Application_Image%20Reference_2024-04-10%20-%20Design%20Brief%20-%20D07-12-24-0020.PDF
+      X-Azure-Ref:
+      - 20250222T174212Z-1546cc466899nx5nhC1YTO1xwg00000000v0000000005sc7
+      X-Cache:
+      - CONFIG_NOCACHE
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Sat, 22 Feb 2025 17:42:12 GMT
+recorded_with: VCR 6.3.1
