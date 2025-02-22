@@ -23,13 +23,11 @@ http_interactions:
       Server:
       - nginx
       Date:
-      - Tue, 23 Jan 2024 13:46:44 GMT
+      - Sat, 22 Feb 2025 17:42:20 GMT
       Content-Type:
       - application/json; charset=utf-8
       Transfer-Encoding:
       - chunked
-      Connection:
-      - keep-alive
       Strict-Transport-Security:
       - max-age=15724800; includeSubDomains
       X-Xss-Protection:
@@ -37,22 +35,20 @@ http_interactions:
       X-Frame-Options:
       - SAMEORIGIN
       X-Ott-Cache:
-      - '11'
+      - '27'
       Set-Cookie:
-      - NSC_QH_NzTP_ohjoy=ffffffffc3a07a1d45525d5f4f58455e445a4a42378b;expires=Tue,
-        23-Jan-2024 14:16:44 GMT;path=/;httponly
-      - incap_ses_530_2348304=7H2hZUgoBinKfubUX/FaB0PDr2UAAAAASKHPt64mHzLx6IKXOZxngg==;
+      - incap_ses_1710_2348304=eSkmQZX2qW2tTqMzLSS7F3wMumcAAAAA4CPRdTyr0dtIIb98UJ6GSA==;
         path=/; Domain=.ottawa.ca
-      - nlbi_2348304=C6d6KyeKQjfaWxagl2uJLQAAAABJtif8X4+0xBiAibolRmg2; path=/; Domain=.ottawa.ca
-      - visid_incap_2348304=ls97pvvuQc6lSU2l6nOf5EPDr2UAAAAAQUIPAAAAAABL+0Hx+MaqLpu2jyukDrRD;
-        expires=Wed, 22 Jan 2025 07:35:11 GMT; HttpOnly; path=/; Domain=.ottawa.ca
+      - nlbi_2348304=LQopZYaPDj7iWK+JuLiUiQAAAABknz74UAE0vnnKzNkReDq8; HttpOnly; path=/;
+        Domain=.ottawa.ca
+      - visid_incap_2348304=xaAIlCPnTEOWO+Njl5J2cXwMumcAAAAAQUIPAAAAAAAnFhCMZ2yZSmV1RarLpWuh;
+        expires=Sun, 22 Feb 2026 06:56:40 GMT; HttpOnly; path=/; Domain=.ottawa.ca
       X-Cdn:
       - Imperva
       X-Iinfo:
-      - 9-27653050-27653056 NNYN CT(10 47 0) RT(1706017603556 49) q(0 0 0 -1) r(1
-        1) U24
+      - 52-5128015-5127979 PNYy RT(1740246139960 9) q(0 0 0 -1) r(1 1) U24
     body:
       encoding: ASCII-8BIT
       string: '{"devApps":[],"totalDevApps":0,"index":0,"limit":0}'
-  recorded_at: Tue, 23 Jan 2024 13:46:44 GMT
-recorded_with: VCR 6.1.0
+  recorded_at: Sat, 22 Feb 2025 17:42:20 GMT
+recorded_with: VCR 6.3.1
