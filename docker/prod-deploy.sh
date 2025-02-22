@@ -4,7 +4,7 @@
 
 cd `dirname $0`
 
-. ~/src/infra/ottwatch.sh
+. ~/src/infra/ottwatch-snack.sh
 
 echo "############################"
 date
@@ -25,13 +25,6 @@ date
 echo "Migrating..."
 echo ""
 ./prod-exec.sh bin/rails db:migrate:primary
-
-echo ""
-echo "############################"
-date
-echo "Sidekiq..."
-echo ""
-./prod-sidekiq.sh
 
 echo ""
 echo "############################"

@@ -1,6 +1,5 @@
 #!/bin/bash
 
-. ~/src/infra/ottwatch.sh
+. ~/src/infra/ottwatch-snack.sh
 
 sudo docker stop ottwatch-web
-sudo docker stop ottwatch-sidekiq

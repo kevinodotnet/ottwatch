@@ -1,6 +1,6 @@
 #!/bin/bash
 
-. ~/src/infra/ottwatch.sh
+. ~/src/infra/ottwatch-snack.sh
 
 sudo docker container stop ottwatch-web
 sudo docker container rm ottwatch-web
