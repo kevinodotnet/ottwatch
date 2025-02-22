@@ -105,9 +105,6 @@ GEM
       bigdecimal
       rexml
     crass (1.0.6)
-    cronex (0.15.0)
-      tzinfo
-      unicode (>= 0.4.4.5)
     date (3.4.1)
     debug (1.9.2)
       irb (~> 1.10)
@@ -353,7 +350,6 @@ GEM
     rake (13.2.1)
     rdoc (6.12.0)
       psych (>= 4.0.0)
-    redis (4.8.1)
     regexp_parser (2.9.2)
     reline (0.6.0)
       io-console (~> 0.5)
@@ -394,15 +390,6 @@ GEM
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2, < 3.0)
       websocket (~> 1.0)
-    sidekiq (6.5.12)
-      connection_pool (>= 2.2.5, < 3)
-      rack (~> 2.0)
-      redis (>= 4.5.0, < 5)
-    sidekiq-cron (2.0.0)
-      cronex (>= 0.13.0)
-      fugit (~> 1.8, >= 1.11.1)
-      globalid (>= 1.0.1)
-      sidekiq (>= 6.5.0)
     signet (0.19.0)
       addressable (~> 2.8)
       faraday (>= 0.17.5, < 3.a)
@@ -461,7 +448,6 @@ GEM
     tzinfo-data (1.2024.2)
       tzinfo (>= 1.0.0)
     uber (0.1.0)
-    unicode (0.4.4.5)
     unicode-display_width (2.6.0)
     uniform_notifier (1.16.0)
     uri (1.0.1)
@@ -527,8 +513,6 @@ DEPENDENCIES
   rmagick
   rubocop
   selenium-webdriver
-  sidekiq (< 7)
-  sidekiq-cron
   solid_cable (~> 3.0)
   solid_queue (~> 1.1)
   spring
