@@ -8,3 +8,36 @@
 #     command: "SoftDeletedRecord.due.delete_all"
 #     priority: 2
 #     schedule: at 5am every day
+
+
+#################################
+### OLD SIDEKIQ JOB SCHEDULES ###
+#################################
+
+# dev_app_scan_job:
+#    cron: "30 10-20 * * *"
+#    class: "DevAppScanJob"
+
+# lobbying_scan_job:
+#    cron: "45 10-20 * * *"
+#    class: "LobbyingScanJob"
+
+# meeting_scan_job:
+#    cron: "0 6,10,14,16,20 * * *"
+#    class: "MeetingScanJob"
+
+# parcel_scanner:
+#    cron: "0 2 1,2,3 * *"
+#    class: "ParcelScanner"
+
+# zoning_scanner:
+#    cron: "0 2 1,2,3 * *"
+#    class: "ZoningScanner"
+
+# consultation_scanner:
+#    cron: "10 10-20 * * *"
+#    class: "ConsultationScanner"
+
+# traffic_camera_scrape_job:
+#    cron: "*/5 * * * *"
+#    class: "TrafficCameraScrapeJob"
