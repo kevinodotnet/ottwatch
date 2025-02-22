@@ -32,12 +32,6 @@ gem "stimulus-rails"
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 gem "jbuilder"
 
-# Use Redis adapter to run Action Cable in production
-# gem "redis", "~> 4.0"
-
-# Use Kredis to get higher-level data types in Redis [https://github.com/rails/kredis]
-# gem "kredis"
-
 # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
 # gem "bcrypt", "~> 3.1.7"
 
@@ -55,9 +49,6 @@ gem "image_processing"
 gem "mini_magick", "~> 4.13"
 
 gem "google-cloud-storage", require: false
-#gem "sidekiq"
-gem 'sidekiq', '<7'
-gem "sidekiq-cron"
 gem "xsv"
 gem "twitter"
 gem 'tzinfo-data'
