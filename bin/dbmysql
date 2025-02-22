@@ -1,0 +1,3 @@
+#!/bin/bash
+
+mysql -h $DB_HOST -u $DB_USER --password=$DB_PASS $DB_NAME
