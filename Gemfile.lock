@@ -412,6 +412,11 @@ GEM
     snaky_hash (2.0.1)
       hashie
       version_gem (~> 1.1, >= 1.1.1)
+    solid_cable (3.0.7)
+      actioncable (>= 7.2)
+      activejob (>= 7.2)
+      activerecord (>= 7.2)
+      railties (>= 7.2)
     spring (4.2.1)
     sprockets (4.2.1)
       concurrent-ruby (~> 1.0)
@@ -517,6 +522,7 @@ DEPENDENCIES
   selenium-webdriver
   sidekiq (< 7)
   sidekiq-cron
+  solid_cable (~> 3.0)
   spring
   sprockets-rails
   sqlite3 (~> 1.4)
