@@ -101,3 +101,5 @@ group :test do
 end
 
 gem "bugsnag", "~> 6.25"
+
+gem "solid_cable", "~> 3.0"
