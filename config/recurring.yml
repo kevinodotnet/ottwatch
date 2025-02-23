@@ -9,6 +9,28 @@
 #     priority: 2
 #     schedule: at 5am every day
 
+production:
+  dev_app_scan_job:
+    class: "DevAppScanJob"
+    schedule: "30 10-20 * * *"
+  lobbying_scan_job:
+    class: "LobbyingScanJob"
+    schedule: "45 10-20 * * *"
+  meeting_scan_job:
+    class: "MeetingScanJob"
+    schedule: "0 6,10,14,16,20 * * *"
+  parcel_scanner:
+    class: "ParcelScanner"
+    schedule: "0 2 1,2,3 * *"
+  zoning_scanner:
+    class: "ZoningScanner"
+    schedule: "0 2 1,2,3 * *"
+  consultation_scanner:
+    class: "ConsultationScanner"
+    schedule: "10 10-20 * * *"
+  traffic_camera_scrape_job:
+    schedule: "*/5 * * * *"
+
 
 #################################
 ### OLD SIDEKIQ JOB SCHEDULES ###
