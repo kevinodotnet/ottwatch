@@ -15,7 +15,7 @@ gem "sqlite3", "~> 1.4"
 gem "mysql2"
 
 # Use the Puma web server [https://github.com/puma/puma]
-gem "puma", "~> 5.6"
+gem "puma", "~> 6.6"
 
 # https://www.reddit.com/r/rails/comments/19de7ju/rails_official_guide_installation_not_working/
 gem "psych", "~> 4"
