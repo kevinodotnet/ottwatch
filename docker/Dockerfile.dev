@@ -11,4 +11,13 @@ FROM ottwatch-base
 # bundle config set --local path 'vendor/bundle'
 # bundle install
 # bin/rails server -b 0.0.0.0
-#
+
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get -y install mariadb-server
+
+# # MariaDB 10.6 to match production
+# RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get -y install curl
+# RUN curl -LsSO https://r.mariadb.com/downloads/mariadb_repo_setup
+# RUN chmod +x mariadb_repo_setup
+# # RUN sudo ./mariadb_repo_setup --mariadb-server-version="mariadb-10.6"
+# # RUN sudo apt update
+# # RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get -y install mariadb-server mariadb-backup
