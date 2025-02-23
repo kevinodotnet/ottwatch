@@ -16,6 +16,7 @@ sudo docker run \
   -e DB_NAME_V1=$DB_NAME_V1 \
   -e DB_PASS=$DB_PASS \
   -e DB_USER=$DB_USER \
+  -e SOLID_QUEUE_IN_PUMA=1 \
   -e GCS_KEYFILE=/infra/gcs-prodweb-service-account.json \
   -e GOOGLE_MAPS_API_KEY=$GOOGLE_MAPS_API_KEY \
   -e GOOGLE_WEB_APP_CLIENT_ID=$GOOGLE_WEB_APP_CLIENT_ID \
