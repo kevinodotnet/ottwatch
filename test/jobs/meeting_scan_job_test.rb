@@ -42,6 +42,21 @@ class MeetingScanJobTest < ActiveJob::TestCase
     end
   end
 
+  focus
+  test "fix document re-index regression" do
+    # Mysql2::Error: Record has changed since last read in table 'meeting_item_documents'
+    # https://app.bugsnag.com/self-488/ottwatch/errors/67bb744a1d0cb2222befe3d7?filters[event.since]=1h&filters[error.status]=open
+    # MeetingItemDocument.where(reference_id: (saved_docs - current_docs)).delete_all
+    m = {"title":"Planning Committee","reference_guid":"128fff38-faa9-4b07-a8cc-e13e88688f9d","meeting_time":"2022-09-08T09:30:00.000-05:00"}
+    VCR.use_cassette("#{class_name}_#{method_name}") do
+      assert_difference -> { MeetingItem.count }, 23 do
+        MeetingScanJob.perform_now(attrs: m)
+        
+        MeetingScanJob.perform_now(attrs: m)
+      end
+    end
+  end
+
   test "meeting items and docs are parsed; saved; not duplicated" do
     m = {"title":"Planning Committee","reference_guid":"128fff38-faa9-4b07-a8cc-e13e88688f9d","meeting_time":"2022-09-08T09:30:00.000-05:00"}
 
