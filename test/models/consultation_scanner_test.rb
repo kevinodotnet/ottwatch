@@ -9,10 +9,10 @@ class ConsultationScannerTest < ActiveSupport::TestCase
 
       # cherry pick attr tests
       c = Consultation.find_by_href("/beryl-gaffney-off-leash-dog-park")
-      assert_equal "Beryl Gaffney Off-Leash Dog Park", c.title
+      assert_equal "Beryl Gaffney Off-leash Dog Park", c.title
       assert_equal "archived", c.status
       assert_equal 1, c.announcements.count
-      expected = "New Consultation: Beryl Gaffney Off-Leash Dog Park"
+      expected = "New Consultation: Beryl Gaffney Off-leash Dog Park"
       assert_equal expected, c.announcements.first.message
 
       # confirm only two known states

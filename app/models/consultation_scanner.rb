@@ -25,7 +25,8 @@ class ConsultationScanner < ApplicationJob
       next unless d.attributes["class"]&.value
       next unless d.attributes["class"]&.value.split(" ").include?("project-tile")
       tile = Nokogiri::HTML(d.to_s)
-      title = tile.xpath('//div[@class="project-tile__meta"]/span[@class="project-tile__meta__name"]').first.children.first.to_s
+      title = tile.xpath("//body/div").first.attributes["data-name"].value.humanize
+      title = title.split.map(&:capitalize).join(' ')
       href = tile.xpath('//a[@class="project-tile__link"]').first.attributes["href"].value
       status = d.attributes["data-state"].value
       {
