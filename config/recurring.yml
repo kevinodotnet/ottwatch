@@ -1,13 +1,13 @@
 production:
   dev_app_scan_job:
     class: DevAppScanJob
-    schedule: "30 10-20 * * *"
+    schedule: "30 * * * *"
   lobbying_scan_job:
     class: LobbyingScanJob
     schedule: "45 10-20 * * *"
   meeting_scan_job:
     class: MeetingScanJob
-    schedule: "0 6,10,14,16,20 * * *"
+    schedule: "0 * * * *"
   parcel_scanner:
     class: ParcelScanner
     schedule: "0 2 1,2,3 * *"
@@ -16,7 +16,7 @@ production:
     schedule: "0 2 1,2,3 * *"
   consultation_scanner:
     class: ConsultationScanner
-    schedule: "10 10-20 * * *"
+    schedule: "10 * * * *"
   traffic_camera_scrape_job:
     class: TrafficCameraScrapeJob
     schedule: "*/5 * * * *"
