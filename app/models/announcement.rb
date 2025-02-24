@@ -3,7 +3,7 @@ class Announcement < ApplicationRecord
 
   def reference_context
     if reference.is_a?(Consultation)
-      reference.title
+      return reference.title
     end
     if reference.is_a?(DevApp::Entry)
       if addr = reference.addresses.first
