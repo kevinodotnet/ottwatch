@@ -96,3 +96,5 @@ gem "bugsnag", "~> 6.25"
 gem "solid_cable", "~> 3.0"
 
 gem "solid_queue", "~> 1.1"
+
+gem "bskyrb", github: "ShreyanJain9/bskyrb"

@@ -1,0 +1,100 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://bsky.social/xrpc/com.atproto.server.createSession
+    body:
+      encoding: UTF-8
+      string: '{"identifier":"ottwatch-test.bsky.social","password":"blkyure78re"}'
+    headers:
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 25 Feb 2025 05:21:19 GMT
+      Content-Type:
+      - application/json; charset=utf-8
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      X-Powered-By:
+      - Express
+      Access-Control-Allow-Origin:
+      - "*"
+      Ratelimit-Limit:
+      - '10'
+      Ratelimit-Remaining:
+      - '9'
+      Ratelimit-Reset:
+      - '1740547279'
+      Ratelimit-Policy:
+      - 10;w=86400
+      Etag:
+      - W/"5f6-tYSs8f9DoFJI5pzchdKqeL/BfMY"
+      Vary:
+      - Accept-Encoding
+    body:
+      encoding: ASCII-8BIT
+      string: '{"did":"did:plc:674vrlyznlzm5jxa6o6uzzq3","didDoc":{"@context":["https://www.w3.org/ns/did/v1","https://w3id.org/security/multikey/v1","https://w3id.org/security/suites/secp256k1-2019/v1"],"id":"did:plc:674vrlyznlzm5jxa6o6uzzq3","alsoKnownAs":["at://ottwatch-test.bsky.social"],"verificationMethod":[{"id":"did:plc:674vrlyznlzm5jxa6o6uzzq3#atproto","type":"Multikey","controller":"did:plc:674vrlyznlzm5jxa6o6uzzq3","publicKeyMultibase":"zQ3shuHJd2NyEtsc7NsnrU5h3RZuheUSENNU4wwo9kzG88JpC"}],"service":[{"id":"#atproto_pds","type":"AtprotoPersonalDataServer","serviceEndpoint":"https://mazegill.us-west.host.bsky.network"}]},"handle":"ottwatch-test.bsky.social","email":"kevinodotnet+ottwatch+bsky+test@gmail.com","emailConfirmed":false,"emailAuthFactor":false,"accessJwt":"eyJ0eXAiOiJhdCtqd3QiLCJhbGciOiJFUzI1NksifQ.eyJzY29wZSI6ImNvbS5hdHByb3RvLmFjY2VzcyIsInN1YiI6ImRpZDpwbGM6Njc0dnJseXpubHptNWp4YTZvNnV6enEzIiwiaWF0IjoxNzQwNDYwODc5LCJleHAiOjE3NDA0NjgwNzksImF1ZCI6ImRpZDp3ZWI6bWF6ZWdpbGwudXMtd2VzdC5ob3N0LmJza3kubmV0d29yayJ9.WJxIS_H1enR7aIo8X0G6pZuNe3dDXrh2RhR-wYSIOayHHHXho0XYI7OW9MqcezVpYkqc6BQcAsL7-3ea_V-GaA","refreshJwt":"eyJ0eXAiOiJyZWZyZXNoK2p3dCIsImFsZyI6IkVTMjU2SyJ9.eyJzY29wZSI6ImNvbS5hdHByb3RvLnJlZnJlc2giLCJzdWIiOiJkaWQ6cGxjOjY3NHZybHl6bmx6bTVqeGE2bzZ1enpxMyIsImF1ZCI6ImRpZDp3ZWI6YnNreS5zb2NpYWwiLCJqdGkiOiJ4QkI1OFdZclR5ekFQSUFLWklSVUdwcEk1MzduME1xMW9pbnhSMU4vdXpzIiwiaWF0IjoxNzQwNDYwODc5LCJleHAiOjE3NDgyMzY4Nzl9.wcZqN95ACWIXG6IpX0m-X8EMptU-CRu6aMhOl6JUmGjQMMbwFPaPtTvb9s8x5om9fVM4hbYBtdvNXfCKdmcRtA","active":true}'
+  recorded_at: Mon, 24 Feb 2025 00:00:00 GMT
+- request:
+    method: post
+    uri: https://bsky.social/xrpc/com.atproto.repo.createRecord
+    body:
+      encoding: UTF-8
+      string: '{"collection":"app.bsky.feed.post","$type":"app.bsky.feed.post","repo":"did:plc:674vrlyznlzm5jxa6o6uzzq3","record":{"$type":"app.bsky.feed.post","createdAt":"2025-02-24T00:00:00.000+00:00","text":"Hello
+        from bskyrb, link https://github.com/","facets":[{"$type":"app.bsky.richtext.facet","index":{"byteStart":24,"byteEnd":43},"features":[{"uri":"https://github.com//","$type":"app.bsky.richtext.facet#link"}]}]}}'
+    headers:
+      Content-Type:
+      - application/json
+      Authorization:
+      - Bearer eyJ0eXAiOiJhdCtqd3QiLCJhbGciOiJFUzI1NksifQ.eyJzY29wZSI6ImNvbS5hdHByb3RvLmFjY2VzcyIsInN1YiI6ImRpZDpwbGM6Njc0dnJseXpubHptNWp4YTZvNnV6enEzIiwiaWF0IjoxNzQwNDYwODc5LCJleHAiOjE3NDA0NjgwNzksImF1ZCI6ImRpZDp3ZWI6bWF6ZWdpbGwudXMtd2VzdC5ob3N0LmJza3kubmV0d29yayJ9.WJxIS_H1enR7aIo8X0G6pZuNe3dDXrh2RhR-wYSIOayHHHXho0XYI7OW9MqcezVpYkqc6BQcAsL7-3ea_V-GaA
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 25 Feb 2025 05:21:19 GMT
+      Content-Type:
+      - application/json; charset=utf-8
+      Content-Length:
+      - '276'
+      Connection:
+      - keep-alive
+      X-Powered-By:
+      - Express
+      Access-Control-Allow-Origin:
+      - "*"
+      Ratelimit-Limit:
+      - '3000'
+      Ratelimit-Remaining:
+      - '2998'
+      Ratelimit-Reset:
+      - '1740461134'
+      Ratelimit-Policy:
+      - 3000;w=300
+      Vary:
+      - Accept-Encoding
+    body:
+      encoding: UTF-8
+      string: '{"uri":"at://did:plc:674vrlyznlzm5jxa6o6uzzq3/app.bsky.feed.post/3liy4kbkwvb2z","cid":"bafyreidie6uziynjgyx45fd2xinmrf3w6iniudm3prrfbecckmvtl2ry44","commit":{"cid":"bafyreihxsyi3d36q6n4l2tocljuxre27yokgkxcqaacfwnfcjaruhy76iq","rev":"3liy4kbl7oj2z"},"validationStatus":"valid"}'
+  recorded_at: Mon, 24 Feb 2025 00:00:00 GMT
+recorded_with: VCR 6.3.1
