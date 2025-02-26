@@ -20,3 +20,6 @@ production:
   traffic_camera_scrape_job:
     class: TrafficCameraScrapeJob
     schedule: "*/5 * * * *"
+  syndication_job:
+    class: SyndicationJob
+    schedule: "* * * * *"
