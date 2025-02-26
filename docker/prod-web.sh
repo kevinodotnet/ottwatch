@@ -10,6 +10,7 @@ sudo docker run \
   -d \
   --network $DOCKER_NETWORK \
   --ip 10.50.1.13 \
+  -e BLUE_SKY_PASSWORD=$BLUE_SKY_PASSWORD \
   -e BUGSNAG_KEY=$BUGSNAG_KEY \
   -e DB_HOST=$DB_HOST \
   -e DB_NAME=$DB_NAME \
