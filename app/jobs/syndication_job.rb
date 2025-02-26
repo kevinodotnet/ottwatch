@@ -7,7 +7,7 @@ class SyndicationJob < ApplicationJob
     msg = a.message
     msg << " (#{a.reference_context})" if a.reference_context
     msg << " #{a.reference_link}"
-    # MastedonClient.update(msg)
+    BlueSky.new.skeet(msg)
   end
 
   def perform
@@ -20,7 +20,7 @@ class SyndicationJob < ApplicationJob
   private
 
   def announcements
-    last_id = GlobalControl.get(GLOBAL_CONFIG_KEY) || 0
+    last_id = GlobalControl.get(GLOBAL_CONFIG_KEY) || Announcement.last.id
     Announcement.where('id > ?', last_id).order(:id).limit(5)
   end
 end

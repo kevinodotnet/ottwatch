@@ -6,6 +6,7 @@ class SyndicationJobTest < ActiveJob::TestCase
   end
 
   test "syndication job updates last_id pointer" do
+    SyndicationJob.any_instance.expects(:syndicate).times(1)
     assert_changes -> { GlobalControl.get("syndication_job_last_id") }, from: nil, to: Announcement.last.id.to_s do
       SyndicationJob.perform_now
     end
@@ -17,15 +18,4 @@ class SyndicationJobTest < ActiveJob::TestCase
     SyndicationJob.any_instance.expects(:syndicate).times(0)
     SyndicationJob.perform_now
   end
-
-  # test "syndication job sends one post per announcement" do
-  #   # MastedonClient.expects(:update).times(Announcement.count)
-  #   SyndicationJob.perform_now
-  # end
-
-  # test "messages include links back to the reference" do
-  #   expected = "A first message (3020 HAWTHORNE Road) http://localhost:33000/devapp/D07-05-16-0003"
-  #   # MastedonClient.expects(:update).with(expected)
-  #   SyndicationJob.new.syndicate(Announcement.first)
-  # end
 end
