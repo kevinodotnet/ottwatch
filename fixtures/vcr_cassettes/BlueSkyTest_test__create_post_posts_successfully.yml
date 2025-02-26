@@ -1,0 +1,101 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://bsky.social/xrpc/com.atproto.server.createSession
+    body:
+      encoding: UTF-8
+      string: '{"identifier":"ottwatch-test.bsky.social","password":"blkyure78re"}'
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Wed, 26 Feb 2025 02:03:34 GMT
+      Content-Type:
+      - application/json; charset=utf-8
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      X-Powered-By:
+      - Express
+      Access-Control-Allow-Origin:
+      - "*"
+      Ratelimit-Limit:
+      - '10'
+      Ratelimit-Remaining:
+      - '9'
+      Ratelimit-Reset:
+      - '1740621814'
+      Ratelimit-Policy:
+      - 10;w=86400
+      Etag:
+      - W/"5f6-wtZ5goXF7oTwc5LbkvAewhHZupQ"
+      Vary:
+      - Accept-Encoding
+    body:
+      encoding: ASCII-8BIT
+      string: '{"did":"did:plc:674vrlyznlzm5jxa6o6uzzq3","didDoc":{"@context":["https://www.w3.org/ns/did/v1","https://w3id.org/security/multikey/v1","https://w3id.org/security/suites/secp256k1-2019/v1"],"id":"did:plc:674vrlyznlzm5jxa6o6uzzq3","alsoKnownAs":["at://ottwatch-test.bsky.social"],"verificationMethod":[{"id":"did:plc:674vrlyznlzm5jxa6o6uzzq3#atproto","type":"Multikey","controller":"did:plc:674vrlyznlzm5jxa6o6uzzq3","publicKeyMultibase":"zQ3shuHJd2NyEtsc7NsnrU5h3RZuheUSENNU4wwo9kzG88JpC"}],"service":[{"id":"#atproto_pds","type":"AtprotoPersonalDataServer","serviceEndpoint":"https://mazegill.us-west.host.bsky.network"}]},"handle":"ottwatch-test.bsky.social","email":"kevinodotnet+ottwatch+bsky+test@gmail.com","emailConfirmed":false,"emailAuthFactor":false,"accessJwt":"eyJ0eXAiOiJhdCtqd3QiLCJhbGciOiJFUzI1NksifQ.eyJzY29wZSI6ImNvbS5hdHByb3RvLmFjY2VzcyIsInN1YiI6ImRpZDpwbGM6Njc0dnJseXpubHptNWp4YTZvNnV6enEzIiwiaWF0IjoxNzQwNTM1NDE0LCJleHAiOjE3NDA1NDI2MTQsImF1ZCI6ImRpZDp3ZWI6bWF6ZWdpbGwudXMtd2VzdC5ob3N0LmJza3kubmV0d29yayJ9.Io1MnNXTvLRErJvcILtEr0PJYC-Ui-VrsIbj9oycOs6r9iBkqJb6KEqiGa5KgZOcnwCLPtp6x8pKzdCselDHrQ","refreshJwt":"eyJ0eXAiOiJyZWZyZXNoK2p3dCIsImFsZyI6IkVTMjU2SyJ9.eyJzY29wZSI6ImNvbS5hdHByb3RvLnJlZnJlc2giLCJzdWIiOiJkaWQ6cGxjOjY3NHZybHl6bmx6bTVqeGE2bzZ1enpxMyIsImF1ZCI6ImRpZDp3ZWI6YnNreS5zb2NpYWwiLCJqdGkiOiJteDVzblpvNGNqYVdVeGd2QmFPTnp1YVY4Wm05bXZNMkJqczJsNkZ2SzZrIiwiaWF0IjoxNzQwNTM1NDE0LCJleHAiOjE3NDgzMTE0MTR9.3wVfbCkubDkeKZLiDZXamIof7_cvsdTNnV5q2W6kesinqXLX9VostyK3ZSYT3xj3BKdZInCKQYL3EwzVH7Z3ug","active":true}'
+  recorded_at: Wed, 26 Feb 2025 00:00:00 GMT
+- request:
+    method: post
+    uri: https://bsky.social/xrpc/com.atproto.repo.createRecord
+    body:
+      encoding: UTF-8
+      string: '{"repo":"did:plc:674vrlyznlzm5jxa6o6uzzq3","collection":"app.bsky.feed.post","record":{"text":"A
+        test message for BlueSkyTest_test_#create_post_posts_successfully at 20250226_000000,
+        link https://ottwatch.ca","createdAt":"2025-02-26T00:00:00+00:00","langs":["en"],"facets":[{"index":{"byteStart":93,"byteEnd":112},"features":[{"uri":"https://ottwatch.ca","$type":"app.bsky.richtext.facet#link"}]}]}}'
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+      Content-Type:
+      - application/json
+      Authorization:
+      - Bearer eyJ0eXAiOiJhdCtqd3QiLCJhbGciOiJFUzI1NksifQ.eyJzY29wZSI6ImNvbS5hdHByb3RvLmFjY2VzcyIsInN1YiI6ImRpZDpwbGM6Njc0dnJseXpubHptNWp4YTZvNnV6enEzIiwiaWF0IjoxNzQwNTM1NDE0LCJleHAiOjE3NDA1NDI2MTQsImF1ZCI6ImRpZDp3ZWI6bWF6ZWdpbGwudXMtd2VzdC5ob3N0LmJza3kubmV0d29yayJ9.Io1MnNXTvLRErJvcILtEr0PJYC-Ui-VrsIbj9oycOs6r9iBkqJb6KEqiGa5KgZOcnwCLPtp6x8pKzdCselDHrQ
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Wed, 26 Feb 2025 02:03:34 GMT
+      Content-Type:
+      - application/json; charset=utf-8
+      Content-Length:
+      - '276'
+      Connection:
+      - keep-alive
+      X-Powered-By:
+      - Express
+      Access-Control-Allow-Origin:
+      - "*"
+      Ratelimit-Limit:
+      - '3000'
+      Ratelimit-Remaining:
+      - '2998'
+      Ratelimit-Reset:
+      - '1740535712'
+      Ratelimit-Policy:
+      - 3000;w=300
+      Vary:
+      - Accept-Encoding
+    body:
+      encoding: UTF-8
+      string: '{"uri":"at://did:plc:674vrlyznlzm5jxa6o6uzzq3/app.bsky.feed.post/3lj2bxlulnv2n","cid":"bafyreihupb6wvnorseobnle527o4vctzwjs5ube6bwyy2sdgmu34khdhki","commit":{"cid":"bafyreic6o7lvleoe4gzmnmcm4jhkanrfpungo4thq35kdspfqtrvdbhydq","rev":"3lj2bxluuh52n"},"validationStatus":"valid"}'
+  recorded_at: Wed, 26 Feb 2025 00:00:00 GMT
+recorded_with: VCR 6.3.1
