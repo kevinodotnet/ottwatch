@@ -5,6 +5,7 @@
 sudo docker run \
   --rm \
 	--network $DOCKER_NETWORK \
+  -e BLUE_SKY_PASSWORD=$BLUE_SKY_PASSWORD \
   -e BUGSNAG_KEY=$BUGSNAG_KEY \
 	-e DB_HOST=$DB_HOST \
 	-e DB_NAME=$DB_NAME \
