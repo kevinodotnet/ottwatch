@@ -1,19 +1,35 @@
-<div style="margin-top: 10px; margin-bottom: 10px;">
-  <h2>Upcoming Meetings</h2>
-</div>
-<div class="owrows">
-  <% @meetings.each do |m| %>
-    <% meeting_url = "/meeting/#{m.reference_id}#{m.reference_guid}" %>
-    <div class="row">
-      <div class="col-sm-3">
-        <%= link_to(m.start_time.in_time_zone("America/New_York").strftime("%b %d %H:%M"), meeting_url) %>
-      </div>
-      <div class="col-md-9">
-        <%= m.committee.name %>
-      </div>
+<div class="row">
+<div class="col-sm-6">
+  <div style="margin-top: 10px; margin-bottom: 10px;">
+    <h2>Announcements</h2>
+  </div>
+  <div class="owrows">
+    <ul>
+      <% @announcements.each do |a| %>
+        <li><%= link_to(a.message, a.reference_link) %></li>
+      <% end %>
+      <li><%= link_to("... see all", "/announcement/index") %></li>
+    </ul>
+  </div>
+  </div>
+  <div class="col-sm-6">
+    <div style="margin-top: 10px; margin-bottom: 10px;">
+      <h2>Meetings</h2>
     </div>
-  <% end %>
+    <div class="owrows">
+        <ul>
+      <% @meetings.each do |m| %>
+        <% meeting_url = "/meeting/#{m.reference_id}#{m.reference_guid}" %>
+          <li>
+          <%= link_to(m.start_time.in_time_zone("America/New_York").strftime("%b %d @ %H:%M #{m.committee.name}"), meeting_url) %>
+          </li>
+      <% end %>
+      <li><%= link_to("... see all", "/meeting/index") %></li>
+      </ul>
+    </div>
+  </div>
 </div>
+
 
 <div style="margin-top: 10px; margin-bottom: 10px;">
   <h2>Features</h2>

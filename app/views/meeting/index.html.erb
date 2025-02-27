@@ -1,17 +1,36 @@
 <div class="owrows">
   <% unless params["before_id"] %>
-  <h1>Upcoming Meetings</h1>
-  <% @upcoming.each do |m| %>
-    <% meeting_url = "/meeting/#{m.reference_id}#{m.reference_guid}" %>
-    <div class="row">
-      <div class="col-sm-3">
-        <%= link_to(m.start_time.in_time_zone("America/New_York").strftime("%b %d %H:%M, %Y"), meeting_url) %>
+    <h1>Today's Meetings</h1>
+    <% if @today.none? %>
+      <div class="row">
+        <div class="col-sm-12">
+          No meetings today
+        </div>
       </div>
-      <div class="col-md-9">
-        <%= m.committee.name %>
+    <% end %>
+    <% @today.each do |m| %>
+      <% meeting_url = "/meeting/#{m.reference_id}#{m.reference_guid}" %>
+      <div class="row">
+        <div class="col-sm-3">
+          <%= link_to(m.start_time.in_time_zone("America/New_York").strftime("%b %d %H:%M, %Y"), meeting_url) %>
+        </div>
+        <div class="col-md-9">
+          <%= m.committee.name %>
+        </div>
       </div>
-    </div>
-  <% end %>
+    <% end %>
+    <h1>Upcoming Meetings</h1>
+    <% @upcoming.each do |m| %>
+      <% meeting_url = "/meeting/#{m.reference_id}#{m.reference_guid}" %>
+      <div class="row">
+        <div class="col-sm-3">
+          <%= link_to(m.start_time.in_time_zone("America/New_York").strftime("%b %d %H:%M, %Y"), meeting_url) %>
+        </div>
+        <div class="col-md-9">
+          <%= m.committee.name %>
+        </div>
+      </div>
+    <% end %>
   <% end %>
 
   <h1>Past Meetings</h1>
