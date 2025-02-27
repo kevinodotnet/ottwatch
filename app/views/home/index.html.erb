@@ -6,7 +6,13 @@
   <div class="owrows">
     <ul>
       <% @announcements.each do |a| %>
-        <li><%= link_to(a.message, a.reference_link) %></li>
+        <li>
+          <%
+          message = a.message
+          message = [a.message, a.reference_context].join(" ") if a.reference_type == "LobbyingUndertaking"
+          %>
+          <%= link_to(message, a.reference_link) %>
+        </li>
       <% end %>
       <li><%= link_to("... see all", "/announcement/index") %></li>
     </ul>
