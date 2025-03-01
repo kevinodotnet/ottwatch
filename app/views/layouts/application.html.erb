@@ -15,8 +15,7 @@
     <link href='https://unpkg.com/maplibre-gl@3.3.1/dist/maplibre-gl.css' rel='stylesheet' />
     <%= auto_discovery_link_tag :rss, "https://ottwatch.ca/home/index.rss" %>
 
-    <style>
-    </style>
+    <script src="https://kit.fontawesome.com/cdb3542d2a.js" crossorigin="anonymous"></script>
 
     <% if Rails.env.production? %>
       <script async src="https://www.googletagmanager.com/gtag/js?id=UA-6324294-24"></script>
@@ -32,7 +31,7 @@
   <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
       <div class="container">
-        <a class="navbar-brand" href="/">OttWatch</a>
+        <a class="navbar-brand" href="/">ottwatch</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -59,9 +58,11 @@
             <li class="nav-item">
               <a class="nav-link" href="https://github.com/kevinodotnet/ottwatch">Contribute</a>
             </li>
+            <!--
             <li class="nav-item">
               <a class="nav-link" href="https://shop.ottwatch.ca/">Shop</a>
             </li>
+            -->
             <!--
             <li class="nav-item">
               <a class="nav-link" href="/team/index">Team</a>
@@ -83,10 +84,15 @@
       <%= yield %>
 
       <div class="row ow_footer" style="">
-        <div class="col-6">
+        <div class="col-4">
           <%= image_tag "logo_50.png" %>
         </div>
-        <div class="col-6" style="text-align: right;">
+        <div class="col-4">
+          <center>
+          <a href="https://bsky.app/profile/ottwatch.bsky.social"><i class="fa-brands fa-square-bluesky fa-3x"></i><br/>@ottwatch</a>
+          </center>
+        </div>
+        <div class="col-4" style="text-align: right;">
           By <a href="https://kevino.ca">Kevin O'Donnell</a><br/>
           <% if user_signed_in? %>
             <%= link_to "Sign Out", destroy_user_session_path, method: :delete %>
