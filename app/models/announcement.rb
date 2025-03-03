@@ -1,6 +1,22 @@
 class Announcement < ApplicationRecord
   belongs_to :reference, polymorphic: true
 
+  # TODO: this should be in an ERB helper?
+  def font_awesome_class
+    case reference_type
+    when "Consultation"
+      "fa-solid fa-square-poll-horizontal"
+    when "DevApp::Entry"
+      "fa-solid fa-building"
+    when "LobbyingUndertaking"
+      "fa-solid fa-handshake"
+    when "Meeting"
+      "fa-solid fa-calendar"
+    else
+      "fa-solid fa-question"
+    end
+  end
+
   def reference_context
     if reference.is_a?(Consultation)
       return reference.title

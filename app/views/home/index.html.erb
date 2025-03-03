@@ -11,6 +11,7 @@
           message = a.message
           message = [a.message, a.reference_context].join(" ") if a.reference_type == "LobbyingUndertaking"
           %>
+          <i class="<%= a.font_awesome_class %>"></i>
           <%= link_to(message, a.reference_link) %>
         </li>
       <% end %>
