@@ -1,6 +1,15 @@
 require "test_helper"
 
 class LobbyingScanJobTest < ActiveJob::TestCase
+  test "all details of a lobbying undertaking are captured" do
+    VCR.use_cassette("#{class_name}_#{method_name}", :match_requests_on => [:body]) do
+      assert_changes(->{LobbyingUndertaking.count}) do
+        LobbyingScanJob.perform_now(date: "2025-02-21")
+      end
+    end
+    assert LobbyingUndertaking.all.to_a.all?{|u| u.attributes.values.all?{|v| v.presence}}
+  end
+
   test "specific dates can be scraped" do
     VCR.use_cassette("#{class_name}_#{method_name}", :match_requests_on => [:body]) do
       LobbyingScanJob.perform_now(date: "2022-04-12")

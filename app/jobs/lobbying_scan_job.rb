@@ -26,6 +26,8 @@ class LobbyingScanJob < ApplicationJob
       lobbyist_name: e["name"],
       lobbyist_position: e["position"],
       lobbyist_reg_type: e["reg_type"],
+      client: e["client"],
+      client_org: e["client_org"],
     }
     LobbyingUndertaking.transaction do
       undertaking = LobbyingUndertaking.where(attr).first || LobbyingUndertaking.new(**attr, view_details: e[:params].to_json)
