@@ -25,13 +25,13 @@
   </div>
 </div>
 
+<div class="row">
+  <div class="col-sm-4"><b>Who was lobbied?</b></div>
+  <div class="col-sm-4"><b>Their title</b></div>
+  <div class="col-sm-2"><b>When?</nobr></b></div>
+  <div class="col-sm-2"><b>By?</b></div>
+</div>
 <% @undertaking.activities.order(activity_date: :desc).each do |a| %>
-  <div class="row">
-    <div class="col-sm-4"><b>Who was lobbied?</b></div>
-    <div class="col-sm-4"><b>Their title</b></div>
-    <div class="col-sm-2"><b>When?</nobr></b></div>
-    <div class="col-sm-2"><b>By?</b></div>
-  </div>
   <div class="row">
     <div class="col-sm-4"><%= a.lobbied_name %></div>
     <div class="col-sm-4"><%= a.lobbied_title %></div>
