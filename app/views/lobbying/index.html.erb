@@ -4,9 +4,7 @@
 <% @undertakings.each do |u| %>
   <div class="row">
     <div class="col-sm-3">
-      <b><%= u.lobbyist_name %></b><br/>
-      <%= u.lobbyist_position %><br/>
-      <%= u.lobbyist_reg_type %>
+      <b><%= u.client %></b> (by <%= u.lobbyist_name %>)
     </div>
     <div class="col-sm-7">
       <b><%= link_to u.subject, "/lobbying/#{u.id}" %></b>: <%= u.issue %>
