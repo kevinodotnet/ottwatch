@@ -2,7 +2,8 @@ require 'test_helper'
 
 class TrafficCameraTest < ActiveSupport::TestCase
     setup do
-    @camera = TrafficCamera.create!(reference_id: 37, camera_number: 8, name: "Belfast & St. Laurent", camera_owner: "CITY", lat: 45.411858, lon: -75.630376)
+      @camera = TrafficCamera.create!(reference_id: 37, camera_number: 8, name: "Belfast & St. Laurent", camera_owner: "CITY", lat: 45.411858, lon: -75.630376)
+      system("sqlite3 #{TrafficCamera::CAPTURE_FOLDER}/camera_archive.sqlar -Ac")
     end
 
 
@@ -39,6 +40,17 @@ class TrafficCameraTest < ActiveSupport::TestCase
             end
         end
         capture = @camera.captures.last
+    end
+
+    test "#captures inserts a row in the SQLite archive" do
+        VCR.use_cassette("#{class_name}_#{method_name}", :match_requests_on => [:body]) do
+          image_data = @camera.capture_image
+          SQLite3::Database.open(TrafficCamera::SQLITE_ARCHIVE) do |db|
+            assert_equal db.execute(" select count(1) from sqlar ").first.first, 1
+          end
+          db_data = @camera.image_from_sqlite_archive(image_data[:time])
+          assert_equal image_data[:image], db_data
+        end
     end
 
     private

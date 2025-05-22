@@ -1,5 +1,6 @@
 class TrafficCamera < ApplicationRecord
     CAPTURE_FOLDER = (ENV["LOCAL_STORAGE_FOLDER"] || Rails.root.join("tmp").to_s) + "/camera"
+    SQLITE_ARCHIVE = "#{CAPTURE_FOLDER}/camera_archive.sqlar"
 
     def self.cameras
         @cameras ||= begin
@@ -33,7 +34,35 @@ class TrafficCamera < ApplicationRecord
         capture_filename = "#{camera_path}/#{id}_#{time_now}.jpg"
         FileUtils.mkdir_p(camera_path)
         File.binwrite(capture_filename, response)
-        response
+        save_image_to_sqlite_archive(time: time_now, image: response)
+        {
+            time: time_now,
+            camera_id: id,
+            filename: capture_filename,
+            image: response
+        }
+    end
+
+    def save_image_to_sqlite_archive(time:, image:)
+        filename = "#{id}_#{time}.jpg"
+        file_data = nil # File.binread(filename)
+        file_stat = nil # File.stat(filename)
+
+        SQLite3::Database.open(SQLITE_ARCHIVE) do |db|
+            db.execute(
+                "INSERT INTO sqlar (name, mode, mtime, sz, data) VALUES (?, ?, ?, ?, ?)",
+                [filename, file_stat&.mode, file_stat&.mtime.to_i, image.size, image]
+            )
+        end
+    end
+
+    def image_from_sqlite_archive(time_ms)
+        SQLite3::Database.open(SQLITE_ARCHIVE) do |db|
+            db.execute("SELECT data FROM sqlar WHERE name = ?", ["#{id}_#{time_ms}.jpg"]) do |row|
+                return row.first
+            end
+        end
+        nil
     end
 
     def capture_jpg(time_ms)
