@@ -44,7 +44,6 @@ class TrafficCameraTest < ActiveSupport::TestCase
     private
 
     def captured_files
-        capture_folder = TrafficCamera.capture_folder
-        Dir.glob(File.join(capture_folder, '**', '*')).select { |f| File.file?(f) }.sort
+        Dir.glob(File.join(TrafficCamera::CAPTURE_FOLDER, '**', '*')).select { |f| File.file?(f) }.sort
     end
 end
