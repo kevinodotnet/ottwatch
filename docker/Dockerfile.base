@@ -19,8 +19,7 @@ RUN apt-get update && \
         rbenv \
         poppler-utils \
         imagemagick \
-        libmagick++-dev \
-        sqlite3
+        libmagick++-dev
 
 RUN groupadd -g 2200 -r app && \
     useradd -u 2200 --no-log-init -r -g app app && \
