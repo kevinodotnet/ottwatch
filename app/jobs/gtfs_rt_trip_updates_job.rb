@@ -21,12 +21,13 @@ class GtfsRtTripUpdatesJob < ApplicationJob
     year = current_time.strftime("%Y")
     month = current_time.strftime("%m")
     day = current_time.strftime("%d")
+    hour = current_time.strftime("%H")
     date_string = current_time.strftime("%Y%m%d")
     time_string = current_time.strftime("%H%M%S")
     timestamp = current_time.to_i
     
     storage_base = ENV["LOCAL_STORAGE_FOLDER"] || Rails.root.join("storage")
-    gtfs_rt_folder = File.join(storage_base, "gtfs-rt", year, month, day)
+    gtfs_rt_folder = File.join(storage_base, "gtfs-rt", year, month, day, hour)
     
     # Create directory if it doesn't exist
     FileUtils.mkdir_p(gtfs_rt_folder)

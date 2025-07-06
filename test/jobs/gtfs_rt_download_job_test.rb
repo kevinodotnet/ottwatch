@@ -101,11 +101,12 @@ class GtfsRtDownloadJobTest < ActiveJob::TestCase
     GtfsRtDownloadJob.perform_now
 
     # Verify file was downloaded
-    current_date = Date.current
-    year = current_date.strftime("%Y")
-    month = current_date.strftime("%m")
-    day = current_date.strftime("%d")
-    gtfs_rt_folder = File.join(@test_storage_folder, "gtfs-rt", year, month, day)
+    current_time = Time.current
+    year = current_time.strftime("%Y")
+    month = current_time.strftime("%m")
+    day = current_time.strftime("%d")
+    hour = current_time.strftime("%H")
+    gtfs_rt_folder = File.join(@test_storage_folder, "gtfs-rt", year, month, day, hour)
     
     assert Dir.exist?(gtfs_rt_folder), "GTFS-RT folder should be created"
     
@@ -122,11 +123,12 @@ class GtfsRtDownloadJobTest < ActiveJob::TestCase
     GtfsRtDownloadJob.perform_now
 
     # Find the downloaded JSON file
-    current_date = Date.current
-    year = current_date.strftime("%Y")
-    month = current_date.strftime("%m")
-    day = current_date.strftime("%d")
-    gtfs_rt_folder = File.join(@test_storage_folder, "gtfs-rt", year, month, day)
+    current_time = Time.current
+    year = current_time.strftime("%Y")
+    month = current_time.strftime("%m")
+    day = current_time.strftime("%d")
+    hour = current_time.strftime("%H")
+    gtfs_rt_folder = File.join(@test_storage_folder, "gtfs-rt", year, month, day, hour)
     json_file = Dir.glob(File.join(gtfs_rt_folder, "*.json")).first
 
     # Test that it's valid JSON
@@ -160,28 +162,30 @@ class GtfsRtDownloadJobTest < ActiveJob::TestCase
   test "creates proper directory structure" do
     GtfsRtDownloadJob.perform_now
 
-    current_date = Date.current
-    year = current_date.strftime("%Y")
-    month = current_date.strftime("%m")
-    day = current_date.strftime("%d")
-    expected_path = File.join(@test_storage_folder, "gtfs-rt", year, month, day)
-    assert Dir.exist?(expected_path), "Should create year/month/day directory structure"
+    current_time = Time.current
+    year = current_time.strftime("%Y")
+    month = current_time.strftime("%m")
+    day = current_time.strftime("%d")
+    hour = current_time.strftime("%H")
+    expected_path = File.join(@test_storage_folder, "gtfs-rt", year, month, day, hour)
+    assert Dir.exist?(expected_path), "Should create year/month/day/hour directory structure"
   end
 
   test "filename follows vehicle_positions_YYYYMMDD_HHMMSS format" do
     GtfsRtDownloadJob.perform_now
 
-    current_date = Date.current
-    year = current_date.strftime("%Y")
-    month = current_date.strftime("%m")
-    day = current_date.strftime("%d")
-    gtfs_rt_folder = File.join(@test_storage_folder, "gtfs-rt", year, month, day)
+    current_time = Time.current
+    year = current_time.strftime("%Y")
+    month = current_time.strftime("%m")
+    day = current_time.strftime("%d")
+    hour = current_time.strftime("%H")
+    gtfs_rt_folder = File.join(@test_storage_folder, "gtfs-rt", year, month, day, hour)
     
     json_files = Dir.glob(File.join(gtfs_rt_folder, "*.json"))
     json_filename = File.basename(json_files.first)
     
     # Should match pattern: vehicle_positions_YYYYMMDD_HHMMSS.json
-    date_string = current_date.strftime("%Y%m%d")
+    date_string = current_time.strftime("%Y%m%d")
     assert_match(/^vehicle_positions_#{date_string}_\d{6}\.json$/, json_filename, "Filename should follow vehicle_positions_YYYYMMDD_HHMMSS.json format")
   end
 
@@ -208,11 +212,12 @@ class GtfsRtDownloadJobTest < ActiveJob::TestCase
     GtfsRtDownloadJob.perform_now
 
     # Find and read the downloaded file
-    current_date = Date.current
-    year = current_date.strftime("%Y")
-    month = current_date.strftime("%m")
-    day = current_date.strftime("%d")
-    gtfs_rt_folder = File.join(@test_storage_folder, "gtfs-rt", year, month, day)
+    current_time = Time.current
+    year = current_time.strftime("%Y")
+    month = current_time.strftime("%m")
+    day = current_time.strftime("%d")
+    hour = current_time.strftime("%H")
+    gtfs_rt_folder = File.join(@test_storage_folder, "gtfs-rt", year, month, day, hour)
     json_file = Dir.glob(File.join(gtfs_rt_folder, "*.json")).first
     
     saved_content = File.read(json_file)
