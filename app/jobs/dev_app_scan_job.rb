@@ -8,7 +8,7 @@ class DevAppScanJob < ApplicationJob
       enqueued = Set.new
       DevApp::Scanner.latest.each do |d|
         next if enqueued.include?(d[:app_number])
-        DevAppScanJob.set(wait: rand(0..3600).seconds).perform_later(app_number: d[:app_number])
+        DevAppScanJob.set(wait: rand(0..7200).seconds).perform_later(app_number: d[:app_number])
         enqueued << d[:app_number]
       end
     end

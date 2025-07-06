@@ -10,7 +10,7 @@ class LobbyingScanJob < ApplicationJob
   def perform(date: nil)
     if date.nil?
       # (-5500..-2400).each { |i| LobbyingScanJob.perform_later(date: Date.today + i.days) }
-      (-HISTORY_DAYS..0).each { |i| LobbyingScanJob.set(wait: rand(0..3600).seconds).perform_later(date: Date.today + i.days) }
+      (-HISTORY_DAYS..0).each { |i| LobbyingScanJob.set(wait: rand(0..7200).seconds).perform_later(date: Date.today + i.days) }
     else
       lobbying_for_date(date.to_date).each do |e|
         perform_entry(e)
