@@ -12,8 +12,8 @@ class GtfsDownloadJob < ApplicationJob
     current_date = Date.current
     year = current_date.strftime("%Y")
     month = current_date.strftime("%m")
-    day = current_time.strftime("%d")
-    date_string = current_time.strftime("%Y%m%d")
+    day = current_date.strftime("%d")
+    date_string = current_date.strftime("%Y%m%d")
     epoch_time = Time.current.to_i
     
     storage_base = ENV["LOCAL_STORAGE_FOLDER"] || Rails.root.join("storage")

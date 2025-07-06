@@ -126,7 +126,8 @@ class GtfsDownloadJobTest < ActiveJob::TestCase
     current_date = Date.current
     year = current_date.strftime("%Y")
     month = current_date.strftime("%m")
-    gtfs_folder = File.join(@test_storage_folder, "gtfs", year, month)
+    day = current_date.strftime("%d")
+    gtfs_folder = File.join(@test_storage_folder, "gtfs", year, month, day)
     
     zip_files = Dir.glob(File.join(gtfs_folder, "*.zip"))
     zip_filename = File.basename(zip_files.first)
