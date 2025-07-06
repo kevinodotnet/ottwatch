@@ -120,7 +120,7 @@ class GtfsDownloadJobTest < ActiveJob::TestCase
     assert Dir.exist?(expected_path), "Should create year/month directory structure"
   end
 
-  test "filename follows YYYYMMDD_EPOCH format" do
+  test "filename follows static_gtfs_YYYYMMDD_EPOCH format" do
     GtfsDownloadJob.perform_now
 
     current_date = Date.current
@@ -132,9 +132,9 @@ class GtfsDownloadJobTest < ActiveJob::TestCase
     zip_files = Dir.glob(File.join(gtfs_folder, "*.zip"))
     zip_filename = File.basename(zip_files.first)
     
-    # Should match pattern: YYYYMMDD_EPOCH.zip
+    # Should match pattern: static_gtfs_YYYYMMDD_EPOCH.zip
     date_string = current_date.strftime("%Y%m%d")
-    assert_match(/^#{date_string}_\d+\.zip$/, zip_filename, "Filename should follow YYYYMMDD_EPOCH.zip format")
+    assert_match(/^static_gtfs_#{date_string}_\d+\.zip$/, zip_filename, "Filename should follow static_gtfs_YYYYMMDD_EPOCH.zip format")
   end
 
   private

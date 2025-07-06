@@ -23,7 +23,7 @@ class GtfsDownloadJob < ApplicationJob
     FileUtils.mkdir_p(gtfs_folder)
     
     # Download file
-    zip_filename = "#{date_string}_#{epoch_time}.zip"
+    zip_filename = "static_gtfs_#{date_string}_#{epoch_time}.zip"
     zip_path = File.join(gtfs_folder, zip_filename)
     
     Rails.logger.info "Downloading GTFS files from #{gtfs_url}"

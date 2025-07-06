@@ -4,6 +4,7 @@ class GtfsRtDownloadJob < ApplicationJob
   def perform
     require 'net/http'
     require 'fileutils'
+    require 'zlib'
     
     # GTFS-RT API URL
     api_url = "https://nextrip-public-api.azure-api.net/octranspo/gtfs-rt-vp/beta/v1/VehiclePositions?format=json"
@@ -33,7 +34,7 @@ class GtfsRtDownloadJob < ApplicationJob
     FileUtils.mkdir_p(gtfs_rt_folder)
     
     # Download file
-    json_filename = "vehicle_positions_#{date_string}_#{time_string}.json"
+    json_filename = "vehicle_positions_#{date_string}_#{time_string}.json.gz"
     json_path = File.join(gtfs_rt_folder, json_filename)
     
     Rails.logger.info "Downloading GTFS-RT vehicle positions from #{api_url}"
@@ -50,10 +51,10 @@ class GtfsRtDownloadJob < ApplicationJob
       response = http.request(request)
       
       if response.code == '200'
-        File.open(json_path, 'w') do |file|
-          file.write(response.body)
+        Zlib::GzipWriter.open(json_path) do |gz|
+          gz.write(response.body)
         end
-        Rails.logger.info "✓ GTFS-RT vehicle positions downloaded successfully"
+        Rails.logger.info "✓ GTFS-RT vehicle positions downloaded and compressed successfully"
         Rails.logger.info "File size: #{File.size(json_path)} bytes"
       else
         Rails.logger.error "✗ Failed to download GTFS-RT data. HTTP Status: #{response.code}"

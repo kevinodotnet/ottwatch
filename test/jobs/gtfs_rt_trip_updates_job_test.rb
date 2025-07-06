@@ -1,5 +1,6 @@
 require "test_helper"
 require "webmock/minitest"
+require "zlib"
 
 VCR.turn_off!
 WebMock.enable!
@@ -120,30 +121,31 @@ class GtfsRtTripUpdatesJobTest < ActiveJob::TestCase
     
     assert Dir.exist?(gtfs_rt_folder), "GTFS-RT folder should be created"
     
-    # Find the downloaded JSON file
-    json_files = Dir.glob(File.join(gtfs_rt_folder, "trip_updates_*.json"))
-    assert_equal 1, json_files.length, "Should have downloaded exactly one trip updates JSON file"
+    # Find the downloaded compressed JSON file
+    json_files = Dir.glob(File.join(gtfs_rt_folder, "trip_updates_*.json.gz"))
+    assert_equal 1, json_files.length, "Should have downloaded exactly one trip updates compressed JSON file"
     
     json_file = json_files.first
-    assert File.exist?(json_file), "Downloaded trip updates JSON file should exist"
-    assert File.size(json_file) > 0, "Downloaded trip updates JSON file should not be empty"
+    assert File.exist?(json_file), "Downloaded trip updates compressed JSON file should exist"
+    assert File.size(json_file) > 0, "Downloaded trip updates compressed JSON file should not be empty"
   end
 
   test "downloaded file contains valid JSON" do
     GtfsRtTripUpdatesJob.perform_now
 
-    # Find the downloaded JSON file
+    # Find the downloaded compressed JSON file
     current_time = Time.current
     year = current_time.strftime("%Y")
     month = current_time.strftime("%m")
     day = current_time.strftime("%d")
     hour = current_time.strftime("%H")
     gtfs_rt_folder = File.join(@test_storage_folder, "gtfs", year, month, day, hour)
-    json_file = Dir.glob(File.join(gtfs_rt_folder, "trip_updates_*.json")).first
+    json_file = Dir.glob(File.join(gtfs_rt_folder, "trip_updates_*.json.gz")).first
 
-    # Test that it's valid JSON
+    # Test that it's valid compressed JSON
     assert_nothing_raised do
-      json_data = JSON.parse(File.read(json_file))
+      json_content = Zlib::GzipReader.open(json_file) { |gz| gz.read }
+      json_data = JSON.parse(json_content)
       assert json_data.is_a?(Hash), "JSON should be a hash"
       assert json_data.key?("Header"), "JSON should contain Header"
       assert json_data.key?("Entity"), "JSON should contain Entity array"
@@ -181,7 +183,7 @@ class GtfsRtTripUpdatesJobTest < ActiveJob::TestCase
     assert Dir.exist?(expected_path), "Should create year/month/day/hour directory structure"
   end
 
-  test "filename follows trip_updates_YYYYMMDD_HHMMSS format" do
+  test "filename follows trip_updates_YYYYMMDD_HHMMSS.json.gz format" do
     GtfsRtTripUpdatesJob.perform_now
 
     current_time = Time.current
@@ -191,12 +193,12 @@ class GtfsRtTripUpdatesJobTest < ActiveJob::TestCase
     hour = current_time.strftime("%H")
     gtfs_rt_folder = File.join(@test_storage_folder, "gtfs", year, month, day, hour)
     
-    json_files = Dir.glob(File.join(gtfs_rt_folder, "trip_updates_*.json"))
+    json_files = Dir.glob(File.join(gtfs_rt_folder, "trip_updates_*.json.gz"))
     json_filename = File.basename(json_files.first)
     
-    # Should match pattern: trip_updates_YYYYMMDD_HHMMSS.json
+    # Should match pattern: trip_updates_YYYYMMDD_HHMMSS.json.gz
     date_string = current_time.strftime("%Y%m%d")
-    assert_match(/^trip_updates_#{date_string}_\d{6}\.json$/, json_filename, "Filename should follow trip_updates_YYYYMMDD_HHMMSS.json format")
+    assert_match(/^trip_updates_#{date_string}_\d{6}\.json\.gz$/, json_filename, "Filename should follow trip_updates_YYYYMMDD_HHMMSS.json.gz format")
   end
 
   test "includes required headers in API request" do
@@ -207,20 +209,21 @@ class GtfsRtTripUpdatesJobTest < ActiveJob::TestCase
       headers: { 'Ocp-Apim-Subscription-Key' => 'test_subscription_key' }
   end
 
-  test "saves response body correctly" do
+  test "saves response body correctly and compresses it" do
     GtfsRtTripUpdatesJob.perform_now
 
-    # Find and read the downloaded file
+    # Find and read the downloaded compressed file
     current_time = Time.current
     year = current_time.strftime("%Y")
     month = current_time.strftime("%m")
     day = current_time.strftime("%d")
     hour = current_time.strftime("%H")
     gtfs_rt_folder = File.join(@test_storage_folder, "gtfs", year, month, day, hour)
-    json_file = Dir.glob(File.join(gtfs_rt_folder, "trip_updates_*.json")).first
+    json_file = Dir.glob(File.join(gtfs_rt_folder, "trip_updates_*.json.gz")).first
     
-    saved_content = File.read(json_file)
-    assert_equal @mock_json_response, saved_content, "Saved content should match the API response"
+    # Decompress and verify content
+    saved_content = Zlib::GzipReader.open(json_file) { |gz| gz.read }
+    assert_equal @mock_json_response, saved_content, "Decompressed content should match the API response"
   end
 
   test "handles different response status codes" do
