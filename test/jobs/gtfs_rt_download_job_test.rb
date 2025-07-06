@@ -8,32 +8,78 @@ class GtfsRtDownloadJobTest < ActiveJob::TestCase
     ENV["LOCAL_STORAGE_FOLDER"] = @test_storage_folder.to_s
     ENV["GTFS_KEY_1"] = "test_subscription_key"
     
-    # Mock JSON response data
+    # Mock JSON response data matching actual OC Transpo GTFS-RT structure
     @mock_json_response = {
-      "header" => {
-        "gtfsRealtimeVersion" => "2.0",
-        "incrementality" => "FULL_DATASET",
-        "timestamp" => "1751773800"
+      "Header" => {
+        "GtfsRealtimeVersion" => "2.0",
+        "HasGtfsRealtimeVersion" => true,
+        "Incrementality" => 0,
+        "HasIncrementality" => true,
+        "Timestamp" => 1751774274,
+        "HasTimestamp" => true
       },
-      "entity" => [
+      "Entity" => [
         {
-          "id" => "1001",
-          "vehicle" => {
-            "trip" => {
-              "tripId" => "trip_123",
-              "routeId" => "95"
+          "Id" => "1",
+          "HasId" => true,
+          "IsDeleted" => false,
+          "HasIsDeleted" => false,
+          "TripUpdate" => nil,
+          "Vehicle" => {
+            "Trip" => {
+              "TripId" => "23282070",
+              "HasTripId" => true,
+              "RouteId" => "61",
+              "HasRouteId" => true,
+              "DirectionId" => 0,
+              "HasDirectionId" => false,
+              "StartTime" => "",
+              "HasStartTime" => false,
+              "StartDate" => "",
+              "HasStartDate" => false,
+              "ScheduleRelationship" => 0,
+              "HasScheduleRelationship" => true
             },
-            "position" => {
-              "latitude" => 45.4215,
-              "longitude" => -75.6972,
-              "bearing" => 180.0,
-              "speed" => 15.5
+            "Vehicle" => {
+              "Id" => "6474",
+              "HasId" => true,
+              "Label" => "",
+              "HasLabel" => false,
+              "LicensePlate" => "",
+              "HasLicensePlate" => false,
+              "WheelchairAccessible" => 0,
+              "HasWheelchairAccessible" => false
             },
-            "timestamp" => "1751773800",
-            "vehicle" => {
-              "id" => "1001"
-            }
-          }
+            "Position" => {
+              "Latitude" => 45.30957,
+              "HasLatitude" => true,
+              "Longitude" => -75.90692,
+              "HasLongitude" => true,
+              "Bearing" => 52,
+              "HasBearing" => true,
+              "Odometer" => 0,
+              "HasOdometer" => false,
+              "Speed" => 0,
+              "HasSpeed" => true
+            },
+            "CurrentStopSequence" => 0,
+            "HasCurrentStopSequence" => false,
+            "StopId" => "",
+            "HasStopId" => false,
+            "CurrentStatus" => 2,
+            "HasCurrentStatus" => false,
+            "Timestamp" => 1751774261,
+            "HasTimestamp" => true,
+            "CongestionLevel" => 0,
+            "HasCongestionLevel" => false,
+            "OccupancyStatus" => 0,
+            "HasOccupancyStatus" => false,
+            "OccupancyPercentage" => 0,
+            "HasOccupancyPercentage" => false,
+            "MultiCarriageDetails" => []
+          },
+          "Alert" => nil,
+          "Shape" => nil
         }
       ]
     }.to_json
@@ -87,8 +133,8 @@ class GtfsRtDownloadJobTest < ActiveJob::TestCase
     assert_nothing_raised do
       json_data = JSON.parse(File.read(json_file))
       assert json_data.is_a?(Hash), "JSON should be a hash"
-      assert json_data.key?("header"), "JSON should contain header"
-      assert json_data.key?("entity"), "JSON should contain entity array"
+      assert json_data.key?("Header"), "JSON should contain Header"
+      assert json_data.key?("Entity"), "JSON should contain Entity array"
     end
   end
 
