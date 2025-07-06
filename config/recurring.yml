@@ -23,3 +23,6 @@ production:
   syndication_job:
     class: SyndicationJob
     schedule: "* * * * *"
+  gtfs_download_job:
+    class: GtfsDownloadJob
+    schedule: "0 5 * * *"
