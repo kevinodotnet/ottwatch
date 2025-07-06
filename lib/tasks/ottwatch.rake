@@ -110,4 +110,62 @@ namespace :ottwatch do
       end
     end
   end
+
+  desc "Move TrafficCamera image file to correct directory structure"
+  task :move_camera_file, [:filename] => :environment do |t, args|
+    filename = args[:filename]
+    
+    unless filename
+      puts "Usage: rake ottwatch:move_camera_file[path/to/file.jpg]"
+      exit 1
+    end
+    
+    unless File.exist?(filename)
+      puts "Error: File '#{filename}' does not exist"
+      exit 1
+    end
+    
+    basename = File.basename(filename, '.jpg')
+    
+    # Parse ID_TIMESTAMP format
+    match = basename.match(/^(\d+)_(\d+)$/)
+    unless match
+      puts "Error: Filename '#{basename}' does not match expected format ID_TIMESTAMP"
+      exit 1
+    end
+    
+    camera_id = match[1]
+    timestamp = match[2].to_i
+    
+    # Convert timestamp to date
+    begin
+      date = Time.at(timestamp / 1000.0)
+    rescue ArgumentError
+      puts "Error: Invalid timestamp '#{timestamp}'"
+      exit 1
+    end
+    
+    # Build target directory path
+    capture_folder = ENV["LOCAL_STORAGE_FOLDER"] || Rails.root.join("tmp")
+    date_path = date.strftime("%Y/%m/%d")
+    target_dir = File.join(capture_folder, "camera", date_path, camera_id)
+    target_file = File.join(target_dir, "#{basename}.jpg")
+    
+    # Create directory if it doesn't exist
+    FileUtils.mkdir_p(target_dir)
+    
+    # Move the file
+    if File.exist?(target_file)
+      puts "Warning: Target file '#{target_file}' already exists"
+      puts "Do you want to overwrite? (y/N)"
+      response = STDIN.gets.chomp.downcase
+      unless response == 'y' || response == 'yes'
+        puts "Cancelled"
+        exit 0
+      end
+    end
+    
+    FileUtils.mv(filename, target_file)
+    puts "Moved '#{filename}' to '#{target_file}'"
+  end
 end
