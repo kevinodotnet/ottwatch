@@ -116,7 +116,7 @@ class GtfsRtTripUpdatesJobTest < ActiveJob::TestCase
     month = current_time.strftime("%m")
     day = current_time.strftime("%d")
     hour = current_time.strftime("%H")
-    gtfs_rt_folder = File.join(@test_storage_folder, "gtfs-rt", year, month, day, hour)
+    gtfs_rt_folder = File.join(@test_storage_folder, "gtfs", year, month, day, hour)
     
     assert Dir.exist?(gtfs_rt_folder), "GTFS-RT folder should be created"
     
@@ -138,7 +138,7 @@ class GtfsRtTripUpdatesJobTest < ActiveJob::TestCase
     month = current_time.strftime("%m")
     day = current_time.strftime("%d")
     hour = current_time.strftime("%H")
-    gtfs_rt_folder = File.join(@test_storage_folder, "gtfs-rt", year, month, day, hour)
+    gtfs_rt_folder = File.join(@test_storage_folder, "gtfs", year, month, day, hour)
     json_file = Dir.glob(File.join(gtfs_rt_folder, "trip_updates_*.json")).first
 
     # Test that it's valid JSON
@@ -177,7 +177,7 @@ class GtfsRtTripUpdatesJobTest < ActiveJob::TestCase
     month = current_time.strftime("%m")
     day = current_time.strftime("%d")
     hour = current_time.strftime("%H")
-    expected_path = File.join(@test_storage_folder, "gtfs-rt", year, month, day, hour)
+    expected_path = File.join(@test_storage_folder, "gtfs", year, month, day, hour)
     assert Dir.exist?(expected_path), "Should create year/month/day/hour directory structure"
   end
 
@@ -189,7 +189,7 @@ class GtfsRtTripUpdatesJobTest < ActiveJob::TestCase
     month = current_time.strftime("%m")
     day = current_time.strftime("%d")
     hour = current_time.strftime("%H")
-    gtfs_rt_folder = File.join(@test_storage_folder, "gtfs-rt", year, month, day, hour)
+    gtfs_rt_folder = File.join(@test_storage_folder, "gtfs", year, month, day, hour)
     
     json_files = Dir.glob(File.join(gtfs_rt_folder, "trip_updates_*.json"))
     json_filename = File.basename(json_files.first)
@@ -216,7 +216,7 @@ class GtfsRtTripUpdatesJobTest < ActiveJob::TestCase
     month = current_time.strftime("%m")
     day = current_time.strftime("%d")
     hour = current_time.strftime("%H")
-    gtfs_rt_folder = File.join(@test_storage_folder, "gtfs-rt", year, month, day, hour)
+    gtfs_rt_folder = File.join(@test_storage_folder, "gtfs", year, month, day, hour)
     json_file = Dir.glob(File.join(gtfs_rt_folder, "trip_updates_*.json")).first
     
     saved_content = File.read(json_file)

@@ -12,11 +12,12 @@ class GtfsDownloadJob < ApplicationJob
     current_date = Date.current
     year = current_date.strftime("%Y")
     month = current_date.strftime("%m")
+    day = current_time.strftime("%d")
     date_string = current_date.strftime("%Y%m%d")
     epoch_time = Time.current.to_i
     
     storage_base = ENV["LOCAL_STORAGE_FOLDER"] || Rails.root.join("storage")
-    gtfs_folder = File.join(storage_base, "gtfs", year, month)
+    gtfs_folder = File.join(storage_base, "gtfs", year, month, day)
     
     # Create directory if it doesn't exist
     FileUtils.mkdir_p(gtfs_folder)

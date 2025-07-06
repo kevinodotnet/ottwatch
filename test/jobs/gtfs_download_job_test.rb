@@ -28,7 +28,8 @@ class GtfsDownloadJobTest < ActiveJob::TestCase
     current_date = Date.current
     year = current_date.strftime("%Y")
     month = current_date.strftime("%m")
-    gtfs_folder = File.join(@test_storage_folder, "gtfs", year, month)
+    day = current_date.strftime("%d")
+    gtfs_folder = File.join(@test_storage_folder, "gtfs", year, month, day)
     
     assert Dir.exist?(gtfs_folder), "GTFS folder should be created"
     
@@ -48,7 +49,8 @@ class GtfsDownloadJobTest < ActiveJob::TestCase
     current_date = Date.current
     year = current_date.strftime("%Y")
     month = current_date.strftime("%m")
-    gtfs_folder = File.join(@test_storage_folder, "gtfs", year, month)
+    day = current_date.strftime("%d")
+    gtfs_folder = File.join(@test_storage_folder, "gtfs", year, month, day)
     zip_file = Dir.glob(File.join(gtfs_folder, "*.zip")).first
 
     # Test that it's a valid zip file by attempting to read it
@@ -68,7 +70,8 @@ class GtfsDownloadJobTest < ActiveJob::TestCase
     current_date = Date.current
     year = current_date.strftime("%Y")
     month = current_date.strftime("%m")
-    gtfs_folder = File.join(@test_storage_folder, "gtfs", year, month)
+    day = current_date.strftime("%d")
+    gtfs_folder = File.join(@test_storage_folder, "gtfs", year, month, day)
     zip_file = Dir.glob(File.join(gtfs_folder, "*.zip")).first
 
     require 'zip'
