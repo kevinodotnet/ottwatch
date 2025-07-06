@@ -29,3 +29,6 @@ production:
   gtfs_rt_download_job:
     class: GtfsRtDownloadJob
     schedule: "*/3 * * * *"
+  gtfs_rt_trip_updates_job:
+    class: GtfsRtTripUpdatesJob
+    schedule: "*/3 * * * *"
