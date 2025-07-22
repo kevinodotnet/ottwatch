@@ -50,7 +50,6 @@ gem "mini_magick", "~> 4.13"
 
 gem "google-cloud-storage", require: false
 gem "xsv"
-gem "twitter"
 gem 'tzinfo-data'
 gem 'devise'
 # gem 'omniauth'
