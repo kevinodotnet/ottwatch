@@ -27,6 +27,7 @@ RUN groupadd -g 2200 -r app && \
     chown app:app /home/app && \
     adduser app sudo
 
-WORKDIR /app/ottwatch
-
 RUN gem install bundler
+
+USER app
+WORKDIR /home/app
