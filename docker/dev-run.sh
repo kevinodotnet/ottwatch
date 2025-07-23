@@ -27,6 +27,6 @@ if [ -z "${port}" ]; then
   port=33000
 fi
 
-docker run --name $instance -p $port:3000 -v `pwd`/..:/ottwatch -i -t ottwatch-dev || \
+docker run --name $instance -p $port:3000 -v `pwd`/..:/app/ottwatch -i -t ottwatch-dev || \
   docker start -i $instance
 
