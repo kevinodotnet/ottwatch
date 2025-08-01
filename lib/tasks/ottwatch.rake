@@ -155,7 +155,8 @@ namespace :ottwatch do
       
       # Move the file
       if File.exist?(target_file)
-        puts "Warning: Target file '#{target_file}' already exists, skipping"
+        puts "rm '#{filename}'"
+        FileUtils.rm(filename)
         next
       end
       
