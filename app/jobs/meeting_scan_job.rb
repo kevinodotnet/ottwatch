@@ -15,10 +15,12 @@ class MeetingScanJob < ApplicationJob
   def scan_main_list
 
     url = URI("https://pub-ottawa.escribemeetings.com/MeetingsCalendarView.aspx/GetAllMeetings")
+    url = URI("https://pub-ottawa.escribemeetings.com/MeetingsCalendarView.aspx/GetCalendarMeetings")
     req = Net::HTTP::Post.new(url)
     req['Content-Type'] = 'application/json'
+    req['User-Agent'] = 'OttWatch/1.0'
     # FIXME: lame date hard coding
-    req.body = "{calendarStartDate: '2024-01-01T00:00:00-05:00', calendarEndDate: '2025-12-01T00:00:00-05:00'}"
+    req.body = "{'calendarStartDate':'2024-01-01T00:00:00-04:00','calendarEndDate':'2026-12-01T00:00:00-04:00'}"
 
     http = Net::HTTP.new(url.host, url.port)
     http.use_ssl = true
@@ -36,7 +38,7 @@ class MeetingScanJob < ApplicationJob
         reference_guid: m["ID"],
         meeting_time: m["StartDate"].in_time_zone('Eastern Time (US & Canada)')
       }
-      MeetingScanJob.set(wait: rand(0..7200).seconds).perform_later(attrs: attrs)
+      MeetingScanJob.perform_later(attrs: attrs)
     end
   end
 
@@ -95,7 +97,12 @@ class MeetingScanJob < ApplicationJob
     meeting_time = attrs[:meeting_time].to_time
     title = attrs[:title]
 
-    data = Net::HTTP.get(URI("https://pub-ottawa.escribemeetings.com/Meeting.aspx?Id=#{guid}&Agenda=Agenda&lang=English"))
+    url = URI("https://pub-ottawa.escribemeetings.com/Meeting.aspx?Id=#{guid}&Agenda=Agenda&lang=English")
+    req = Net::HTTP::Get.new(url)
+    req['User-Agent'] = 'OttWatch/1.0'
+    http = Net::HTTP.new(url.host, url.port)
+    http.use_ssl = true
+    data = http.request(req).body
     doc = Nokogiri::HTML(data)
 
     items = if elements_with_class(doc, 'SelectableItem').any?
