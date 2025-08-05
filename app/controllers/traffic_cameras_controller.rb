@@ -30,6 +30,7 @@ class TrafficCamerasController < ApplicationController
             name: camera.name,
             camera_number: camera.camera_number,
             camera_owner: camera.camera_owner,
+            current_image_url: camera.current_image_url,
             url: url_for(controller: 'traffic_cameras', action: 'show', id: camera.id)
           }
         }

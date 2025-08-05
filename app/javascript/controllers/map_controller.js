@@ -93,7 +93,11 @@ export default class extends Controller {
 
     const popupContent = this.generatePopupContent(properties);
 
-    new maplibregl.Popup()
+    new maplibregl.Popup({
+      maxWidth: '300px',
+      closeButton: true,
+      closeOnClick: false
+    })
       .setLngLat(coordinates)
       .setHTML(popupContent)
       .addTo(this.map);
@@ -110,6 +114,12 @@ export default class extends Controller {
       
       if (targetName === 'viewDetails') {
         element.href = properties.url;
+      } else if (targetName === 'currentImage') {
+        // Handle image elements
+        const propertyValue = properties.current_image_url || properties.currentImageUrl;
+        if (propertyValue) {
+          element.src = propertyValue;
+        }
       } else {
         // Map common property names
         const propertyValue = properties[targetName] || 
