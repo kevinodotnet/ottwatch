@@ -1,14 +1,13 @@
 <div data-map-target="popupTemplate" style="display: none;">
   <div style="width: 260px; max-width: 260px; overflow: hidden; box-sizing: border-box;">
     <div style="position: relative; width: 100%; height: 140px; overflow: hidden; border-radius: 8px 8px 0 0;">
-      <img data-map-popup-target="currentImage" style="width: 100%; height: 100%; object-fit: cover; display: block;" alt="Camera view">
+      <a href="#" data-map-popup-target="imageLink" style="display: block; width: 100%; height: 100%; cursor: pointer;">
+        <img data-map-popup-target="currentImage" style="width: 100%; height: 100%; object-fit: cover; display: block;" alt="Camera view">
+      </a>
     </div>
     <div style="padding: 8px; background: white; border-radius: 0 0 8px 8px;">
       <h5 style="margin: 0 0 4px 0; font-size: 0.9rem; font-weight: bold; color: #333;" data-map-popup-target="name"></h5>
       <h6 style="margin: 0 0 6px 0; font-size: 0.75rem; color: #666;">Camera #<span data-map-popup-target="camera_number"></span></h6>
-      <p style="margin: 0 0 8px 0;">
-        <span style="display: inline-block; padding: 2px 6px; background: #6c757d; color: white; border-radius: 3px; font-size: 0.7rem;" data-map-popup-target="camera_owner"></span>
-      </p>
       <a href="#" style="display: inline-block; padding: 4px 8px; background: #007bff; color: white; text-decoration: none; border-radius: 4px; font-size: 0.75rem;" data-map-popup-target="viewDetails">View Camera</a>
     </div>
   </div>

@@ -13,6 +13,14 @@ export default class extends Controller {
 
   connect() {
     this.initMap()
+    this.openPopups = new Set()
+    this.startImageUpdateInterval()
+  }
+
+  disconnect() {
+    if (this.imageUpdateInterval) {
+      clearInterval(this.imageUpdateInterval)
+    }
   }
 
   initMap() {
@@ -93,7 +101,7 @@ export default class extends Controller {
 
     const popupContent = this.generatePopupContent(properties);
 
-    new maplibregl.Popup({
+    const popup = new maplibregl.Popup({
       maxWidth: '300px',
       closeButton: true,
       closeOnClick: false
@@ -101,6 +109,21 @@ export default class extends Controller {
       .setLngLat(coordinates)
       .setHTML(popupContent)
       .addTo(this.map);
+
+    // Track popup for image updates if it has a camera
+    if (properties.camera_number) {
+      const popupData = {
+        popup: popup,
+        cameraNumber: properties.camera_number,
+        baseImageUrl: properties.current_image_url?.split('?')[0]
+      };
+      this.openPopups.add(popupData);
+
+      // Remove from tracking when popup is closed
+      popup.on('close', () => {
+        this.openPopups.delete(popupData);
+      });
+    }
   }
 
   generatePopupContent(properties) {
@@ -112,7 +135,7 @@ export default class extends Controller {
     popupTargets.forEach(element => {
       const targetName = element.dataset.mapPopupTarget;
       
-      if (targetName === 'viewDetails') {
+      if (targetName === 'viewDetails' || targetName === 'imageLink') {
         element.href = properties.url;
       } else if (targetName === 'currentImage') {
         // Handle image elements
@@ -141,6 +164,32 @@ export default class extends Controller {
 
   snakeToCamel(str) {
     return str.replace(/_([a-z])/g, (match, letter) => letter.toUpperCase());
+  }
+
+  startImageUpdateInterval() {
+    this.imageUpdateInterval = setInterval(() => {
+      this.updatePopupImages();
+    }, 10000); // Update every 10 seconds
+  }
+
+  updatePopupImages() {
+    this.openPopups.forEach(popupData => {
+      const { popup, cameraNumber, baseImageUrl } = popupData;
+      
+      if (popup.isOpen() && baseImageUrl) {
+        const newTimems = Date.now();
+        const newImageUrl = `${baseImageUrl}?id=${cameraNumber}&timems=${newTimems}`;
+        
+        // Find and update the image in the popup
+        const popupElement = popup.getElement();
+        if (popupElement) {
+          const imageElement = popupElement.querySelector('[data-map-popup-target="currentImage"]');
+          if (imageElement) {
+            imageElement.src = newImageUrl;
+          }
+        }
+      }
+    });
   }
 
   applyFilters() {
