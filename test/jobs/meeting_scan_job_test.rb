@@ -60,8 +60,8 @@ class MeetingScanJobTest < ActiveJob::TestCase
   end
 
   test "no argument job inhales the meeting index and enqueues subsequent jobs" do
-    MeetingScanJob.expects(:perform_later).at_least(2) # fails if there are fewer than 2 meetings with published HTML agendas at time of test
-    # MeetingScanJob.expects(:scan_past_meetings).at_least(10).returns([]) # ensure fan-out code that checks past meetings for 10+ meeting types happens
+    MeetingScanJob.expects(:set).with(wait: instance_of(ActiveSupport::Duration)).returns(MeetingScanJob).at_least(10)
+    MeetingScanJob.expects(:perform_later).at_least(10)
     VCR.use_cassette("#{class_name}_#{method_name}") do
       MeetingScanJob.perform_now
     end
