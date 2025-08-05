@@ -38,7 +38,7 @@ class MeetingScanJob < ApplicationJob
         reference_guid: m["ID"],
         meeting_time: m["StartDate"].in_time_zone('Eastern Time (US & Canada)')
       }
-      MeetingScanJob.set(wait: rand(0..7200).seconds).perform_later(attrs: attrs)
+      MeetingScanJob.perform_later(attrs: attrs)
     end
   end
 
