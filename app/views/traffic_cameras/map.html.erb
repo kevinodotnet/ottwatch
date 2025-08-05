@@ -1,0 +1,22 @@
+<% content_for(:html_title, "Camera Map") %>
+<div class="container-fluid" data-controller="map"
+     data-map-initial-lat-value="<%= @initial_lat %>"
+     data-map-initial-lon-value="<%= @initial_lon %>"
+     data-map-data-url-value="<%= traffic_cameras_map_data_path %>"
+     data-map-single-point-value="false">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Traffic Cameras</h1>
+    <div class="btn-group" role="group" aria-label="View toggle">
+      <%= link_to "List", traffic_cameras_path, class: "btn btn-outline-primary" %>
+      <%= link_to "Map", traffic_cameras_map_path, class: "btn btn-outline-primary active" %>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12">
+      <div data-map-target="mapContainer" style="width: 100%; height: 600px;"></div>
+    </div>
+  </div>
+
+  <%= render partial: 'map_popup' %>
+</div>
