@@ -103,19 +103,34 @@ export default class extends Controller {
     const template = this.popupTemplateTarget.cloneNode(true);
     template.style.display = 'block';
 
-    const appNumberEl = template.querySelector('[data-map-popup-target="appNumber"]');
-    const appTypeEl = template.querySelector('[data-map-popup-target="appType"]');
-    const statusEl = template.querySelector('[data-map-popup-target="status"]');
-    const descriptionEl = template.querySelector('[data-map-popup-target="description"]');
-    const viewDetailsEl = template.querySelector('[data-map-popup-target="viewDetails"]');
-
-    appNumberEl.textContent = properties.app_number;
-    appTypeEl.textContent = properties.app_type;
-    statusEl.textContent = properties.status;
-    descriptionEl.textContent = properties.description;
-    viewDetailsEl.href = properties.url;
+    // Generic popup content population based on data attributes
+    const popupTargets = template.querySelectorAll('[data-map-popup-target]');
+    popupTargets.forEach(element => {
+      const targetName = element.dataset.mapPopupTarget;
+      
+      if (targetName === 'viewDetails') {
+        element.href = properties.url;
+      } else {
+        // Map common property names
+        const propertyValue = properties[targetName] || 
+                            properties[this.camelToSnake(targetName)] ||
+                            properties[this.snakeToCamel(targetName)];
+        
+        if (propertyValue !== undefined) {
+          element.textContent = propertyValue;
+        }
+      }
+    });
 
     return template.innerHTML;
+  }
+
+  camelToSnake(str) {
+    return str.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`);
+  }
+
+  snakeToCamel(str) {
+    return str.replace(/_([a-z])/g, (match, letter) => letter.toUpperCase());
   }
 
   applyFilters() {

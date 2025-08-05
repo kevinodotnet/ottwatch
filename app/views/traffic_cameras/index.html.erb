@@ -1,4 +1,14 @@
 <% content_for(:html_title, "Cameras") %>
+<div class="container-fluid">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Traffic Cameras</h1>
+    <div class="btn-group" role="group" aria-label="View toggle">
+      <%= link_to "List", traffic_cameras_path, class: "btn btn-outline-primary active" %>
+      <%= link_to "Map", traffic_cameras_map_path, class: "btn btn-outline-primary" %>
+    </div>
+  </div>
+</div>
+
 <div class="camera-grid">
   <% @traffic_cameras.each do |camera| %>
     <%= link_to traffic_camera_path(camera), class: "camera-item" do %>

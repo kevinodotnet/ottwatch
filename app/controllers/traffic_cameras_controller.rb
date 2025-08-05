@@ -7,6 +7,38 @@ class TrafficCamerasController < ApplicationController
     @traffic_camera = TrafficCamera.find(params[:id])
   end
 
+  def map
+    ottawa_city_hall = Coordinates.new(45.420906, -75.689374)
+    @initial_lat = ottawa_city_hall.lat
+    @initial_lon = ottawa_city_hall.lon
+  end
+
+  def map_data
+    geojson = {
+      type: "FeatureCollection",
+      features: TrafficCamera.all.filter_map do |camera|
+        next unless camera.lat && camera.lon
+
+        {
+          type: "Feature",
+          geometry: {
+            type: "Point",
+            coordinates: [camera.lon, camera.lat],
+          },
+          properties: {
+            id: camera.id,
+            name: camera.name,
+            camera_number: camera.camera_number,
+            camera_owner: camera.camera_owner,
+            url: url_for(controller: 'traffic_cameras', action: 'show', id: camera.id)
+          }
+        }
+      end
+    }
+
+    render json: geojson
+  end
+
   def capture
     # params: { id: '1010' }
     # params: { time_ms: '1717234234' }
