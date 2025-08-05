@@ -29,5 +29,8 @@ RUN groupadd -g 2200 -r app && \
 
 RUN gem install bundler
 
-USER app
-WORKDIR /home/app
+# clone into /ottwatch and run bundle; speeding up all other image
+RUN git clone https://github.com/kevinodotnet/ottwatch.git --single-branch
+WORKDIR /ottwatch
+# RUN bundle config set --local path '/vendor/bundle'
+RUN bundle install
