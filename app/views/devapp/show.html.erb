@@ -73,7 +73,7 @@
             <% @entry.documents.each do |document| %>
               <li class="list-group-item">
                 <%= link_to(document.name.gsub(@entry.app_number, "").strip, document.url, target: "_blank") %>
-                <% unless %w(200 302).include?(document.state) %>
+                <% unless %w(200 302 307).include?(document.state) %>
                   <span class="badge bg-danger">Missing/broken document: <%= document.state %></span>
                 <% end %>
               </li>
