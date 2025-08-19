@@ -1,0 +1,71 @@
+# This workflow uses actions that are not certified by GitHub.  They are
+# provided by a third-party and are governed by separate terms of service,
+# privacy policy, and support documentation.
+#
+# This workflow will install a prebuilt Ruby version, install dependencies, and
+# run tests and linters.
+name: "Ruby on Rails CI"
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    # services:
+    #   mysql:
+    #     image: mysql:5.7
+    #     env:
+    #       MYSQL_ALLOW_EMPTY_PASSWORD: yes
+    #       MYSQL_DATABASE: ottwatch_test
+    #     ports:
+    #       - 3306
+    #     options: >-
+    #       --health-cmd="mysqladmin ping"
+    #       --health-interval=10s
+    #       --health-timeout=5s
+    #       --health-retries=3    
+    env:
+      RAILS_ENV: test
+      DATABASE_URL: "mysql2://localhost/ottwatch_test"
+      DB_DATABASE: ottwatch_test
+      DB_USER: root
+      DB_PASSWORD: root
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      # Add or replace dependency steps here
+      - name: Install Ruby and gems2
+        uses: ruby/setup-ruby@55283cc23133118229fd3f97f9336ee23a179fcf # v1.146.0
+        with:
+          bundler-cache: true
+      # Add or replace database setup steps here
+      - name: Start MySQL2
+        run: |
+          sudo /etc/init.d/mysql start
+          mysql -e "CREATE DATABASE IF NOT EXISTS $DB_DATABASE;" -u$DB_USER -p$DB_PASSWORD
+          mysql -e "ALTER USER '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASSWORD';" -u$DB_USER -p$DB_PASSWORD
+          mysql -e "FLUSH PRIVILEGES;" -u$DB_USER -p$DB_PASSWORD
+      - name: Set up database schema2
+        run: bin/rails db:schema:load
+      # Add or replace test runners here
+      - name: Run tests
+        run: bin/rake
+
+  # lint:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v3
+  #     - name: Install Ruby and gems
+  #       uses: ruby/setup-ruby@55283cc23133118229fd3f97f9336ee23a179fcf # v1.146.0
+  #       with:
+  #         bundler-cache: true
+  #     # Add or replace any other lints here
+  #     - name: Security audit dependencies
+  #       run: bin/bundler-audit --update
+  #     - name: Security audit application code
+  #       run: bin/brakeman -q -w2
+  #     - name: Lint Ruby files
+  #       run: bin/rubocop --parallel
