@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  get 'memo/index'
+  get 'memo/:id', to: 'memo#show', as: 'memo'
   get 'announcement/index'
   get 'transpo/show_stop'
 

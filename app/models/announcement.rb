@@ -12,6 +12,8 @@ class Announcement < ApplicationRecord
       "fa-solid fa-handshake"
     when "Meeting"
       "fa-solid fa-calendar"
+    when "Memo"
+      "fa-solid fa-memo"
     else
       "fa-solid fa-question"
     end
@@ -33,6 +35,7 @@ class Announcement < ApplicationRecord
       issue = reference.issue || ""
       "#{reference.lobbyist_name} (#{reference.lobbyist_position}): #{issue.split(" ").first(10).join(" ")} ..."
     end
+    return "#{reference.department} - #{reference.issued_date.strftime("%b %d, %Y")}" if reference.is_a?(Memo)
   end
 
   def reference_link
@@ -51,5 +54,6 @@ class Announcement < ApplicationRecord
       return "#{url}/meeting/#{reference.reference_guid}" if reference.reference_guid
     end
     return "#{url}/lobbying/#{reference.id}" if reference.is_a?(LobbyingUndertaking)
+    return "#{url}/memo/#{reference.id}" if reference.is_a?(Memo)
   end
 end
