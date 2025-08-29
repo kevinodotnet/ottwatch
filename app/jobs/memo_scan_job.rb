@@ -7,11 +7,31 @@ class MemoScanJob < ApplicationJob
 
   BASE_URL = "https://ottawa.ca/en/city-hall/open-transparent-and-accountable-government/public-disclosure/memoranda-issued-members-council"
 
-  def perform
-    scan_all_memos
+  def perform(page: nil)
+    if page
+      scan_page(page)
+    else
+      scan_all_memos
+    end
   end
 
   private
+
+
+  def scan_page(page)
+    response = fetch_page(page)
+    doc = Nokogiri::HTML(response)
+
+    page_title = doc.css('meta[name="dcterms.title"]').first&.[]('content')
+    
+    doc.css('[data-target]').each do |d|
+      memo = d.parent.parent
+      title = memo.css('h2').first.children.text.strip 
+      body = memo.css('div').first.to_s
+    end
+    
+    binding.pry
+  end
 
   def scan_all_memos
     response = fetch_page(BASE_URL)
