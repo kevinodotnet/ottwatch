@@ -13,10 +13,14 @@ class MemoScanJobTest < ActiveJob::TestCase
     end
   end
 
-  test "perform with page arg reads memo page" do
+  test "perform with page arg reads memo page" do 
     page = "https://ottawa.ca/en/city-hall/open-transparent-and-accountable-government/public-disclosure/memoranda-issued-members-council/memoranda-issued-infrastructure-and-water-services"
     VCR.use_cassette("#{class_name}_#{method_name}") do
-      MemoScanJob.perform_now(page: page)
+      assert_changes -> { Memo.count } do
+        assert_changes -> { Announcement.count } do
+          MemoScanJob.perform_now(page: page)
+        end
+      end
     end
   end
 end

@@ -25,12 +25,25 @@ class MemoScanJob < ApplicationJob
     page_title = doc.css('meta[name="dcterms.title"]').first&.[]('content')
     
     doc.css('[data-target]').each do |d|
-      memo = d.parent.parent
-      title = memo.css('h2').first.children.text.strip 
-      body = memo.css('div').first.to_s
+      memo_element = d.parent.parent
+      title = memo_element.css('h2').first.children.text.strip 
+      content = memo_element.css('div').first.to_s
+      reference_id = d['data-target']
+      
+      next if Memo.exists?(reference_id: reference_id)
+      
+      memo = Memo.create!(
+        title: title,
+        content: content,
+        reference_id: reference_id,
+        url: "#{page}#{reference_id}",
+        department: extract_department_from_title(title),
+        issued_date: extract_date_from_title(title) || Date.current
+      )
+      
+      create_announcement(memo)
     end
     
-    binding.pry
   end
 
   def scan_all_memos
@@ -76,7 +89,18 @@ class MemoScanJob < ApplicationJob
 
   def create_announcement(memo)
     memo.announcements.create!(
-      message: "New Memo: #{memo.title}"
+      message: "New Memo: #{memo.title} (#{memo.department})"
     )
+  end
+
+  def extract_department_from_title(title)
+    title.split(' - ').first || 'Unknown'
+  end
+
+  def extract_date_from_title(title)
+    date_match = title.match(/(\d{4}-\d{2}-\d{2})/)
+    Date.parse(date_match[1]) if date_match
+  rescue ArgumentError
+    nil
   end
 end

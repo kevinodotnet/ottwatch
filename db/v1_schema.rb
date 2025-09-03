@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_08_24_141130) do
+ActiveRecord::Schema[8.0].define(version: 2025_09_03_114707) do
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -234,12 +234,12 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_24_141130) do
     t.text "title"
     t.string "department"
     t.date "issued_date"
-    t.string "sender"
     t.text "content"
     t.string "url"
     t.string "reference_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.text "body"
   end
 
   create_table "parcels", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|

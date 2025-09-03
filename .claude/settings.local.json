@@ -6,7 +6,10 @@
       "Bash(grep:*)",
       "Bash(find:*)",
       "WebFetch(domain:open.ottawa.ca)",
-      "WebFetch(domain:ottawa.ca)"
+      "WebFetch(domain:ottawa.ca)",
+      "Bash(rails generate:*)",
+      "Bash(bundle exec rails generate migration:*)",
+      "Bash(docker exec:*)"
     ],
     "deny": []
   }

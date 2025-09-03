@@ -34,9 +34,6 @@
       </div>
       <div class="col-md-6">
         <%= link_to memo.title, memo_path(memo) %>
-        <% if memo.sender.present? %>
-          <br><small class="text-muted">From: <%= memo.sender %></small>
-        <% end %>
       </div>
     </div>
   <% end %>
