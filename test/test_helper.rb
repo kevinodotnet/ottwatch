@@ -20,6 +20,8 @@ class ActiveSupport::TestCase
     config.cassette_library_dir = "fixtures/vcr_cassettes"
     config.hook_into :webmock
   end
+  
+  VCR.turn_on!
 end
 
 class Minitest::Unit::TestCase

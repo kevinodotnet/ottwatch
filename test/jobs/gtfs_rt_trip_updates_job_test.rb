@@ -2,11 +2,11 @@ require "test_helper"
 require "webmock/minitest"
 require "zlib"
 
-VCR.turn_off!
-WebMock.enable!
-
 class GtfsRtTripUpdatesJobTest < ActiveJob::TestCase
   def setup
+    VCR.turn_off!
+    WebMock.enable!
+    
     @test_storage_folder = Rails.root.join("tmp", "test_gtfs_rt_trip_updates_storage")
     FileUtils.mkdir_p(@test_storage_folder)
     ENV["LOCAL_STORAGE_FOLDER"] = @test_storage_folder.to_s
@@ -102,9 +102,6 @@ class GtfsRtTripUpdatesJobTest < ActiveJob::TestCase
     ENV.delete("LOCAL_STORAGE_FOLDER")
     ENV.delete("GTFS_KEY_1")
     WebMock.reset!
-  end
-
-  def self.teardown
     VCR.turn_on!
   end
 

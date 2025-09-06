@@ -51,7 +51,7 @@ class DevApp::ScannerTest < ActiveSupport::TestCase
       end
       announcement = Announcement.last
       expected = "DevApp D07-05-23-0005 (Demolition Control for 115 SPENCER) has been born: City-initiated demo control. Two-storey single detached home with detached garage. Existing structure appears to be typical stick..."
-      assert_match(/#{APP_NUMBER}.*205 GREENBANK/, announcement.message)
+      assert_match(/#{APP_NUMBER}.*205 GREENBANK/, announcement.reference_context)
     end
   end
 

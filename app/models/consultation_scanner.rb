@@ -41,7 +41,7 @@ class ConsultationScanner < ApplicationJob
         Consultation.where(href: t[:href]).first_or_create do |c|
           c.title = t[:title]
           c.status = t[:status]
-          c.announcements << Announcement.new(message: "New")
+          c.announcements << Announcement.new(message: "New Consultation: #{t[:title]}")
         end
       end
     end

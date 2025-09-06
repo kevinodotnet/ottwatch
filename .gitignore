@@ -38,3 +38,5 @@ tmp/storage/*
 
 db/ottwatch_v1_snapshot.sql
 .DS_Store
+
+.claude

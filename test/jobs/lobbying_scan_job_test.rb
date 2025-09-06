@@ -61,13 +61,13 @@ class LobbyingScanJobTest < ActiveJob::TestCase
       assert count_2 > count_1
 
       a = u.announcements.first
-      assert_equal "New Lobbying undertaking", a.message
-      assert_equal a.reference_context, "Reza Lotfalian (CTO): Kaaj Energy Inc. is in the planning stage to propose ..."
+      assert_equal "New", a.message
+      assert_equal a.reference_context, "Lobbying: Reza Lotfalian: Kaaj Energy Inc. is in the planning stage to propose a long-duration energy storage facility ..."
       assert_equal a.reference_link, "http://localhost:33000/lobbying/#{u.id}"
 
       a = u.announcements.last
-      assert_equal "Additional Lobbying activity", a.message
-      assert_equal a.reference_context, "Reza Lotfalian (CTO): Kaaj Energy Inc. is in the planning stage to propose ..."
+      assert_equal "More", a.message
+      assert_equal a.reference_context, "Lobbying: Reza Lotfalian: Kaaj Energy Inc. is in the planning stage to propose a long-duration energy storage facility ..."
       assert_equal a.reference_link, "http://localhost:33000/lobbying/#{u.id}"
     end
   end
