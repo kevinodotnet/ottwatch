@@ -26,9 +26,8 @@ class Announcement < ApplicationRecord
 
     if reference.is_a?(DevApp::Entry)
       if addr = reference.addresses.first
-        parts = [reference.app_number, addr.road_number, addr.road_name, addr.road_type, addr.direction].reject{|c| c == ""}
-        return nil if parts.count < 2
-        return "DevApp: #{parts.join(" ")}"
+        parts = [addr.road_number, addr.road_name, addr.road_type, addr.direction].reject{|c| c == ""}
+        return "DevApp #{reference.app_number}: #{parts.join(" ")}"
       end
     end
 
@@ -38,7 +37,7 @@ class Announcement < ApplicationRecord
 
     if reference.is_a?(LobbyingUndertaking)
       issue = reference.issue || ""
-      return "Lobbying: #{reference.lobbyist_name}: #{issue.split(" ").first(15).join(" ")} ..."
+      return "Lobbying by #{reference.lobbyist_name}: #{issue.split(" ").first(15).join(" ")} ..."
     end
 
     return "? #{reference_context}" # should not be reachable
