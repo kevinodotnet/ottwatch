@@ -171,9 +171,7 @@ class MeetingScanJob < ApplicationJob
 
   def create_announcement(meeting)
     return if meeting.persisted? # not a new meeting
-    meeting.announcements << Announcement.new(
-      message: "New Meeting: #{meeting.committee.name}, #{meeting.start_time.strftime("%b %d, %Y")}"
-    )
+    meeting.announcements << Announcement.new(message: "New")
   end
 
   def find_or_create_item(meeting, reference_id)
