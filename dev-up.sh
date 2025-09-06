@@ -8,10 +8,10 @@ cd docker
 instance="dev_ottwatch"
 port=33000
 
-docker build $BUILD_NO_CACHE -t ottwatch-base -f Dockerfile.base . && \
-  docker stop -t 0 dev_ottwatch && \
-  docker rm dev_ottwatch && \
-  docker run -d --name dev_ottwatch -p $port:3000 -v `pwd`/..:/ottwatch -i -t ottwatch-base
+docker build $BUILD_NO_CACHE -t ottwatch-base -f Dockerfile.base .
+docker stop -t 0 dev_ottwatch
+docker rm dev_ottwatch
+docker run -d --name dev_ottwatch -p $port:3000 -v `pwd`/..:/ottwatch -i -t ottwatch-base
 
 cat << EOF
 #
