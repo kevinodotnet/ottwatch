@@ -50,7 +50,7 @@ class MemoScanJob < ApplicationJob
         issued_date: issued_date
       )
       
-      create_announcement(memo)
+      # create_announcement(memo)
     end
     
   end
