@@ -30,7 +30,7 @@
         <%= memo.issued_date.strftime("%b %d, %Y") %>
       </div>
       <div class="col-md-7">
-        <%= link_to memo.title, memo_path(memo) %>
+        <%= link_to memo.title, memo.url %>
       </div>
       <div class="col-sm-3">
         <small class="text-muted"><%= memo.department %></small>
