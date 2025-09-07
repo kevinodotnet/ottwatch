@@ -1,5 +1,5 @@
 <div class="row">
-<div class="col-lg-6">
+<div class="col-lg-12">
   <div style="margin-top: 10px; margin-bottom: 10px;">
     <h2>Announcements</h2>
   </div>
@@ -7,19 +7,15 @@
     <ul>
       <% @announcements.each do |a| %>
         <li>
-          <%
-          message = a.message
-          message = [a.message, a.reference_context].join(" ") if a.reference_type == "LobbyingUndertaking"
-          %>
           <i class="<%= a.font_awesome_class %>"></i>
-          <%= link_to(message, a.reference_link) %>
+          <%= link_to(a.reference_context, a.reference_link) %>
         </li>
       <% end %>
       <li><%= link_to("... see all", "/announcement/index") %></li>
     </ul>
   </div>
   </div>
-  <div class="col-lg-6">
+  <div class="col-lg-12">
     <div style="margin-top: 10px; margin-bottom: 10px;">
       <h2>Meetings</h2>
     </div>

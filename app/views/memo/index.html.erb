@@ -1,0 +1,48 @@
+<div class="owrows">
+  <h1>Memoranda to Council</h1>
+  
+  <% if @departments.present? %>
+    <div class="row mb-3">
+      <div class="col-sm-12">
+        <strong>Filter by Department:</strong>
+        <%= link_to "All", memo_index_path, class: "btn btn-sm #{'btn-primary' if params[:department].blank?} #{'btn-outline-primary' if params[:department].present?}" %>
+        <% @departments.each do |dept| %>
+          <%= link_to dept, memo_index_path(department: dept), class: "btn btn-sm #{'btn-primary' if params[:department] == dept} #{'btn-outline-primary' if params[:department] != dept}" %>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+
+  <% if @memos.none? %>
+    <div class="row">
+      <div class="col-sm-12">
+        No memos found
+        <% if params[:department].present? %>
+          for <%= params[:department] %>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+
+  <% @memos.each do |memo| %>
+    <div class="row">
+      <div class="col-sm-2">
+        <%= memo.issued_date.strftime("%b %d, %Y") %>
+      </div>
+      <div class="col-md-7">
+        <%= link_to memo.title, memo.url %>
+      </div>
+      <div class="col-sm-3">
+        <small class="text-muted"><%= memo.department %></small>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<% if respond_to?(:paginate) %>
+<div style="padding-top: 20px;">
+  <center>
+    <%= paginate @memos if @memos.respond_to?(:current_page) %>
+  </center>
+</div>
+<% end %>

@@ -12,6 +12,8 @@ class Announcement < ApplicationRecord
       "fa-solid fa-handshake"
     when "Meeting"
       "fa-solid fa-calendar"
+    when "Memo"
+      "fa-solid fa-memo"
     else
       "fa-solid fa-question"
     end
@@ -40,6 +42,11 @@ class Announcement < ApplicationRecord
       return "Lobbying by #{reference.lobbyist_name}: #{issue.split(" ").first(15).join(" ")} ..."
     end
 
+    if reference.is_a?(Memo)
+      content = ActionView::Base.full_sanitizer.sanitize(reference.content).gsub(/\s+/, ' ').strip.gsub(/^Memo: /, '').gsub(/ \(.*20\d\d\) /, ' - ').first(100) + "..."
+      return "Memo: #{reference.department} - #{content}" 
+    end
+
     return "? #{reference_context}" # should not be reachable
   end
 
@@ -59,5 +66,6 @@ class Announcement < ApplicationRecord
       return "#{url}/meeting/#{reference.reference_guid}" if reference.reference_guid
     end
     return "#{url}/lobbying/#{reference.id}" if reference.is_a?(LobbyingUndertaking)
+    return reference.url if reference.is_a?(Memo)
   end
 end
