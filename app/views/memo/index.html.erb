@@ -26,14 +26,14 @@
 
   <% @memos.each do |memo| %>
     <div class="row">
-      <div class="col-sm-3">
-        <%= link_to memo.issued_date.strftime("%b %d, %Y"), memo_path(memo) %>
+      <div class="col-sm-2">
+        <%= memo.issued_date.strftime("%b %d, %Y") %>
+      </div>
+      <div class="col-md-7">
+        <%= link_to memo.title, memo_path(memo) %>
       </div>
       <div class="col-sm-3">
         <small class="text-muted"><%= memo.department %></small>
-      </div>
-      <div class="col-md-6">
-        <%= link_to memo.title, memo_path(memo) %>
       </div>
     </div>
   <% end %>

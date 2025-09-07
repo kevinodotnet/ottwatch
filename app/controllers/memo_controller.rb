@@ -1,8 +1,8 @@
 class MemoController < ApplicationController
   def index
-    @memos = Memo.recent.includes(:announcements)
+    @memos = Memo.recent # .includes(:announcements)
     @memos = @memos.by_department(params[:department]) if params[:department].present?
-    @memos = @memos.page(params[:page]).per(20)
+    @memos = @memos.order(issued_date: :desc)
     @departments = Memo.distinct.pluck(:department).compact.sort
   end
 
