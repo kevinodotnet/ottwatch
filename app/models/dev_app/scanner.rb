@@ -157,17 +157,8 @@ class DevApp::Scanner
       if announcements.any?
         msg = announcements.first
         message = if msg[:type] == :new_dev_app
-          addr = entry.addresses.first
-          addr = [addr.road_number, addr.road_name].join(" ")
-          m = "DevApp #{entry.app_number} (#{entry.app_type} for #{addr}) has been born:"
-          desc_parts = entry.desc.split(" ")
-          while m.length < 200 && desc_parts.any? do
-            m << " #{desc_parts.shift}"
-          end
-          m << "..." if desc_parts.any?
-          m
+          entry.announcements << Announcement.new(message: "New")
         end
-        entry.announcements << Announcement.new(message: message)
       end
 
       entry

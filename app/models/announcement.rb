@@ -20,26 +20,34 @@ class Announcement < ApplicationRecord
   end
 
   def reference_context
+    parts = []
+
     if reference.is_a?(Consultation)
-      return reference.title
+      return "Consultation: #{reference.title}"
     end
+
     if reference.is_a?(DevApp::Entry)
       if addr = reference.addresses.first
         parts = [addr.road_number, addr.road_name, addr.road_type, addr.direction].reject{|c| c == ""}
-        return nil if parts.count < 2
-        return parts.join(" ")
+        return "DevApp #{reference.app_number}: #{parts.join(" ")}"
       end
     end
-    return "#{reference.start_time.in_time_zone("America/New_York").strftime("%b %d %H:%M")}" if reference.is_a?(Meeting)
+
+    if reference.is_a?(Meeting)
+      return "Meeting: #{reference.committee.name} #{reference.start_time.in_time_zone("America/New_York").strftime("%b %d %H:%M")}" 
+    end
+
     if reference.is_a?(LobbyingUndertaking)
       issue = reference.issue || ""
-      "#{reference.lobbyist_name} (#{reference.lobbyist_position}): #{issue.split(" ").first(10).join(" ")} ..."
+      return "Lobbying by #{reference.lobbyist_name}: #{issue.split(" ").first(15).join(" ")} ..."
     end
-    ActionView::Base.full_sanitizer.sanitize(reference.content).gsub(/\s+/, ' ').strip
+
     if reference.is_a?(Memo)
       content = ActionView::Base.full_sanitizer.sanitize(reference.content).gsub(/\s+/, ' ').strip.gsub(/^Memo: /, '').gsub(/ \(.*20\d\d\) /, ' - ').first(100) + "..."
       return "Memo: #{reference.department} - #{content}" 
     end
+
+    return "? #{reference_context}" # should not be reachable
   end
 
   def reference_link

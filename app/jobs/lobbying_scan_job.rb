@@ -34,7 +34,7 @@ class LobbyingScanJob < ApplicationJob
       announcements = []
       unless undertaking.persisted?
         undertaking.save!
-        announcements << Announcement.new(message: "New Lobbying undertaking")
+        announcements << Announcement.new(message: "New")
       end
       e[:activities].each do |a|
         attr = {
@@ -46,7 +46,7 @@ class LobbyingScanJob < ApplicationJob
         activity = undertaking.activities.where(attr).first || undertaking.activities.new(attr)
         unless activity.persisted?
           activity.save!
-          announcements << Announcement.new(message: "Additional Lobbying activity")
+          announcements << Announcement.new(message: "More")
         end
       end
       if announcements.any?
