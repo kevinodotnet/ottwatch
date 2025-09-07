@@ -234,10 +234,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_24_141130) do
     t.text "title"
     t.string "department"
     t.date "issued_date"
-    t.string "sender"
     t.text "content"
     t.string "url"
-    t.string "reference_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

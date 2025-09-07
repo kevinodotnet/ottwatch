@@ -5,7 +5,7 @@ class SyndicationJob < ApplicationJob
 
   def syndicate(a)
     msg = a.message
-    msg << " (#{a.reference_context})" if a.reference_context
+    msg << " #{a.reference_context}" if a.reference_context
     msg << " #{a.reference_link}"
     BlueSky.new.skeet(msg)
   end

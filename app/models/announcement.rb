@@ -35,7 +35,11 @@ class Announcement < ApplicationRecord
       issue = reference.issue || ""
       "#{reference.lobbyist_name} (#{reference.lobbyist_position}): #{issue.split(" ").first(10).join(" ")} ..."
     end
-    return "#{reference.department} - #{reference.issued_date.strftime("%b %d, %Y")}" if reference.is_a?(Memo)
+    ActionView::Base.full_sanitizer.sanitize(reference.content).gsub(/\s+/, ' ').strip
+    if reference.is_a?(Memo)
+      content = ActionView::Base.full_sanitizer.sanitize(reference.content).gsub(/\s+/, ' ').strip.gsub(/^Memo: /, '').gsub(/ \(.*20\d\d\) /, ' - ').first(100) + "..."
+      return "#{reference.department} - #{content}" 
+    end
   end
 
   def reference_link

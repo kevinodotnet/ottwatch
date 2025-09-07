@@ -7,11 +7,53 @@ class MemoScanJob < ApplicationJob
 
   BASE_URL = "https://ottawa.ca/en/city-hall/open-transparent-and-accountable-government/public-disclosure/memoranda-issued-members-council"
 
-  def perform
-    scan_all_memos
+  def perform(page: nil)
+    if page
+      scan_page(page)
+    else
+      scan_all_memos
+    end
   end
 
   private
+
+
+  def scan_page(page)
+    response = fetch_page(page)
+    doc = Nokogiri::HTML(response)
+
+    page_title = doc.css('meta[name="dcterms.title"]').first&.[]('content')
+    
+    doc.css('[data-target]').each do |d|
+      memo_element = d.parent.parent
+      title = memo_element.css('h2').first.children.text.strip
+      title = title.gsub(/^Memo: /, '')
+      title = title.gsub(/ \(.*\)/, '') # remove (Date)
+      issued_date = title.match(/(\d{4}-\d{2}-\d{2})/) || Date.current
+      content = memo_element.css('div').first.to_s
+      # binding.pry if title.match?(/Bayswater/)
+
+      reference_id = d['data-target']
+      url = "#{page}#{reference_id}"
+
+      next if Memo.exists?(url: url)
+
+      # "infrastructure and water services"      
+      department = url.gsub(/#.*/, '').gsub(/.*\/memoranda-issued-/, '').gsub(/-/, ' ')
+      department = department.split.map { |word| %w[and].include?(word) ? word : word.capitalize }.join(' ')
+
+      memo = Memo.create!(
+        title: title,
+        content: content,
+        url: url,
+        department: department,
+        issued_date: issued_date
+      )
+      
+      create_announcement(memo)
+    end
+    
+  end
 
   def scan_all_memos
     response = fetch_page(BASE_URL)
@@ -55,8 +97,6 @@ class MemoScanJob < ApplicationJob
   end
 
   def create_announcement(memo)
-    memo.announcements.create!(
-      message: "New Memo: #{memo.title}"
-    )
+    memo.announcements.create!(message: "New")
   end
 end

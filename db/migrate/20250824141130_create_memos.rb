@@ -4,10 +4,8 @@ class CreateMemos < ActiveRecord::Migration[8.0]
       t.text :title
       t.string :department
       t.date :issued_date
-      t.string :sender
       t.text :content
       t.string :url
-      t.string :reference_id
 
       t.timestamps
     end
