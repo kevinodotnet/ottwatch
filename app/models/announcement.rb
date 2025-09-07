@@ -38,7 +38,7 @@ class Announcement < ApplicationRecord
     ActionView::Base.full_sanitizer.sanitize(reference.content).gsub(/\s+/, ' ').strip
     if reference.is_a?(Memo)
       content = ActionView::Base.full_sanitizer.sanitize(reference.content).gsub(/\s+/, ' ').strip.gsub(/^Memo: /, '').gsub(/ \(.*20\d\d\) /, ' - ').first(100) + "..."
-      return "#{reference.department} - #{content}" 
+      return "Memo: #{reference.department} - #{content}" 
     end
   end
 
