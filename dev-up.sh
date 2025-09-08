@@ -23,5 +23,8 @@ cat << EOF
 # on first run of container:
 #
 cd /ottwatch; bin/rails db:setup
+
+http://snack:33000
+
 EOF
 

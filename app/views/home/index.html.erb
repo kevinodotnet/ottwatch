@@ -1,37 +1,49 @@
 <div class="row">
-<div class="col-lg-12">
-  <div style="margin-top: 10px; margin-bottom: 10px;">
-    <h2>Announcements</h2>
-  </div>
-  <div class="owrows">
-    <ul>
-      <% @announcements.each do |a| %>
-        <li>
-          <i class="<%= a.font_awesome_class %>"></i>
-          <%= link_to(a.reference_context, a.reference_link) %>
-        </li>
-      <% end %>
-      <li><%= link_to("... see all", "/announcement/index") %></li>
-    </ul>
-  </div>
-  </div>
-  <div class="col-lg-12">
+  <div class="col-12">
     <div style="margin-top: 10px; margin-bottom: 10px;">
-      <h2>Meetings</h2>
-    </div>
-    <div class="owrows">
-        <ul>
-      <% @meetings.each do |m| %>
-        <% meeting_url = "/meeting/#{m.reference_id}#{m.reference_guid}" %>
-          <li>
-          <%= link_to(m.start_time.in_time_zone("America/New_York").strftime("%b %d @ %H:%M #{m.committee.name}"), meeting_url) %>
-          </li>
-      <% end %>
-      <li><%= link_to("... see all", "/meeting/index") %></li>
-      </ul>
+      <h2>Announcements</h2>
     </div>
   </div>
 </div>
+
+<% prev_date = nil%>
+<% @announcements.each do |a| %>
+  <div class="row">
+    <div class="col-12">
+      <%= link_to(a.reference_context, a.reference_link) %>
+    </div>
+  </div>
+<% end %>
+
+<div class="row">
+  <div class="col-12">
+    <%= link_to("... see all", "/announcement/index") %>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-12">
+    <div style="margin-top: 10px; margin-bottom: 10px;">
+      <h2>Meetings</h2>
+    </div>
+  </div>
+</div>
+
+<% @meetings.each do |m| %>
+<% meeting_url = "/meeting/#{m.reference_id}#{m.reference_guid}" %>
+  <div class="row">
+    <div class="col-12">
+        <%= m.start_time.in_time_zone("America/New_York").strftime("%b %d @ %I:%M%P") %> <%= link_to(m.committee.name, meeting_url) %>
+    </div>
+  </div>
+<% end %>
+<div class="row">
+  <div class="col-12">
+      <%= link_to("... see all", "/meeting/index") %>
+  </div>
+</div>
+
+
 
 
 <div style="margin-top: 10px; margin-bottom: 10px;">

@@ -4,30 +4,16 @@ last_id = session["annoucements_index_#{last_key}"] || 0
 session["annoucements_index_#{last_key}"] = @announcements.first&.id
 %>
 <div class="row">
-  <div class="col-8">
+  <div class="col-6">
     <h4>
     Announcements
-    <small>
-    <%= link_to("all", announcement_index_path) %>
-    <%= link_to("devapps", announcement_index_path(reference_type: "DevApp::Entry")) %>
-    <%= link_to("meetings", announcement_index_path(reference_type: "Meeting")) %>
-    <%= link_to("consultations", announcement_index_path(reference_type: "Consultation")) %>
-    <%= link_to("lobbying", announcement_index_path(reference_type: "LobbyingUndertaking")) %>
-    </small>
     </h4>
   </div>
-
-  <div class="col-4 text-end">
-    Next:
-    <% [25, 50, 100].each do |limit| %>
-      <%= link_to(
-        "#{limit}", 
-        announcement_index_path(
-          before_id: @announcements.last&.id,
-          reference_type: params[:reference_type],
-          limit: limit
-        )
-      ) %>
+  <div class="col-6">
+    <strong>Filter by:</strong>
+    <%= link_to "All", announcement_index_path, class: "btn btn-sm #{'btn-primary' if params[:reference_type].blank?} #{'btn-outline-primary' if params[:reference_type].present?}" %>
+    <% @reference_types.each do |reference_type| %>
+      <%= link_to reference_type, announcement_index_path(reference_type: reference_type), class: "btn btn-sm #{'btn-primary' if params[:reference_type] == reference_type} #{'btn-outline-primary' if params[:reference_type] != reference_type}" %>
     <% end %>
   </div>
 </div>
@@ -42,17 +28,25 @@ prev_date = nil
     <%
   end
   prev_date = a.created_at.to_date
-  message = a.message
-  message = [a.message, a.reference_context].join(" ") if a.reference_type == "LobbyingUndertaking"
+  message = [a.message, a.reference_context].join(" ")
   %>
   <div class="row" style="margin-top: 2px;">
-    <div class="col-9">
+    <div class="col-12">
       <i class="<%= a.font_awesome_class %>"></i>
       <%= link_to(message, a.reference_link) %>
     </div>
-    <div class="col-3 text-nowrap" style="text-align: right">
-      <%= raw("<span class=\"new_announcement_badge\">(new)</span>") if a.id > last_id %>
-    </div>
   </div>
 <% end %>
-</div>
+
+Next:
+<% [25, 50, 100].each do |limit| %>
+  <%= link_to(
+    "#{limit}", 
+    announcement_index_path(
+      before_id: @announcements.last&.id,
+      reference_type: params[:reference_type],
+      limit: limit
+    ),
+    class: "btn btn-sm btn-primary"
+  ) %>
+<% end %>
