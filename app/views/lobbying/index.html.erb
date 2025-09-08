@@ -6,13 +6,9 @@
     <div class="col-sm-3">
       <b><%= u.client %></b> (by <%= u.lobbyist_name %>)
     </div>
-    <div class="col-sm-7">
-      <b><%= link_to u.subject, "/lobbying/#{u.id}" %></b>: <%= u.issue %>
-    </div>
-    <div class="col-sm-2" style="text-align: right;">
-      Latest: <%= @latest[u.id]&.strftime("%Y-%m-%d") %><br/>
-      First: <%= @first[u.id]&.strftime("%Y-%m-%d") %><br/>
-      Total: <%= @counts[u.id] %><br/>
+    <div class="col-sm-9">
+      <b><%= link_to u.subject, "/lobbying/#{u.id}" %></b>: <%= u.issue %><br/>
+      <%= @latest[u.id]&.strftime("(%Y-%m-%d)") %>
     </div>
   </div>
 <% end %>
