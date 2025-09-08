@@ -13,42 +13,27 @@
       "https://pub-ottawa.escribemeetings.com/Meeting.aspx?Id=#{@meeting.reference_guid}&Agenda=Agenda&lang=English"
     end
     %>
-
-    <a href="<%= meeting_url %>">View on ottawa.ca</a>
+    <a href="<%= meeting_url %>" target="_blank" class="btn btn-primary">View on ottawa.ca</a>
   </div>
 </div>
 
-<%
-@meeting.items.each do |item|
-  %>
-  <h5>
-    <a href="https://pub-ottawa.escribemeetings.com/Meeting.aspx?Id=<%= @meeting.reference_guid %>&Agenda=Agenda&lang=English&Item=<%= item.reference_id %>&Tab=attachments">
-    <%= item.title %>
-    </a>
-  </h5>
-  <%
-  if item.content.present?
-    %>
-    <%= item.content[0..500] %><%= item.content.size > 500 ? "... (cont)" : "" %>
-    <%
-  end
-  %>
-  <ul>
-    <%
-    item.documents.each do |doc|
-      %>
-      <li>
-        <a href="https://pub-ottawa.escribemeetings.com/filestream.ashx?DocumentId=<%= doc.reference_id %>"><%= doc.title %></a>
-      </li>
-      <%
-    end
-    %>
-  </ul>
-  <%
-end
+<% @meeting.items.each do |item| %>
+  <div class="row" style="margin-top: 10px">
+    <div class="col-12">
+      <b><%= item.title %></b>
+      <!-- <a href="https://pub-ottawa.escribemeetings.com/Meeting.aspx?Id=<%= @meeting.reference_guid %>&Agenda=Agenda&lang=English&Item=<%= item.reference_id %>&Tab=attachments">go</a> -->
+      <% if item.content.present? %>
+        <br/>
+        <%= item.content %>
+      <% end %>
+      <ul style="margin-top: 10px">
+      <% item.documents.each do |doc| %>  
+        <li><a href="https://pub-ottawa.escribemeetings.com/filestream.ashx?DocumentId=<%= doc.reference_id %>"><%= doc.title %></a></li>
+      <% end %>
+      </ul>
+<% end %>
 
-%>
-
+<!--
 <% if @meeting.reference_id %>
 <h4>Agenda</h4>
 <i>(note: this section doesn't work on mobile; blame the city)</i>
@@ -65,3 +50,4 @@ end
   style="width: 100%; height: 2000px;"
 ></iframe>
 <% end %>
+-->
