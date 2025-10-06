@@ -20,9 +20,9 @@ production:
   consultation_scanner:
     class: ConsultationScanner
     schedule: "10 */3 * * *"
-  traffic_camera_scrape_job:
-    class: TrafficCameraScrapeJob
-    schedule: "*/5 * * * *"
+#  traffic_camera_scrape_job:
+#    class: TrafficCameraScrapeJob
+#    schedule: "*/5 * * * *"
   syndication_job:
     class: SyndicationJob
     schedule: "* * * * *"
