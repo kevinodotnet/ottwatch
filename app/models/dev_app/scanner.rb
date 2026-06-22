@@ -154,6 +154,40 @@ class DevApp::Scanner
         doc.save!
       end
 
+      # Check if any document has an unhealthy state and is missing an archived URL
+      has_missing_archives = entry.documents.reload.any? do |doc|
+        !%w(200 302 307).include?(doc.state) && doc.archived_url.blank?
+      end
+      if has_missing_archives
+        begin
+          tracker_url = "https://devtracker.org/ottawa/#{entry.app_number}/data"
+          response = Net::HTTP.get_response(URI(tracker_url))
+          if response.code == "200"
+            tracker_data = JSON.parse(response.body)
+            archived_docs = tracker_data["documents"] || {}
+            
+            # Build normalized lookup map from devtracker data
+            normalized_archives = archived_docs.each_with_object({}) do |(key, value), hash|
+              hash[normalize_key(key)] = value
+            end
+            
+            # Match and update documents
+            entry.documents.each do |doc|
+              next if %w(200 302 307).include?(doc.state) # Only check broken ones
+              
+              db_filename = doc.path.split('_').last
+              match_url = normalized_archives[normalize_key(db_filename)] || normalized_archives[normalize_key(doc.path)]
+              
+              if match_url
+                doc.update!(archived_url: match_url)
+              end
+            end
+          end
+        rescue => e
+          Rails.logger.warn("Failed to check archives from devtracker.org for app #{entry.app_number}: #{e.message}")
+        end
+      end
+
       if announcements.any?
         msg = announcements.first
         message = if msg[:type] == :new_dev_app
@@ -174,6 +208,10 @@ class DevApp::Scanner
   end
 
 	private 
+
+  def self.normalize_key(name)
+    name.to_s.downcase.gsub(/[^a-z0-9]/, "")
+  end
 
 	def self.open_data_url
 		"https://devapps-restapi.ottawa.ca/devapps/ExportData"
